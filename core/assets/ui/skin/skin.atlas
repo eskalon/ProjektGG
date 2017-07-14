@@ -1,0 +1,69 @@
+
+skin.png
+size: 2048,2048
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+button-down
+  rotate: false
+  xy: 601, 526
+  size: 325, 45
+  orig: 325, 45
+  offset: 0, 0
+  index: -1
+button-over
+  rotate: false
+  xy: 601, 573
+  size: 325, 45
+  orig: 325, 45
+  offset: 0, 0
+  index: -1
+button-up
+  rotate: false
+  xy: 2, 2
+  size: 325, 45
+  orig: 325, 45
+  offset: 0, 0
+  index: -1
+parchment
+  rotate: false
+  xy: 2, 620
+  size: 1920, 1271
+  orig: 1920, 1271
+  offset: 0, 0
+  index: -1
+parchment-small
+  rotate: false
+  xy: 2, 147
+  size: 597, 471
+  orig: 597, 471
+  offset: 0, 0
+  index: -1
+scroll
+  rotate: false
+  xy: 2, 49
+  size: 408, 96
+  orig: 408, 96
+  offset: 0, 0
+  index: -1
+small-button-down
+  rotate: false
+  xy: 928, 578
+  size: 120, 40
+  orig: 120, 40
+  offset: 0, 0
+  index: -1
+small-button-over
+  rotate: false
+  xy: 1924, 1851
+  size: 120, 40
+  orig: 120, 40
+  offset: 0, 0
+  index: -1
+small-button-up
+  rotate: false
+  xy: 412, 105
+  size: 120, 40
+  orig: 120, 40
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,78 @@
+package dev.gg.desktop;
+
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
+
+import com.badlogic.gdx.Files;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+
+import dev.gg.core.ProjektGG;
+import dev.gg.utils.MicroOptions;
+
+/**
+ * Starts the application for the desktop-based builds.
+ */
+public class DesktopLauncher {
+
+	/**
+	 * The start-method for the whole application. Currently supported start
+	 * arguments:
+	 * <ul>
+	 * <li>--debug sets the game to debug mode.
+	 * <li>--novid skips the splash screen.
+	 * </ul>
+	 *
+	 * @param args
+	 *            The start arguments.
+	 */
+	public static void main(String[] args) {
+		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.title = "Projekt GG";
+		config.height = 720;
+		config.width = 1280;
+		config.addIcon("ui/images/icon.png", Files.FileType.Absolute);
+
+		boolean debug = false;
+		if (args != null && args.length > 0) {
+			if (args[0].equalsIgnoreCase("debug")) {
+				debug = true;
+			}
+		}
+
+		MicroOptions options = new MicroOptions();
+		options.option("novid").describedAs("no splashscreen").isUnary();
+		options.option("debug").describedAs("enables debugmode").isUnary();
+		try {
+			options.parse(args);
+		} catch (MicroOptions.OptionException e) {
+			System.err.println("Usage:");
+			System.err.println(options.usageString());
+			System.exit(-1);
+		}
+
+		// options.getArg("file", "/tmp/out");
+
+		try {
+			// Start the game
+			new LwjglApplication(
+					new ProjektGG(options.has("debug"), !options.has("novid")),
+					config);
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			// Write the crash log
+			try {
+				FileUtils.writeStringToFile(new File("./crash.log"),
+						e.getLocalizedMessage());
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+
+			System.exit(-1);
+		}
+	}
+
+}
