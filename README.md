@@ -5,4 +5,4 @@ ProjektGG zielt darauf ab, das 2002 erschienene Die Gilde (oder auch Europa 1400
 [Hier](https://github.com/Meidimax99/ProjektGG/wiki) pflegen wir ein ausgedehntes Wiki, um einen Überblick über den aktuellen und den geplanten Stand des Spiels zu bieten.
 
 ## Die Technik dahinter
-ProjectGG verwendet als Grundlage das Java-Framework libGDX in Verbindung mit dem Entity-Component-System artemis-odb. Mehr zur Technik dahinter ist hier zu finden.
+ProjectGG verwendet als Grundlage das Java-Framework libGDX in Verbindung mit dem Entity-Component-System artemis-odb. Mehr zur Technik dahinter ist [hier](https://github.com/Meidimax99/ProjektGG/wiki/Technik-dahinter) zu finden.
