@@ -1,7 +1,15 @@
 ![Projekt GG Header](https://www.dropbox.com/s/a8rbml1ss9jnsga/project_gg_banner.png?raw=1)
 
 # Projekt GG
-Mit ProjektGG versucht unser Team, einen geistigen Nachfolger von _[Die Gilde](https://de.wikipedia.org/wiki/Die_Gilde)_ (auch bekannt als _Europa 1400_) zu entwickeln. Dazu wollen wir das ursprüngliche Spielprinzip mit zahlreichen kleinen und größeren Verbesserungen versehen, ohne dabei das eigentliche "Spielgefühl" zu beeinträchtigen. Der Fokus liegt hier ganz klar auf dem Multiplayer-Modus des Spiels, der für den Spieler angenehmer zu benutzen und bugfreier gestaltet werden soll.
+Mit ProjektGG versucht unser Team, einen geistigen Nachfolger von _[Die Gilde](https://de.wikipedia.org/wiki/Die_Gilde)_ (auch bekannt als _Europa 1400_) zu entwickeln. Dazu wollen wir das ursprÃ¼ngliche Spielprinzip mit zahlreichen kleinen und grÃ¶ÃŸeren Verbesserungen versehen, ohne dabei das eigentliche "SpielgefÃ¼hl" zu beeintrÃ¤chtigen. Der Fokus liegt hier ganz klar auf dem Multiplayer-Modus des Spiels, der fÃ¼r den Spieler angenehmer zu benutzen und bugfreier gestaltet werden soll.
+
+**Eine Auswahl der geplanten Verbesserugnen:**
+* Stabilerer Multiplayer
+* Mehr und verbesserte Dienstleistungsberufe
+* Mehr Aktionen fÃ¼r politische Ã„mter
+* Berechenbarere und beeinflusbarere Marktsituation
+* Generell mehr Aktionen fÃ¼r den Spieler selbst (insbesondere im Early-Game).
+
 
 ## Wiki
 [Hier](https://github.com/Meidimax99/ProjektGG/wiki) pflegen wir ein ausgedehntes Wiki, um einen Ãœberblick Ã¼ber den aktuellen und den geplanten Stand des Spiels zu bieten.
