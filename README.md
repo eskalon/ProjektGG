@@ -1,5 +1,7 @@
+![Projekt GG Header](https://www.dropbox.com/s/a8rbml1ss9jnsga/project_gg_banner.png?raw=1)
+
 # Projekt GG
-ProjektGG zielt darauf ab, das 2002 erschienene Die Gilde (oder auch Europa 1400) mitsamt aller Erweiterungen aus der Gold-Edition nachzubauen sowie mit vielen kleinen und grÃ¶ÃŸeren Verbesserungen zu versehen. Das entstehenden Spiel soll das Spielgeschehen, insbesondere im Multiplayer, fÃ¼r den Spieler angenehmer und bugfreier gestalten.
+Mit ProjektGG versucht unser Team, einen geistigen Nachfolger von _[Die Gilde](https://de.wikipedia.org/wiki/Die_Gilde)_ (auch bekannt als _Europa 1400_) zu entwickeln. Dazu wollen wir das ursprüngliche Spielprinzip mit zahlreichen kleinen und größeren Verbesserungen versehen, ohne dabei das eigentliche "Spielgefühl" zu beeinträchtigen. Der Fokus liegt hier ganz klar auf dem Multiplayer-Modus des Spiels, der für den Spieler angenehmer zu benutzen und bugfreier gestaltet werden soll.
 
 ## Wiki
 [Hier](https://github.com/Meidimax99/ProjektGG/wiki) pflegen wir ein ausgedehntes Wiki, um einen Ãœberblick Ã¼ber den aktuellen und den geplanten Stand des Spiels zu bieten.
