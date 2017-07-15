@@ -16,3 +16,6 @@ Mit ProjektGG versucht unser Team, einen geistigen Nachfolger von _[Die Gilde](h
 
 ## Die Technik dahinter
 ProjectGG verwendet als Grundlage das Java-Framework libGDX in Verbindung mit dem Entity-Component-System artemis-odb. Mehr zur Technik dahinter ist [hier](https://github.com/Meidimax99/ProjektGG/wiki/Technik-dahinter) zu finden.
+
+## Mitarbeit
+Wir freuen uns über jede Form der Mitarbeit, ob im Wiki, im Issue-Tracker oder als Pull-Request. Wer Schreib-Rechte im Wiki haben bzw. als Collaborator ins Projekt einsteigen möchte, der möge bitte einen der momentanen Contributor kontaktieren.
