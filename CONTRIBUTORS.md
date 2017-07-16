@@ -1,4 +1,4 @@
-Following is a list of our contributors and all used external assets. 
+Eine Liste aller Contributor und der genutzten externen Assets:
 
 ## Contributors
 * [damios](https://github.com/crykn)

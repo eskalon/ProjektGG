@@ -19,3 +19,5 @@ ProjectGG verwendet als Grundlage das Java-Framework libGDX in Verbindung mit de
 
 ## Mitarbeit
 Wir freuen uns über jede Form der Mitarbeit, ob im Wiki, im Issue-Tracker oder als Pull-Request. Wer Schreib-Rechte im Wiki haben bzw. als Collaborator ins Projekt einsteigen möchte, der möge bitte einen der momentanen Contributor kontaktieren.
+
+Eine Übersicht über alle bisherigen Contributor und die genutzten externen Assets gibt es in der [CONTRIBUTORS.md](https://github.com/Meidimax99/ProjektGG/blob/master/CONTRIBUTORS.md).
