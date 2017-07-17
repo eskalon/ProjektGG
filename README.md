@@ -1,7 +1,7 @@
 ![Projekt GG Header](https://www.dropbox.com/s/a8rbml1ss9jnsga/project_gg_banner.png?raw=1)
 
 # Projekt GG
-ProjektGG ist eine mittelalterliche Wirtschafts- und Politiksimulation und stellt sich damit in eine Reihe von Spiele-Klassikern wie _[Die Gilde](https://de.wikipedia.org/wiki/Die_Gilde)_. Der Spieler lebt im [Bamberg](https://de.wikipedia.org/wiki/Bamberg) des Spätmittelalter und versucht politische und wirtschaftliche Bedeutung in seiner Stadt zu gewinnen. Der Fokus liegt hier ganz klar auf dem Multiplayer-Modus des Spiels, in dem verschiedene Spieler miteinander bzw. gegeneinander aktiv werden können.
+ProjektGG ist eine mittelalterliche Wirtschafts- und Politiksimulation und reiht sich damit ein hinter Spielen wie _[Die Gilde](https://de.wikipedia.org/wiki/Die_Gilde)_ und _[Patrizier](https://de.wikipedia.org/wiki/Patrizier_(Computerspiel))_. Der Spieler lebt im [Bamberg](https://de.wikipedia.org/wiki/Bamberg) des Spätmittelalter und versucht politische und wirtschaftliche Bedeutung in seiner Stadt zu gewinnen. Der Fokus liegt hier ganz klar auf dem Multiplayer-Modus des Spiels, in dem verschiedene Spieler miteinander bzw. gegeneinander aktiv werden können.
 
 **Eine Auswahl der geplanten Funktionen:**
 * Eine Vielzahl [politischer Ämter](https://github.com/Meidimax99/ProjektGG/wiki/Amts%C3%BCbersicht), die sich durch individuelle Handlungsmöglichkeiten auszeichnen
