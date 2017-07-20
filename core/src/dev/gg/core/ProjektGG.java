@@ -20,19 +20,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.kotcrab.vis.ui.util.CursorManager;
 
 import dev.gg.exception.ScreenNotFoundException;
-import dev.gg.screens.BaseScreen;
-import dev.gg.screens.GameHouseScreen;
-import dev.gg.screens.GameMapScreen;
-import dev.gg.screens.GameRoundendScreen;
-import dev.gg.screens.LoadingScreen;
-import dev.gg.screens.LobbyCreationScreen;
-import dev.gg.screens.LobbyScreen;
-import dev.gg.screens.MainMenuScreen;
-import dev.gg.screens.ServerBrowserScreen;
-import dev.gg.screens.SplashScreen;
-import dev.gg.settings.GameSettings;
-import dev.gg.utils.DataStore;
-import dev.network.MultiplayerGame;
+import dev.gg.network.MultiplayerSession;
+import dev.gg.screen.BaseScreen;
+import dev.gg.screen.BaseUIScreen;
+import dev.gg.screen.GameHouseScreen;
+import dev.gg.screen.GameMapScreen;
+import dev.gg.screen.GameRoundendScreen;
+import dev.gg.screen.LoadingScreen;
+import dev.gg.screen.LobbyCreationScreen;
+import dev.gg.screen.LobbyScreen;
+import dev.gg.screen.MainMenuScreen;
+import dev.gg.screen.ServerBrowserScreen;
+import dev.gg.screen.SplashScreen;
+import dev.gg.setting.GameSettings;
 import net.dermetfan.gdx.assets.AnnotationAssetManager;
 
 /**
@@ -45,6 +45,9 @@ import net.dermetfan.gdx.assets.AnnotationAssetManager;
 public class ProjektGG extends Game {
 
 	private SpriteBatch batch;
+	/**
+	 * The asset manager.
+	 */
 	private final AnnotationAssetManager assetManager = new AnnotationAssetManager(
 			new InternalFileHandleResolver());
 	/**
@@ -58,8 +61,6 @@ public class ProjektGG extends Game {
 	private OrthographicCamera uiCamera;
 	private PerspectiveCamera gameCamera;
 
-	private DataStore dataStore;
-
 	private GameSettings settings;
 
 	private CursorManager cursorManager;
@@ -67,8 +68,8 @@ public class ProjektGG extends Game {
 	private boolean debug, showSplashscreen;
 
 	private Skin uiSkin;
-	
-	private MultiplayerGame game;
+
+	private GameSession session;
 
 	public ProjektGG(boolean debug, boolean showSplashscreen) {
 		super();
@@ -109,10 +110,6 @@ public class ProjektGG extends Game {
 		// Load game settings
 		this.settings = new GameSettings("projekt-gg");
 
-		// Create data store
-		this.dataStore = new DataStore();
-		dataStore.put("debug", debug);
-
 		// Add screens
 		addScreen("splash", new SplashScreen());
 		addScreen("mainMenu", new MainMenuScreen());
@@ -147,14 +144,11 @@ public class ProjektGG extends Game {
 	}
 
 	/**
-	 * <p>
 	 * Pushes a screen to be the active screen. The screen has to be added to
 	 * the game beforehand via {@link #addScreen(String, BaseScreen)}.
-	 * </p>
 	 * <p>
 	 * {@link Screen#hide()} is called on any old activeScreen, and
 	 * {@link Screen#show()} is called on the new activeScreen, if any.
-	 * </p>
 	 * 
 	 * @param name
 	 *            The name of the pushed screen.
@@ -182,6 +176,25 @@ public class ProjektGG extends Game {
 		this.screen = pushedScreen;
 	}
 
+	/**
+	 * Returns a screen in the game.
+	 * 
+	 * @param name
+	 *            The name of the screen.
+	 * @return The screen.
+	 */
+	public BaseScreen getScreen(String name) {
+		BaseScreen screen = this.screens.get(name);
+
+		if (screen == null) {
+			throw new ScreenNotFoundException("Could not find a screen named '"
+					+ name
+					+ "'. Add the screen first via #addScreen(String, BaseScreen).");
+		}
+
+		return screen;
+	}
+
 	@Override
 	public final void dispose() {
 		super.dispose();
@@ -196,16 +209,16 @@ public class ProjektGG extends Game {
 	}
 
 	/**
-	 * @return The game data store.
+	 * @return The camera used in the actual game.
 	 */
-	public DataStore getDataStore() {
-		return this.dataStore;
-	}
-
 	public PerspectiveCamera /* CameraWrapper */ getGameCamera() {
 		return this.gameCamera;
 	}
 
+	/**
+	 * @return The camera used by the UI screens.
+	 * @see BaseUIScreen#render(float)
+	 */
 	public Camera getUICamera() {
 		return this.uiCamera;
 	}
@@ -217,6 +230,12 @@ public class ProjektGG extends Game {
 		return settings;
 	}
 
+	/**
+	 * Sets the UI skin.
+	 * 
+	 * @param skin
+	 *            The UI skin.
+	 */
 	public void setUISkin(Skin skin) {
 		this.uiSkin = skin;
 	}
@@ -236,20 +255,44 @@ public class ProjektGG extends Game {
 		return batch;
 	}
 
+	/**
+	 * @return The initial viewport width.
+	 */
 	public int getViewportWidth() {
 		return this.viewportWidth;
 	}
 
+	/**
+	 * @return The initial viewport height.
+	 */
 	public int getViewportHeight() {
 		return this.viewportHeight;
 	}
-	
-	public MultiplayerGame getCurrentGame(){
-		return game;
+
+	/**
+	 * @return The current game session.
+	 */
+	public GameSession getCurrentSession() {
+		return session;
 	}
-	
-	public void setCurrentGame(MultiplayerGame game){
-		this.game = game;
+
+	/**
+	 * @return The current multiplayer game session.
+	 */
+	public MultiplayerSession getCurrentMultiplayerSession() {
+		return (MultiplayerSession) session;
+	}
+
+	public void setCurrentSession(MultiplayerSession session) {
+		this.session = session;
+	}
+
+	/**
+	 * @return Whether the debug flag is set and thus debug stuff should get
+	 *         rendered.
+	 */
+	public boolean showDebugStuff() {
+		return debug;
 	}
 
 }
