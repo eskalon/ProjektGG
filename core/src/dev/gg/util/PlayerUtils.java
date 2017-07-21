@@ -18,12 +18,19 @@ public class PlayerUtils {
 	 * All possible random names.
 	 */
 	private static String[] names = new String[]{"Franz", "Heinrich", "Marthe",
-			"Ferdinand", "Luise"};
+			"Ferdinand", "Luise", "Oskar", "Jan", "Pierre", "Ève", "Michael",
+			"Moritz"};
 	/**
 	 * All possible random surnames.
 	 */
-	private static String[] surname = new String[]{"Woyzeck", "Faust",
-			"Schwerdtlein", "von Walter", "Miller"};
+	private static String[] surnames = new String[]{"Woyzeck", "Faust",
+			"Schwerdtlein", "von Walter", "Miller", "Matzerath", "Bronski",
+			"Dumaine", "Charlier", "Kohlhaas", "Jäger"};
+	/**
+	 * The genders to all possible names.
+	 */
+	private static boolean[] genders = new boolean[]{true, true, false, true,
+			false, true, true, true, false, true, true};
 
 	private PlayerUtils() {
 	}
@@ -98,10 +105,30 @@ public class PlayerUtils {
 		return allReady;
 	}
 
-	public static Tuple<String, String> getRandomName() {
-		int index = RandomUtils.getRandomNumber(0, names.length - 1);
+	/**
+	 * @return A random index for the player lists.
+	 * @see #names
+	 * @see #surnames
+	 * @see #genders
+	 */
+	private static int getRandomIndex() {
+		return RandomUtils.getRandomNumber(0, names.length - 1);
+	}
 
-		return new Tuple<String, String>(names[index], surname[index]);
+	/**
+	 * Returns a random player.
+	 * 
+	 * @param collection
+	 *            A collection of all of the already used players to specify the
+	 *            unused player icons.
+	 * @return The random player.
+	 */
+	public static Player getRandomPlayer(Collection<Player> collection) {
+		int index = getRandomIndex();
+
+		return new Player(names[index], surnames[index],
+				PlayerUtils.getAvailableIcons(collection).get(0),
+				genders[index]);
 	}
 
 }
