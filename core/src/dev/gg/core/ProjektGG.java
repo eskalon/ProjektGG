@@ -74,6 +74,11 @@ public class ProjektGG extends Game {
 	public ProjektGG(boolean debug, boolean showSplashscreen) {
 		super();
 
+		if (debug)
+			Gdx.app.setLogLevel(Gdx.app.LOG_DEBUG);
+		else
+			Gdx.app.setLogLevel(Gdx.app.LOG_INFO);
+
 		this.debug = debug;
 		this.showSplashscreen = showSplashscreen;
 	}
@@ -197,6 +202,10 @@ public class ProjektGG extends Game {
 
 	@Override
 	public final void dispose() {
+		for (Screen s : screens.values()) {
+			s.pause();
+			s.dispose();
+		}
 		super.dispose();
 		this.batch.dispose();
 	}
