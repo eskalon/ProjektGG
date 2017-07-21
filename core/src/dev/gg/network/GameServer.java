@@ -22,7 +22,6 @@ import dev.gg.network.message.PlayerLeftMessage;
 import dev.gg.network.message.TurnCommandsMessage;
 import dev.gg.util.CollectionUtils;
 import dev.gg.util.PlayerUtils;
-import dev.gg.util.Tuple;
 
 /**
  * This class represents a game server instance.
@@ -78,11 +77,9 @@ public class GameServer {
 			@Override
 			public void connected(Connection con) {
 				Gdx.app.log("Server", "Client connected");
-				Tuple<String, String> name = PlayerUtils.getRandomName();
+
 				players.put(playersJoinedCount,
-						new Player(name.x, name.y, PlayerUtils
-								.getAvailableIcons(players.values()).get(0),
-								true));
+						PlayerUtils.getRandomPlayer(players.values()));
 				connections.put(playersJoinedCount, con);
 
 				// Inform the other clients
