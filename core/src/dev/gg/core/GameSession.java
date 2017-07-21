@@ -4,9 +4,9 @@ import java.util.Deque;
 import java.util.Random;
 
 import dev.gg.command.PlayerCommand;
+import dev.gg.data.DataStore;
 import dev.gg.network.Player;
 import dev.gg.network.message.NewCommandMessage;
-import dev.gg.util.DataStore;
 
 /**
  * This class handles all the basic game stuff.

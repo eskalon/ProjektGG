@@ -1,4 +1,4 @@
-package dev.gg.util;
+package dev.gg.data;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
