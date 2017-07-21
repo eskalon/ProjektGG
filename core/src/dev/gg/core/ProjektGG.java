@@ -80,6 +80,12 @@ public class ProjektGG extends Game {
 
 	@Override
 	public final void create() {
+		if (debug)
+			Gdx.app.setLogLevel(Gdx.app.LOG_DEBUG);
+		else
+			Gdx.app.setLogLevel(Gdx.app.LOG_INFO);
+		
+		
 		// Initialize sprite batch
 		this.batch = new SpriteBatch();
 
@@ -197,6 +203,10 @@ public class ProjektGG extends Game {
 
 	@Override
 	public final void dispose() {
+		for (Screen s : screens.values()) {
+			s.pause();
+			s.dispose();
+		}
 		super.dispose();
 		this.batch.dispose();
 	}
