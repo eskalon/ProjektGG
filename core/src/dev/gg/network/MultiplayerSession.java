@@ -1,31 +1,43 @@
 package dev.gg.network;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
+
 import dev.gg.callback.IClientCallback;
 import dev.gg.callback.IHostCallback;
-import dev.gg.command.PlayerCommand;
+import dev.gg.command.Command;
+import dev.gg.command.PlayerCommands;
 import dev.gg.core.GameSession;
 import dev.gg.network.event.ClientEventHandler;
 import dev.gg.network.message.ChatMessageSentMessage;
 import dev.gg.network.message.PlayerChangedMessage;
+import dev.gg.network.message.PlayerTurnMessage;
 
 /**
  * This class handles anything related to a multiplayer game session.
  */
 public class MultiplayerSession extends GameSession {
 
+	/**
+	 * A hashmap of all the player commands scheduled for execution.
+	 */
+	protected HashMap<Integer, List<PlayerCommands>> commands;
 	private NetworkManager networkManager;
 	/**
 	 * The network ID of the local player.
 	 */
-	private int localId;
-	private HashMap<Integer, Player> players;
+	private short localId;
+	private HashMap<Short, Player> players;
+	private List<Command> commandsForCurrentTurn;
 
 	public MultiplayerSession() {
 		super();
-		networkManager = new NetworkManager(this);
+		this.networkManager = new NetworkManager(this);
+		this.commandsForCurrentTurn = new ArrayList<>();
+		this.commands = new HashMap<>();
 	}
 
 	/**
@@ -40,7 +52,7 @@ public class MultiplayerSession extends GameSession {
 	 * @param difficulty
 	 *            The game's difficulty.
 	 */
-	public void setUp(HashMap<Integer, Player> players, int networkID,
+	public void setUp(HashMap<Short, Player> players, short networkID,
 			long randomSeed, GameDifficulty difficulty) {
 		this.players = players;
 		this.localId = networkID;
@@ -51,30 +63,48 @@ public class MultiplayerSession extends GameSession {
 	 * Adds new commands to get executed.
 	 * 
 	 * @param commands
-	 *            A list of the commands.
+	 *            The commands.
 	 */
-	public void addNewCommands(List<PlayerCommand> commands) {
-		commands.addAll(commands);
+	public void addNewCommands(int turn, List<PlayerCommands> playerCommands) {
+		commands.put(turn, playerCommands);
 	}
 
 	@Override
-	public void preUpdate(float delta) {
-		networkManager.update(delta);
+	protected void processCommands(int turn) {
+		if (commands.containsKey(turn)) {
+			for (PlayerCommands c : commands.get(turn)) {
+				for (Command c2 : c.getCommands())
+					processCommand(c2, c.getPlayerID());
+			}
+		} else {
+			Gdx.app.error("Client",
+					"[ERROR] The client did not receive the necessary command message for turn "
+							+ currentTurn);
+			// TODO Spiel pausieren, bis TurnCommandsMessage empfangen wird
+		}
+	}
+
+	@Override
+	public void onFixedUpdate() {
+		PlayerTurnMessage message = new PlayerTurnMessage(
+				commandsForCurrentTurn.isEmpty()
+						? null
+						: (new PlayerCommands(commandsForCurrentTurn, localId)),
+				currentTurn + 2, localId);
+		networkManager.sendObject(message);
+		commandsForCurrentTurn.clear();
+		networkManager.fixedUpdate();
 	}
 
 	/**
-	 * Executes a players command by sending it to the server first. Takes care
-	 * of filling in the current turn and the sender ID.
+	 * Executes a players command by sending it to the server first.
 	 * 
 	 * @param command
 	 *            The command message.
 	 */
 	@Override
-	public void executeNewCommand(PlayerCommand command) {
-		command.setTurn(turn + 2);
-		command.setSenderID(localId);
-
-		networkManager.sendObject(command);
+	public void executeNewCommand(Command command) {
+		commandsForCurrentTurn.add(command);
 	}
 
 	/**
@@ -99,14 +129,14 @@ public class MultiplayerSession extends GameSession {
 	 * 
 	 * @return The player hashmap.
 	 */
-	public HashMap<Integer, Player> getPlayers() {
+	public HashMap<Short, Player> getPlayers() {
 		return players;
 	}
 
 	/**
 	 * @return The local player's ID.
 	 */
-	public int getLocalID() {
+	public short getLocalID() {
 		return localId;
 	}
 

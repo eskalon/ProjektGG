@@ -1,5 +1,7 @@
 package dev.gg.screen;
 
+import java.util.Map.Entry;
+
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -211,7 +213,7 @@ public class LobbyScreen extends BaseUIScreen implements ClientEventHandler {
 	}
 
 	@Override
-	public void onNewChatMessage(int senderId, String message) {
+	public void onNewChatMessage(short senderId, String message) {		
 		addChatMessage(
 				session.getPlayers().get(senderId).getName() + " "
 						+ session.getPlayers().get(senderId).getSurname(),

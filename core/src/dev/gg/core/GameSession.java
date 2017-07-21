@@ -1,26 +1,32 @@
 package dev.gg.core;
 
-import java.util.Deque;
 import java.util.Random;
 
-import dev.gg.command.PlayerCommand;
+import dev.gg.command.Command;
 import dev.gg.data.DataStore;
 import dev.gg.network.Player;
-import dev.gg.network.message.NewCommandMessage;
 
 /**
  * This class handles all the basic game stuff.
  */
 public abstract class GameSession {
 
-	/**
-	 * A dequeue of all the current and future player commands. All child
-	 * classes have to take care of filling it for themselves.
-	 */
-	protected Deque<PlayerCommand> commands;
 	private GameDifficulty difficulty;
 	private DataStore dataStore;
 	private Random random;
+	/**
+	 * These times are used to calculate the time delta.
+	 */
+	private long lastTime = System.currentTimeMillis(), currentTime;
+	/**
+	 * This time is used to calculate the {@linkplain #currentTurn turns}.
+	 */
+	private long timeRunning;
+	private boolean isRunning = true;
+	/**
+	 * The current turn in game.
+	 */
+	protected int currentTurn = 1;
 
 	public GameSession() {
 		this.dataStore = new DataStore();
@@ -40,70 +46,60 @@ public abstract class GameSession {
 	}
 
 	/**
-	 * This time is used to calculate the {@linkplain #turn turns}.
-	 */
-	// TODO use long
-	private double time = 0;
-	protected int turn = 0;
-
-	/**
 	 * Updates the game session. Needed to process the command messages.
 	 * 
-	 * @param delta
-	 *            The time delta.
 	 * @return Whether the ingame day is over (8 minutes).
 	 */
-	public boolean update(float delta) {
-		preUpdate(delta);
+	public boolean update() {
+		while (isRunning) {
+			currentTime = System.currentTimeMillis();
+			long delta = currentTime - lastTime;
+			lastTime = currentTime;
 
-		time += delta;
-
-		if (time >= 0.2F) {
-			time -= 0.2F;
-			turn++;
-
-			processCommands(turn);
 			// TODO update the ECS (except renderer-systems)
 
-			if (turn % 2400 == 0)
-				return true; // Switch to the EndgameScreen
+			timeRunning += delta;
+
+			if (timeRunning >= 150) {
+				processCommands(currentTurn);
+
+				onFixedUpdate();
+
+				currentTurn++;
+				timeRunning -= 150;
+
+				if (currentTurn % 3200 == 0)
+					return true; // Switch to the EndgameScreen
+			}
 		}
 
 		return false;
-
 	}
 
 	/**
-	 * Used to update things before the actual updating takes place.
-	 * 
-	 * @param delta
-	 *            The time delta.
+	 * Used to update things in each turn.
 	 */
-	public void preUpdate(float delta) {
+	public void onFixedUpdate() {
 	}
 
 	/**
-	 * Executes all commands for the given turn.
+	 * Processes all commands for the given turn.
 	 * 
 	 * @param turn
 	 *            The turn.
-	 * @see #executeCommand(NewCommandMessage)
+	 * @see #processCommand(Command)
 	 */
-	private void processCommands(int turn) {
-		if (!commands.isEmpty()) {
-			while (commands.peekFirst().getTurn() == turn) {
-				processCommand(commands.pollFirst());
-			}
-		}
-	}
+	protected abstract void processCommands(int turn);
 
 	/**
 	 * Executes one command message.
 	 * 
 	 * @param c
 	 *            The command message.
+	 * @param id
+	 *            The executing player's id.
 	 */
-	private void processCommand(PlayerCommand c) {
+	protected void processCommand(Command c, int id) {
 		// TODO
 	}
 
@@ -112,8 +108,10 @@ public abstract class GameSession {
 	 * 
 	 * @param command
 	 *            The command issued by the player.
+	 * 
+	 * @see #processCommands(int)
 	 */
-	public abstract void executeNewCommand(PlayerCommand command);
+	public abstract void executeNewCommand(Command command);
 
 	/**
 	 * Stops the game and saves it.

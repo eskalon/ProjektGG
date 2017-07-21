@@ -20,7 +20,7 @@ public interface ClientEventHandler {
 
 	/**
 	 * Called when a player connects. Basically the same as
-	 * {@link #onPlayerChanged(int, Player)}
+	 * {@link #onPlayerChanged(short, Player)}
 	 * 
 	 * @param id
 	 *            The new player's ID.
@@ -39,7 +39,7 @@ public interface ClientEventHandler {
 	 * @param message
 	 *            The message.
 	 */
-	public default void onNewChatMessage(int senderId, String message) {
+	public default void onNewChatMessage(short senderId, String message) {
 	}
 
 	/**

@@ -8,7 +8,7 @@ public class ChatMessageSentMessage {
 	/**
 	 * The sending player's ID.
 	 */
-	private int senderId;
+	private short senderId;
 	/**
 	 * The actual message.
 	 */
@@ -18,12 +18,12 @@ public class ChatMessageSentMessage {
 
 	}
 
-	public ChatMessageSentMessage(int senderId, String message) {
+	public ChatMessageSentMessage(short senderId, String message) {
 		this.senderId = senderId;
 		this.message = message;
 	}
 
-	public int getSenderId() {
+	public short getSenderId() {
 		return senderId;
 	}
 

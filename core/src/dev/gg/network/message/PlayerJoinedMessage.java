@@ -10,7 +10,7 @@ public class PlayerJoinedMessage {
 	/**
 	 * The joining player's ID.
 	 */
-	private int id;
+	private short id;
 	/**
 	 * The joining player.
 	 */
@@ -20,12 +20,12 @@ public class PlayerJoinedMessage {
 
 	}
 
-	public PlayerJoinedMessage(int id, Player player) {
+	public PlayerJoinedMessage(short id, Player player) {
 		this.id = id;
 		this.player = player;
 	}
 
-	public int getId() {
+	public short getId() {
 		return id;
 	}
 

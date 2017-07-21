@@ -10,7 +10,7 @@ public class PlayerChangedMessage {
 	/**
 	 * The changed player's ID.
 	 */
-	private int id;
+	private short id;
 	/**
 	 * The changed player.
 	 */
@@ -20,12 +20,12 @@ public class PlayerChangedMessage {
 
 	}
 
-	public PlayerChangedMessage(int id, Player player) {
+	public PlayerChangedMessage(short id, Player player) {
 		this.id = id;
 		this.player = player;
 	}
 
-	public int getId() {
+	public short getId() {
 		return id;
 	}
 

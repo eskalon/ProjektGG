@@ -11,14 +11,14 @@ import com.esotericsoftware.kryonet.Listener.ConnectionListener;
 import com.esotericsoftware.kryonet.Listener.TypeListener;
 import com.esotericsoftware.kryonet.Server;
 
-import dev.gg.command.PlayerCommand;
+import dev.gg.command.PlayerCommands;
 import dev.gg.core.GameSession.GameDifficulty;
 import dev.gg.network.message.ChatMessageSentMessage;
 import dev.gg.network.message.GameSetupMessage;
-import dev.gg.network.message.NewCommandMessage;
 import dev.gg.network.message.PlayerChangedMessage;
 import dev.gg.network.message.PlayerJoinedMessage;
 import dev.gg.network.message.PlayerLeftMessage;
+import dev.gg.network.message.PlayerTurnMessage;
 import dev.gg.network.message.TurnCommandsMessage;
 import dev.gg.util.CollectionUtils;
 import dev.gg.util.PlayerUtils;
@@ -32,22 +32,16 @@ public class GameServer {
 	/**
 	 * A count of all joined players. Used to generate the player IDs.
 	 */
-	private int playersJoinedCount = 0;
+	private short playersJoinedCount = 0;
 	private long seed = System.currentTimeMillis();
-	private HashMap<Integer, Player> players;
-	private HashMap<Integer, Connection> connections;
+	private HashMap<Short, Player> players;
+	private HashMap<Short, Connection> connections;
 	private GameDifficulty difficulty;
 	/**
-	 * All commands, that ever got received by the server.
+	 * All command messages, that ever got received by the server.
 	 */
-	private HashMap<Integer, List<PlayerCommand>> commands;
-
-	private int turn;
-	/**
-	 * This time is used to calculate the {@linkplain #turn turns}. The server
-	 * normally runs half a turn behind the clients.
-	 */
-	private float time = -0.1F;
+	private HashMap<Integer, List<PlayerTurnMessage>> playerCommands;
+	private int currentTurn = 1;
 
 	public GameServer(GameDifficulty difficulty) {
 		this.difficulty = difficulty;
@@ -88,13 +82,14 @@ public class GameServer {
 
 				con.sendTCP(new GameSetupMessage(players, difficulty,
 						playersJoinedCount, seed));
+				
 				playersJoinedCount++;
 			}
 
 			@Override
 			public void disconnected(Connection con) {
 				System.out.println("** [Server] Player disconnected");
-				int id = CollectionUtils.getKeyByValue(connections, con);
+				short id = CollectionUtils.getKeyByValue(connections, con);
 
 				server.sendToAllExceptTCP(con.getID(),
 						new PlayerLeftMessage(id));
@@ -115,32 +110,14 @@ public class GameServer {
 			server.sendToAllExceptTCP(con.getID(), msg);
 		});
 		// Command
-		typeListener.addTypeHandler(NewCommandMessage.class, (con, msg) -> {
-			if (turn <= msg.getCommand().getTurn()) {
-				saveCommand(msg.getCommand());
-			} else {
-				Gdx.app.debug("Server", "[ERROR] Discarded command '"
-						+ msg.getClass().getSimpleName() + "' by player "
-						+ msg.getCommand().getSenderID() + " for turn "
-						+ msg.getCommand().getTurn() + " (" + turn + ")");
+		typeListener.addTypeHandler(PlayerTurnMessage.class, (con, msg) -> {
+			if (!playerCommands.containsKey(msg.getTurn())) {
+				playerCommands.put(msg.getTurn(), new ArrayList<>());
 			}
+			playerCommands.get(msg.getTurn()).add(msg);
 		});
 
 		server.addListener(typeListener);
-	}
-
-	/**
-	 * Saves a command message for execution in the appropriate turn.
-	 * 
-	 * @param command
-	 *            The command.
-	 */
-	private void saveCommand(PlayerCommand command) {
-		if (!commands.containsKey(command.getTurn())) {
-			commands.put(command.getTurn(), new ArrayList<>());
-		}
-
-		commands.get(command.getTurn()).add(command);
 	}
 
 	public void startNewGame() {
@@ -156,24 +133,41 @@ public class GameServer {
 	}
 
 	/**
-	 * Updates the game server. Needed to send the command messages at the right
-	 * time. The game server naturally runs half a {@linkplain #turn turn}
-	 * behind the clients.
-	 * 
-	 * @param delta
-	 *            The time delta.
+	 * Updates the game server after one turn. Needed to send the command
+	 * messages at the right time.
 	 */
-	public void update(float delta) {
-		time += delta;
+	public void fixedUpdate() {
+		if (playerCommands.containsKey(currentTurn + 1)) {
+			if (playerCommands.get(currentTurn + 1).size() != players.size()) {
+				// TODO Auf restliche Nachrichten warten
+				Gdx.app.error("Server",
+						"[ERROR] Not all player commands received for turn "
+								+ (currentTurn + 1) + ". "
+								+ (players.size() - playerCommands
+										.get(currentTurn + 1).size())
+								+ " more are needed!");
+			} else {
+				List<PlayerCommands> cmds = new ArrayList<>();
+				for (PlayerTurnMessage m : playerCommands
+						.get(currentTurn + 1)) {
+					if (m.getCommands() != null)
+						cmds.add(m.getCommands());
+				}
 
-		if (time >= 0.2F) {
-			time -= 0.2F;
-			turn++;
-
-			if (commands.containsKey(turn))
 				server.sendToAllTCP(
-						new TurnCommandsMessage(commands.get(turn)));
+						new TurnCommandsMessage(cmds, currentTurn + 1));
+			}
+		} else {
+			// TODO Auf restliche Nachrichten warten
+			Gdx.app.error("Server",
+					"[ERROR] No player commands received for turn "
+							+ (currentTurn + 1));
 		}
+
+		currentTurn++;
+
+		// if (currentTurn % 3200 == 0)
+		// Endgame screen
 	}
 
 	/**

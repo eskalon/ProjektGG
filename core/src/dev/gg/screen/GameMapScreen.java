@@ -17,7 +17,7 @@ public class GameMapScreen extends BaseScreen implements ClientEventHandler {
 
 	@Override
 	public void render(float delta) {
-		game.getCurrentSession().update(delta);
+		game.getCurrentSession().update();
 
 		game.getCurrentSession().renderMap(delta, 0, 0);
 	}
@@ -35,7 +35,7 @@ public class GameMapScreen extends BaseScreen implements ClientEventHandler {
 	}
 
 	@Override
-	public void onNewChatMessage(int senderId, String message) {
+	public void onNewChatMessage(short senderId, String message) {
 		// TODO
 	}
 

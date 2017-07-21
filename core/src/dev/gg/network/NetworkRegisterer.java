@@ -5,14 +5,16 @@ import java.util.HashMap;
 
 import com.esotericsoftware.kryo.Kryo;
 
+import dev.gg.command.Command;
+import dev.gg.command.PlayerCommands;
 import dev.gg.core.GameSession.GameDifficulty;
 import dev.gg.network.Player.PlayerIcon;
-import dev.gg.network.message.NewCommandMessage;
 import dev.gg.network.message.ChatMessageSentMessage;
 import dev.gg.network.message.GameSetupMessage;
 import dev.gg.network.message.PlayerChangedMessage;
 import dev.gg.network.message.PlayerJoinedMessage;
 import dev.gg.network.message.PlayerLeftMessage;
+import dev.gg.network.message.PlayerTurnMessage;
 import dev.gg.network.message.TurnCommandsMessage;
 
 /**
@@ -44,8 +46,10 @@ public class NetworkRegisterer {
 		kryo.register(PlayerJoinedMessage.class);
 		kryo.register(PlayerLeftMessage.class);
 		kryo.register(ArrayList.class);
-		kryo.register(NewCommandMessage.class);
 		kryo.register(TurnCommandsMessage.class);
+		kryo.register(PlayerTurnMessage.class);
+		kryo.register(PlayerCommands.class);
+		kryo.register(Command.class);
 	}
 
 }

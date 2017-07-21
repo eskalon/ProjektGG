@@ -8,17 +8,17 @@ public class PlayerLeftMessage {
 	/**
 	 * The leaving player's ID.
 	 */
-	private int id;
+	private short id;
 
 	public PlayerLeftMessage() {
 
 	}
 
-	public PlayerLeftMessage(int id) {
+	public PlayerLeftMessage(short id) {
 		this.id = id;
 	}
 
-	public int getId() {
+	public short getId() {
 		return id;
 	}
 

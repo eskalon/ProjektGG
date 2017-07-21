@@ -33,9 +33,9 @@ public class NetworkManager {
 		this.session = session;
 	}
 
-	public void update(float delta) {
+	public void fixedUpdate() {
 		if (serverHandler != null)
-			serverHandler.update(delta);
+			serverHandler.fixedUpdate();
 	}
 
 	/**
@@ -108,7 +108,8 @@ public class NetworkManager {
 
 		TypeListener listener = new TypeListener();
 		listener.addTypeHandler(GameSetupMessage.class, (con, msg) -> {
-			Gdx.app.log("Client", "Lobby beigetreten");
+			Gdx.app.log("Client",
+					"Lobby beigetreten (ID: " + msg.getId() + ")");
 			session.setUp(msg.getPlayers(), msg.getId(), msg.getSeed(),
 					msg.getDifficulty());
 		});
@@ -137,7 +138,7 @@ public class NetworkManager {
 				eventHandler.onPlayerDisconnect(p);
 		});
 		listener.addTypeHandler(TurnCommandsMessage.class, (con, msg) -> {
-			session.addNewCommands(msg.getCommands());
+			session.addNewCommands(msg.getTurn(), msg.getPlayerCommands());
 		});
 
 		client.addListener(listener);

@@ -2,26 +2,32 @@ package dev.gg.network.message;
 
 import java.util.List;
 
-import dev.gg.command.PlayerCommand;
+import dev.gg.command.PlayerCommands;
 
 /**
- * This class contains all command messages for a turn and is sent by the
- * server.
+ * This class contains all command messages for a specific {@link #turn} and is
+ * sent by server to the client.
  */
 public class TurnCommandsMessage {
 
-	private List<PlayerCommand> commands;
+	private int turn;
+	private List<PlayerCommands> commandMessages;
 
 	public TurnCommandsMessage() {
 
 	}
 
-	public TurnCommandsMessage(List<PlayerCommand> commands) {
-		this.commands = commands;
+	public TurnCommandsMessage(List<PlayerCommands> commandMessages, int turn) {
+		this.commandMessages = commandMessages;
+		this.turn = turn;
 	}
 
-	public List<PlayerCommand> getCommands() {
-		return commands;
+	public int getTurn() {
+		return turn;
+	}
+
+	public List<PlayerCommands> getPlayerCommands() {
+		return commandMessages;
 	}
 
 }

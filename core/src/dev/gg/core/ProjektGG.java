@@ -84,8 +84,7 @@ public class ProjektGG extends Game {
 			Gdx.app.setLogLevel(Gdx.app.LOG_DEBUG);
 		else
 			Gdx.app.setLogLevel(Gdx.app.LOG_INFO);
-		
-		
+
 		// Initialize sprite batch
 		this.batch = new SpriteBatch();
 
@@ -209,7 +208,7 @@ public class ProjektGG extends Game {
 		}
 		super.dispose();
 		this.batch.dispose();
-	}
+	}	
 
 	/**
 	 * @return The asset manager used by the game.
