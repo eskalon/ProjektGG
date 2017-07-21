@@ -11,7 +11,7 @@ ProjektGG ist eine mittelalterliche Wirtschafts- und Politiksimulation und reiht
 * Eine durch Angebot, Nachfrage, Steuern und Ereignisse [beeinflussbare Marktsituation](https://github.com/Meidimax99/ProjektGG/wiki/Marktplatz)
 * Verbesserungsmöglichkeiten für den Spieler in Form von [Charaktereigenschaften](https://github.com/Meidimax99/ProjektGG/wiki/Spieler)
 * Viele [Interaktionsmöglichkeiten](https://github.com/Meidimax99/ProjektGG/wiki/Aktionsmöglichkeiten) für den Spieler (insbesondere im Early-Game, in dem die Politik noch eine untergeordnete Rolle spielt)
-* Ein stabiler Multiplayer, anders als der Multiplayer in den meist älteren Vertretern dieses Genres
+* Ein stabiles Mehrspielererlebnis, anders als der Multiplayer in den meist älteren Vertretern dieses Genres
 
 
 ## Wiki
