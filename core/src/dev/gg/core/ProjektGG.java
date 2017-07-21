@@ -215,7 +215,7 @@ public class ProjektGG extends Game {
 			s.pause();
 			s.dispose();
 		}
-		super.dispose();
+
 		this.batch.dispose();
 	}
 
