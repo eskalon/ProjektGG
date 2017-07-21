@@ -83,8 +83,8 @@ public class ProjektGG extends Game {
 		if (debug)
 			Gdx.app.setLogLevel(Gdx.app.LOG_DEBUG);
 		else
-			Gdx.app.setLogLevel(Gdx.app.LOG_INFO);
-
+			Gdx.app.setLogLevel(Gdx.app.LOG_INFO);		
+		
 		// Initialize sprite batch
 		this.batch = new SpriteBatch();
 
