@@ -5,6 +5,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
@@ -20,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.kotcrab.vis.ui.util.CursorManager;
 
 import dev.gg.exception.ScreenNotFoundException;
+import dev.gg.input.GameInputProcessor;
 import dev.gg.network.MultiplayerSession;
 import dev.gg.screen.BaseScreen;
 import dev.gg.screen.BaseUIScreen;
@@ -67,6 +70,8 @@ public class ProjektGG extends Game {
 
 	private boolean debug, showSplashscreen;
 
+	private GameInputProcessor inputProcessor = new GameInputProcessor();
+
 	private Skin uiSkin;
 
 	private GameSession session;
@@ -83,8 +88,8 @@ public class ProjektGG extends Game {
 		if (debug)
 			Gdx.app.setLogLevel(Gdx.app.LOG_DEBUG);
 		else
-			Gdx.app.setLogLevel(Gdx.app.LOG_INFO);		
-		
+			Gdx.app.setLogLevel(Gdx.app.LOG_INFO);
+
 		// Initialize sprite batch
 		this.batch = new SpriteBatch();
 
@@ -114,6 +119,9 @@ public class ProjektGG extends Game {
 
 		// Load game settings
 		this.settings = new GameSettings("projekt-gg");
+
+		// Set input processor
+		Gdx.input.setInputProcessor(inputProcessor);
 
 		// Add screens
 		addScreen("splash", new SplashScreen());
@@ -202,13 +210,14 @@ public class ProjektGG extends Game {
 
 	@Override
 	public final void dispose() {
+		this.screen = null;
 		for (Screen s : screens.values()) {
 			s.pause();
 			s.dispose();
 		}
 		super.dispose();
 		this.batch.dispose();
-	}	
+	}
 
 	/**
 	 * @return The asset manager used by the game.
@@ -294,6 +303,17 @@ public class ProjektGG extends Game {
 
 	public void setCurrentSession(MultiplayerSession session) {
 		this.session = session;
+	}
+
+	/**
+	 * Sets the input processor of the game. Should be used instead of
+	 * {@link Input#setInputProcessor(InputProcessor)}.
+	 * 
+	 * @param inputProcessor
+	 *            The new input processor.
+	 */
+	public void setInputProcessor(InputProcessor inputProcessor) {
+		this.inputProcessor.setInputProcessor(inputProcessor);
 	}
 
 	/**

@@ -81,14 +81,14 @@ public abstract class BaseUIScreen extends BaseScreen {
 
 		mainTable.setDebug((boolean) game.showDebugStuff());
 
-		Gdx.input.setInputProcessor(stage);
+		game.setInputProcessor(stage);
 
 		initUI();
 	}
 
 	@Override
 	public void hide() {
-		Gdx.input.setInputProcessor(null);
+		game.setInputProcessor(null);
 	}
 
 	@Override

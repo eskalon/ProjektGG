@@ -24,13 +24,13 @@ public class GameMapScreen extends BaseScreen implements ClientEventHandler {
 
 	@Override
 	public void show() {
-		// Gdx.input.setInputProcessor(this);
+		// game.setInputProcessor(this);
 		game.getCurrentMultiplayerSession().setClientEventHandler(this);
 	}
 
 	@Override
 	public void hide() {
-		// Gdx.input.setInputProcessor(null);
+		// game.setInputProcessor(null);
 		game.getCurrentMultiplayerSession().setClientEventHandler(null);
 	}
 
