@@ -74,17 +74,18 @@ public class ProjektGG extends Game {
 	public ProjektGG(boolean debug, boolean showSplashscreen) {
 		super();
 
-		if (debug)
-			Gdx.app.setLogLevel(Gdx.app.LOG_DEBUG);
-		else
-			Gdx.app.setLogLevel(Gdx.app.LOG_INFO);
-
 		this.debug = debug;
 		this.showSplashscreen = showSplashscreen;
 	}
 
 	@Override
 	public final void create() {
+		if (debug)
+			Gdx.app.setLogLevel(Gdx.app.LOG_DEBUG);
+		else
+			Gdx.app.setLogLevel(Gdx.app.LOG_INFO);
+		
+		
 		// Initialize sprite batch
 		this.batch = new SpriteBatch();
 
