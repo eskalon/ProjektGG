@@ -10,7 +10,7 @@ ProjektGG ist eine mittelalterliche Wirtschafts- und Politiksimulation und reiht
 * Viele verschiedene herstellbare [Produkte](https://github.com/Meidimax99/ProjektGG/wiki/Items), die an einem Markt verkauft werden können
 * Eine durch Angebot, Nachfrage, Steuern und Ereignisse [beeinflussbare Marktsituation](https://github.com/Meidimax99/ProjektGG/wiki/Marktplatz)
 * Verbesserungsmöglichkeiten für den Spieler in Form von [Charaktereigenschaften](https://github.com/Meidimax99/ProjektGG/wiki/Spieler)
-* Viele Interaktionsmöglichkeiten für den Spieler (insbesondere im Early-Game, in dem die Politik noch eine untergeordnete Rolle spielt)
+* Viele [[Interaktionsmöglichkeiten|Aktionsmöglichkeiten]] für den Spieler (insbesondere im Early-Game, in dem die Politik noch eine untergeordnete Rolle spielt)
 * Ein stabiler Multiplayer, anders als der Multiplayer in den meist älteren Vertretern dieses Genres
 
 
@@ -18,7 +18,7 @@ ProjektGG ist eine mittelalterliche Wirtschafts- und Politiksimulation und reiht
 [Hier](https://github.com/Meidimax99/ProjektGG/wiki) pflegen wir ein ausgedehntes Wiki, um einen Überblick über den aktuellen und den geplanten Stand des Spiels zu bieten.
 
 ## Die Technik dahinter
-ProjectGG verwendet als Grundlage das Java-Framework libGDX in Verbindung mit dem Entity-Component-System artemis-odb. Für den Netzwerk-Part wird eine abgewandelte Form von [KryoNet](https://github.com/crykn/kryonet) verwendet. Mehr zur Technik dahinter ist [hier](https://github.com/Meidimax99/ProjektGG/wiki/Technik-dahinter) zu finden.
+ProjectGG verwendet als Grundlage das Java-Framework libGDX in Verbindung mit dem Entity-Component-System artemis-odb. Für den Netzwerk-Part wird eine abgewandelte Form von KryoNet verwendet. Mehr zur Technik dahinter ist [hier](https://github.com/Meidimax99/ProjektGG/wiki/Technik-dahinter) zu finden.
 
 ## Mitarbeit
 Wir freuen uns über jede Form der Mitarbeit, ob im Wiki, im Issue-Tracker oder als Pull-Request. Wer Schreib-Rechte im Wiki haben bzw. als Collaborator ins Projekt einsteigen möchte, der möge bitte einen der momentanen Contributor kontaktieren.
