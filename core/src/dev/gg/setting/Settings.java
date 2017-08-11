@@ -3,7 +3,7 @@ package dev.gg.setting;
 /**
  * Manages the actual game settings. Encapsulates {@link ConfigHandler}.
  */
-public class GameSettings {
+public class Settings {
 
 	private final ConfigHandler configHandler;
 	private final String MASTER_VOLUME = "masterVolume";
@@ -14,7 +14,7 @@ public class GameSettings {
 	 * @param fileName
 	 *            The name of the preference file.
 	 */
-	public GameSettings(String fileName) {
+	public Settings(String fileName) {
 		configHandler = new ConfigHandler(fileName);
 	}
 

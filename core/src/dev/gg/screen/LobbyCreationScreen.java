@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
 import dev.gg.callback.IHostCallback;
 import dev.gg.core.GameSession.GameDifficulty;
+import dev.gg.data.GameSettings;
 import dev.gg.network.MultiplayerSession;
 import dev.gg.network.event.ClientEventHandler;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
@@ -92,7 +93,9 @@ public class LobbyCreationScreen extends BaseUIScreen implements IHostCallback {
 
 					// Sever & Client starten
 					session.setUpAsHost(Integer.valueOf(portField.getText()),
-							difficulty, callback);
+							new GameSettings(difficulty,
+									System.currentTimeMillis()),
+							callback);
 					connectingDialog = new Dialog("Starten...", skin);
 					connectingDialog.text("Server startet...");
 					connectingDialog.show(stage);

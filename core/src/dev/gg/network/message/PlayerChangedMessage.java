@@ -1,6 +1,6 @@
 package dev.gg.network.message;
 
-import dev.gg.network.Player;
+import dev.gg.core.Player;
 
 /**
  * This message is sent when a player was changed.

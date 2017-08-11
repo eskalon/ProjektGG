@@ -1,6 +1,6 @@
 package dev.gg.network.message;
 
-import dev.gg.network.Player;
+import dev.gg.core.Player;
 
 /**
  * This message is sent after a new player joins a game.

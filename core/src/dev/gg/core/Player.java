@@ -1,4 +1,4 @@
-package dev.gg.network;
+package dev.gg.core;
 
 /**
  * This class describes a player.

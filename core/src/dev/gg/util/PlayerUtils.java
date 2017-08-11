@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
-import dev.gg.network.Player;
-import dev.gg.network.Player.PlayerIcon;
+import dev.gg.core.Player;
+import dev.gg.core.Player.PlayerIcon;
 
 /**
  * This class contains utility methods for working with players.
@@ -19,18 +19,19 @@ public class PlayerUtils {
 	 */
 	private static String[] names = new String[]{"Franz", "Heinrich", "Marthe",
 			"Ferdinand", "Luise", "Oskar", "Jan", "Pierre", "Ève", "Michael",
-			"Moritz"};
+			"Moritz", "Gregor", "Andrej Nikolajewitsch", "Peter"};
 	/**
 	 * All possible random surnames.
 	 */
 	private static String[] surnames = new String[]{"Woyzeck", "Faust",
 			"Schwerdtlein", "von Walter", "Miller", "Matzerath", "Bronski",
-			"Dumaine", "Charlier", "Kohlhaas", "Jäger"};
+			"Dumaine", "Charlier", "Kohlhaas", "Jäger", "Samsa", "Bolkónski",
+			"Besúchow"};
 	/**
 	 * The genders to all possible names.
 	 */
 	private static boolean[] genders = new boolean[]{true, true, false, true,
-			false, true, true, true, false, true, true};
+			false, true, true, true, false, true, true, true, true, true};
 
 	private PlayerUtils() {
 	}

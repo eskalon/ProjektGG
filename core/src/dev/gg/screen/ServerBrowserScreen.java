@@ -60,8 +60,8 @@ public class ServerBrowserScreen extends BaseUIScreen
 
 				session.setUpAsClient(ip, port, callback);
 
-				connectingDialog = new Dialog("Starten...", skin);
-				connectingDialog.text("Server startet...");
+				connectingDialog = new Dialog("Verbinden...", skin);
+				connectingDialog.text("Spiel beitreten...");
 				connectingDialog.show(stage);
 
 				return true;
@@ -116,8 +116,8 @@ public class ServerBrowserScreen extends BaseUIScreen
 									Integer.valueOf(portInputField.getText()),
 									callback);
 
-							connectingDialog = new Dialog("Starten...", skin);
-							connectingDialog.text("Server startet...");
+							connectingDialog = new Dialog("Verbinden...", skin);
+							connectingDialog.text("Spiel beitreten...");
 							connectingDialog.show(stage);
 						}
 					}
@@ -151,7 +151,7 @@ public class ServerBrowserScreen extends BaseUIScreen
 	}
 
 	@Override
-	public void onClientStarted(IOException e) {
+	public void onClientConnected(IOException e) {
 		connectingDialog.setVisible(false);
 		if (e == null) {
 			game.pushScreen("lobby");

@@ -35,7 +35,7 @@ import dev.gg.screen.LobbyScreen;
 import dev.gg.screen.MainMenuScreen;
 import dev.gg.screen.ServerBrowserScreen;
 import dev.gg.screen.SplashScreen;
-import dev.gg.setting.GameSettings;
+import dev.gg.setting.Settings;
 import net.dermetfan.gdx.assets.AnnotationAssetManager;
 
 /**
@@ -64,7 +64,7 @@ public class ProjektGG extends Game {
 	private OrthographicCamera uiCamera;
 	private PerspectiveCamera gameCamera;
 
-	private GameSettings settings;
+	private Settings settings;
 
 	private CursorManager cursorManager;
 
@@ -118,7 +118,7 @@ public class ProjektGG extends Game {
 		this.cursorManager = new CursorManager();
 
 		// Load game settings
-		this.settings = new GameSettings("projekt-gg");
+		this.settings = new Settings("projekt-gg");
 
 		// Set input processor
 		Gdx.input.setInputProcessor(inputProcessor);
@@ -244,7 +244,7 @@ public class ProjektGG extends Game {
 	/**
 	 * @return An instance of the game settings handler.
 	 */
-	public GameSettings getSettings() {
+	public Settings getSettings() {
 		return settings;
 	}
 

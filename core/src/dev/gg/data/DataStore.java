@@ -10,6 +10,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DataStore {
 
+	/**
+	 * The hashmap containing the data.
+	 */
 	protected Map<String, Object> data = new ConcurrentHashMap<>();
 
 	/**

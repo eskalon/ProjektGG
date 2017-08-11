@@ -1,50 +1,55 @@
 package dev.gg.network;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import com.badlogic.gdx.Gdx;
 
 import dev.gg.callback.IClientCallback;
 import dev.gg.callback.IHostCallback;
-import dev.gg.command.Command;
-import dev.gg.command.PlayerCommands;
+import dev.gg.command.PlayerCommand;
 import dev.gg.core.GameSession;
+import dev.gg.core.Player;
+import dev.gg.data.GameSettings;
 import dev.gg.network.event.ClientEventHandler;
 import dev.gg.network.message.ChatMessageSentMessage;
+import dev.gg.network.message.ClientTurnMessage;
 import dev.gg.network.message.PlayerChangedMessage;
-import dev.gg.network.message.PlayerTurnMessage;
 
 /**
  * This class handles anything related to a multiplayer game session.
  */
 public class MultiplayerSession extends GameSession {
 
-	/**
-	 * A hashmap of all the player commands scheduled for execution.
-	 */
-	protected HashMap<Integer, List<PlayerCommands>> commands;
-	private NetworkManager networkManager;
+	private ClientNetworkHandler client;
+	private GameServer server;
 	/**
 	 * The network ID of the local player.
 	 */
 	private short localId;
 	private HashMap<Short, Player> players;
-	private List<Command> commandsForCurrentTurn;
+	private List<PlayerCommand> commandsForCurrentTurn;
+	/**
+	 * A hashmap of all the player commands scheduled for execution.
+	 */
+	private HashMap<Integer, HashMap<Short, List<PlayerCommand>>> serverCommands;
 
 	public MultiplayerSession() {
 		super();
-		this.networkManager = new NetworkManager(this);
+		this.client = new ClientNetworkHandler(this);
 		this.commandsForCurrentTurn = new ArrayList<>();
-		this.commands = new HashMap<>();
+		this.serverCommands = new HashMap<>();
+		this.client = new ClientNetworkHandler(this);
 	}
 
 	/**
 	 * Sets up the game.
 	 * 
 	 * @param players
-	 *            A hashmap with the players.
+	 *            A hashmap containing the players.
 	 * @param networkID
 	 *            The networkID of the local player.
 	 * @param randomSeed
@@ -52,48 +57,77 @@ public class MultiplayerSession extends GameSession {
 	 * @param difficulty
 	 *            The game's difficulty.
 	 */
-	public void setUp(HashMap<Short, Player> players, short networkID,
-			long randomSeed, GameDifficulty difficulty) {
+	public void init(HashMap<Short, Player> players, short networkID,
+			GameSettings settings) {
+		super.init(settings);
 		this.players = players;
 		this.localId = networkID;
-		setUp(randomSeed, difficulty);
 	}
 
 	/**
 	 * Adds new commands to get executed.
 	 * 
-	 * @param commands
+	 * @param turn
+	 *            The turn in which the commands should get executed.
+	 * @param playerCommands
 	 *            The commands.
 	 */
-	public void addNewCommands(int turn, List<PlayerCommands> playerCommands) {
-		commands.put(turn, playerCommands);
+	public synchronized void addNewCommands(int turn,
+			HashMap<Short, List<PlayerCommand>> playerCommands) {
+		this.serverCommands.put(turn, playerCommands);
 	}
 
 	@Override
-	protected void processCommands(int turn) {
-		if (commands.containsKey(turn)) {
-			for (PlayerCommands c : commands.get(turn)) {
-				for (Command c2 : c.getCommands())
-					processCommand(c2, c.getPlayerID());
+	protected synchronized boolean processCommands(int turn) {
+		if (serverCommands.containsKey(turn)) {
+			if (serverCommands.get(turn) != null) {
+				for (Entry<Short, List<PlayerCommand>> e : serverCommands
+						.get(turn).entrySet()) {
+					if (e.getValue() != null) {
+						for (PlayerCommand c2 : e.getValue())
+							processCommand(c2, e.getKey());
+					}
+				}
 			}
+			serverCommands.remove(turn);
+
+			return true;
 		} else {
 			Gdx.app.error("Client",
 					"[ERROR] The client did not receive the necessary command message for turn "
 							+ currentTurn);
-			// TODO Spiel pausieren, bis TurnCommandsMessage empfangen wird
+			if (currentTurn > 3) { // BUG should be '2' but the server doesn't
+									// send a turn message for turn 3!
+				return false;
+			}
+			return true; // only for the first two turns, for which no client
+							// command messages could be sent
 		}
 	}
 
-	@Override
-	public void onFixedUpdate() {
-		PlayerTurnMessage message = new PlayerTurnMessage(
-				commandsForCurrentTurn.isEmpty()
+	public synchronized void sendCommands(int turn) {
+		ClientTurnMessage message = new ClientTurnMessage(
+				(commandsForCurrentTurn.isEmpty()
 						? null
-						: (new PlayerCommands(commandsForCurrentTurn, localId)),
-				currentTurn + 2, localId);
-		networkManager.sendObject(message);
+						: commandsForCurrentTurn),
+				turn, localId);
+		client.sendObject(message);
+		System.out.println("[Client] Commands sent for turn " + (turn));
 		commandsForCurrentTurn.clear();
-		networkManager.fixedUpdate();
+	}
+
+	/**
+	 * {@inheritDoc} Has to be called after the client is
+	 * {@linkplain # connected}.
+	 */
+	@Override
+	public void start() {
+		super.start();
+	}
+
+	@Override
+	public synchronized void fixedUpdate() {
+		sendCommands(currentTurn + 2);
 	}
 
 	/**
@@ -103,7 +137,7 @@ public class MultiplayerSession extends GameSession {
 	 *            The command message.
 	 */
 	@Override
-	public void executeNewCommand(Command command) {
+	public void executeNewCommand(PlayerCommand command) {
 		commandsForCurrentTurn.add(command);
 	}
 
@@ -112,7 +146,71 @@ public class MultiplayerSession extends GameSession {
 	 */
 	@Override
 	public void stop() {
-		networkManager.stop();
+		client.disconnect();
+
+		if (server != null)
+			server.stop();
+	}
+
+	private Exception exxx;
+
+	/**
+	 * Sets up a server and a client asynchronically. After it is finished the
+	 * appropriate {@linkplain IHostCallback#onHostStarted(IOException) callback
+	 * method} is invoked.
+	 * 
+	 * @param port
+	 *            The used port.
+	 * @param settings
+	 *            The game's settings.
+	 * @param callback
+	 *            The callback.
+	 */
+	public void setUpAsHost(int port, GameSettings settings,
+			IHostCallback callback) {
+		server = new GameServer(settings);
+
+		server.start(port, new IHostCallback() {
+			@Override
+			public void onHostStarted(IOException e) {
+				if (e == null) {
+					setUpAsClient("localhost", port, new IClientCallback() {
+						@Override
+						public void onClientConnected(IOException e) {
+							Gdx.app.postRunnable(new Runnable() {
+								@Override
+								public void run() {
+									callback.onHostStarted(e);
+								}
+							});
+						}
+					});
+				} else {
+					Gdx.app.postRunnable(new Runnable() {
+						@Override
+						public void run() {
+							callback.onHostStarted(e);
+						}
+					});
+				}
+			}
+		});
+	}
+
+	/**
+	 * Sets up a client asynchronically. After it is finished the appropriate
+	 * {@linkplain IClientCallback#onClientStarted(IOException) callback method}
+	 * is invoked.
+	 * 
+	 * @param ip
+	 *            The servers ip.
+	 * @param port
+	 *            The servers port.
+	 * @param callback
+	 *            The callback.
+	 */
+	public void setUpAsClient(String ip, int port, IClientCallback callback) {
+		client.connect(ip, port, callback);
 	}
 
 	/**
@@ -144,11 +242,11 @@ public class MultiplayerSession extends GameSession {
 	 * @return Whether this player is also hosting the server.
 	 */
 	public boolean isHost() {
-		return networkManager.isHost();
+		return server != null;
 	}
 
 	public void setClientEventHandler(ClientEventHandler eventHandler) {
-		networkManager.setEventHandler(eventHandler);
+		client.setEventHandler(eventHandler);
 	}
 
 	/**
@@ -158,45 +256,14 @@ public class MultiplayerSession extends GameSession {
 	 *            The message.
 	 */
 	public void sendNewChatMessage(String chatMessage) {
-		networkManager
-				.sendObject(new ChatMessageSentMessage(localId, chatMessage));
+		client.sendObject(new ChatMessageSentMessage(localId, chatMessage));
 	}
 
 	/**
 	 * Updates the player on the server.
 	 */
 	public void onLocalPlayerChange() {
-		networkManager
-				.sendObject(new PlayerChangedMessage(localId, getPlayer()));
-	}
-
-	/**
-	 * Sets up a server and a client asynchronically.
-	 * 
-	 * @param port
-	 *            The used port.
-	 * @param speed
-	 *            The game speed.
-	 * @param callback
-	 *            The callback.
-	 */
-	public void setUpAsHost(int port, GameDifficulty difficulty,
-			IHostCallback callback) {
-		networkManager.setUpAsHost(port, difficulty, callback);
-	}
-
-	/**
-	 * Sets up a client asynchronically.
-	 * 
-	 * @param ip
-	 *            The servers ip.
-	 * @param port
-	 *            The servers port.
-	 * @param callback
-	 *            The callback.
-	 */
-	public void setUpAsClient(String ip, int port, IClientCallback callback) {
-		networkManager.setUpAsClient(ip, port, callback);
+		client.sendObject(new PlayerChangedMessage(localId, getPlayer()));
 	}
 
 }

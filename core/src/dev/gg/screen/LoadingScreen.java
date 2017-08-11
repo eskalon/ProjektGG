@@ -75,8 +75,13 @@ public class LoadingScreen extends BaseScreen {
 		assetManager.load(MAIN_FONT_22_PATH());
 		assetManager.load(LETTER_FONT_20_PATH());
 		assetManager.load(HANDWRITTEN_FONT_20_PATH());
+		assetManager.load(game.getScreen("mainMenu"));
 		assetManager.load(game.getScreen("serverBrowser"));
 		assetManager.load(game.getScreen("lobby"));
+		assetManager.load(game.getScreen("lobbyCreation"));
+		assetManager.load(game.getScreen("map"));
+		assetManager.load(game.getScreen("house"));
+		assetManager.load(game.getScreen("roundEnd"));
 	}
 
 	@Override

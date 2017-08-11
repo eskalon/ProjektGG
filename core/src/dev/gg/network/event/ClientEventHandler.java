@@ -1,6 +1,6 @@
 package dev.gg.network.event;
 
-import dev.gg.network.Player;
+import dev.gg.core.Player;
 import dev.gg.screen.LobbyScreen;
 
 /**
@@ -31,7 +31,7 @@ public interface ClientEventHandler {
 	}
 
 	/**
-	 * Called upon a new chat message. i>Not</i> called for one clients own
+	 * Called upon a new chat message. <i>Not</i> called for one clients own
 	 * messages.
 	 * 
 	 * @param senderId

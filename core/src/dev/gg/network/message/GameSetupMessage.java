@@ -2,8 +2,8 @@ package dev.gg.network.message;
 
 import java.util.HashMap;
 
-import dev.gg.core.GameSession.GameDifficulty;
-import dev.gg.network.Player;
+import dev.gg.core.Player;
+import dev.gg.data.GameSettings;
 
 /**
  * This message is the first thing sent to the client by the server and contains
@@ -20,24 +20,18 @@ public class GameSetupMessage {
 	 */
 	private short clientId;
 	/**
-	 * The random seed used by the game. Needed to synchronize the random events
-	 * of all clients.
+	 * The game's settings.
 	 */
-	private long seed;
-	/**
-	 * The game difficulty.
-	 */
-	private GameDifficulty difficulty;
+	private GameSettings settings;
 
 	public GameSetupMessage() {
 	}
 
-	public GameSetupMessage(HashMap<Short, Player> players,
-			GameDifficulty difficulty, short clientId, long seed) {
+	public GameSetupMessage(HashMap<Short, Player> players, short clientId,
+			GameSettings settings) {
 		this.players = players;
-		this.difficulty = difficulty;
+		this.settings = settings;
 		this.clientId = clientId;
-		this.seed = seed;
 	}
 
 	public HashMap<Short, Player> getPlayers() {
@@ -48,12 +42,8 @@ public class GameSetupMessage {
 		return clientId;
 	}
 
-	public long getSeed() {
-		return seed;
-	}
-
-	public GameDifficulty getDifficulty() {
-		return difficulty;
+	public GameSettings getSettings() {
+		return settings;
 	}
 
 }

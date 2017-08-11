@@ -1,7 +1,5 @@
 package dev.gg.screen;
 
-import java.util.Map.Entry;
-
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -14,8 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 
+import dev.gg.core.Player;
 import dev.gg.network.MultiplayerSession;
-import dev.gg.network.Player;
 import dev.gg.network.event.ClientEventHandler;
 import dev.gg.util.PlayerUtils;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
@@ -203,17 +201,20 @@ public class LobbyScreen extends BaseUIScreen implements ClientEventHandler {
 				((sender == null || sender.isEmpty()) ? "" : sender + ": ")
 						+ message + " \n");
 	}
+	
 	private void startGameIfReady() {
 		if (PlayerUtils.areAllPlayersReady(session.getPlayers().values())) {
 			addChatMessage(null, "Spiel startet...");
+			game.setInputProcessor(null);
 
-			// Input processor null?
-			// pushScreen();
+			// TODO Spiel aufsetzen
+			game.getCurrentMultiplayerSession().start();
+			game.pushScreen("map");
 		}
 	}
 
 	@Override
-	public void onNewChatMessage(short senderId, String message) {		
+	public void onNewChatMessage(short senderId, String message) {
 		addChatMessage(
 				session.getPlayers().get(senderId).getName() + " "
 						+ session.getPlayers().get(senderId).getSurname(),

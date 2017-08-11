@@ -1,48 +1,43 @@
 package dev.gg.core;
 
-import java.util.Random;
-
-import dev.gg.command.Command;
-import dev.gg.data.DataStore;
-import dev.gg.network.Player;
+import dev.gg.command.PlayerCommand;
+import dev.gg.data.GameSettings;
 
 /**
  * This class handles all the basic game stuff.
  */
 public abstract class GameSession {
 
-	private GameDifficulty difficulty;
-	private DataStore dataStore;
-	private Random random;
+	private GameSettings settings;
+
 	/**
-	 * These times are used to calculate the time delta.
+	 * Used to calculate the time delta.
 	 */
 	private long lastTime = System.currentTimeMillis(), currentTime;
 	/**
-	 * This time is used to calculate the {@linkplain #currentTurn turns}.
+	 * Used to calculate when the {@linkplain #currentTurn current turn} ends.
 	 */
-	private long timeRunning;
-	private boolean isRunning = true;
+	private long currentTurnTime;
+	protected boolean isRunning = true;
 	/**
 	 * The current turn in game.
 	 */
 	protected int currentTurn = 1;
+	private int TURN_DURATION = 2000;
+	// unnecessary (?)
+	private long pauseTime;
 
 	public GameSession() {
-		this.dataStore = new DataStore();
 	}
 
 	/**
-	 * Sets up the game session.
+	 * Initializes the game session.
 	 * 
-	 * @param seed
-	 *            The seed used by the random generator.
-	 * @param difficulty
-	 *            The game's difficulty.
+	 * @param settings
+	 *            The game session's settings.
 	 */
-	public void setUp(long seed, GameDifficulty difficulty) {
-		this.difficulty = difficulty;
-		this.random = new Random(seed);
+	public void init(GameSettings settings) {
+		this.settings = settings;
 	}
 
 	/**
@@ -51,26 +46,37 @@ public abstract class GameSession {
 	 * @return Whether the ingame day is over (8 minutes).
 	 */
 	public boolean update() {
-		while (isRunning) {
-			currentTime = System.currentTimeMillis();
-			long delta = currentTime - lastTime;
-			lastTime = currentTime;
+		currentTime = System.currentTimeMillis();
+		long delta = currentTime - lastTime;
+		lastTime = currentTime;
 
-			// TODO update the ECS (except renderer-systems)
+		return update(delta);
+	}
 
-			timeRunning += delta;
+	protected boolean update(long delta) {
+		// render() -> extern erledigen
+		// updateSystems();
 
-			if (timeRunning >= 150) {
-				processCommands(currentTurn);
+		if (isRunning)
+			currentTurnTime += delta;
+		else
+			pauseTime += delta;
 
-				onFixedUpdate();
-
-				currentTurn++;
-				timeRunning -= 150;
-
-				if (currentTurn % 3200 == 0)
-					return true; // Switch to the EndgameScreen
+		if (currentTurnTime >= TURN_DURATION) {
+			if (processCommands(currentTurn)) {
+				isRunning = true;
+			} else {
+				isRunning = false;
+				return false;
 			}
+			fixedUpdate();
+
+			currentTurnTime -= TURN_DURATION;
+			currentTurn++;
+
+			if (currentTurn % 3200 == 0) // TODO calculate this in another way –
+											// for example via the real time
+				return true; // Switch to the EndgameScreen
 		}
 
 		return false;
@@ -79,17 +85,19 @@ public abstract class GameSession {
 	/**
 	 * Used to update things in each turn.
 	 */
-	public void onFixedUpdate() {
+	protected void fixedUpdate() {
 	}
 
 	/**
-	 * Processes all commands for the given turn.
+	 * Processes all commands for the given turn. The processing is repeated
+	 * until it succeeds.
 	 * 
 	 * @param turn
 	 *            The turn.
-	 * @see #processCommand(Command)
+	 * @return If the processing was successful.
+	 * @see #processCommand(PlayerCommand)
 	 */
-	protected abstract void processCommands(int turn);
+	protected abstract boolean processCommands(int turn);
 
 	/**
 	 * Executes one command message.
@@ -99,7 +107,7 @@ public abstract class GameSession {
 	 * @param id
 	 *            The executing player's id.
 	 */
-	protected void processCommand(Command c, int id) {
+	protected void processCommand(PlayerCommand c, short id) {
 		// TODO
 	}
 
@@ -111,7 +119,26 @@ public abstract class GameSession {
 	 * 
 	 * @see #processCommands(int)
 	 */
-	public abstract void executeNewCommand(Command command);
+	public abstract void executeNewCommand(PlayerCommand command);
+
+	/**
+	 * Starts the actual game and therefore the processing. Has to be called
+	 * after the {@linkplain #init(GameSettings) initialization}.
+	 */
+	public void start() {
+		// TODO Set up the game
+
+		GameSession session = this;
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (true) {
+					session.update();
+				}
+			}
+		}).start();
+
+	}
 
 	/**
 	 * Stops the game and saves it.
@@ -120,33 +147,11 @@ public abstract class GameSession {
 
 	}
 
-	public void renderMap(float delta, int x, int y) {
-		// TODO
-	}
-
-	public void renderHouse(float delta) {
-		// TODO
-	}
-
 	/**
-	 * @return The game data store.
+	 * @return The game's settings.
 	 */
-	public DataStore getDataStore() {
-		return this.dataStore;
-	}
-
-	/**
-	 * @return The used random number generator.
-	 */
-	public Random getRandom() {
-		return random;
-	}
-
-	/**
-	 * @return The game's difficulty.
-	 */
-	public GameDifficulty getDifficulty() {
-		return difficulty;
+	public GameSettings getSettings() {
+		return settings;
 	}
 
 	/**

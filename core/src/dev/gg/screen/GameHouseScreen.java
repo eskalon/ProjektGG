@@ -15,7 +15,7 @@ public class GameHouseScreen extends BaseScreen {
 	public void render(float delta) {
 		game.getCurrentSession().update();
 
-		game.getCurrentSession().renderHouse(delta);
+		//game.getCurrentSession().renderHouse(delta);
 	}
 
 	@Override

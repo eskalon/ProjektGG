@@ -1,9 +1,9 @@
 package dev.gg.network;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Connection;
@@ -11,15 +11,17 @@ import com.esotericsoftware.kryonet.Listener.ConnectionListener;
 import com.esotericsoftware.kryonet.Listener.TypeListener;
 import com.esotericsoftware.kryonet.Server;
 
-import dev.gg.command.PlayerCommands;
-import dev.gg.core.GameSession.GameDifficulty;
+import dev.gg.callback.IHostCallback;
+import dev.gg.command.PlayerCommand;
+import dev.gg.core.Player;
+import dev.gg.data.GameSettings;
 import dev.gg.network.message.ChatMessageSentMessage;
+import dev.gg.network.message.ClientTurnMessage;
 import dev.gg.network.message.GameSetupMessage;
 import dev.gg.network.message.PlayerChangedMessage;
 import dev.gg.network.message.PlayerJoinedMessage;
 import dev.gg.network.message.PlayerLeftMessage;
-import dev.gg.network.message.PlayerTurnMessage;
-import dev.gg.network.message.TurnCommandsMessage;
+import dev.gg.network.message.SeverTurnMessage;
 import dev.gg.util.CollectionUtils;
 import dev.gg.util.PlayerUtils;
 
@@ -33,69 +35,56 @@ public class GameServer {
 	 * A count of all joined players. Used to generate the player IDs.
 	 */
 	private short playersJoinedCount = 0;
-	private long seed = System.currentTimeMillis();
+	private GameSettings settings;
+	private HashMap<Short, ServerPlayer> clients;
 	private HashMap<Short, Player> players;
 	private HashMap<Short, Connection> connections;
-	private GameDifficulty difficulty;
-	/**
-	 * All command messages, that ever got received by the server.
-	 */
-	private HashMap<Integer, List<PlayerTurnMessage>> playerCommands;
-	private int currentTurn = 1;
 
-	public GameServer(GameDifficulty difficulty) {
-		this.difficulty = difficulty;
-		this.players = new HashMap<>();
+	/**
+	 * This time is used to calculate the {@linkplain #currentTurn turns}.
+	 */
+	private long currentTurnTime;
+	private long lastTime = System.currentTimeMillis(), currentTime;
+	protected boolean isRunning = true;
+	/**
+	 * The current turn in game.
+	 */
+	protected int currentTurn = 1;
+	private int TURN_DURATION = 2000;
+
+	public GameServer(GameSettings settings) {
+		this.settings = settings;
+		this.clients = new HashMap<>();
 		this.connections = new HashMap<>();
+		this.players = new HashMap<>();
 	}
 
 	/**
-	 * Sets up the game server.
+	 * Starts the game server asynchronically. After it is finished the
+	 * appropriate {@linkplain IHostCallback#onHostStarted(IOException) callback
+	 * method} is invoked. The callback is <i>not</i> invoked on the rendering
+	 * thread.
 	 * 
 	 * @param port
-	 *            The used tcp port.
-	 * @throws IOException
-	 *             Thrown if anything goes wrong.
+	 *            The used port.
+	 * @param callback
+	 *            The callback.
 	 */
-	public void setUpServer(int port) throws IOException {
+	public void start(int port, IHostCallback callback) {
 		server = new Server();
 		server.start();
 
-		// Log.INFO();
-
 		NetworkRegisterer.registerClasses(server.getKryo());
-
-		server.bind(port);
 
 		server.addListener(new ConnectionListener() {
 			@Override
 			public void connected(Connection con) {
-				Gdx.app.log("Server", "Client connected");
-
-				players.put(playersJoinedCount,
-						PlayerUtils.getRandomPlayer(players.values()));
-				connections.put(playersJoinedCount, con);
-
-				// Inform the other clients
-				server.sendToAllExceptTCP(con.getID(), new PlayerJoinedMessage(
-						playersJoinedCount, players.get(playersJoinedCount)));
-
-				con.sendTCP(new GameSetupMessage(players, difficulty,
-						playersJoinedCount, seed));
-				
-				playersJoinedCount++;
+				onNewConnection(con);
 			}
 
 			@Override
 			public void disconnected(Connection con) {
-				System.out.println("** [Server] Player disconnected");
-				short id = CollectionUtils.getKeyByValue(connections, con);
-
-				server.sendToAllExceptTCP(con.getID(),
-						new PlayerLeftMessage(id));
-
-				connections.remove(id);
-				players.remove(id);
+				onDisconnect(con);
 			}
 		});
 
@@ -104,31 +93,59 @@ public class GameServer {
 		typeListener.addTypeHandler(ChatMessageSentMessage.class,
 				(con, msg) -> {
 					server.sendToAllExceptTCP(con.getID(), msg);
-				});
+				}
+
+		);
 		// Player Changed Message
-		typeListener.addTypeHandler(PlayerChangedMessage.class, (con, msg) -> {
-			server.sendToAllExceptTCP(con.getID(), msg);
-		});
+		typeListener.addTypeHandler(PlayerChangedMessage.class,
+				(con, msg) -> onPlayerChange(con, msg));
 		// Command
-		typeListener.addTypeHandler(PlayerTurnMessage.class, (con, msg) -> {
-			if (!playerCommands.containsKey(msg.getTurn())) {
-				playerCommands.put(msg.getTurn(), new ArrayList<>());
-			}
-			playerCommands.get(msg.getTurn()).add(msg);
-		});
+		typeListener.addTypeHandler(ClientTurnMessage.class,
+				(con, msg) -> onNewClientTurnMessage(con, msg));
 
 		server.addListener(typeListener);
+
+		Thread t = new Thread(new Runnable() {
+			public void run() {
+				try {
+					server.bind(port);
+				} catch (IOException e) {
+					callback.onHostStarted(e);
+					e.printStackTrace();
+					return;
+
+				}
+				callback.onHostStarted(null);
+			}
+		});
+		t.start();
 	}
 
-	public void startNewGame() {
+	private void update() {
+		currentTime = System.currentTimeMillis();
+		long delta = currentTime - lastTime;
+		lastTime = currentTime;
 
+		update(delta);
 	}
 
-	public void startExistingGame() {
+	private void update(long delta) {
+		if (isRunning) {
+			currentTurnTime += delta;
+		}
 
-	}
+		if (currentTurnTime >= TURN_DURATION) {
+			// System.out.println("[Server] processing turn " + currentTurn);
+			if (sendMessage(currentTurn + 1)) {
+				isRunning = true;
+			} else {
+				isRunning = false;
+				return;
+			}
 
-	public void play() {
+			currentTurn++;
+			currentTurnTime -= TURN_DURATION;
+		}
 
 	}
 
@@ -136,50 +153,105 @@ public class GameServer {
 	 * Updates the game server after one turn. Needed to send the command
 	 * messages at the right time.
 	 */
-	public void fixedUpdate() {
-		if (playerCommands.containsKey(currentTurn + 1)) {
-			if (playerCommands.get(currentTurn + 1).size() != players.size()) {
-				// TODO Auf restliche Nachrichten warten
+	public synchronized boolean sendMessage(int turn) {
+		for (ServerPlayer s : clients.values()) {
+			if (!s.isReadyForTurn(turn)) {
 				Gdx.app.error("Server",
 						"[ERROR] Not all player commands received for turn "
-								+ (currentTurn + 1) + ". "
-								+ (players.size() - playerCommands
-										.get(currentTurn + 1).size())
-								+ " more are needed!");
-			} else {
-				List<PlayerCommands> cmds = new ArrayList<>();
-				for (PlayerTurnMessage m : playerCommands
-						.get(currentTurn + 1)) {
-					if (m.getCommands() != null)
-						cmds.add(m.getCommands());
-				}
+								+ turn);
 
-				server.sendToAllTCP(
-						new TurnCommandsMessage(cmds, currentTurn + 1));
+				if (currentTurn > 2)
+					return false;
+				else
+					return true;
 			}
-		} else {
-			// TODO Auf restliche Nachrichten warten
-			Gdx.app.error("Server",
-					"[ERROR] No player commands received for turn "
-							+ (currentTurn + 1));
 		}
 
-		currentTurn++;
+		sendTurnResponse(turn);
+		return true;
+	}
 
-		// if (currentTurn % 3200 == 0)
-		// Endgame screen
+	private synchronized void sendTurnResponse(int turn) {
+		HashMap<Short, List<PlayerCommand>> cmds = new HashMap<>();
+		for (Entry<Short, ServerPlayer> entry : clients.entrySet()) {
+			if (entry.getValue().getMessageForTurn(turn).getCommands() != null)
+				cmds.put(entry.getKey(),
+						entry.getValue().getMessageForTurn(turn).getCommands());
+		}
+
+		server.sendToAllTCP(
+				new SeverTurnMessage(cmds.size() == 0 ? null : cmds, turn));
+
+		System.out.println("[Server] Turn response sent for turn " + turn);
 	}
 
 	/**
 	 * Stops the game and saves it. Also takes care of disposing the server.
 	 */
-	public void stopGame() {
+	public void stop() {
 		// TODO save the game
-		dispose();
+		server.close();
 	}
 
-	private void dispose() {
-		server.close();
+	// LISTENER METHDOS
+	private synchronized void onNewConnection(Connection con) {
+		Gdx.app.log("Server", "Client connected");
+
+		Player p = PlayerUtils.getRandomPlayer(players.values());
+		players.put(playersJoinedCount, p);
+		clients.put(playersJoinedCount, new ServerPlayer(p));
+		connections.put(playersJoinedCount, con);
+
+		// Inform the other clients
+		server.sendToAllExceptTCP(con.getID(), new PlayerJoinedMessage(
+				playersJoinedCount, players.get(playersJoinedCount)));
+
+		// Send the setup response
+		con.sendTCP(
+				new GameSetupMessage(players, playersJoinedCount, settings));
+
+		playersJoinedCount++;
+	}
+
+	private synchronized void onDisconnect(Connection con) {
+		short id = CollectionUtils.getKeyByValue(connections, con);
+		Gdx.app.log("[Server]", "Player " + id + " disconnected");
+
+		server.sendToAllExceptTCP(con.getID(), new PlayerLeftMessage(id));
+
+		connections.remove(id);
+		clients.remove(id);
+		players.remove(id);
+	}
+
+	private void onPlayerChange(Connection con, PlayerChangedMessage msg) {
+		server.sendToAllExceptTCP(con.getID(), msg);
+
+		players.put(msg.getId(), msg.getPlayer());
+
+		System.out.println("Player changed " + msg.getId());
+
+		if (PlayerUtils.areAllPlayersReady(players.values())) {
+			// TODO Spiel aufsetzen
+
+			// Spiel starten
+			GameServer server = this;
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					while (true) {
+						server.update();
+					}
+				}
+			}).start();
+		}
+	}
+
+	private synchronized void onNewClientTurnMessage(Connection con,
+			ClientTurnMessage msg) {
+		clients.get(msg.getClientID()).addMessage(msg.getTurn(), msg);
+		System.out.println("[Server] Commands received for turn "
+				+ msg.getTurn() + " by player " + msg.getClientID());
 	}
 
 }
