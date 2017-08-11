@@ -4,7 +4,7 @@ Eine Liste aller Contributor und der genutzten externen Assets:
 * [damios](https://github.com/crykn)
 * [Meidimax](https://github.com/Meidimax99)
 
-### External assets and code
+## External assets and code
 ### Code
 * **uopt4j**\
   Path: de.game.spacechaos.game.utils.MicroOptions\
