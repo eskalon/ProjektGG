@@ -1,7 +1,5 @@
 package dev.gg.screen;
 
-import java.io.IOException;
-
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,15 +12,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.google.common.eventbus.Subscribe;
 
-import dev.gg.callback.IHostCallback;
-import dev.gg.core.GameSession.GameDifficulty;
-import dev.gg.data.GameSettings;
-import dev.gg.network.MultiplayerSession;
-import dev.gg.network.event.ClientEventHandler;
+import de.gg.event.ConnectionEstablishedEvent;
+import dev.gg.data.GameMap;
+import dev.gg.data.GameSessionSetup;
+import dev.gg.data.GameSessionSetup.GameDifficulty;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
-public class LobbyCreationScreen extends BaseUIScreen implements IHostCallback {
+public class LobbyCreationScreen extends BaseUIScreen {
 
 	@Asset(Sound.class)
 	private final String BUTTON_SOUND = "audio/button-tick.mp3";
@@ -63,8 +61,6 @@ public class LobbyCreationScreen extends BaseUIScreen implements IHostCallback {
 			}
 		});
 
-		IHostCallback callback = this;
-
 		ImageTextButton createButton = new ImageTextButton("Erstellen", skin);
 		createButton.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,
@@ -86,16 +82,12 @@ public class LobbyCreationScreen extends BaseUIScreen implements IHostCallback {
 						difficulty = GameDifficulty.HARD;
 					}
 
-					MultiplayerSession session = new MultiplayerSession();
-					session.setClientEventHandler(
-							(ClientEventHandler) game.getScreen("lobby"));
-					game.setCurrentSession(session);
-
 					// Sever & Client starten
-					session.setUpAsHost(Integer.valueOf(portField.getText()),
-							new GameSettings(difficulty,
-									System.currentTimeMillis()),
-							callback);
+					game.getNetworkHandler().setUpConnectionAsHost(
+							Integer.valueOf(portField.getText()),
+							new GameSessionSetup(difficulty,
+									GameMap.getMaps().get(0),
+									System.currentTimeMillis()));
 					connectingDialog = new Dialog("Starten...", skin);
 					connectingDialog.text("Server startet...");
 					connectingDialog.show(stage);
@@ -139,15 +131,15 @@ public class LobbyCreationScreen extends BaseUIScreen implements IHostCallback {
 
 	}
 
-	@Override
-	public void onHostStarted(IOException e) {
+	@Subscribe
+	public void onHostStarted(ConnectionEstablishedEvent event) {
 		connectingDialog.setVisible(false);
-		if (e == null) {
+		if (event.getException() == null) {
 			game.pushScreen("lobby");
 		} else {
 			game.setCurrentSession(null);
 			Dialog dialog = new Dialog("Fehler", skin);
-			dialog.text(e.getMessage());
+			dialog.text(event.getException().getMessage());
 			dialog.button("Ok", true);
 			dialog.key(Keys.ENTER, true);
 			dialog.show(stage);

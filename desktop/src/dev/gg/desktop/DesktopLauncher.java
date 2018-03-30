@@ -1,11 +1,12 @@
 package dev.gg.desktop;
 
 import com.badlogic.gdx.Files;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 import dev.gg.core.ProjektGG;
-import dev.gg.util.ErrorUtils;
+import dev.gg.util.CrashLogUtils;
 import dev.gg.util.MicroOptions;
 
 /**
@@ -26,7 +27,7 @@ public class DesktopLauncher {
 	 */
 	public static void main(String[] args) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.title = "Projekt GG";
+		config.title = ProjektGG.name;
 		config.height = 720;
 		config.width = 1280;
 		config.resizable = false;
@@ -58,9 +59,10 @@ public class DesktopLauncher {
 					new ProjektGG(options.has("debug"), !options.has("novid")),
 					config);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Gdx.app.error(ProjektGG.name,
+					"An unexpected error occurred while starting the game", e);
 
-			ErrorUtils.writeCrashLogToFile(e, true);
+			CrashLogUtils.writeCrashLogToFile(e, true);
 		}
 	}
 

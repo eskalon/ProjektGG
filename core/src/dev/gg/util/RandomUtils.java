@@ -1,9 +1,13 @@
 package dev.gg.util;
 
+import java.util.Random;
+
 /**
  * A few utility methods for dealing with random numbers and chances.
  */
 public class RandomUtils {
+
+	private static Random random = new Random();
 
 	private RandomUtils() {
 	}
@@ -18,7 +22,7 @@ public class RandomUtils {
 	 * @return The random integer.
 	 */
 	public static int getRandomNumber(int min, int max) {
-		return (int) (Math.random() * (max - min)) + min;
+		return random.nextInt(max - min + 1) + min;
 	}
 
 	/**
@@ -26,7 +30,7 @@ public class RandomUtils {
 	 * 
 	 * @param x
 	 *            The reciprocal of the chance.
-	 * @return The random integer.
+	 * @return Whether the roll succeeded.
 	 */
 	public static boolean rollTheDice(int x) {
 		return getRandomNumber(1, x) == 1;

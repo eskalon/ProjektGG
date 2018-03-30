@@ -74,6 +74,7 @@ public abstract class BaseUIScreen extends BaseScreen {
 
 	@Override
 	public void show() {
+		super.show();
 		stage = new Stage(new ScreenViewport());
 		mainTable = new Table();
 		stage.addActor(mainTable);
@@ -81,14 +82,15 @@ public abstract class BaseUIScreen extends BaseScreen {
 
 		mainTable.setDebug((boolean) game.showDebugStuff());
 
-		game.setInputProcessor(stage);
+		game.getInputMultiplexer().addProcessor(stage);
 
 		initUI();
 	}
 
 	@Override
 	public void hide() {
-		game.setInputProcessor(null);
+		super.hide();
+		game.getInputMultiplexer().removeInputProcessors();
 	}
 
 	@Override

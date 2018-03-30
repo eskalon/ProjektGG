@@ -1,7 +1,5 @@
 package dev.gg.screen;
 
-import java.io.IOException;
-
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,15 +12,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.google.common.eventbus.Subscribe;
 
-import dev.gg.callback.IClientCallback;
-import dev.gg.network.MultiplayerSession;
-import dev.gg.network.event.ClientEventHandler;
+import de.gg.event.ConnectionEstablishedEvent;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
-public class ServerBrowserScreen extends BaseUIScreen
-		implements
-			IClientCallback {
+public class ServerBrowserScreen extends BaseUIScreen {
 
 	@Asset(Texture.class)
 	private final String BACKGROUND_IMAGE_PATH = "ui/backgrounds/town.jpg";
@@ -41,8 +36,6 @@ public class ServerBrowserScreen extends BaseUIScreen
 		Table serverTable = new Table();
 		ScrollPane pane = new ScrollPane(serverTable);
 
-		IClientCallback callback = this;
-
 		// TODO gegen echte Server-Daten austauschen
 		String ip = "127.0.0.1";
 		int port = 12345;
@@ -53,12 +46,7 @@ public class ServerBrowserScreen extends BaseUIScreen
 					int pointer, int button) {
 				clickSound.play(1F);
 
-				MultiplayerSession session = new MultiplayerSession();
-				session.setClientEventHandler(
-						(ClientEventHandler) game.getScreen("lobby"));
-				game.setCurrentSession(session);
-
-				session.setUpAsClient(ip, port, callback);
+				game.getNetworkHandler().setUpConnectionAsClient(ip, port);
 
 				connectingDialog = new Dialog("Verbinden...", skin);
 				connectingDialog.text("Spiel beitreten...");
@@ -107,14 +95,9 @@ public class ServerBrowserScreen extends BaseUIScreen
 				Dialog dialog = new Dialog("Direkt verbinden", skin) {
 					public void result(Object obj) {
 						if ((Boolean) obj) {
-							MultiplayerSession session = new MultiplayerSession();
-							session.setClientEventHandler(
-									(ClientEventHandler) game
-											.getScreen("lobby"));
-							game.setCurrentSession(session);
-							session.setUpAsClient(ipInputField.getText(),
-									Integer.valueOf(portInputField.getText()),
-									callback);
+							game.getNetworkHandler().setUpConnectionAsClient(
+									ipInputField.getText(),
+									Integer.valueOf(portInputField.getText()));
 
 							connectingDialog = new Dialog("Verbinden...", skin);
 							connectingDialog.text("Spiel beitreten...");
@@ -150,16 +133,16 @@ public class ServerBrowserScreen extends BaseUIScreen
 		mainTable.add(buttonTable).height(50).bottom();
 	}
 
-	@Override
-	public void onClientConnected(IOException e) {
+	@Subscribe
+	public void onClientConnected(ConnectionEstablishedEvent event) {
 		connectingDialog.setVisible(false);
-		if (e == null) {
+		if (event.getException() == null) {
 			game.pushScreen("lobby");
 		} else {
 			game.setCurrentSession(null);
 
 			Dialog dialog = new Dialog("Fehler", skin);
-			dialog.text(e.getMessage());
+			dialog.text(event.getException().getMessage());
 			dialog.button("Ok", true);
 			dialog.key(Keys.ENTER, true);
 			dialog.show(stage);

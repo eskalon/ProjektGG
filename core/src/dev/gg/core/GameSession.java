@@ -1,170 +1,81 @@
 package dev.gg.core;
 
-import dev.gg.command.PlayerCommand;
-import dev.gg.data.GameSettings;
+import dev.gg.data.GameSessionSetup;
+import dev.gg.data.RoundEndData;
+import dev.gg.entity.City;
 
 /**
- * This class handles all the basic game stuff.
+ * This class holds the game data and takes care of calculating when a round
+ * ends.
  */
 public abstract class GameSession {
 
-	private GameSettings settings;
-
+	private static final long ROUND_DURATION = 100;
+	private GameSessionSetup setup;
 	/**
 	 * Used to calculate the time delta.
 	 */
-	private long lastTime = System.currentTimeMillis(), currentTime;
+	private long lastTime = System.currentTimeMillis();
 	/**
-	 * Used to calculate when the {@linkplain #currentTurn current turn} ends.
+	 * Used to determine when the current round ends and the end round screen is
+	 * shown. To start the following round, the server needs to receive every
+	 * player's approval.
 	 */
-	private long currentTurnTime;
-	protected boolean isRunning = true;
-	/**
-	 * The current turn in game.
-	 */
-	protected int currentTurn = 1;
-	private int TURN_DURATION = 2000;
-	// unnecessary (?)
-	private long pauseTime;
+	private long currentRoundTime = ROUND_DURATION;
 
-	public GameSession() {
-	}
+	private City city;
 
 	/**
-	 * Initializes the game session.
+	 * Creates a new game session.
 	 * 
-	 * @param settings
-	 *            The game session's settings.
+	 * @param sessionSetup
+	 *            The settings of the game session.
 	 */
-	public void init(GameSettings settings) {
-		this.settings = settings;
+	public GameSession(GameSessionSetup sessionSetup) {
+		this.setup = sessionSetup;
+		this.city = new City();
+
+		// TODO mit Hilfe des sessionSetup das Spiel aufsetzen, d.h. die
+		// Spielwelt in #city einrichten
 	}
 
 	/**
-	 * Updates the game session. Needed to process the command messages.
+	 * Updates the game session.
 	 * 
 	 * @return Whether the ingame day is over (8 minutes).
 	 */
 	public boolean update() {
-		currentTime = System.currentTimeMillis();
+		long currentTime = System.currentTimeMillis();
 		long delta = currentTime - lastTime;
 		lastTime = currentTime;
 
-		return update(delta);
-	}
+		currentRoundTime += delta;
 
-	protected boolean update(long delta) {
-		// render() -> extern erledigen
-		// updateSystems();
-
-		if (isRunning)
-			currentTurnTime += delta;
-		else
-			pauseTime += delta;
-
-		if (currentTurnTime >= TURN_DURATION) {
-			if (processCommands(currentTurn)) {
-				isRunning = true;
-			} else {
-				isRunning = false;
-				return false;
-			}
-			fixedUpdate();
-
-			currentTurnTime -= TURN_DURATION;
-			currentTurn++;
-
-			if (currentTurn % 3200 == 0) // TODO calculate this in another way –
-											// for example via the real time
-				return true; // Switch to the EndgameScreen
-		}
-
-		return false;
+		return currentRoundTime > ROUND_DURATION;
 	}
 
 	/**
-	 * Used to update things in each turn.
-	 */
-	protected void fixedUpdate() {
-	}
-
-	/**
-	 * Processes all commands for the given turn. The processing is repeated
-	 * until it succeeds.
+	 * Called after a round ended to setup the next round.
 	 * 
-	 * @param turn
-	 *            The turn.
-	 * @return If the processing was successful.
-	 * @see #processCommand(PlayerCommand)
+	 * @param data
+	 *            This data contains all calculations done after a round i.e. a
+	 *            salary costs, tuition effects, etc.
 	 */
-	protected abstract boolean processCommands(int turn);
+	public void setupNewRound(RoundEndData data) {
+		// TODO apply the round end data (salaries, etc.)
 
-	/**
-	 * Executes one command message.
-	 * 
-	 * @param c
-	 *            The command message.
-	 * @param id
-	 *            The executing player's id.
-	 */
-	protected void processCommand(PlayerCommand c, short id) {
-		// TODO
+		currentRoundTime = 0;
 	}
 
 	/**
-	 * Called by the player when he does a thing.
-	 * 
-	 * @param command
-	 *            The command issued by the player.
-	 * 
-	 * @see #processCommands(int)
+	 * @return The game's setup.
 	 */
-	public abstract void executeNewCommand(PlayerCommand command);
-
-	/**
-	 * Starts the actual game and therefore the processing. Has to be called
-	 * after the {@linkplain #init(GameSettings) initialization}.
-	 */
-	public void start() {
-		// TODO Set up the game
-
-		GameSession session = this;
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				while (true) {
-					session.update();
-				}
-			}
-		}).start();
-
+	public GameSessionSetup getSetup() {
+		return setup;
 	}
 
-	/**
-	 * Stops the game and saves it.
-	 */
-	public void stop() {
-
-	}
-
-	/**
-	 * @return The game's settings.
-	 */
-	public GameSettings getSettings() {
-		return settings;
-	}
-
-	/**
-	 * @return The local player.
-	 */
-	public abstract Player getPlayer();
-
-	/**
-	 * An enum describing the game difficulty.
-	 */
-	public enum GameDifficulty {
-
-		EASY, NORMAL, HARD;
+	public City getCity() {
+		return city;
 	}
 
 }

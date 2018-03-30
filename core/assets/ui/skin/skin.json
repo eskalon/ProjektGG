@@ -45,8 +45,8 @@
 			label: {
 				font: main-19
 			},
-		background: button-up, 
-		wrapWidth: 400
+			background: button-up, 
+			wrapWidth: 400
 		}
 	}
 }

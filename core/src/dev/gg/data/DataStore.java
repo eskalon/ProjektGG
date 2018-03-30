@@ -3,12 +3,18 @@ package dev.gg.data;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.google.common.base.Preconditions;
+
 /**
- * Stores data via a key.
+ * Stores data via a key. Basically a {@linkplain ConcurrentHashMap HashMap}.
  * 
  * @see #data
  */
 public class DataStore {
+
+	private static final String KEY_CANNOT_BE_NULL_MSG = "Key cannot be null.";
+	private static final String KEY_CANNOT_BE_EMPTY_MSG = "Key cannot be empty.";
+	private static final String DATA_CANNOT_BE_NULL_MSG = "Data cannot be null.";
 
 	/**
 	 * The hashmap containing the data.
@@ -26,19 +32,24 @@ public class DataStore {
 	 *            The data.
 	 */
 	public void put(String key, Object data) {
-		if (key == null) {
-			throw new NullPointerException("Key cannot be null.");
-		}
-
-		if (key.isEmpty()) {
-			throw new IllegalArgumentException("Key cannot be empty.");
-		}
-
-		if (data == null) {
-			throw new NullPointerException("Data cannot be null.");
-		}
+		Preconditions.checkNotNull(key, KEY_CANNOT_BE_NULL_MSG);
+		Preconditions.checkArgument(key.isEmpty(), KEY_CANNOT_BE_EMPTY_MSG);
+		Preconditions.checkNotNull(data, DATA_CANNOT_BE_NULL_MSG);
 
 		this.data.put(key, data);
+	}
+
+	/**
+	 * Removes the key (and its corresponding value) from this map.
+	 * 
+	 * @param key
+	 *            The key to remove.
+	 */
+	public void remove(String key) {
+		Preconditions.checkNotNull(key, KEY_CANNOT_BE_NULL_MSG);
+		Preconditions.checkArgument(key.isEmpty(), KEY_CANNOT_BE_EMPTY_MSG);
+
+		this.data.remove(key);
 	}
 
 	/**
@@ -46,10 +57,13 @@ public class DataStore {
 	 * Returns true if this data store contains a mapping for the specified key.
 	 * 
 	 * @param key
-	 *            The key of the value
-	 * @return true if data store contains mapping for specified tag
+	 *            The key of the value.
+	 * @return true if the data store contains a mapping for the specified tag.
 	 */
 	public boolean contains(String key) {
+		Preconditions.checkNotNull(key, KEY_CANNOT_BE_NULL_MSG);
+		Preconditions.checkArgument(key.isEmpty(), KEY_CANNOT_BE_EMPTY_MSG);
+
 		return this.data.containsKey(key);
 	}
 
@@ -62,6 +76,9 @@ public class DataStore {
 	 * @return The value or null if the key wasn't added before.
 	 */
 	public Object get(String key) {
+		Preconditions.checkNotNull(key, KEY_CANNOT_BE_NULL_MSG);
+		Preconditions.checkArgument(key.isEmpty(), KEY_CANNOT_BE_EMPTY_MSG);
+
 		return this.data.get(key);
 	}
 
@@ -77,6 +94,9 @@ public class DataStore {
 	 * @return The value or null if the key wasn't added before.
 	 */
 	public <T> T get(String key, Class<T> clazz) {
+		Preconditions.checkNotNull(key, KEY_CANNOT_BE_NULL_MSG);
+		Preconditions.checkArgument(key.isEmpty(), KEY_CANNOT_BE_EMPTY_MSG);
+
 		Object obj = this.get(key);
 
 		if (obj == null) {

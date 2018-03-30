@@ -19,14 +19,17 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.kotcrab.vis.ui.util.CursorManager;
 
+import de.gg.camera.CameraWrapper;
+import de.gg.util.asset.Text;
+import de.gg.util.asset.TextLoader;
 import dev.gg.exception.ScreenNotFoundException;
-import dev.gg.input.GameInputProcessor;
-import dev.gg.network.MultiplayerSession;
+import dev.gg.input.GameInputMultiplexer;
+import dev.gg.network.NetworkHandler;
 import dev.gg.screen.BaseScreen;
 import dev.gg.screen.BaseUIScreen;
-import dev.gg.screen.GameHouseScreen;
+import dev.gg.screen.GameInHouseScreen;
+import dev.gg.screen.GameLoadingScreen;
 import dev.gg.screen.GameMapScreen;
 import dev.gg.screen.GameRoundendScreen;
 import dev.gg.screen.LoadingScreen;
@@ -35,18 +38,21 @@ import dev.gg.screen.LobbyScreen;
 import dev.gg.screen.MainMenuScreen;
 import dev.gg.screen.ServerBrowserScreen;
 import dev.gg.screen.SplashScreen;
-import dev.gg.setting.Settings;
+import dev.gg.setting.GameSettings;
+import dev.gg.util.EventQueueBus;
 import net.dermetfan.gdx.assets.AnnotationAssetManager;
 
 /**
  * This class starts the game by creating all the necessary screens and then
- * displaying the menu.
+ * displaying the menu. The assets of the screens are loaded automatically when
+ * the screens are first shown, but can also be loaded by the
+ * {@link LoadingScreen LoadingScreen}.
  * <p>
  * Only {@link BaseScreen}s are supported.
- *
  */
 public class ProjektGG extends Game {
 
+	public static final String name = "ProjektGG";
 	private SpriteBatch batch;
 	/**
 	 * The asset manager.
@@ -62,19 +68,24 @@ public class ProjektGG extends Game {
 	private static int viewportHeight;
 
 	private OrthographicCamera uiCamera;
-	private PerspectiveCamera gameCamera;
+	private CameraWrapper gameCamera;
 
-	private Settings settings;
-
-	private CursorManager cursorManager;
+	private GameSettings settings;
 
 	private boolean debug, showSplashscreen;
 
-	private GameInputProcessor inputProcessor = new GameInputProcessor();
+	private GameInputMultiplexer inputProcessor = new GameInputMultiplexer();
 
 	private Skin uiSkin;
 
-	private GameSession session;
+	private GameSession currentSession;
+
+	/**
+	 * Event bus. All events are queued first and then taken care of in the
+	 * rendering thread.
+	 */
+	private EventQueueBus eventBus;
+	private NetworkHandler networkHandler;
 
 	public ProjektGG(boolean debug, boolean showSplashscreen) {
 		super();
@@ -99,6 +110,8 @@ public class ProjektGG extends Game {
 				new FreeTypeFontGeneratorLoader(resolver));
 		this.assetManager.setLoader(BitmapFont.class, ".ttf",
 				new FreetypeFontLoader(resolver));
+		this.assetManager.setLoader(Text.class,
+				new TextLoader(new InternalFileHandleResolver()));
 
 		this.viewportWidth = Gdx.graphics.getWidth();
 		this.viewportHeight = Gdx.graphics.getHeight();
@@ -108,17 +121,21 @@ public class ProjektGG extends Game {
 		this.uiCamera.translate(viewportWidth / 2, viewportHeight / 2, 0);
 		this.uiCamera.update();
 
-		this.gameCamera = new PerspectiveCamera(0, viewportWidth,
-				viewportHeight);
-		this.gameCamera.translate(viewportWidth / 2, viewportHeight / 2, 0);
+		this.gameCamera = new CameraWrapper(
+				new PerspectiveCamera(67, viewportWidth, viewportHeight));
+		this.gameCamera.getCamera().translate(viewportWidth / 2,
+				viewportHeight / 2, 0);
 		// this.camera.update();
-		this.batch.setProjectionMatrix(this.gameCamera.combined);
-
-		// Create new cursor manager
-		this.cursorManager = new CursorManager();
+		this.batch.setProjectionMatrix(this.gameCamera.getCamera().combined);
 
 		// Load game settings
-		this.settings = new Settings("projekt-gg");
+		this.settings = new GameSettings("projekt-gg");
+
+		// Create the event bus
+		this.eventBus = new EventQueueBus();
+
+		// Create the network handler
+		this.networkHandler = new NetworkHandler(eventBus);
 
 		// Set input processor
 		Gdx.input.setInputProcessor(inputProcessor);
@@ -127,11 +144,12 @@ public class ProjektGG extends Game {
 		addScreen("splash", new SplashScreen());
 		addScreen("mainMenu", new MainMenuScreen());
 		addScreen("loading", new LoadingScreen());
+		addScreen("gameLoading", new GameLoadingScreen());
 		addScreen("serverBrowser", new ServerBrowserScreen());
 		addScreen("lobby", new LobbyScreen());
 		addScreen("lobbyCreation", new LobbyCreationScreen());
 		addScreen("map", new GameMapScreen());
-		addScreen("house", new GameHouseScreen());
+		addScreen("house", new GameInHouseScreen());
 		addScreen("roundEnd", new GameRoundendScreen());
 
 		// Push screen
@@ -139,6 +157,14 @@ public class ProjektGG extends Game {
 			pushScreen("splash");
 		else
 			pushScreen("loading");
+	}
+
+	@Override
+	public void render() {
+		// Takes care of posting the events in the rendering thread
+		eventBus.distributeEvents();
+
+		super.render();
 	}
 
 	/**
@@ -160,8 +186,9 @@ public class ProjektGG extends Game {
 	 * Pushes a screen to be the active screen. The screen has to be added to
 	 * the game beforehand via {@link #addScreen(String, BaseScreen)}.
 	 * <p>
-	 * {@link Screen#hide()} is called on any old activeScreen, and
-	 * {@link Screen#show()} is called on the new activeScreen, if any.
+	 * {@link Screen#hide()} is called on the previously {@linkplain Game#screen
+	 * active screen} and {@link Screen#show()} is called on the new active
+	 * screen.
 	 * 
 	 * @param name
 	 *            The name of the pushed screen.
@@ -172,7 +199,7 @@ public class ProjektGG extends Game {
 		if (pushedScreen == null) {
 			throw new ScreenNotFoundException("Could not find a screen named '"
 					+ name
-					+ "'. Add the screen first via #addScreen(String, BaseScreen).");
+					+ "'. Add the screen via #addScreen(String, BaseScreen) first.");
 		}
 
 		if (screen != null) {
@@ -202,7 +229,7 @@ public class ProjektGG extends Game {
 		if (screen == null) {
 			throw new ScreenNotFoundException("Could not find a screen named '"
 					+ name
-					+ "'. Add the screen first via #addScreen(String, BaseScreen).");
+					+ "'. Add the screen via #addScreen(String, BaseScreen) first.");
 		}
 
 		return screen;
@@ -229,7 +256,7 @@ public class ProjektGG extends Game {
 	/**
 	 * @return The camera used in the actual game.
 	 */
-	public PerspectiveCamera /* CameraWrapper */ getGameCamera() {
+	public CameraWrapper getGameCamera() {
 		return this.gameCamera;
 	}
 
@@ -244,8 +271,16 @@ public class ProjektGG extends Game {
 	/**
 	 * @return An instance of the game settings handler.
 	 */
-	public Settings getSettings() {
+	public GameSettings getSettings() {
 		return settings;
+	}
+
+	/**
+	 * @return The events bus. See {@link EventQueueBus}. Events are processed
+	 *         in the rendering thread.
+	 */
+	public EventQueueBus getEventBus() {
+		return eventBus;
 	}
 
 	/**
@@ -263,10 +298,6 @@ public class ProjektGG extends Game {
 	 */
 	public Skin getUISkin() {
 		return uiSkin;
-	}
-
-	public CursorManager getCursorManager() {
-		return this.cursorManager;
 	}
 
 	public SpriteBatch getSpriteBatch() {
@@ -288,32 +319,45 @@ public class ProjektGG extends Game {
 	}
 
 	/**
-	 * @return The current game session.
+	 * @return The current game session. Null if no session is played at the
+	 *         moment.
+	 * @see #getCurrentMultiplayerSession()
 	 */
 	public GameSession getCurrentSession() {
-		return session;
+		return currentSession;
 	}
 
 	/**
 	 * @return The current multiplayer game session.
+	 * @see #getCurrentSession()
 	 */
 	public MultiplayerSession getCurrentMultiplayerSession() {
-		return (MultiplayerSession) session;
+		return (MultiplayerSession) currentSession;
 	}
 
 	public void setCurrentSession(MultiplayerSession session) {
-		this.session = session;
+		this.currentSession = session;
 	}
 
 	/**
-	 * Sets the input processor of the game. Should be used instead of
+	 * @return The network handler for this client. Can be null.
+	 */
+	public NetworkHandler getNetworkHandler() {
+		return networkHandler;
+	}
+
+	public void setNetworkHandler(NetworkHandler networkHandler) {
+		this.networkHandler = networkHandler;
+	}
+
+	/**
+	 * Returns the input multiplexer of the game. Should be used instead of
 	 * {@link Input#setInputProcessor(InputProcessor)}.
 	 * 
-	 * @param inputProcessor
-	 *            The new input processor.
+	 * @return The game's input multiplexer.
 	 */
-	public void setInputProcessor(InputProcessor inputProcessor) {
-		this.inputProcessor.setInputProcessor(inputProcessor);
+	public GameInputMultiplexer getInputMultiplexer() {
+		return inputProcessor;
 	}
 
 	/**

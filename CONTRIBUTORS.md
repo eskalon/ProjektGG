@@ -7,7 +7,7 @@ Eine Liste aller Contributor und der genutzten externen Assets:
 ## External assets and code
 ### Code
 * **uopt4j**\
-  Path: de.game.spacechaos.game.utils.MicroOptions\
+  Path: dev.gg.util.MicroOptions\
   License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)\
   Author & Copyright: Andrew Hayden
   

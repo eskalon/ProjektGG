@@ -3,7 +3,7 @@ package dev.gg.screen;
 /**
  * This screen is rendered after a round ends.
  */
-public class GameRoundendScreen extends BaseScreen {
+public class GameRoundendScreen extends BaseGameScreen {
 
 	@Override
 	protected void onInit() {
@@ -13,7 +13,6 @@ public class GameRoundendScreen extends BaseScreen {
 
 	@Override
 	public void render(float delta) {
-		// TODO Auto-generated method stub
 
 	}
 

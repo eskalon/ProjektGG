@@ -9,11 +9,19 @@ import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+/**
+ * Takes care of saving a screenshot.
+ */
 public class ScreenshotUtils {
 
 	private ScreenshotUtils() {
 	}
 
+	/**
+	 * Takes a screenshot of the currently rendered screen and saves it on disk
+	 * as a PNG. The file's name is the current date and time in the format
+	 * "yyyy-MM-dd HH-mm-ss".
+	 */
 	public static void takeScreenshot() {
 		byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0,
 				Gdx.graphics.getBackBufferWidth(),

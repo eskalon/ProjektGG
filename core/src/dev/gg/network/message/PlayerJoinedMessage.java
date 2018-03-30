@@ -1,6 +1,6 @@
 package dev.gg.network.message;
 
-import dev.gg.core.Player;
+import dev.gg.core.LobbyPlayer;
 
 /**
  * This message is sent after a new player joins a game.
@@ -14,13 +14,13 @@ public class PlayerJoinedMessage {
 	/**
 	 * The joining player.
 	 */
-	private Player player;
+	private LobbyPlayer player;
 
 	public PlayerJoinedMessage() {
 
 	}
 
-	public PlayerJoinedMessage(short id, Player player) {
+	public PlayerJoinedMessage(short id, LobbyPlayer player) {
 		this.id = id;
 		this.player = player;
 	}
@@ -29,7 +29,7 @@ public class PlayerJoinedMessage {
 		return id;
 	}
 
-	public Player getPlayer() {
+	public LobbyPlayer getPlayer() {
 		return player;
 	}
 

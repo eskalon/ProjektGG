@@ -1,5 +1,7 @@
 package dev.gg.screen;
 
+import java.util.HashMap;
+
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -11,14 +13,21 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
+import com.google.common.eventbus.Subscribe;
 
-import dev.gg.core.Player;
-import dev.gg.network.MultiplayerSession;
-import dev.gg.network.event.ClientEventHandler;
+import de.gg.event.GameSessionSetupEvent;
+import de.gg.event.NewChatMessagEvent;
+import de.gg.event.PlayerChangedEvent;
+import de.gg.event.PlayerConnectedEvent;
+import de.gg.event.PlayerDisconnectedEvent;
+import dev.gg.core.LobbyPlayer;
+import dev.gg.core.MultiplayerSession;
+import dev.gg.data.GameSessionSetup;
+import dev.gg.network.NetworkHandler;
 import dev.gg.util.PlayerUtils;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
-public class LobbyScreen extends BaseUIScreen implements ClientEventHandler {
+public class LobbyScreen extends BaseUIScreen {
 
 	@Asset(Texture.class)
 	private final String BACKGROUND_IMAGE_PATH = "ui/backgrounds/town.jpg";
@@ -39,12 +48,13 @@ public class LobbyScreen extends BaseUIScreen implements ClientEventHandler {
 	private TextArea messagesArea;
 	private Table[] playerSlots;
 	private ImageTextButton readyUpLobbyButton;
-	private MultiplayerSession session;
+
+	private GameSessionSetup sessionSetup;
+	private HashMap<Short, LobbyPlayer> players;
+	private short localNetworkId;
 
 	@Override
 	protected void initUI() {
-		this.session = game.getCurrentMultiplayerSession();
-
 		// backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
 		Sound clickSound = assetManager.get(BUTTON_SOUND);
 
@@ -56,16 +66,17 @@ public class LobbyScreen extends BaseUIScreen implements ClientEventHandler {
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				clickSound.play(1F);
-				session.stop();
-				game.setCurrentSession(null);
+				game.getNetworkHandler().disconnect();
 
 				game.pushScreen("mainMenu");
 				return true;
 			}
 		});
 
+		NetworkHandler netHandler = game.getNetworkHandler();
+
 		readyUpLobbyButton = new ImageTextButton("Bereit", skin /* "small" */);
-		if (session.isHost()) {
+		if (netHandler.isHost()) {
 			readyUpLobbyButton.setDisabled(true);
 			readyUpLobbyButton.setText("Spiel starten");
 		}
@@ -73,17 +84,10 @@ public class LobbyScreen extends BaseUIScreen implements ClientEventHandler {
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				clickSound.play(1F);
-				session.getPlayer().toggleReady();
+				getLocalPlayer().toggleReady();
+				netHandler.onLocalPlayerChange(getLocalPlayer());
 
-				if (!session.isHost()) {
-					if (session.getPlayer().isReady()) {
-						readyUpLobbyButton.setText("Nicht bereit");
-					} else {
-						readyUpLobbyButton.setText("Bereit");
-					}
-				}
-				session.onLocalPlayerChange();
-				updateLobby();
+				updateLobbyUI();
 
 				return true;
 			}
@@ -108,23 +112,22 @@ public class LobbyScreen extends BaseUIScreen implements ClientEventHandler {
 				if (!textField.getText().isEmpty() && (key == (char) 13)) { // Enter
 					clickSound.play(1F);
 
-					session.sendNewChatMessage(chatInputField.getText());
-					onNewChatMessage(session.getLocalID(),
-							chatInputField.getText());
+					netHandler.sendChatMessage(chatInputField.getText());
+					onNewChatMessage(new NewChatMessagEvent(localNetworkId,
+							chatInputField.getText()));
 					chatInputField.setText("");
 				}
 			}
 		});
-
 		sendButton.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				if (!chatInputField.getText().isEmpty()) {
 					clickSound.play(1F);
 
-					session.sendNewChatMessage(chatInputField.getText());
-					onNewChatMessage(session.getLocalID(),
-							chatInputField.getText());
+					netHandler.sendChatMessage(chatInputField.getText());
+					onNewChatMessage(new NewChatMessagEvent(localNetworkId,
+							chatInputField.getText()));
 					chatInputField.setText("");
 				}
 
@@ -165,80 +168,59 @@ public class LobbyScreen extends BaseUIScreen implements ClientEventHandler {
 
 		mainTable.setDebug(true);
 
-		updateLobby();
+		// updateLobbyUI();
 	}
 
-	private void updateLobby() {
-		Object[] playersArray = session.getPlayers().values().toArray();
+	/**
+	 * Updates the lobby ui after player changes.
+	 */
+	private void updateLobbyUI() {
+		Object[] playersArray = players.values().toArray();
 
 		updatePlayerSlot(playerSlots[0],
-				(playersArray.length >= 1 ? (Player) playersArray[0] : null));
+				(playersArray.length >= 1
+						? (LobbyPlayer) playersArray[0]
+						: null));
 		updatePlayerSlot(playerSlots[1],
-				(playersArray.length >= 2 ? (Player) playersArray[1] : null));
+				(playersArray.length >= 2
+						? (LobbyPlayer) playersArray[1]
+						: null));
 		updatePlayerSlot(playerSlots[2],
-				(playersArray.length >= 3 ? (Player) playersArray[2] : null));
+				(playersArray.length >= 3
+						? (LobbyPlayer) playersArray[2]
+						: null));
 		updatePlayerSlot(playerSlots[3],
-				(playersArray.length >= 4 ? (Player) playersArray[3] : null));
+				(playersArray.length >= 4
+						? (LobbyPlayer) playersArray[3]
+						: null));
 		updatePlayerSlot(playerSlots[4],
-				(playersArray.length >= 5 ? (Player) playersArray[4] : null));
+				(playersArray.length >= 5
+						? (LobbyPlayer) playersArray[4]
+						: null));
 		updatePlayerSlot(playerSlots[5],
-				(playersArray.length >= 6 ? (Player) playersArray[5] : null));
+				(playersArray.length >= 6
+						? (LobbyPlayer) playersArray[5]
+						: null));
 
-		if (session.isHost()) {
-			if (PlayerUtils.areAllPlayersReadyExcept(
-					session.getPlayers().values(), session.getPlayer())) {
+		if (game.getNetworkHandler().isHost()) {
+			if (PlayerUtils.areAllPlayersReadyExcept(players.values(),
+					getLocalPlayer())) {
 				readyUpLobbyButton.setDisabled(false);
 			} else {
 				readyUpLobbyButton.setDisabled(true);
+			}
+		} else {
+			if (getLocalPlayer().isReady()) {
+				readyUpLobbyButton.setText("Nicht bereit");
+			} else {
+				readyUpLobbyButton.setText("Bereit");
 			}
 		}
 
 		startGameIfReady();
 	}
 
-	private void addChatMessage(String sender, String message) {
-		messagesArea.appendText(
-				((sender == null || sender.isEmpty()) ? "" : sender + ": ")
-						+ message + " \n");
-	}
-	
-	private void startGameIfReady() {
-		if (PlayerUtils.areAllPlayersReady(session.getPlayers().values())) {
-			addChatMessage(null, "Spiel startet...");
-			game.setInputProcessor(null);
-
-			// TODO Spiel aufsetzen
-			game.getCurrentMultiplayerSession().start();
-			game.pushScreen("map");
-		}
-	}
-
-	@Override
-	public void onNewChatMessage(short senderId, String message) {
-		addChatMessage(
-				session.getPlayers().get(senderId).getName() + " "
-						+ session.getPlayers().get(senderId).getSurname(),
-				message);
-	}
-
-	@Override
-	public void onPlayerChanged() {
-		updateLobby();
-	}
-
-	@Override
-	public void onPlayerDisconnect(Player player) {
-		addChatMessage(null, player.getName() + " hat das Spiel verlassen");
-		updateLobby();
-	}
-
-	@Override
-	public void onPlayerConnect(Player player) {
-		addChatMessage(null, player.getName() + " ist dem Spiel beigetreten");
-		updateLobby();
-	}
-
-	private Table updatePlayerSlot(Table t, Player p) {
+	private Table updatePlayerSlot(Table t, LobbyPlayer p) {
 		t.clear();
 		if (p == null) {
 			t.add().width(25);
@@ -253,6 +235,78 @@ public class LobbyScreen extends BaseUIScreen implements ClientEventHandler {
 		}
 
 		return t;
+	}
+
+	/**
+	 * Adds a chat message to the ui.
+	 * 
+	 * @param sender
+	 *            The sender. Can be null for system messages.
+	 * @param message
+	 *            The actual message.
+	 */
+	private void addChatMessageToUI(String sender, String message) {
+		messagesArea.appendText(
+				((sender == null || sender.isEmpty()) ? "" : sender + ": ")
+						+ message + " \n");
+	}
+
+	/**
+	 * Starts the game if all players are ready.
+	 */
+	private void startGameIfReady() {
+		if (PlayerUtils.areAllPlayersReady(players.values())) {
+			addChatMessageToUI(null, "Spiel startet...");
+			game.getInputMultiplexer().removeInputProcessors();
+			game.setCurrentSession(new MultiplayerSession(sessionSetup, players,
+					localNetworkId));
+			game.getEventBus().register(game.getCurrentMultiplayerSession());
+			game.getCurrentMultiplayerSession().startGame(game);
+			game.pushScreen("gameLoading");
+		}
+	}
+
+	@Subscribe
+	public void onNewChatMessage(NewChatMessagEvent event) {
+		addChatMessageToUI(
+				players.get(event.getPlayerId()).getName() + " "
+						+ players.get(event.getPlayerId()).getSurname(),
+				event.getMessage());
+	}
+
+	@Subscribe
+	public void onPlayerChanged(PlayerChangedEvent event) {
+		players.put(event.getNetworkId(), event.getPlayer());
+		updateLobbyUI();
+	}
+
+	@Subscribe
+	public void onPlayerDisconnect(PlayerDisconnectedEvent event) {
+		addChatMessageToUI(null, players.get(event.getId()).getName()
+				+ " hat das Spiel verlassen");
+		players.remove(event.getId());
+		updateLobbyUI();
+	}
+
+	@Subscribe
+	public void onPlayerConnect(PlayerConnectedEvent event) {
+		players.put(event.getNetworkId(), event.getPlayer());
+		addChatMessageToUI(null,
+				event.getPlayer().getName() + " ist dem Spiel beigetreten");
+		updateLobbyUI();
+	}
+
+	@Subscribe
+	public void onGameSetup(GameSessionSetupEvent event) {
+		players = event.getPlayers();
+		localNetworkId = event.getId();
+		sessionSetup = event.getSettings();
+
+		updateLobbyUI();
+	}
+
+	private LobbyPlayer getLocalPlayer() {
+		return players.get(localNetworkId);
 	}
 
 }

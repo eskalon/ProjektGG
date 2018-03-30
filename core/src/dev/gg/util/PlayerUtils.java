@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
-import dev.gg.core.Player;
-import dev.gg.core.Player.PlayerIcon;
+import dev.gg.core.LobbyPlayer;
+import dev.gg.core.LobbyPlayer.PlayerIcon;
 
 /**
  * This class contains utility methods for working with players.
@@ -16,22 +16,29 @@ public class PlayerUtils {
 	private static Random random = new Random();
 	/**
 	 * All possible random names.
+	 * 
+	 * @see Player#getName()
 	 */
 	private static String[] names = new String[]{"Franz", "Heinrich", "Marthe",
 			"Ferdinand", "Luise", "Oskar", "Jan", "Pierre", "Ève", "Michael",
-			"Moritz", "Gregor", "Andrej Nikolajewitsch", "Peter"};
+			"Moritz", "Gregor", "Andrej Nikolajewitsch", "Peter", "Walter"};
 	/**
 	 * All possible random surnames.
+	 * 
+	 * @see Player#getSurname()
 	 */
 	private static String[] surnames = new String[]{"Woyzeck", "Faust",
 			"Schwerdtlein", "von Walter", "Miller", "Matzerath", "Bronski",
 			"Dumaine", "Charlier", "Kohlhaas", "Jäger", "Samsa", "Bolkónski",
-			"Besúchow"};
+			"Besúchow", "Faber"};
 	/**
-	 * The genders to all possible names.
+	 * The genders to all possible names. The boolean is denoting if the person
+	 * is male.
+	 * 
+	 * @see Player#isMale()
 	 */
 	private static boolean[] genders = new boolean[]{true, true, false, true,
-			false, true, true, true, false, true, true, true, true, true};
+			false, true, true, true, false, true, true, true, true, true, true};
 
 	private PlayerUtils() {
 	}
@@ -40,12 +47,12 @@ public class PlayerUtils {
 	 * @return A list of all unused icons.
 	 */
 	public static List<PlayerIcon> getAvailableIcons(
-			Collection<Player> players) {
+			Collection<LobbyPlayer> players) {
 		List<PlayerIcon> tmp = new ArrayList();
 
 		for (PlayerIcon i : PlayerIcon.values()) {
 			boolean taken = false;
-			for (Player p : players) {
+			for (LobbyPlayer p : players) {
 				if (p.getIcon() == i) {
 					taken = true;
 
@@ -67,10 +74,10 @@ public class PlayerUtils {
 	 *            The players.
 	 * @return The overall ready status.
 	 */
-	public static boolean areAllPlayersReady(Collection<Player> players) {
+	public static boolean areAllPlayersReady(Collection<LobbyPlayer> players) {
 		boolean allReady = true;
 
-		for (Player p : players) {
+		for (LobbyPlayer p : players) {
 			if (!p.isReady()) {
 				allReady = false;
 				break;
@@ -88,13 +95,13 @@ public class PlayerUtils {
 	 *            The players.
 	 * @param player
 	 *            The exempt player.
-	 * @return The ready status.
+	 * @return The overall ready status.
 	 */
-	public static boolean areAllPlayersReadyExcept(Collection<Player> players,
-			Player player) {
+	public static boolean areAllPlayersReadyExcept(
+			Collection<LobbyPlayer> players, LobbyPlayer player) {
 		boolean allReady = true;
 
-		for (Player p : players) {
+		for (LobbyPlayer p : players) {
 			if (p != player) {
 				if (!p.isReady()) {
 					allReady = false;
@@ -124,10 +131,11 @@ public class PlayerUtils {
 	 *            unused player icons.
 	 * @return The random player.
 	 */
-	public static Player getRandomPlayer(Collection<Player> collection) {
+	public static LobbyPlayer getRandomPlayer(
+			Collection<LobbyPlayer> collection) {
 		int index = getRandomIndex();
 
-		return new Player(names[index], surnames[index],
+		return new LobbyPlayer(names[index], surnames[index],
 				PlayerUtils.getAvailableIcons(collection).get(0),
 				genders[index]);
 	}

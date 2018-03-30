@@ -2,8 +2,8 @@ package dev.gg.network.message;
 
 import java.util.HashMap;
 
-import dev.gg.core.Player;
-import dev.gg.data.GameSettings;
+import dev.gg.core.LobbyPlayer;
+import dev.gg.data.GameSessionSetup;
 
 /**
  * This message is the first thing sent to the client by the server and contains
@@ -14,7 +14,7 @@ public class GameSetupMessage {
 	/**
 	 * A hashmap of all players and their respective IDs.
 	 */
-	private HashMap<Short, Player> players;
+	private HashMap<Short, LobbyPlayer> players;
 	/**
 	 * The ID of the client player.
 	 */
@@ -22,19 +22,19 @@ public class GameSetupMessage {
 	/**
 	 * The game's settings.
 	 */
-	private GameSettings settings;
+	private GameSessionSetup settings;
 
 	public GameSetupMessage() {
 	}
 
-	public GameSetupMessage(HashMap<Short, Player> players, short clientId,
-			GameSettings settings) {
+	public GameSetupMessage(HashMap<Short, LobbyPlayer> players, short clientId,
+			GameSessionSetup settings) {
 		this.players = players;
 		this.settings = settings;
 		this.clientId = clientId;
 	}
 
-	public HashMap<Short, Player> getPlayers() {
+	public HashMap<Short, LobbyPlayer> getPlayers() {
 		return players;
 	}
 
@@ -42,7 +42,7 @@ public class GameSetupMessage {
 		return clientId;
 	}
 
-	public GameSettings getSettings() {
+	public GameSessionSetup getSettings() {
 		return settings;
 	}
 

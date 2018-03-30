@@ -17,6 +17,10 @@ import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
  * initializing the screen. To manually load the assets i.e. when implementing a
  * loading screen, one has to call {@link #finishLoading()} after finishing to
  * load the assets.
+ * <p>
+ * The screen is automatically registered in the game's
+ * {@linkplain ProjektGG#getEventBus() event bus} while {@linkplain #show()
+ * shown}.
  */
 public abstract class BaseScreen implements Screen {
 
@@ -60,6 +64,22 @@ public abstract class BaseScreen implements Screen {
 	 */
 	public boolean isLoaded() {
 		return loaded;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void show() {
+		game.getEventBus().register(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void hide() {
+		game.getEventBus().unregister(this);
 	}
 
 	@Override
