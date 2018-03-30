@@ -1,11 +1,15 @@
-package de.gg.event;
+package de.gg.network.message;
 
 import java.util.HashMap;
 
 import de.gg.core.LobbyPlayer;
 import de.gg.data.GameSessionSetup;
 
-public class GameSessionSetupEvent {
+/**
+ * This message is the first thing sent to the client by the server and contains
+ * all the necessary information about the game.
+ */
+public class GameSetupMessage {
 
 	/**
 	 * A hashmap of all players and their respective IDs.
@@ -20,10 +24,10 @@ public class GameSessionSetupEvent {
 	 */
 	private GameSessionSetup settings;
 
-	public GameSessionSetupEvent() {
+	public GameSetupMessage() {
 	}
 
-	public GameSessionSetupEvent(HashMap<Short, LobbyPlayer> players, short clientId,
+	public GameSetupMessage(HashMap<Short, LobbyPlayer> players, short clientId,
 			GameSessionSetup settings) {
 		this.players = players;
 		this.settings = settings;
