@@ -18,7 +18,7 @@ ProjektGG ist eine mittelalterliche Wirtschafts- und Politiksimulation und reiht
 [Hier](https://github.com/eskalon/ProjektGG/wiki) pflegen wir ein ausgedehntes Wiki, um einen Überblick über den aktuellen und den geplanten Stand des Spiels zu bieten.
 
 ## Die Technik dahinter
-ProjectGG verwendet als Grundlage das Java-Framework libGDX in Verbindung mit der Physics-Engine Bullet. Für den Netzwerk-Part wird ein custom Fork von KryoNet verwendet. Mehr zur Technik dahinter ist [hier](https://github.com/eskalon/ProjektGG/wiki/Technik-dahinter) zu finden.
+ProjektGG verwendet als Grundlage das Java-Framework libGDX in Verbindung mit der Physics-Engine Bullet. Für den Netzwerk-Part wird ein custom Fork von KryoNet verwendet. Mehr zur Technik dahinter ist [hier](https://github.com/eskalon/ProjektGG/wiki/Technik-dahinter) zu finden.
 
 ## Mitarbeit
 Wir freuen uns über jede Form der Mitarbeit, ob im Wiki, im Issue-Tracker oder als Pull-Request. Wer Schreib-Rechte im Wiki haben bzw. als Collaborator ins Projekt einsteigen möchte, der möge bitte einen der momentanen Contributor kontaktieren.
