@@ -9,13 +9,13 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.Shader;
 import com.badlogic.gdx.graphics.g3d.model.NodePart;
-import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultTextureBinder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 
 import de.gg.entity.Building;
-import de.gg.input.DefaultInputProcessor;
+import de.gg.input.MapMovementInputController;
+import de.gg.input.MapSelectionInputController;
 import de.gg.render.RenderData;
 import de.gg.render.SceneRenderer;
 import de.gg.render.TestShader;
@@ -38,7 +38,8 @@ public class GameMapScreen extends BaseGameScreen {
 	private Shader shader;
 	private RenderContext renderContext;
 
-	private CameraInputController cameraController;
+	private MapMovementInputController movementInputController;
+	private MapSelectionInputController selectionInputController;
 
 	private Renderable renderable;
 
@@ -48,8 +49,9 @@ public class GameMapScreen extends BaseGameScreen {
 
 		sceneRenderer = new SceneRenderer(game.getGameCamera().getCamera(),
 				game.getCurrentSession().getCity());
-		Model scene = assetManager.get(TEST_SCENE_PATH);
 
+		// Load the scene
+		Model scene = assetManager.get(TEST_SCENE_PATH);
 		for (int i = 0; i < scene.nodes.size; i++) {
 			String id = scene.nodes.get(i).id;
 			RenderData instance = new RenderData(scene, id, true);
@@ -79,6 +81,7 @@ public class GameMapScreen extends BaseGameScreen {
 			 */
 		}
 
+		// SPHERE
 		ModelBuilder modelBuilder = new ModelBuilder();
 		Model model = modelBuilder.createSphere(2f, 2f, 2f, 20, 20,
 				new Material(),
@@ -101,7 +104,12 @@ public class GameMapScreen extends BaseGameScreen {
 
 		// this.shader.init();
 
-		this.cameraController = new CameraInputController(
+		this.selectionInputController = new MapSelectionInputController(
+				game.getSettings(), game.getEventBus(),
+				game.getGameCamera().getCamera(),
+				game.getCurrentSession().getCity().getBuildings());
+
+		this.movementInputController = new MapMovementInputController(
 				game.getGameCamera().getCamera());
 	}
 
@@ -117,10 +125,12 @@ public class GameMapScreen extends BaseGameScreen {
 
 		game.getSpriteBatch().end();
 
-		cameraController.update();
+		movementInputController.update();
 
+		// Render city
 		sceneRenderer.render();
 
+		// Render sphere
 		renderContext.begin();
 		shader.begin(game.getGameCamera().getCamera(), renderContext);
 		shader.render(renderable);
@@ -132,7 +142,8 @@ public class GameMapScreen extends BaseGameScreen {
 	@Override
 	public void show() {
 		super.show();
-		game.getInputMultiplexer().addProcessor(cameraController);
+		game.getInputMultiplexer().addProcessor(selectionInputController);
+		game.getInputMultiplexer().addProcessor(movementInputController);
 	}
 
 	@Override

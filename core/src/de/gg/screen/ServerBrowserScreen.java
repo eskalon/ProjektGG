@@ -124,7 +124,7 @@ public class ServerBrowserScreen extends BaseUIScreen {
 	}
 
 	/**
-	 * Discovers available servers in the local network and adds the to the ui.
+	 * Discovers available servers in the local network and adds them to the ui.
 	 */
 	private void discoverLanServers() {
 		serverTable.clear();
