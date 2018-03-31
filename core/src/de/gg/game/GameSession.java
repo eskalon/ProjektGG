@@ -10,7 +10,7 @@ import de.gg.util.StoppableRunnable;
  */
 public abstract class GameSession {
 
-	private static final long ROUND_DURATION = 20 * 1000;
+	private static final long ROUND_DURATION = 20 * 1000; // 8*60*1000
 	protected volatile boolean waitingForNextRound = false;
 	private GameSessionSetup setup;
 	/**

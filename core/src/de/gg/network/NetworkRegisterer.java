@@ -11,6 +11,7 @@ import de.gg.game.AuthoritativeResultListener;
 import de.gg.game.SlaveActionListener;
 import de.gg.network.LobbyPlayer.PlayerIcon;
 import de.gg.network.message.ChatMessageSentMessage;
+import de.gg.network.message.DiscoveryResponsePacket;
 import de.gg.network.message.GameSetupMessage;
 import de.gg.network.message.PlayerChangedMessage;
 import de.gg.network.message.PlayerJoinedMessage;

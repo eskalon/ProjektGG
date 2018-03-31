@@ -18,6 +18,7 @@ import de.gg.data.GameMap;
 import de.gg.data.GameSessionSetup;
 import de.gg.data.GameSessionSetup.GameDifficulty;
 import de.gg.event.ConnectionEstablishedEvent;
+import de.gg.network.NetworkHandler;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class LobbyCreationScreen extends BaseUIScreen {
@@ -37,7 +38,8 @@ public class LobbyCreationScreen extends BaseUIScreen {
 		Label portLabel = new Label("Port: ", skin);
 
 		TextField nameField = new TextField("", skin);
-		TextField portField = new TextField("55789", skin);
+		TextField portField = new TextField(
+				String.valueOf(NetworkHandler.DEFAULT_PORT), skin);
 		portField.setTextFieldFilter(
 				new TextField.TextFieldFilter.DigitsOnlyFilter());
 

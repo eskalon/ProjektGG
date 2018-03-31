@@ -1,5 +1,8 @@
 package de.gg.screen;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,6 +18,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.google.common.eventbus.Subscribe;
 
 import de.gg.event.ConnectionEstablishedEvent;
+import de.gg.network.NetworkHandler;
+import de.gg.network.NetworkHandler.HostDiscoveryListener;
+import de.gg.network.message.DiscoveryResponsePacket;
+import de.gg.util.StoppableRunnable;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class ServerBrowserScreen extends BaseUIScreen {
@@ -26,35 +33,22 @@ public class ServerBrowserScreen extends BaseUIScreen {
 	@Asset(Sound.class)
 	private final String BUTTON_SOUND = "audio/button-tick.mp3";
 	private Dialog connectingDialog;
+	private Sound clickSound;
+	private Table serverTable;
+	/**
+	 * This list holds all local LAN servers that were discovered.
+	 */
+	private List<String> dicoveredServers = new ArrayList<>();
+	private StoppableRunnable discoveryThread;
 
 	@Override
 	protected void initUI() {
 		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
-		Sound clickSound = assetManager.get(BUTTON_SOUND);
+		clickSound = assetManager.get(BUTTON_SOUND);
 
 		// mainTable.setBackground(skin.getDrawable("parchment-small"));
-		Table serverTable = new Table();
+		serverTable = new Table();
 		ScrollPane pane = new ScrollPane(serverTable);
-
-		// TODO gegen echte Server-Daten austauschen
-		String ip = "127.0.0.1";
-		int port = 12345;
-		ImageTextButton joinButton = new ImageTextButton("Beitreten", skin
-		/* "small" */);
-		joinButton.addListener(new InputListener() {
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				clickSound.play(1F);
-
-				game.getNetworkHandler().setUpConnectionAsClient(ip, port);
-
-				connectingDialog = new Dialog("Verbinden...", skin);
-				connectingDialog.text("Spiel beitreten...");
-				connectingDialog.show(stage);
-
-				return true;
-			}
-		});
 
 		ImageTextButton backButton = new ImageTextButton("Zurück", skin
 		/* "small" */);
@@ -87,7 +81,8 @@ public class ServerBrowserScreen extends BaseUIScreen {
 					int pointer, int button) {
 				clickSound.play(1F);
 
-				TextField portInputField = new TextField("55789", skin);
+				TextField portInputField = new TextField(
+						String.valueOf(NetworkHandler.DEFAULT_PORT), skin);
 				portInputField.setTextFieldFilter(
 						new TextField.TextFieldFilter.DigitsOnlyFilter());
 				TextField ipInputField = new TextField("127.0.0.1", skin);
@@ -122,15 +117,71 @@ public class ServerBrowserScreen extends BaseUIScreen {
 		buttonTable.add(createLobbyButton).padLeft(55);
 		buttonTable.add(directConnectButton).padLeft(55);
 
-		serverTable.left().top()
-				.add(new Image((Texture) assetManager.get(TICK_IMAGE_PATH)))
-				.padRight(15).padLeft(12);
-		serverTable.add(new Label("Spiel 2", skin)).expandX();
-		serverTable.add(joinButton).padRight(12);
-		serverTable.row().padTop(20);
+		discoverLanServers();
 
 		mainTable.add(serverTable).width(580).height(405).row();
 		mainTable.add(buttonTable).height(50).bottom();
+	}
+
+	/**
+	 * Discovers available servers in the local network and adds the to the ui.
+	 */
+	private void discoverLanServers() {
+		serverTable.clear();
+		dicoveredServers.clear();
+		if (discoveryThread != null)
+			discoveryThread.stop();
+		discoveryThread = new StoppableRunnable() {
+			@Override
+			public void doStuff() {
+				game.getNetworkHandler()
+						.discoverHosts(new HostDiscoveryListener() {
+							@Override
+							public void onHostDiscovered(String address,
+									DiscoveryResponsePacket datagramPacket) {
+								if (!dicoveredServers
+										.contains(datagramPacket.getGameName()
+												+ datagramPacket.getPort())) {
+									dicoveredServers
+											.add(datagramPacket.getGameName()
+													+ datagramPacket.getPort());
+									addServerToUI(serverTable,
+											datagramPacket.getGameName(),
+											address, datagramPacket.getPort());
+								}
+							}
+						});
+			}
+		};
+		(new Thread(discoveryThread)).start();
+	}
+
+	private void addServerToUI(Table serverTable, String gameName, String ip,
+			int port) {
+		// TODO gegen echte Server-Daten austauschen
+		ImageTextButton joinButton = new ImageTextButton("Beitreten", skin
+		/* "small" */);
+		joinButton.addListener(new InputListener() {
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				clickSound.play(1F);
+
+				game.getNetworkHandler().setUpConnectionAsClient(ip, port);
+
+				connectingDialog = new Dialog("Verbinden...", skin);
+				connectingDialog.text("Spiel beitreten...");
+				connectingDialog.show(stage);
+
+				return true;
+			}
+		});
+
+		serverTable.left().top()
+				.add(new Image((Texture) assetManager.get(TICK_IMAGE_PATH)))
+				.padRight(15).padLeft(12);
+		serverTable.add(new Label(gameName, skin)).expandX();
+		serverTable.add(joinButton).padRight(12);
+		serverTable.row().padTop(20);
 	}
 
 	@Subscribe

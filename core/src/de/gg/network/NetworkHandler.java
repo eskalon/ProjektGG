@@ -1,8 +1,11 @@
 package de.gg.network;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
 
+import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.kryonet.ClientDiscoveryHandler;
 import com.esotericsoftware.kryonet.Listener.TypeListener;
 import com.esotericsoftware.kryonet.rmi.ObjectSpace;
 import com.google.common.base.Preconditions;
@@ -19,6 +22,7 @@ import de.gg.game.AuthoritativeResultListener;
 import de.gg.game.SlaveActionListener;
 import de.gg.network.GameServer.IHostCallback;
 import de.gg.network.message.ChatMessageSentMessage;
+import de.gg.network.message.DiscoveryResponsePacket;
 import de.gg.network.message.GameSetupMessage;
 import de.gg.network.message.PlayerChangedMessage;
 import de.gg.network.message.PlayerJoinedMessage;
@@ -35,6 +39,8 @@ import de.gg.util.Log;
  */
 public class NetworkHandler {
 
+	public static final int DEFAULT_PORT = 55678;
+	public static final int UDP_DISCOVER_PORT = 54678;
 	private EventBus eventBus;
 	private Client client;
 	private GameServer server;
@@ -102,8 +108,7 @@ public class NetworkHandler {
 					// Das Event hierfür wird beim Empfangen des Game Setups
 					// gepostet
 				} catch (IOException e) {
-					Log.error("Client", "Fehler beim Betreten der Lobby");
-					e.printStackTrace();
+					Log.error("Client", "Fehler beim Betreten der Lobby: ", e);
 					eventBus.post(new ConnectionEstablishedEvent(e));
 				}
 			}
@@ -199,6 +204,34 @@ public class NetworkHandler {
 
 	public boolean readyUp() {
 		return actionListener.readyUp(localClientId);
+	}
+
+	public void discoverHosts(HostDiscoveryListener listener) {
+		Client c = new Client();
+		c.getKryo().register(DiscoveryResponsePacket.class);
+		c.setDiscoveryHandler(new ClientDiscoveryHandler() {
+			@Override
+			public DatagramPacket onRequestNewDatagramPacket() {
+				byte[] buffer = new byte[1024];
+				return new DatagramPacket(buffer, buffer.length);
+			}
+
+			@Override
+			public void onDiscoveredHost(DatagramPacket datagramPacket) {
+				DiscoveryResponsePacket packet = (DiscoveryResponsePacket)c.getKryo().readClassAndObject(new Input(datagramPacket.getData()));
+				listener.onHostDiscovered(datagramPacket.getAddress().getHostAddress(), packet);
+			}
+
+			@Override
+			public void onFinally() {
+			}
+		});
+		c.discoverHosts(UDP_DISCOVER_PORT, 4500);
+		c.close();
+	}
+
+	public interface HostDiscoveryListener {
+		public void onHostDiscovered(String address, DiscoveryResponsePacket datagramPacket);
 	}
 
 }

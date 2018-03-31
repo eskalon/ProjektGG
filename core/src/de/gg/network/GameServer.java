@@ -1,6 +1,9 @@
 package de.gg.network;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.DatagramChannel;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -8,6 +11,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener.ConnectionListener;
 import com.esotericsoftware.kryonet.Listener.TypeListener;
 import com.esotericsoftware.kryonet.Server;
+import com.esotericsoftware.kryonet.ServerDiscoveryHandler;
 import com.esotericsoftware.kryonet.rmi.ObjectSpace;
 
 import de.gg.data.GameSessionSetup;
@@ -15,6 +19,7 @@ import de.gg.game.AuthoritativeResultListener;
 import de.gg.game.AuthoritativeSession;
 import de.gg.game.SlaveActionListener;
 import de.gg.network.message.ChatMessageSentMessage;
+import de.gg.network.message.DiscoveryResponsePacket;
 import de.gg.network.message.GameSetupMessage;
 import de.gg.network.message.PlayerChangedMessage;
 import de.gg.network.message.PlayerJoinedMessage;
@@ -26,6 +31,7 @@ import de.gg.util.PlayerUtils;
 public class GameServer {
 
 	private Server server;
+	private Server broadcastServer;
 	private GameSessionSetup setup;
 	private AuthoritativeSession session;
 	private String gameName;
@@ -76,14 +82,62 @@ public class GameServer {
 		Thread t = new Thread(new Runnable() {
 			public void run() {
 				try {
+					// Server starten
 					server.bind(port);
+					Log.info("Server", "Server gestartet");
+
+					// Wenn das erfolgreich war, einen Broadcast Server starten
+					(new Thread(new Runnable() {
+						@Override
+						public void run() {
+							broadcastServer = new Server();
+							broadcastServer.start();
+							broadcastServer.getKryo()
+									.register(DiscoveryResponsePacket.class);
+							broadcastServer.setDiscoveryHandler(
+									new ServerDiscoveryHandler() {
+										@Override
+										public boolean onDiscoverHost(
+												DatagramChannel datagramChannel,
+												InetSocketAddress fromAddress)
+												throws IOException {
+											DiscoveryResponsePacket packet = new DiscoveryResponsePacket(
+													port, gameName,
+													players.size());
+
+											ByteBuffer buffer = ByteBuffer
+													.allocate(256);
+											broadcastServer
+													.getSerializationFactory()
+													.newInstance(null)
+													.write(buffer, packet);
+											buffer.flip();
+
+											datagramChannel.send(buffer,
+													fromAddress);
+
+											return true;
+										}
+									});
+
+							try {
+								broadcastServer.bind(0,
+										NetworkHandler.UDP_DISCOVER_PORT);
+								Log.info("Server",
+										"Broadcast Server gestartet");
+							} catch (IOException e) {
+								Log.error("Server",
+										"Der Broadcast Server konnte nicht gestartet werden: %s",
+										e);
+							}
+						}
+					})).start();
+					callback.onHostStarted(null);
 				} catch (IOException e) {
 					callback.onHostStarted(e);
-					e.printStackTrace();
-					return;
-
+					Log.error("Server",
+							"Der Server konnte nicht gestartet werden: %s", e);
 				}
-				callback.onHostStarted(null);
 			}
 		});
 		t.start();
@@ -96,6 +150,8 @@ public class GameServer {
 		if (session != null)
 			session.stopGame();
 		server.stop();
+		if (broadcastServer != null)
+			broadcastServer.stop();
 	}
 
 	// LISTENER METHDOS
@@ -161,8 +217,11 @@ public class GameServer {
 			}
 
 			session.startGame(resultListeners);
-
 			Log.info("Server", "Spiel gestartet");
+
+			broadcastServer.close();
+			broadcastServer = null;
+			Log.info("Server", "Broadcast Server geschlossen");
 		}
 	}
 

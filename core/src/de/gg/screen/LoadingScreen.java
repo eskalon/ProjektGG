@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.VisUI.SkinScale;
 
 import de.gg.render.TestShader;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
