@@ -5,9 +5,11 @@ import java.util.HashMap;
 
 import com.esotericsoftware.kryo.Kryo;
 
-import de.gg.core.LobbyPlayer;
-import de.gg.core.LobbyPlayer.PlayerIcon;
 import de.gg.data.GameSessionSetup.GameDifficulty;
+import de.gg.data.RoundEndData;
+import de.gg.game.AuthoritativeResultListener;
+import de.gg.game.SlaveActionListener;
+import de.gg.network.LobbyPlayer.PlayerIcon;
 import de.gg.network.message.ChatMessageSentMessage;
 import de.gg.network.message.GameSetupMessage;
 import de.gg.network.message.PlayerChangedMessage;
@@ -48,6 +50,11 @@ public class NetworkRegisterer {
 		kryo.register(PlayerChangedMessage.class);
 		kryo.register(PlayerJoinedMessage.class);
 		kryo.register(PlayerLeftMessage.class);
+
+		kryo.register(AuthoritativeResultListener.class);
+		kryo.register(SlaveActionListener.class);
+		
+		kryo.register(RoundEndData.class);
 	}
 
 }

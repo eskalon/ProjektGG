@@ -137,6 +137,7 @@ public class ServerBrowserScreen extends BaseUIScreen {
 	public void onClientConnected(ConnectionEstablishedEvent event) {
 		connectingDialog.setVisible(false);
 		if (event.getException() == null) {
+			((LobbyScreen) game.getScreen("lobby")).setupLobby(event);
 			game.pushScreen("lobby");
 		} else {
 			game.setCurrentSession(null);

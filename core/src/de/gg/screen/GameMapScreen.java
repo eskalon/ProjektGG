@@ -132,17 +132,6 @@ public class GameMapScreen extends BaseGameScreen {
 	@Override
 	public void show() {
 		super.show();
-		game.getInputMultiplexer().addProcessor(new DefaultInputProcessor() {
-			@Override
-			public boolean keyDown(int keycode) {
-				System.out.println("Key pressed: " + keycode);
-
-				// game.getCurrentMultiplayerSession()
-				// .executeNewCommand(new TestCommand());
-
-				return true;
-			}
-		});
 		game.getInputMultiplexer().addProcessor(cameraController);
 	}
 
@@ -154,7 +143,8 @@ public class GameMapScreen extends BaseGameScreen {
 
 	@Override
 	public void dispose() {
-		sceneRenderer.dispose();
+		if (isLoaded())
+			sceneRenderer.dispose();
 	}
 
 }

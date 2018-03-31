@@ -15,15 +15,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.google.common.eventbus.Subscribe;
 
-import de.gg.core.LobbyPlayer;
-import de.gg.core.MultiplayerSession;
 import de.gg.data.GameSessionSetup;
-import de.gg.event.GameSessionSetupEvent;
+import de.gg.event.ConnectionEstablishedEvent;
 import de.gg.event.NewChatMessagEvent;
 import de.gg.event.PlayerChangedEvent;
 import de.gg.event.PlayerConnectedEvent;
 import de.gg.event.PlayerDisconnectedEvent;
+import de.gg.game.SlaveSession;
+import de.gg.network.LobbyPlayer;
 import de.gg.network.NetworkHandler;
+import de.gg.util.Log;
 import de.gg.util.PlayerUtils;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
@@ -168,7 +169,7 @@ public class LobbyScreen extends BaseUIScreen {
 
 		mainTable.setDebug(true);
 
-		// updateLobbyUI();
+		updateLobbyUI();
 	}
 
 	/**
@@ -258,10 +259,11 @@ public class LobbyScreen extends BaseUIScreen {
 		if (PlayerUtils.areAllPlayersReady(players.values())) {
 			addChatMessageToUI(null, "Spiel startet...");
 			game.getInputMultiplexer().removeInputProcessors();
-			game.setCurrentSession(new MultiplayerSession(sessionSetup, players,
+			game.setCurrentSession(new SlaveSession(game, sessionSetup, players,
 					localNetworkId));
-			game.getEventBus().register(game.getCurrentMultiplayerSession());
-			game.getCurrentMultiplayerSession().startGame(game);
+			game.getCurrentSession().startGame();
+			game.getNetworkHandler().startGame(game.getCurrentSession());
+			Log.info("Client", "Spiel gestartet");
 			game.pushScreen("gameLoading");
 		}
 	}
@@ -296,13 +298,10 @@ public class LobbyScreen extends BaseUIScreen {
 		updateLobbyUI();
 	}
 
-	@Subscribe
-	public void onGameSetup(GameSessionSetupEvent event) {
+	public void setupLobby(ConnectionEstablishedEvent event) {
 		players = event.getPlayers();
 		localNetworkId = event.getId();
 		sessionSetup = event.getSettings();
-
-		updateLobbyUI();
 	}
 
 	private LobbyPlayer getLocalPlayer() {

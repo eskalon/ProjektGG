@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
-import de.gg.core.LobbyPlayer;
-import de.gg.core.LobbyPlayer.PlayerIcon;
+import de.gg.network.LobbyPlayer;
+import de.gg.network.LobbyPlayer.PlayerIcon;
 
 /**
  * This class contains utility methods for working with players.

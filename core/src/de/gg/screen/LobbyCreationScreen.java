@@ -85,6 +85,7 @@ public class LobbyCreationScreen extends BaseUIScreen {
 					// Sever & Client starten
 					game.getNetworkHandler().setUpConnectionAsHost(
 							Integer.valueOf(portField.getText()),
+							nameField.getText(),
 							new GameSessionSetup(difficulty,
 									GameMap.getMaps().get("Bamberg"),
 									System.currentTimeMillis()));
@@ -135,6 +136,7 @@ public class LobbyCreationScreen extends BaseUIScreen {
 	public void onHostStarted(ConnectionEstablishedEvent event) {
 		connectingDialog.setVisible(false);
 		if (event.getException() == null) {
+			((LobbyScreen) game.getScreen("lobby")).setupLobby(event);
 			game.pushScreen("lobby");
 		} else {
 			game.setCurrentSession(null);

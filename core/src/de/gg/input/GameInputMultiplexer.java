@@ -1,11 +1,9 @@
 package de.gg.input;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.utils.Array;
 
+import de.gg.util.Log;
 import de.gg.util.ScreenshotUtils;
 
 /**
@@ -20,7 +18,7 @@ public class GameInputMultiplexer extends InputMultiplexer {
 	@Override
 	public boolean keyDown(int keycode) {
 		if (keycode == Keys.F12) {
-			Gdx.app.log("Input", "Screenshot taken");
+			Log.info("Input", "Screenshot taken");
 			ScreenshotUtils.takeScreenshot();
 
 			return true;

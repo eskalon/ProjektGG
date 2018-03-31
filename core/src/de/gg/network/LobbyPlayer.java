@@ -1,4 +1,4 @@
-package de.gg.core;
+package de.gg.network;
 
 /**
  * This class describes a player.

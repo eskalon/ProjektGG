@@ -17,7 +17,7 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 		game.getScreen("house").finishLoading();
 		game.getScreen("roundEnd").finishLoading();
 
-		game.pushScreen("map");
+		game.pushScreen("roundEnd");
 	}
 
 }

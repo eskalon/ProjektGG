@@ -22,6 +22,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.gg.camera.CameraWrapper;
 import de.gg.exception.ScreenNotFoundException;
+import de.gg.game.GameSession;
+import de.gg.game.SlaveSession;
 import de.gg.input.GameInputMultiplexer;
 import de.gg.network.NetworkHandler;
 import de.gg.screen.BaseScreen;
@@ -38,6 +40,7 @@ import de.gg.screen.ServerBrowserScreen;
 import de.gg.screen.SplashScreen;
 import de.gg.setting.GameSettings;
 import de.gg.util.EventQueueBus;
+import de.gg.util.Log;
 import de.gg.util.asset.Text;
 import de.gg.util.asset.TextLoader;
 import net.dermetfan.gdx.assets.AnnotationAssetManager;
@@ -78,7 +81,7 @@ public class ProjektGG extends Game {
 
 	private Skin uiSkin;
 
-	private GameSession currentSession;
+	private SlaveSession currentSession;
 
 	/**
 	 * Event bus. All events are queued first and then taken care of in the
@@ -97,9 +100,9 @@ public class ProjektGG extends Game {
 	@Override
 	public final void create() {
 		if (debug)
-			Gdx.app.setLogLevel(Gdx.app.LOG_DEBUG);
+			Log.enableDebugLogging();
 		else
-			Gdx.app.setLogLevel(Gdx.app.LOG_INFO);
+			Log.disableDebugLogging();
 
 		// Initialize sprite batch
 		this.batch = new SpriteBatch();
@@ -193,7 +196,7 @@ public class ProjektGG extends Game {
 	 * @param name
 	 *            The name of the pushed screen.
 	 */
-	public void pushScreen(String name) {
+	public synchronized void pushScreen(String name) {
 		BaseScreen pushedScreen = this.screens.get(name);
 
 		if (pushedScreen == null) {
@@ -321,21 +324,12 @@ public class ProjektGG extends Game {
 	/**
 	 * @return The current game session. Null if no session is played at the
 	 *         moment.
-	 * @see #getCurrentMultiplayerSession()
 	 */
-	public GameSession getCurrentSession() {
+	public SlaveSession getCurrentSession() {
 		return currentSession;
 	}
 
-	/**
-	 * @return The current multiplayer game session.
-	 * @see #getCurrentSession()
-	 */
-	public MultiplayerSession getCurrentMultiplayerSession() {
-		return (MultiplayerSession) currentSession;
-	}
-
-	public void setCurrentSession(MultiplayerSession session) {
+	public void setCurrentSession(SlaveSession session) {
 		this.currentSession = session;
 	}
 

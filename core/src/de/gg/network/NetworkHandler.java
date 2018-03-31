@@ -2,28 +2,37 @@ package de.gg.network;
 
 import java.io.IOException;
 
-import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener.TypeListener;
+import com.esotericsoftware.kryonet.rmi.ObjectSpace;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
-import de.gg.core.LobbyPlayer;
 import de.gg.core.ProjektGG;
 import de.gg.data.GameSessionSetup;
 import de.gg.event.ConnectionEstablishedEvent;
-import de.gg.event.GameSessionSetupEvent;
 import de.gg.event.NewChatMessagEvent;
 import de.gg.event.PlayerChangedEvent;
 import de.gg.event.PlayerConnectedEvent;
 import de.gg.event.PlayerDisconnectedEvent;
+import de.gg.game.AuthoritativeResultListener;
+import de.gg.game.SlaveActionListener;
 import de.gg.network.GameServer.IHostCallback;
 import de.gg.network.message.ChatMessageSentMessage;
 import de.gg.network.message.GameSetupMessage;
 import de.gg.network.message.PlayerChangedMessage;
 import de.gg.network.message.PlayerJoinedMessage;
 import de.gg.network.message.PlayerLeftMessage;
+import de.gg.util.Log;
 
+/**
+ * This class takes care of handling the networking part of the game. It holds
+ * an instance of the used kryonet {@linkplain #client client} and the
+ * {@linkplain #server game server} (if the client is also the
+ * {@linkplain #isHost() host}).
+ * <p>
+ * It is further responsible for relaying all user actions to the server.
+ */
 public class NetworkHandler {
 
 	private EventBus eventBus;
@@ -33,6 +42,7 @@ public class NetworkHandler {
 	 * The network ID of the local player.
 	 */
 	private short localClientId;
+	private SlaveActionListener actionListener;
 
 	public NetworkHandler(EventBus eventBus) {
 		Preconditions.checkNotNull(eventBus, "Event handler cannot be null.");
@@ -59,10 +69,10 @@ public class NetworkHandler {
 		TypeListener listener = new TypeListener();
 		// GAME SETUP MESSAGE (ON CLIENT CONNECT)
 		listener.addTypeHandler(GameSetupMessage.class, (con, msg) -> {
-			eventBus.post(new GameSessionSetupEvent(msg.getPlayers(),
+			eventBus.post(new ConnectionEstablishedEvent(msg.getPlayers(),
 					msg.getId(), msg.getSettings()));
 			localClientId = msg.getId();
-			Gdx.app.log("Client", "Netzwerk ID: " + localClientId);
+			Log.info("Client", "Netzwerk ID: %d", localClientId);
 		});
 		// NEW CHAT MESSAGE
 		listener.addTypeHandler(ChatMessageSentMessage.class, (con, msg) -> {
@@ -84,20 +94,21 @@ public class NetworkHandler {
 		});
 		client.addListener(listener);
 
-		Thread t = new Thread(new Runnable() {
+		final Thread connectingThread = new Thread(new Runnable() {
 			public void run() {
-				IOException ex = null;
 				try {
 					client.connect(6000, ip, port);
-					Gdx.app.log("Client", "Lobby beigetreten");
+					Log.info("Client", "Lobby beigetreten");
+					// Das Event hierfür wird beim Empfangen des Game Setups
+					// gepostet
 				} catch (IOException e) {
-					ex = e;
+					Log.error("Client", "Fehler beim Betreten der Lobby");
 					e.printStackTrace();
+					eventBus.post(new ConnectionEstablishedEvent(e));
 				}
-				eventBus.post(new ConnectionEstablishedEvent(ex));
 			}
 		});
-		t.start();
+		connectingThread.start();
 	}
 
 	/**
@@ -107,10 +118,13 @@ public class NetworkHandler {
 	 * 
 	 * @param port
 	 *            The used port.
+	 * @param gameName
+	 *            The name of the game.
 	 * @see ClientNetworkHandler#setUpConnectionAsClient(String, int)
 	 */
-	public void setUpConnectionAsHost(int port, GameSessionSetup setup) {
-		server = new GameServer(port, setup, new IHostCallback() {
+	public void setUpConnectionAsHost(int port, String gameName,
+			GameSessionSetup setup) {
+		server = new GameServer(port, gameName, setup, new IHostCallback() {
 			@Override
 			public void onHostStarted(IOException e) {
 				if (e == null) {
@@ -148,6 +162,11 @@ public class NetworkHandler {
 		client.sendTCP(obj);
 	}
 
+	/**
+	 * Sends a chat message to the server.
+	 * 
+	 * @param message
+	 */
 	public void sendChatMessage(String message) {
 		sendObject(new ChatMessageSentMessage(localClientId, message));
 	}
@@ -157,6 +176,29 @@ public class NetworkHandler {
 	 */
 	public void onLocalPlayerChange(LobbyPlayer player) {
 		sendObject(new PlayerChangedMessage(localClientId, player));
+	}
+
+	/**
+	 * ...
+	 */
+	public void startGame(AuthoritativeResultListener resultListener) {
+		ObjectSpace.registerClasses(client.getKryo());
+		ObjectSpace objectSpace = new ObjectSpace();
+		objectSpace.register(localClientId, resultListener);
+		objectSpace.addConnection(client);
+
+		SlaveActionListener actionListener = ObjectSpace.getRemoteObject(client,
+				254, SlaveActionListener.class);
+
+		if (actionListener == null)
+			Log.error("Client", "Der actionListener des Spielers %d ist null",
+					localClientId);
+
+		this.actionListener = actionListener;
+	}
+
+	public boolean readyUp() {
+		return actionListener.readyUp(localClientId);
 	}
 
 }

@@ -1,6 +1,6 @@
 package de.gg.event;
 
-import de.gg.core.LobbyPlayer;
+import de.gg.network.LobbyPlayer;
 
 /**
  * Called when one of the clients changes (new icon, getting ready, etc.).

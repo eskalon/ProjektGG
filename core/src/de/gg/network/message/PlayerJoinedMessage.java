@@ -1,6 +1,6 @@
 package de.gg.network.message;
 
-import de.gg.core.LobbyPlayer;
+import de.gg.network.LobbyPlayer;
 
 /**
  * This message is sent after a new player joins a game.

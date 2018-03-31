@@ -1,5 +1,9 @@
 package de.gg.util;
 
+/**
+ * This class represents a runnable that can easily be {@linkplain #stop
+ * stopped}.
+ */
 public abstract class StoppableRunnable implements Runnable {
 	volatile boolean stop = false;
 
@@ -12,6 +16,9 @@ public abstract class StoppableRunnable implements Runnable {
 
 	protected abstract void doStuff();
 
+	/**
+	 * Stops the execution of the runnable.
+	 */
 	public void stop() {
 		this.stop = true;
 	}

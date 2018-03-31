@@ -2,8 +2,8 @@ package de.gg.network.message;
 
 import java.util.HashMap;
 
-import de.gg.core.LobbyPlayer;
 import de.gg.data.GameSessionSetup;
+import de.gg.network.LobbyPlayer;
 
 /**
  * This message is the first thing sent to the client by the server and contains

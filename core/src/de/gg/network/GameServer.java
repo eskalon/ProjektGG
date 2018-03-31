@@ -2,30 +2,33 @@ package de.gg.network;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
-import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener.ConnectionListener;
 import com.esotericsoftware.kryonet.Listener.TypeListener;
+import com.esotericsoftware.kryonet.Server;
+import com.esotericsoftware.kryonet.rmi.ObjectSpace;
 
-import de.gg.core.LobbyPlayer;
-import de.gg.core.ServerSession;
 import de.gg.data.GameSessionSetup;
+import de.gg.game.AuthoritativeResultListener;
+import de.gg.game.AuthoritativeSession;
+import de.gg.game.SlaveActionListener;
 import de.gg.network.message.ChatMessageSentMessage;
 import de.gg.network.message.GameSetupMessage;
 import de.gg.network.message.PlayerChangedMessage;
 import de.gg.network.message.PlayerJoinedMessage;
 import de.gg.network.message.PlayerLeftMessage;
 import de.gg.util.CollectionUtils;
+import de.gg.util.Log;
 import de.gg.util.PlayerUtils;
-
-import com.esotericsoftware.kryonet.Server;
 
 public class GameServer {
 
 	private Server server;
 	private GameSessionSetup setup;
-	private ServerSession session;
+	private AuthoritativeSession session;
+	private String gameName;
 	/**
 	 * A count of all joined players. Used to generate the player IDs.
 	 */
@@ -33,11 +36,12 @@ public class GameServer {
 	private HashMap<Short, LobbyPlayer> players;
 	private HashMap<Short, Connection> connections;
 
-	public GameServer(int port, GameSessionSetup setup,
+	public GameServer(int port, String gameName, GameSessionSetup setup,
 			IHostCallback callback) {
 		players = new HashMap<>();
 		connections = new HashMap<>();
-		
+		this.gameName = gameName;
+
 		server = new Server();
 		server.start();
 
@@ -89,14 +93,15 @@ public class GameServer {
 	 * Stops the server. Also takes care of saving the game.
 	 */
 	public void stop() {
-		session.stopGame();
+		if (session != null)
+			session.stopGame();
 		server.stop();
 	}
 
 	// LISTENER METHDOS
 	// ON NEW CONNECTION
 	private synchronized void onNewConnection(Connection con) {
-		Gdx.app.log("Server", "Client connected");
+		Log.info("Server", "Client connected");
 
 		LobbyPlayer p = PlayerUtils.getRandomPlayer(players.values());
 		players.put(playersJoinedCount, p);
@@ -115,7 +120,7 @@ public class GameServer {
 	// ON DISCONNECT
 	private synchronized void onDisconnect(Connection con) {
 		short id = CollectionUtils.getKeyByValue(connections, con);
-		Gdx.app.log("[Server]", "Player " + id + " disconnected");
+		Log.info("Server", "Player %d disconnected", id);
 
 		server.sendToAllExceptTCP(con.getID(), new PlayerLeftMessage(id));
 
@@ -132,8 +137,32 @@ public class GameServer {
 		System.out.println("Player changed " + msg.getId());
 
 		if (PlayerUtils.areAllPlayersReady(players.values())) {
-			session = new ServerSession(setup, players);
-			session.startGame();
+			session = new AuthoritativeSession(setup, players);
+
+			// Register the RMI handler
+			HashMap<Short, AuthoritativeResultListener> resultListeners = new HashMap<>();
+			ObjectSpace.registerClasses(server.getKryo());
+			ObjectSpace objectSpace = new ObjectSpace();
+			objectSpace.register(254, (SlaveActionListener) session);
+
+			for (Entry<Short, Connection> e : connections.entrySet()) {
+				objectSpace.addConnection(e.getValue());
+
+				AuthoritativeResultListener resultListener = ObjectSpace
+						.getRemoteObject(e.getValue(), e.getKey(),
+								AuthoritativeResultListener.class);
+				resultListeners.put(e.getKey(), resultListener);
+
+				if (resultListener == null)
+					Log.error("Server",
+							"Der resultListener des Spielers %d ist null",
+							e.getKey());
+
+			}
+
+			session.startGame(resultListeners);
+
+			Log.info("Server", "Spiel gestartet");
 		}
 	}
 
