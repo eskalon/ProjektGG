@@ -100,7 +100,7 @@ public class AuthoritativeSession extends GameSession
 			// Alle Clienten informieren
 			(new AuthoritativeResultListenerThread() {
 				@Override
-				protected void doStuff(
+				protected void informListener(
 						AuthoritativeResultListener resultListener) {
 					resultListener.onAllPlayersReadied(data);
 				}
@@ -124,11 +124,11 @@ public class AuthoritativeSession extends GameSession
 		public void run() {
 			for (AuthoritativeResultListener resultListener : resultListeners
 					.values()) {
-				doStuff(resultListener);
+				informListener(resultListener);
 			}
 		}
 
-		protected abstract void doStuff(
+		protected abstract void informListener(
 				AuthoritativeResultListener resultListener);
 	}
 

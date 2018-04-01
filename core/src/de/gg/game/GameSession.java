@@ -48,14 +48,16 @@ public abstract class GameSession {
 	 * @return Whether the ingame day is over (8 minutes).
 	 */
 	public synchronized boolean update() {
+		// Zeit-Delta ermitteln
 		long currentTime = System.currentTimeMillis();
 		long delta = currentTime - lastTime;
 		lastTime = currentTime;
 
+		// Rundenzeit hochzählen
 		currentRoundTime += delta;
 
-		// Runde zuende
 		if (currentRoundTime >= ROUND_DURATION) {
+			// Runde zuende
 			if (!waitingForNextRound) {
 				waitingForNextRound = true;
 
@@ -67,8 +69,10 @@ public abstract class GameSession {
 				return true;
 
 			}
-		} else
+		} else {
+			// Runde läuft noch
 			update(delta);
+		}
 
 		return false;
 	}

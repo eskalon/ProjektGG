@@ -57,12 +57,8 @@ public class SlaveSession extends GameSession
 
 		Log.debug("Client", "Alle Spieler sind bereit! Nächste Runde startet");
 
-		try {
-			this.startNextRound();
-			game.pushScreen("map");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.startNextRound();
+		game.pushScreen("map");
 	}
 
 }
