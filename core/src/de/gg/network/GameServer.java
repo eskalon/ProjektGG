@@ -87,51 +87,42 @@ public class GameServer {
 					Log.info("Server", "Server gestartet");
 
 					// Wenn das erfolgreich war, einen Broadcast Server starten
-					(new Thread(new Runnable() {
-						@Override
-						public void run() {
-							broadcastServer = new Server();
-							broadcastServer.start();
-							broadcastServer.getKryo()
-									.register(DiscoveryResponsePacket.class);
-							broadcastServer.setDiscoveryHandler(
-									new ServerDiscoveryHandler() {
-										@Override
-										public boolean onDiscoverHost(
-												DatagramChannel datagramChannel,
-												InetSocketAddress fromAddress)
-												throws IOException {
-											DiscoveryResponsePacket packet = new DiscoveryResponsePacket(
-													port, gameName,
-													players.size());
+					broadcastServer = new Server();
+					broadcastServer.start();
+					broadcastServer.getKryo()
+							.register(DiscoveryResponsePacket.class);
+					broadcastServer
+							.setDiscoveryHandler(new ServerDiscoveryHandler() {
+								@Override
+								public boolean onDiscoverHost(
+										DatagramChannel datagramChannel,
+										InetSocketAddress fromAddress)
+										throws IOException {
+									DiscoveryResponsePacket packet = new DiscoveryResponsePacket(
+											port, gameName, players.size());
 
-											ByteBuffer buffer = ByteBuffer
-													.allocate(256);
-											broadcastServer
-													.getSerializationFactory()
-													.newInstance(null)
-													.write(buffer, packet);
-											buffer.flip();
+									ByteBuffer buffer = ByteBuffer
+											.allocate(256);
+									broadcastServer.getSerializationFactory()
+											.newInstance(null)
+											.write(buffer, packet);
+									buffer.flip();
 
-											datagramChannel.send(buffer,
-													fromAddress);
+									datagramChannel.send(buffer, fromAddress);
 
-											return true;
-										}
-									});
+									return true;
+								}
+							});
 
-							try {
-								broadcastServer.bind(0,
-										NetworkHandler.UDP_DISCOVER_PORT);
-								Log.info("Server",
-										"Broadcast Server gestartet");
-							} catch (IOException e) {
-								Log.error("Server",
-										"Der Broadcast Server konnte nicht gestartet werden: %s",
-										e);
-							}
-						}
-					})).start();
+					try {
+						broadcastServer.bind(0,
+								NetworkHandler.UDP_DISCOVER_PORT);
+						Log.info("Server", "Broadcast Server gestartet");
+					} catch (IOException e) {
+						Log.error("Server",
+								"Der Broadcast Server konnte nicht gestartet werden: %s",
+								e);
+					}
 					callback.onHostStarted(null);
 				} catch (IOException e) {
 					callback.onHostStarted(e);
@@ -141,6 +132,12 @@ public class GameServer {
 			}
 		});
 		t.start();
+	}
+
+	public void update() {
+		if (session.update()) {
+			session.tryToStartNextRoundForEveryone();
+		}
 	}
 
 	/**

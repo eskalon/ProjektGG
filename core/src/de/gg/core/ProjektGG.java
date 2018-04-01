@@ -197,6 +197,8 @@ public class ProjektGG extends Game {
 	 *            The name of the pushed screen.
 	 */
 	public synchronized void pushScreen(String name) {
+		Log.debug("Client", "Pushed screen: %s", name);
+
 		BaseScreen pushedScreen = this.screens.get(name);
 
 		if (pushedScreen == null) {

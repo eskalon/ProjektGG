@@ -141,6 +141,11 @@ public class NetworkHandler {
 		});
 	}
 
+	public void updateServer() {
+		if (isHost())
+			server.update();
+	}
+
 	/**
 	 * @return Whether this player is also hosting the server.
 	 */
@@ -218,8 +223,11 @@ public class NetworkHandler {
 
 			@Override
 			public void onDiscoveredHost(DatagramPacket datagramPacket) {
-				DiscoveryResponsePacket packet = (DiscoveryResponsePacket)c.getKryo().readClassAndObject(new Input(datagramPacket.getData()));
-				listener.onHostDiscovered(datagramPacket.getAddress().getHostAddress(), packet);
+				DiscoveryResponsePacket packet = (DiscoveryResponsePacket) c
+						.getKryo().readClassAndObject(
+								new Input(datagramPacket.getData()));
+				listener.onHostDiscovered(
+						datagramPacket.getAddress().getHostAddress(), packet);
 			}
 
 			@Override
@@ -231,7 +239,8 @@ public class NetworkHandler {
 	}
 
 	public interface HostDiscoveryListener {
-		public void onHostDiscovered(String address, DiscoveryResponsePacket datagramPacket);
+		public void onHostDiscovered(String address,
+				DiscoveryResponsePacket datagramPacket);
 	}
 
 }

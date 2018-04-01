@@ -2,7 +2,7 @@ package de.gg.game;
 
 import de.gg.data.GameSessionSetup;
 import de.gg.entity.City;
-import de.gg.util.StoppableRunnable;
+import de.gg.util.Log;
 
 /**
  * This class holds the game data and takes care of calculating when a round
@@ -22,8 +22,8 @@ public abstract class GameSession {
 	 * shown. To start the following round, the server needs to receive every
 	 * player's approval.
 	 */
-	private long currentRoundTime = ROUND_DURATION;
-	private int currentRound = 0;
+	private volatile long currentRoundTime = ROUND_DURATION;
+	private volatile int currentRound = 0;
 
 	private City city;
 
@@ -42,7 +42,8 @@ public abstract class GameSession {
 	}
 
 	/**
-	 * Updates the game session.
+	 * Updates the game session. Returns true once, when a round is over. To
+	 * start the next round call {@link #startNextRound()}.
 	 * 
 	 * @return Whether the ingame day is over (8 minutes).
 	 */
@@ -53,11 +54,23 @@ public abstract class GameSession {
 
 		currentRoundTime += delta;
 
-		if (currentRoundTime < ROUND_DURATION) {
-			update(delta);
-		}
+		// Runde zuende
+		if (currentRoundTime >= ROUND_DURATION) {
+			if (!waitingForNextRound) {
+				waitingForNextRound = true;
 
-		return currentRoundTime >= ROUND_DURATION;
+				if (getRoundProgress() < 1)
+					for (int i = 0; i < 6; i++)
+						Log.error("Client", "Thread-Bug in Runde %s",
+								getCurrentRound());
+
+				return true;
+
+			}
+		} else
+			update(delta);
+
+		return false;
 	}
 
 	/**
@@ -75,6 +88,7 @@ public abstract class GameSession {
 	protected synchronized void startNextRound() {
 		currentRound++;
 		currentRoundTime = 0;
+		lastTime = System.currentTimeMillis();
 		waitingForNextRound = false;
 	}
 
@@ -102,31 +116,6 @@ public abstract class GameSession {
 
 	public City getCity() {
 		return city;
-	}
-
-	/**
-	 * This runnable updates a game session until a round is over. Once a round
-	 * is over {@link #onRoundEnd()} is called. The updating resumes when
-	 * {@link GameSession#startNextRound} got called.
-	 */
-	abstract class GameSessionUpdateRunnable extends StoppableRunnable {
-
-		@Override
-		protected synchronized void doStuff() {
-			if (update()) {
-				if (!waitingForNextRound) {
-					waitingForNextRound = true;
-
-					onRoundEnd();
-				}
-			}
-		}
-
-		/**
-		 * This method is called once the current round is over.
-		 */
-		protected abstract void onRoundEnd();
-
 	}
 
 }

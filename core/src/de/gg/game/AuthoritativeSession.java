@@ -7,7 +7,6 @@ import de.gg.data.RoundEndData;
 import de.gg.network.LobbyPlayer;
 import de.gg.util.Log;
 import de.gg.util.PlayerUtils;
-import de.gg.util.StoppableRunnable;
 
 /**
  * This class takes care of simulating the game session on the server side and
@@ -22,7 +21,6 @@ public class AuthoritativeSession extends GameSession
 	 * The network ID of the local player.
 	 */
 	private short localId;
-	private StoppableRunnable updateThread;
 	/**
 	 * Set to true when a game round is over. The next round should start, when
 	 * all players issued a ready message.
@@ -53,8 +51,8 @@ public class AuthoritativeSession extends GameSession
 	}
 
 	/**
-	 * Starts the thread that updates the game logic. After a round is over the
-	 * game automatically switches to the round end screen. To resume the game
+	 * Starts the game session. {@link #update()} has to get called to update
+	 * the session. To resume the game after a round ended
 	 * {@link #setupNewRound(RoundEndData)} has to get called.
 	 */
 	public void startGame(
@@ -64,20 +62,9 @@ public class AuthoritativeSession extends GameSession
 		}
 
 		this.resultListeners = resultListeners;
-
-		this.updateThread = new GameSessionUpdateRunnable() {
-			@Override
-			protected void onRoundEnd() {
-				if (PlayerUtils.areAllPlayersReady(players.values()))
-					startNextRoundForEveryone();
-			}
-		};
-		(new Thread(this.updateThread)).start();
 	}
 
 	public void stopGame() {
-		updateThread.stop();
-
 		// TODO save the game
 	}
 
@@ -92,36 +79,38 @@ public class AuthoritativeSession extends GameSession
 		Log.info("Server", "Spieler %d ist für nächste Runde bereit",
 				networkId);
 
-		if (waitingForNextRound
-				&& PlayerUtils.areAllPlayersReady(players.values())) {
-			startNextRoundForEveryone();
+		if (waitingForNextRound) {
+			tryToStartNextRoundForEveryone();
 		}
 
 		return true;
 	}
 
-	private void startNextRoundForEveryone() {
-		Log.info("Server", "Alle Spieler sind für die Runde bereit");
+	public void tryToStartNextRoundForEveryone() {
+		if (PlayerUtils.areAllPlayersReady(players.values())) {
+			Log.info("Server", "Alle Spieler sind für die Runde bereit");
 
-		for (LobbyPlayer player : players.values()) {
-			player.setReady(false);
-		}
-
-		// RoundEndData generieren
-		RoundEndData data = new RoundEndData();
-
-		// Alle Clienten informieren
-		(new AuthoritativeResultListenerThread() {
-			@Override
-			protected void doStuff(AuthoritativeResultListener resultListener) {
-				resultListener.onAllPlayersReadied(data);
+			for (LobbyPlayer player : players.values()) {
+				player.setReady(false);
 			}
-		}).start();
 
-		// TODO Auch auf dem Server die neue Runde aufsetzen -> RoundEndData
-		// anweden
+			// RoundEndData generieren
+			RoundEndData data = new RoundEndData();
 
-		startNextRound();
+			// Alle Clienten informieren
+			(new AuthoritativeResultListenerThread() {
+				@Override
+				protected void doStuff(
+						AuthoritativeResultListener resultListener) {
+					resultListener.onAllPlayersReadied(data);
+				}
+			}).start();
+
+			// TODO Auch auf dem Server die neue Runde aufsetzen -> RoundEndData
+			// anweden
+
+			startNextRound();
+		}
 	}
 
 	/**

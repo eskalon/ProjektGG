@@ -19,6 +19,9 @@ public class GameRoundendScreen extends BaseGameScreen {
 
 	@Override
 	public void render(float delta) {
+		// bewusst kein updateGame()-Call, um Session nicht (sinnlos) zu updaten
+		game.getNetworkHandler().updateServer();
+
 		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g,
 				backgroundColor.b, backgroundColor.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

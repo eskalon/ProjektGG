@@ -99,11 +99,6 @@ public class GameMapScreen extends BaseGameScreen {
 		shader = new TestShader(game.getAssetManager());
 		shader.init();
 
-		// this.renderContext = new RenderContext(
-		// new DefaultTextureBinder(DefaultTextureBinder.WEIGHTED, 1));
-
-		// this.shader.init();
-
 		this.selectionInputController = new MapSelectionInputController(
 				game.getSettings(), game.getEventBus(),
 				game.getGameCamera().getCamera(),
@@ -115,6 +110,7 @@ public class GameMapScreen extends BaseGameScreen {
 
 	@Override
 	public void render(float delta) {
+		updateGame();
 		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g,
 				backgroundColor.b, backgroundColor.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -130,7 +126,7 @@ public class GameMapScreen extends BaseGameScreen {
 		// Render city
 		sceneRenderer.render();
 
-		// Render sphere
+		// Render sphere with shader
 		renderContext.begin();
 		shader.begin(game.getGameCamera().getCamera(), renderContext);
 		shader.render(renderable);

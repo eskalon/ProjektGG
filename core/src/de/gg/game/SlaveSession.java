@@ -2,14 +2,11 @@ package de.gg.game;
 
 import java.util.HashMap;
 
-import com.badlogic.gdx.Gdx;
-
 import de.gg.core.ProjektGG;
 import de.gg.data.GameSessionSetup;
 import de.gg.data.RoundEndData;
 import de.gg.network.LobbyPlayer;
 import de.gg.util.Log;
-import de.gg.util.StoppableRunnable;
 
 /**
  * This class simulates a game session on the client of a multiplayer game. It
@@ -23,7 +20,6 @@ public class SlaveSession extends GameSession
 	 * The network ID of the local player.
 	 */
 	private short localId;
-	private StoppableRunnable updateThread;
 	private ProjektGG game;
 
 	/**
@@ -50,23 +46,9 @@ public class SlaveSession extends GameSession
 	}
 
 	/**
-	 * Starts the thread that updates the game logic. After a round is over the
-	 * game automatically switches to the round end screen. To resume the game
-	 * {@link #setupNewRound(RoundEndData)} has to get called.
+	 * Currently unused.
 	 */
 	public void startGame() {
-		this.updateThread = new GameSessionUpdateRunnable() {
-			@Override
-			protected void onRoundEnd() {
-				if (getCurrentRound() > 0)
-					game.pushScreen("roundEnd");
-			}
-		};
-		(new Thread(this.updateThread)).start();
-	}
-
-	public void stopGame() {
-		updateThread.stop();
 	}
 
 	@Override

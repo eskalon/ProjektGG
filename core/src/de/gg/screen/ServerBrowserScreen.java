@@ -21,7 +21,6 @@ import de.gg.event.ConnectionEstablishedEvent;
 import de.gg.network.NetworkHandler;
 import de.gg.network.NetworkHandler.HostDiscoveryListener;
 import de.gg.network.message.DiscoveryResponsePacket;
-import de.gg.util.StoppableRunnable;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class ServerBrowserScreen extends BaseUIScreen {
@@ -39,7 +38,7 @@ public class ServerBrowserScreen extends BaseUIScreen {
 	 * This list holds all local LAN servers that were discovered.
 	 */
 	private List<String> dicoveredServers = new ArrayList<>();
-	private StoppableRunnable discoveryThread;
+	private Runnable discoveryThread;
 
 	@Override
 	protected void initUI() {
@@ -129,11 +128,9 @@ public class ServerBrowserScreen extends BaseUIScreen {
 	private void discoverLanServers() {
 		serverTable.clear();
 		dicoveredServers.clear();
-		if (discoveryThread != null)
-			discoveryThread.stop();
-		discoveryThread = new StoppableRunnable() {
+		discoveryThread = new Runnable() {
 			@Override
-			public void doStuff() {
+			public void run() {
 				game.getNetworkHandler()
 						.discoverHosts(new HostDiscoveryListener() {
 							@Override
