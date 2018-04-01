@@ -7,18 +7,18 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
  */
 public class CameraWrapper {
 
-    private PerspectiveCamera camera;
+	private PerspectiveCamera camera;
 
-    public CameraWrapper(PerspectiveCamera camera) {
-        this.camera = camera;
-    }
+	public CameraWrapper(PerspectiveCamera camera) {
+		this.camera = camera;
+	}
 
-    public PerspectiveCamera getCamera() {
-        return camera;
-    }
+	public PerspectiveCamera getCamera() {
+		return camera;
+	}
 
-    public void translate(float x, float y, float z) {
-        this.camera.translate(x, y, z);
-    }
+	public void translate(float x, float y, float z) {
+		this.camera.translate(x, y, z);
+	}
 
 }

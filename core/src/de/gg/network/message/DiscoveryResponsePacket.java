@@ -9,8 +9,7 @@ public class DiscoveryResponsePacket {
 	public DiscoveryResponsePacket() {
 	}
 
-	public DiscoveryResponsePacket(int port, String gameName,
-			int playerCount) {
+	public DiscoveryResponsePacket(int port, String gameName, int playerCount) {
 		this.port = port;
 		this.gameName = gameName;
 		this.playerCount = playerCount;

@@ -21,8 +21,8 @@ public class ConnectionEstablishedEvent {
 	 */
 	private HashMap<Short, LobbyPlayer> players = null;
 	/**
-	 * The ID of the client player. -1 if a problem occurred while starting
-	 * the client.
+	 * The ID of the client player. -1 if a problem occurred while starting the
+	 * client.
 	 */
 	private short clientId = -1;
 	/**

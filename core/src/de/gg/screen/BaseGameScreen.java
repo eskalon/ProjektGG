@@ -20,12 +20,12 @@ public abstract class BaseGameScreen extends BaseScreen {
 	public void onPlayerDisconnect(PlayerDisconnectedEvent event) {
 		// TODO
 	}
-	
+
 	protected void updateGame() {
-		if(game.getCurrentSession().update()) {
+		if (game.getCurrentSession().update()) {
 			game.pushScreen("roundEnd");
 		}
-		
+
 		game.getNetworkHandler().updateServer();
 	}
 

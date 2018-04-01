@@ -14,35 +14,39 @@ import com.badlogic.gdx.utils.Array;
  * @see <a href=
  *      "https://gamedev.stackexchange.com/a/101331">https://gamedev.stackexchange.com/a/101331</a>
  */
-public class TextLoader extends AsynchronousAssetLoader<Text, TextLoader.TextParameter> {
+public class TextLoader
+		extends
+			AsynchronousAssetLoader<Text, TextLoader.TextParameter> {
 
-    public TextLoader(FileHandleResolver resolver) {
-        super(resolver);
-    }
+	public TextLoader(FileHandleResolver resolver) {
+		super(resolver);
+	}
 
-    Text text;
+	Text text;
 
-    @Override
-    public void loadAsync(AssetManager manager, String fileName, FileHandle file, TextParameter parameter) {
-        this.text = null;
-        this.text = new Text(file);
-    }
+	@Override
+	public void loadAsync(AssetManager manager, String fileName,
+			FileHandle file, TextParameter parameter) {
+		this.text = null;
+		this.text = new Text(file);
+	}
 
-    @Override
-    public Text loadSync(AssetManager manager, String fileName, FileHandle file, TextParameter parameter) {
-        Text text = this.text;
-        this.text = null;
+	@Override
+	public Text loadSync(AssetManager manager, String fileName, FileHandle file,
+			TextParameter parameter) {
+		Text text = this.text;
+		this.text = null;
 
-        return text;
-    }
+		return text;
+	}
 
-    @SuppressWarnings("rawtypes")
-    @Override
-    public Array<AssetDescriptor> getDependencies(String fileName, FileHandle file, TextParameter parameter) {
-        return null;
-    }
+	@Override
+	public Array<AssetDescriptor> getDependencies(String fileName,
+			FileHandle file, TextParameter parameter) {
+		return null;
+	}
 
-    public static class TextParameter extends AssetLoaderParameters<Text> {
-    }
+	public static class TextParameter extends AssetLoaderParameters<Text> {
+	}
 
 }

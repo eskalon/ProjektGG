@@ -54,7 +54,7 @@ public class NetworkRegisterer {
 
 		kryo.register(AuthoritativeResultListener.class);
 		kryo.register(SlaveActionListener.class);
-		
+
 		kryo.register(RoundEndData.class);
 	}
 
