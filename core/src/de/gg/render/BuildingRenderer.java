@@ -26,27 +26,13 @@ public class BuildingRenderer {
 		visibleObjectCount = 0;
 
 		for (final Building building : buildings) {
-			if (isRenderObjectVisible(camera, building.getRenderData())) {
+			if (building.getRenderData().isVisibleForCamera(camera)) {
 				modelBatch.render(building.getRenderData(), environment);
 				visibleObjectCount++;
 			}
 		}
 
 		return visibleObjectCount;
-	}
-
-	/**
-	 * Takes care of the frustum culling calculations.
-	 * 
-	 * @param cam
-	 * @param instance
-	 * @return
-	 */
-	private boolean isRenderObjectVisible(final Camera cam,
-			final RenderData instance) {
-		instance.transform.getTranslation(tmpPosition);
-		tmpPosition.add(instance.center);
-		return cam.frustum.sphereInFrustum(tmpPosition, instance.radius);
 	}
 
 }

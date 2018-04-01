@@ -96,21 +96,13 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 	}
 
 	private int getObjectAtPositon(int screenX, int screenY) {
-		Vector3 tmpPositon = new Vector3();
-
 		Ray ray = camera.getPickRay(screenX, screenY);
 		int result = -1;
 		float distance = -1;
 		for (int i = 0; i < selectableObjects.size(); ++i) {
-			final RenderData instance = selectableObjects.get(i)
-					.getRenderData();
-			instance.transform.getTranslation(tmpPositon);
-			tmpPositon.add(instance.center);
-			float dist2 = ray.origin.dst2(tmpPositon);
-			if (distance >= 0f && dist2 > distance)
-				continue;
-			if (Intersector.intersectRaySphere(ray, tmpPositon, instance.radius,
-					null)) {
+			final float dist2 = selectableObjects.get(i).getRenderData()
+					.intersects(ray);
+			if (dist2 >= 0f && (distance < 0f || dist2 <= distance)) {
 				result = i;
 				distance = dist2;
 			}
