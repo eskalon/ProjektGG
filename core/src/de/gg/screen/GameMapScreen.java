@@ -109,18 +109,11 @@ public class GameMapScreen extends BaseGameScreen {
 	}
 
 	@Override
-	public void render(float delta) {
-		updateGame();
-		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g,
-				backgroundColor.b, backgroundColor.a);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		game.getSpriteBatch().begin();
-		game.getSpriteBatch().setProjectionMatrix(game.getUICamera().combined);
+	protected void initUI() {
+	}
 
-		game.getSpriteBatch().draw(this.titleImage, 100, 100);
-
-		game.getSpriteBatch().end();
-
+	@Override
+	public void renderGame(float delta) {
 		movementInputController.update();
 
 		// Render city
@@ -132,7 +125,6 @@ public class GameMapScreen extends BaseGameScreen {
 		shader.render(renderable);
 		shader.end();
 		renderContext.end();
-
 	}
 
 	@Override
@@ -143,13 +135,9 @@ public class GameMapScreen extends BaseGameScreen {
 	}
 
 	@Override
-	public void hide() {
-		super.hide();
-		game.getInputMultiplexer().removeInputProcessors();
-	}
-
-	@Override
 	public void dispose() {
+		super.dispose();
+
 		if (isLoaded())
 			sceneRenderer.dispose();
 	}

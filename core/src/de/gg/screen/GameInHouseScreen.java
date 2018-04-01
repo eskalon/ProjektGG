@@ -8,31 +8,25 @@ public class GameInHouseScreen extends BaseGameScreen {
 	@Override
 	protected void onInit() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
-	public void render(float delta) {
-		updateGame();
-		// game.getCurrentSession().renderHouse(delta);
-	}
-
-	@Override
-	public void show() {
+	protected void initUI() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
-	public void hide() {
+	public void renderGame(float delta) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
+		super.dispose();
 
+		// if (isLoaded())
+		// dispose loaded stuff
 	}
 
 }

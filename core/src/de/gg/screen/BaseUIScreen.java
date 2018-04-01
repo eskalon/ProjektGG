@@ -53,18 +53,18 @@ public abstract class BaseUIScreen extends BaseScreen {
 				backgroundColor.b, backgroundColor.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		game.getSpriteBatch().begin();
-
-		if (backgroundTexture != null)
+		if (backgroundTexture != null) {
+			game.getSpriteBatch().begin();
+			game.getSpriteBatch()
+					.setProjectionMatrix(game.getUICamera().combined);
 			game.getSpriteBatch().draw(this.backgroundTexture, 0, 0,
 					game.getViewportWidth(), game.getViewportHeight());
+			game.getSpriteBatch().end();
+		}
 
-		game.getSpriteBatch().setProjectionMatrix(game.getUICamera().combined);
-
+		stage.getBatch().setProjectionMatrix(game.getUICamera().combined);
 		stage.act(delta);
 		stage.draw();
-
-		game.getSpriteBatch().end();
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public abstract class BaseUIScreen extends BaseScreen {
 	@Override
 	public void show() {
 		super.show();
-		stage = new Stage(new ScreenViewport());
+		stage = new Stage(new ScreenViewport(), game.getSpriteBatch());
 		mainTable = new Table();
 		stage.addActor(mainTable);
 		mainTable.setFillParent(true);

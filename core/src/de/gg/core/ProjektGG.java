@@ -197,28 +197,33 @@ public class ProjektGG extends Game {
 	 *            The name of the pushed screen.
 	 */
 	public synchronized void pushScreen(String name) {
-		Log.debug("Client", "Pushed screen: %s", name);
+		Gdx.app.postRunnable(new Runnable() {
+			@Override
+			public void run() {
+				Log.debug("Client", "Pushed screen: %s", name);
 
-		BaseScreen pushedScreen = this.screens.get(name);
+				BaseScreen pushedScreen = screens.get(name);
 
-		if (pushedScreen == null) {
-			throw new ScreenNotFoundException("Could not find a screen named '"
-					+ name
-					+ "'. Add the screen via #addScreen(String, BaseScreen) first.");
-		}
+				if (pushedScreen == null) {
+					throw new ScreenNotFoundException(
+							"Could not find a screen named '" + name
+									+ "'. Add the screen via #addScreen(String, BaseScreen) first.");
+				}
 
-		if (screen != null) {
-			screen.hide();
-		}
+				if (screen != null) {
+					screen.hide();
+				}
 
-		if (!pushedScreen.isLoaded()) {
-			assetManager.load(pushedScreen);
-			assetManager.finishLoading();
-			pushedScreen.finishLoading();
-		}
+				if (!pushedScreen.isLoaded()) {
+					assetManager.load(pushedScreen);
+					assetManager.finishLoading();
+					pushedScreen.finishLoading();
+				}
 
-		pushedScreen.show();
-		this.screen = pushedScreen;
+				pushedScreen.show();
+				screen = pushedScreen;
+			}
+		});
 	}
 
 	/**
