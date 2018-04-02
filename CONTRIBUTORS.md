@@ -13,7 +13,7 @@ Eine Liste aller Contributor und der genutzten externen Assets:
   
 ### Textures
 * **Dark wooden background**\
-  Path: ui/backgrounds/AlemdraSC/\
+  Path: ui/backgrounds/table.jpg\
   Based on: [Vintage Wood Table Top Background](http://www.wildtextures.com/wp-content/uploads/wildtextures_vintage-pine-table-top.jpg)\
   Author: Tomasz Grabowiecki\
   License: [Free for personal and commercial use](http://www.wildtextures.com/terms-of-use/)
