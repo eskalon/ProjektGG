@@ -3,7 +3,6 @@ package de.gg.render;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
@@ -16,6 +15,8 @@ public class RenderData extends ModelInstance {
 
 	private final static BoundingBox bounds = new BoundingBox();
 	private final static Vector3 position = new Vector3();
+
+	public boolean isSelected = false;
 
 	public RenderData(Model model, String rootNode, boolean mergeTransform) {
 		super(model, rootNode, mergeTransform);

@@ -1,5 +1,6 @@
 package de.gg.screen;
 
+import de.gg.render.TestShader;
 import de.gg.util.Log;
 
 /**
@@ -9,6 +10,7 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 
 	@Override
 	protected void initAssets() {
+		assetManager.load(TestShader.class);
 		assetManager.load(game.getScreen("map"));
 		assetManager.load(game.getScreen("house"));
 		assetManager.load(game.getScreen("roundEnd"));

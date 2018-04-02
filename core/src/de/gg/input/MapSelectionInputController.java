@@ -3,18 +3,13 @@ package de.gg.input;
 import java.util.List;
 
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.g3d.Material;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.google.common.eventbus.EventBus;
 
 import de.gg.entity.Building;
-import de.gg.render.RenderData;
 import de.gg.setting.GameSettings;
+import de.gg.util.Log;
 
 public class MapSelectionInputController implements DefaultInputProcessor {
 
@@ -23,10 +18,12 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 	private PerspectiveCamera camera;
 
 	private int clickedObjectId = -1;
+	private int newSelectionId = -1;
 	private int selectedObjectID = -1;
 
-	private Material selectionMaterial;
-	private Material originalMaterial;
+	private long lastClickTime = -1;
+	private static final long DOUBLE_CLICK_TIME = 360;
+
 	private List<Building> selectableObjects;
 
 	public MapSelectionInputController(GameSettings settings, EventBus bus,
@@ -35,10 +32,19 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 		this.bus = bus;
 		this.camera = camera;
 		this.selectableObjects = selectableObjects;
+	}
 
-		selectionMaterial = new Material();
-		selectionMaterial.set(ColorAttribute.createDiffuse(Color.ORANGE));
-		originalMaterial = new Material();
+	public void update() {
+		if (newSelectionId >= 0) {
+			if (System.currentTimeMillis()
+					- lastClickTime > DOUBLE_CLICK_TIME) {
+				// Einzelklick
+				onSingleSelection(newSelectionId);
+
+				newSelectionId = -1;
+			}
+		}
+
 	}
 
 	@Override
@@ -60,39 +66,53 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		if (button == Input.Buttons.LEFT) {
-			if (clickedObjectId >= 0) {
-				if (clickedObjectId == getObjectAtPositon(screenX, screenY))
-					if (selectedObjectID != clickedObjectId)
-						onNewSelection(clickedObjectId);
+			if (clickedObjectId >= 0) { // Wenn auf Objekt geklickt
+				if (clickedObjectId == getObjectAtPositon(screenX, screenY)) {
+					if (System.currentTimeMillis()
+							- lastClickTime <= DOUBLE_CLICK_TIME) {
+						if (clickedObjectId == newSelectionId) {
+							// Doppelklick
+							onDoubleSelection(newSelectionId);
+							newSelectionId = -1;
+						}
+					} else {
+						newSelectionId = clickedObjectId;
+						lastClickTime = System.currentTimeMillis();
+					}
+				}
 
 				clickedObjectId = -1;
 				return true;
+			} else { // Wenn neben Objekt geklickt
+				onSingleSelection(-1); // Altes Objekt deselektieren
 			}
 		}
 
 		return false;
 	}
 
-	private void onNewSelection(int value) {
+	private void onDoubleSelection(int value) {
+		Log.debug("Input", "Double selection: %d", value);
+
+		// eventBus.post(); selectedObjectID, mouseX, mouseY
+	}
+
+	private void onSingleSelection(int value) {
 		// Altes Objekt reseten
 		if (selectedObjectID >= 0) {
-			Material mat = selectableObjects.get(selectedObjectID)
-					.getRenderData().materials.get(0);
-			mat.clear();
-			mat.set(originalMaterial);
+			selectableObjects.get(selectedObjectID)
+					.getRenderData().isSelected = false;
 		}
 		// Neues Objekt markieren
 		selectedObjectID = value;
 		if (selectedObjectID >= 0) {
-			// TODO event bus benachrichtigen
-			Material mat = selectableObjects.get(selectedObjectID)
-					.getRenderData().materials.get(0);
-			originalMaterial.clear();
-			originalMaterial.set(mat);
-			mat.clear();
-			mat.set(selectionMaterial);
+			selectableObjects.get(selectedObjectID)
+					.getRenderData().isSelected = true;
 		}
 
+		Log.debug("Input", "Single selection: %d", value);
+
+		// eventBus.post(); selectedObjectID, mouseX, mouseY
 	}
 
 	private int getObjectAtPositon(int screenX, int screenY) {

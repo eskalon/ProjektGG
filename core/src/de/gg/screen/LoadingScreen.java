@@ -61,7 +61,6 @@ public class LoadingScreen extends BaseLoadingScreen {
 		assetManager.load(MAIN_FONT_22_PATH());
 		assetManager.load(LETTER_FONT_20_PATH());
 		assetManager.load(HANDWRITTEN_FONT_20_PATH());
-		assetManager.load(TestShader.class);
 		assetManager.load(game.getScreen("mainMenu"));
 		assetManager.load(game.getScreen("serverBrowser"));
 		assetManager.load(game.getScreen("lobby"));

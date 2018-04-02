@@ -12,7 +12,7 @@ import de.gg.util.asset.Text;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class TestShader implements Shader {
-	ShaderProgram program;
+	public ShaderProgram program;
 	Camera camera;
 	RenderContext context;
 	private AssetManager assetManager;

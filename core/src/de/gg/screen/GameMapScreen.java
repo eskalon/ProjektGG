@@ -1,7 +1,5 @@
 package de.gg.screen;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Material;
@@ -19,6 +17,7 @@ import de.gg.input.MapSelectionInputController;
 import de.gg.render.RenderData;
 import de.gg.render.SceneRenderer;
 import de.gg.render.TestShader;
+import de.gg.util.asset.Text;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 /**
@@ -31,6 +30,8 @@ public class GameMapScreen extends BaseGameScreen {
 	private final String TITLE_IMAGE_PATH = "ui/images/title.png";
 	@Asset(Model.class)
 	private final String TEST_SCENE_PATH = "models/invaderscene.g3db";
+	@Asset(Text.class)
+	private static final String FRAGMENT_SHADER_PATH = "shaders/single_color.fragment.glsl";
 	private Texture titleImage;
 
 	private SceneRenderer sceneRenderer;
@@ -47,8 +48,9 @@ public class GameMapScreen extends BaseGameScreen {
 	protected void onInit() {
 		titleImage = assetManager.get(TITLE_IMAGE_PATH);
 
+		Text t = game.getAssetManager().get(FRAGMENT_SHADER_PATH);
 		sceneRenderer = new SceneRenderer(game.getGameCamera().getCamera(),
-				game.getCurrentSession().getCity());
+				game.getCurrentSession().getCity(), t.getString());
 
 		// Load the scene
 		Model scene = assetManager.get(TEST_SCENE_PATH);
@@ -115,6 +117,7 @@ public class GameMapScreen extends BaseGameScreen {
 	@Override
 	public void renderGame(float delta) {
 		movementInputController.update();
+		selectionInputController.update();
 
 		// Render city
 		sceneRenderer.render();
