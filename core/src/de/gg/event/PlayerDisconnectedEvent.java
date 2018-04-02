@@ -1,7 +1,7 @@
 package de.gg.event;
 
 /**
- * Called when a player disconnects.
+ * Posted when a player disconnects.
  */
 public class PlayerDisconnectedEvent {
 

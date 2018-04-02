@@ -6,6 +6,7 @@ import com.google.common.eventbus.Subscribe;
 
 import de.gg.event.NewChatMessagEvent;
 import de.gg.event.PlayerDisconnectedEvent;
+import de.gg.event.RoundEndEvent;
 
 public abstract class BaseGameScreen extends BaseUIScreen {
 
@@ -31,6 +32,12 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 	@Subscribe
 	public void onPlayerDisconnect(PlayerDisconnectedEvent event) {
 		// TODO
+	}
+
+	@Subscribe
+	public void onRoundEndDataArrived(RoundEndEvent event) {
+		((GameRoundendScreen) game.getScreen("roundEnd"))
+				.setData(event.getData());
 	}
 
 	@Override

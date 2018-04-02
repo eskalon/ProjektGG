@@ -3,7 +3,7 @@ package de.gg.event;
 import de.gg.network.LobbyPlayer;
 
 /**
- * Called when a player connects.
+ * Posted when a player connects.
  */
 public class PlayerConnectedEvent {
 

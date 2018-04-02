@@ -8,7 +8,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -21,6 +20,7 @@ import de.gg.event.ConnectionEstablishedEvent;
 import de.gg.network.NetworkHandler;
 import de.gg.network.NetworkHandler.HostDiscoveryListener;
 import de.gg.network.message.DiscoveryResponsePacket;
+import de.gg.util.ui.AnimationlessDialog;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class ServerBrowserScreen extends BaseUIScreen {
@@ -31,7 +31,7 @@ public class ServerBrowserScreen extends BaseUIScreen {
 	private final String TICK_IMAGE_PATH = "ui/icons/ready.png";
 	@Asset(Sound.class)
 	private final String BUTTON_SOUND = "audio/button-tick.mp3";
-	private Dialog connectingDialog;
+	private AnimationlessDialog connectingDialog;
 	private Sound clickSound;
 	private Table serverTable;
 	/**
@@ -86,14 +86,16 @@ public class ServerBrowserScreen extends BaseUIScreen {
 						new TextField.TextFieldFilter.DigitsOnlyFilter());
 				TextField ipInputField = new TextField("127.0.0.1", skin);
 
-				Dialog dialog = new Dialog("Direkt verbinden", skin) {
+				AnimationlessDialog dialog = new AnimationlessDialog(
+						"Direkt verbinden", skin) {
 					public void result(Object obj) {
 						if ((Boolean) obj) {
 							game.getNetworkHandler().setUpConnectionAsClient(
 									ipInputField.getText(),
 									Integer.valueOf(portInputField.getText()));
 
-							connectingDialog = new Dialog("Verbinden...", skin);
+							connectingDialog = new AnimationlessDialog(
+									"Verbinden...", skin);
 							connectingDialog.text("Spiel beitreten...");
 							connectingDialog.show(stage);
 						}
@@ -165,7 +167,8 @@ public class ServerBrowserScreen extends BaseUIScreen {
 
 				game.getNetworkHandler().setUpConnectionAsClient(ip, port);
 
-				connectingDialog = new Dialog("Verbinden...", skin);
+				connectingDialog = new AnimationlessDialog("Verbinden...",
+						skin);
 				connectingDialog.text("Spiel beitreten...");
 				connectingDialog.show(stage);
 
@@ -190,7 +193,8 @@ public class ServerBrowserScreen extends BaseUIScreen {
 		} else {
 			game.setCurrentSession(null);
 
-			Dialog dialog = new Dialog("Fehler", skin);
+			AnimationlessDialog dialog = new AnimationlessDialog("Fehler",
+					skin);
 			dialog.text(event.getException().getMessage());
 			dialog.button("Ok", true);
 			dialog.key(Keys.ENTER, true);

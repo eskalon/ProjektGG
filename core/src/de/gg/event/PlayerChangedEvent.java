@@ -3,7 +3,7 @@ package de.gg.event;
 import de.gg.network.LobbyPlayer;
 
 /**
- * Called when one of the clients changes (new icon, getting ready, etc.).
+ * Posted when one of the clients changes (new icon, getting ready, etc.).
  * Basically the same as a {@link PlayerConnectedEvent}.
  */
 public class PlayerChangedEvent {

@@ -7,7 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -19,6 +18,7 @@ import de.gg.data.GameSessionSetup;
 import de.gg.data.GameSessionSetup.GameDifficulty;
 import de.gg.event.ConnectionEstablishedEvent;
 import de.gg.network.NetworkHandler;
+import de.gg.util.ui.AnimationlessDialog;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class LobbyCreationScreen extends BaseUIScreen {
@@ -27,7 +27,7 @@ public class LobbyCreationScreen extends BaseUIScreen {
 	private final String BUTTON_SOUND = "audio/button-tick.mp3";
 	@Asset(Texture.class)
 	private final String BACKGROUND_IMAGE_PATH = "ui/backgrounds/town.jpg";
-	private Dialog connectingDialog;
+	private AnimationlessDialog connectingDialog;
 
 	@Override
 	protected void initUI() {
@@ -67,10 +67,10 @@ public class LobbyCreationScreen extends BaseUIScreen {
 		createButton.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
+				clickSound.play(1F);
+
 				if (!nameField.getText().isEmpty()
 						&& !portField.getText().isEmpty()) {
-					clickSound.play(1F);
-
 					GameDifficulty difficulty = GameDifficulty.NORMAL;
 
 					if (speedGroup.getChecked()
@@ -91,11 +91,12 @@ public class LobbyCreationScreen extends BaseUIScreen {
 							new GameSessionSetup(difficulty,
 									GameMap.getMaps().get("Bamberg"),
 									System.currentTimeMillis()));
-					connectingDialog = new Dialog("Starten...", skin);
+					connectingDialog = new AnimationlessDialog("Starten...", skin);
 					connectingDialog.text("Server startet...");
 					connectingDialog.show(stage);
 				} else {
-					Dialog dialog = new Dialog("Felder unausgefüllt", skin);
+					AnimationlessDialog dialog = new AnimationlessDialog(
+							"Felder unausgefüllt", skin);
 					dialog.text(
 							"Zum Starten müssen alle Felder ausgefüllt sein");
 					dialog.button("Ok", true);
@@ -142,7 +143,7 @@ public class LobbyCreationScreen extends BaseUIScreen {
 			game.pushScreen("lobby");
 		} else {
 			game.setCurrentSession(null);
-			Dialog dialog = new Dialog("Fehler", skin);
+			AnimationlessDialog dialog = new AnimationlessDialog("Fehler", skin);
 			dialog.text(event.getException().getMessage());
 			dialog.button("Ok", true);
 			dialog.key(Keys.ENTER, true);

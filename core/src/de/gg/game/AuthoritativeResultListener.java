@@ -12,12 +12,17 @@ import de.gg.data.RoundEndData;
 public interface AuthoritativeResultListener {
 
 	/**
-	 * Called after a round ended to setup the next round.
+	 * Called when all players readied up.
+	 */
+	public void onAllPlayersReadied();
+
+	/**
+	 * Called after a round ended to inform about the changes.
 	 * 
 	 * @param data
 	 *            This data contains all calculations done after a round i.e. a
 	 *            salary costs, tuition effects, etc.
 	 */
-	public void onAllPlayersReadied(RoundEndData data);
+	public void onRoundEnd(RoundEndData data);
 
 }

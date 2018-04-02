@@ -7,6 +7,7 @@ public class GameInHouseScreen extends BaseGameScreen {
 
 	@Override
 	protected void onInit() {
+		super.onInit();
 		// TODO Auto-generated method stub
 	}
 

@@ -3,8 +3,16 @@ package de.gg.screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.google.common.eventbus.Subscribe;
 
-import de.gg.input.DefaultInputProcessor;
+import de.gg.data.RoundEndData;
+import de.gg.event.RoundEndEvent;
+import de.gg.util.Log;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 /**
@@ -18,12 +26,17 @@ public class GameRoundendScreen extends BaseGameScreen {
 	private final String FLIP_SOUND = "audio/flip-page.mp3";
 	private Sound flipSound;
 
+	private RoundEndData data;
+
+	private ImageTextButton nextButton;
+
 	public GameRoundendScreen() {
 		super(false);
 	}
 
 	@Override
 	protected void onInit() {
+		super.onInit();
 		this.backgroundColor = Color.DARK_GRAY;
 		this.backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
 		this.flipSound = assetManager.get(FLIP_SOUND);
@@ -31,28 +44,59 @@ public class GameRoundendScreen extends BaseGameScreen {
 
 	@Override
 	protected void initUI() {
-		// TODO Auto-generated method stub
-	}
+		// mainTable.setBackground(skin.getDrawable("book"));
+		Table dataTable = new Table();
+		ScrollPane pane = new ScrollPane(dataTable);
 
-	@Override
-	public void show() {
-		super.show();
-		game.getInputMultiplexer().addProcessor(new DefaultInputProcessor() {
-			@Override
-			public boolean keyDown(int keycode) {
-				System.out.println("Key pressed: " + keycode);
+		nextButton = new ImageTextButton("Weiter", skin /* "small" */);
 
+		nextButton.addListener(new InputListener() {
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
 				flipSound.play(1F);
 				game.getNetworkHandler().readyUp();
 
 				return true;
 			}
 		});
+
+		updateUI();
+
+		Table buttonTable = new Table();
+		buttonTable.add(nextButton);
+
+		mainTable.add(dataTable).width(580).height(405).row();
+		mainTable.add(buttonTable).height(50).bottom();
+	}
+
+	private void updateUI() {
+		if (data != null) {
+			Log.debug("Client", "RoundEndData angekommen: %d", data.test);
+			// Data anzeigen
+		}
+
+		nextButton.setDisabled(data == null);
 	}
 
 	@Override
 	public void renderGame(float delta) {
 		game.getNetworkHandler().updateServer();
+	}
+
+	@Subscribe
+	public void onRoundEndDataArrived(RoundEndEvent event) {
+		this.setData(event.getData());
+
+		updateUI();
+	}
+
+	/**
+	 * Set the round end data that should get applied.
+	 * 
+	 * @param data
+	 */
+	public void setData(RoundEndData data) {
+		this.data = data;
 	}
 
 	@Override

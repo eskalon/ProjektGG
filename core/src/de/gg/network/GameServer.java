@@ -136,7 +136,7 @@ public class GameServer {
 
 	public void update() {
 		if (session.update()) {
-			session.tryToStartNextRoundForEveryone();
+			session.onRoundEnd();
 		}
 	}
 

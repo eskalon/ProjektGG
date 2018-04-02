@@ -46,6 +46,7 @@ public class GameMapScreen extends BaseGameScreen {
 
 	@Override
 	protected void onInit() {
+		super.onInit();
 		titleImage = assetManager.get(TITLE_IMAGE_PATH);
 
 		Text t = game.getAssetManager().get(FRAGMENT_SHADER_PATH);

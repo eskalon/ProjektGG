@@ -6,4 +6,6 @@ package de.gg.data;
  */
 public class RoundEndData {
 
+	public int test;
+
 }

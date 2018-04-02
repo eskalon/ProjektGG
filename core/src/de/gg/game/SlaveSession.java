@@ -5,7 +5,9 @@ import java.util.HashMap;
 import de.gg.core.ProjektGG;
 import de.gg.data.GameSessionSetup;
 import de.gg.data.RoundEndData;
+import de.gg.event.RoundEndEvent;
 import de.gg.network.LobbyPlayer;
+import de.gg.screen.GameRoundendScreen;
 import de.gg.util.Log;
 
 /**
@@ -52,13 +54,19 @@ public class SlaveSession extends GameSession
 	}
 
 	@Override
-	public synchronized void onAllPlayersReadied(RoundEndData data) {
-		// TODO apply round end data
-
+	public synchronized void onAllPlayersReadied() {
 		Log.debug("Client", "Alle Spieler sind bereit! Nächste Runde startet");
 
 		this.startNextRound();
+		((GameRoundendScreen) game.getScreen("roundEnd")).setData(null);
 		game.pushScreen("map");
+	}
+
+	@Override
+	public void onRoundEnd(RoundEndData data) {
+		// TODO apply round end data
+
+		game.getEventBus().post(new RoundEndEvent(data));
 	}
 
 }

@@ -22,9 +22,11 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 	private int selectedObjectID = -1;
 
 	private long lastClickTime = -1;
-	private static final long DOUBLE_CLICK_TIME = 360;
+	private static final long DOUBLE_CLICK_TIME = 300;
 
 	private List<Building> selectableObjects;
+
+	private int clickX, clickY;
 
 	public MapSelectionInputController(GameSettings settings, EventBus bus,
 			PerspectiveCamera camera, List<Building> selectableObjects) {
@@ -52,6 +54,8 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 			int button) {
 		if (button == Input.Buttons.LEFT) {
 			clickedObjectId = getObjectAtPositon(screenX, screenY);
+			this.clickX = screenX;
+			this.clickY = screenY;
 			return clickedObjectId >= 0;
 		} else {
 			return false;
@@ -94,7 +98,7 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 	private void onDoubleSelection(int value) {
 		Log.debug("Input", "Double selection: %d", value);
 
-		// eventBus.post(); selectedObjectID, mouseX, mouseY
+		// eventBus.post(); selectedObjectID
 	}
 
 	private void onSingleSelection(int value) {
@@ -112,7 +116,7 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 
 		Log.debug("Input", "Single selection: %d", value);
 
-		// eventBus.post(); selectedObjectID, mouseX, mouseY
+		// eventBus.post(); selectedObjectID, clickX, clickY
 	}
 
 	private int getObjectAtPositon(int screenX, int screenY) {
