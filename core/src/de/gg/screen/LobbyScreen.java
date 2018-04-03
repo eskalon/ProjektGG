@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -26,6 +27,7 @@ import de.gg.network.LobbyPlayer;
 import de.gg.network.NetworkHandler;
 import de.gg.util.Log;
 import de.gg.util.PlayerUtils;
+import de.gg.util.ui.OffsetableTextField;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class LobbyScreen extends BaseUIScreen {
@@ -61,8 +63,8 @@ public class LobbyScreen extends BaseUIScreen {
 
 		// mainTable.setBackground(skin.getDrawable("parchment-small"));
 
-		ImageTextButton leaveButton = new ImageTextButton("Verlassen", skin
-		/* "small" */);
+		ImageTextButton leaveButton = new ImageTextButton("Verlassen", skin,
+				"small");
 		leaveButton.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
@@ -76,9 +78,10 @@ public class LobbyScreen extends BaseUIScreen {
 
 		NetworkHandler netHandler = game.getNetworkHandler();
 
-		readyUpLobbyButton = new ImageTextButton("Bereit", skin /* "small" */);
+		readyUpLobbyButton = new ImageTextButton("Bereit", skin, "small");
 		if (netHandler.isHost()) {
 			readyUpLobbyButton.setDisabled(true);
+			readyUpLobbyButton.setTouchable(Touchable.disabled);
 			readyUpLobbyButton.setText("Spiel starten");
 		}
 		readyUpLobbyButton.addListener(new InputListener() {
@@ -105,8 +108,10 @@ public class LobbyScreen extends BaseUIScreen {
 		buttonTable.add(leaveButton);
 
 		Table chatInputTable = new Table();
-		ImageTextButton sendButton = new ImageTextButton("Senden", skin);
-		TextField chatInputField = new TextField("", skin);
+		ImageTextButton sendButton = new ImageTextButton("Senden", skin,
+				"small");
+		OffsetableTextField chatInputField = new OffsetableTextField("", skin,
+				12);
 		chatInputField.setTextFieldListener(new TextFieldListener() {
 			@Override
 			public void keyTyped(TextField textField, char key) {
@@ -136,7 +141,7 @@ public class LobbyScreen extends BaseUIScreen {
 			}
 		});
 
-		messagesArea = new TextArea("", skin);
+		messagesArea = new TextArea("", skin, "textarea");
 		messagesArea.setDisabled(true);
 		ScrollPane messagesPane = new ScrollPane(messagesArea);
 
@@ -144,8 +149,8 @@ public class LobbyScreen extends BaseUIScreen {
 		chatInputTable.add(sendButton);
 
 		chatTable.debug();
-		chatTable.add(messagesPane).height(125).width(425).top().row();
-		chatTable.add(chatInputTable).left().padTop(10).width(425).bottom();
+		chatTable.add(messagesPane).height(130).width(465).top().row();
+		chatTable.add(chatInputTable).left().padTop(10).width(465).bottom();
 
 		playerSlots = new Table[6];
 		playerSlots[0] = new Table();
@@ -155,17 +160,17 @@ public class LobbyScreen extends BaseUIScreen {
 		playerSlots[4] = new Table();
 		playerSlots[5] = new Table();
 
-		playerTable.add(playerSlots[0]).height(25).width(425).row();
-		playerTable.add(playerSlots[1]).height(25).width(425).row();
-		playerTable.add(playerSlots[2]).height(25).width(425).row();
-		playerTable.add(playerSlots[3]).height(25).width(425).row();
-		playerTable.add(playerSlots[4]).height(25).width(425).row();
-		playerTable.add(playerSlots[5]).height(25).width(425).row();
+		playerTable.add(playerSlots[0]).height(29).width(465).row();
+		playerTable.add(playerSlots[1]).height(29).width(465).row();
+		playerTable.add(playerSlots[2]).height(29).width(465).row();
+		playerTable.add(playerSlots[3]).height(29).width(465).row();
+		playerTable.add(playerSlots[4]).height(29).width(465).row();
+		playerTable.add(playerSlots[5]).height(29).width(465).row();
 
-		mainTable.add(playerTable).width(425).height(155);
+		mainTable.add(playerTable).width(465).height(185);
 		mainTable.add(settingsTable).width(155).row();
-		mainTable.add(chatTable).height(165).bottom();
-		mainTable.add(buttonTable).height(165);
+		mainTable.add(chatTable).height(185).bottom();
+		mainTable.add(buttonTable).height(185);
 
 		mainTable.setDebug(true);
 
@@ -207,8 +212,10 @@ public class LobbyScreen extends BaseUIScreen {
 			if (PlayerUtils.areAllPlayersReadyExcept(players.values(),
 					getLocalPlayer())) {
 				readyUpLobbyButton.setDisabled(false);
+				readyUpLobbyButton.setTouchable(Touchable.enabled);
 			} else {
 				readyUpLobbyButton.setDisabled(true);
+				readyUpLobbyButton.setTouchable(Touchable.disabled);
 			}
 		} else {
 			if (getLocalPlayer().isReady()) {

@@ -10,13 +10,17 @@ import com.badlogic.gdx.graphics.g3d.model.NodePart;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultTextureBinder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
+import com.google.common.eventbus.Subscribe;
 
 import de.gg.entity.Building;
+import de.gg.event.HouseEnterEvent;
+import de.gg.event.HouseSelectionEvent;
 import de.gg.input.MapMovementInputController;
 import de.gg.input.MapSelectionInputController;
 import de.gg.render.RenderData;
 import de.gg.render.SceneRenderer;
 import de.gg.render.TestShader;
+import de.gg.util.Log;
 import de.gg.util.asset.Text;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
@@ -131,11 +135,32 @@ public class GameMapScreen extends BaseGameScreen {
 		renderContext.end();
 	}
 
+	@Subscribe
+	public void onHouseSelectionEvent(HouseSelectionEvent ev) {
+		Log.info("Input", "Single selection: %d", ev.getId());
+
+		// TODO show house selection dialog
+	}
+
+	@Subscribe
+	public void onHouseEnterEvent(HouseEnterEvent ev) {
+		((GameInHouseScreen) game.getScreen("house"))
+				.setSelectedHouseId(ev.getId());
+		game.pushScreen("house");
+	}
+
 	@Override
 	public void show() {
 		super.show();
 		game.getInputMultiplexer().addProcessor(selectionInputController);
 		game.getInputMultiplexer().addProcessor(movementInputController);
+	}
+
+	@Override
+	public void hide() {
+		super.hide();
+
+		selectionInputController.resetSelection();
 	}
 
 	@Override

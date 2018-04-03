@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -26,7 +27,7 @@ public class GameRoundendScreen extends BaseGameScreen {
 	private final String FLIP_SOUND = "audio/flip-page.mp3";
 	private Sound flipSound;
 
-	private RoundEndData data;
+	private volatile RoundEndData data = null;
 
 	private ImageTextButton nextButton;
 
@@ -44,16 +45,16 @@ public class GameRoundendScreen extends BaseGameScreen {
 
 	@Override
 	protected void initUI() {
-		// mainTable.setBackground(skin.getDrawable("book"));
 		Table dataTable = new Table();
 		ScrollPane pane = new ScrollPane(dataTable);
 
-		nextButton = new ImageTextButton("Weiter", skin /* "small" */);
+		nextButton = new ImageTextButton("Weiter", skin, "normal");
 
 		nextButton.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				flipSound.play(1F);
+				nextButton.setText("Warten...");
 				game.getNetworkHandler().readyUp();
 
 				return true;
@@ -63,10 +64,14 @@ public class GameRoundendScreen extends BaseGameScreen {
 		updateUI();
 
 		Table buttonTable = new Table();
-		buttonTable.add(nextButton);
+		buttonTable.add(nextButton).width(200).padLeft(400);
 
-		mainTable.add(dataTable).width(580).height(405).row();
-		mainTable.add(buttonTable).height(50).bottom();
+		Table mTable = new Table();
+		mTable.setBackground(skin.getDrawable("book"));
+		mTable.add(dataTable).width(580).height(415).row();
+		mTable.add(buttonTable).height(50).bottom();
+
+		mainTable.add(mTable);
 	}
 
 	private void updateUI() {
@@ -75,7 +80,10 @@ public class GameRoundendScreen extends BaseGameScreen {
 			// Data anzeigen
 		}
 
+		nextButton.setText("Weiter");
 		nextButton.setDisabled(data == null);
+		nextButton.setTouchable(
+				data == null ? Touchable.disabled : Touchable.enabled);
 	}
 
 	@Override

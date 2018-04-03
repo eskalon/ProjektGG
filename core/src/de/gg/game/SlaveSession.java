@@ -65,7 +65,6 @@ public class SlaveSession extends GameSession
 	@Override
 	public void onRoundEnd(RoundEndData data) {
 		// TODO apply round end data
-
 		game.getEventBus().post(new RoundEndEvent(data));
 	}
 

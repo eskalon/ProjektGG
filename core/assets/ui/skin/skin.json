@@ -5,14 +5,14 @@
 			g: 1
 			b: 1
 			a: 1
-		}
+		},
 		grey: {
 			r: 0.7
 			g: 0.7
 			b: 0.7
 			a: 1
 		}
-	}
+	},
 
 	com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: {
 		default: {
@@ -22,7 +22,18 @@
 			font: main-22
 			fontColor: white
 			downFontColor: grey
+			disabledFontColor: grey
+			disabled: button-up
 		},
+		normal: {
+			up: button-normal-up
+			down: button-normal-down
+			over: button-normal-over
+			font: main-22
+			fontColor: white
+			downFontColor: grey
+			disabledFontColor: grey
+		}
 		small: {
 			up: small-button-up
 			down: small-button-down
@@ -30,15 +41,16 @@
 			font: main-19
 			fontColor: white
 			downFontColor: grey
+			disabledFontColor: grey
 		}
-	}
+	},
 	
 	com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		default: {
 			font: main-22
 			fontColor: white
 		}
-	}
+	},
 	
 	com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
 		default: {
@@ -48,5 +60,78 @@
 			background: button-up, 
 			wrapWidth: 400
 		}
-	}
+	},
+	
+	com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
+		default: { 
+			selection: textfield_selection
+			background: textfield
+			font: main-22
+			fontColor: white
+			cursor: cursor-selection
+		},
+		textarea: { 
+			selection: textfield_selection
+			background: textarea
+			font: main-19
+			fontColor: white
+			cursor: cursor-selection
+		},
+		letter: { 
+			selection: textfield_selection
+			background: textfield
+			font: letter-20
+			fontColor: white
+			cursor: cursor-selection
+		},
+		handwritten: { 
+			selection: textfield_selection
+			background: textfield
+			font: handwritten-20
+			fontColor: white
+			cursor: cursor-selection
+		}
+	},
+	
+	com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
+		default: { 
+			checkboxOn: check-round-on
+			checkboxOff: check-round-off
+			font: main-19
+			fontColor: white
+		}
+		square: { 
+			checkboxOn: check-square-on
+			checkboxOff: check-square-off
+			font: main-19
+			fontColor: white
+		}
+	},
+	
+	com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
+		default-horizontal: {
+			background: slider-h,
+			knob: slider-knob-h,
+			knobOver: slider-knob-over-h,
+			knobDown: slider-knob-down-h,
+			disabledKnob: slider-knob-h
+		}
+	},
+	
+	com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
+		default: { 
+			vScroll: check-square-on
+			hScrollKnob: scroll-knob-h
+			background: scroll-h
+			hScroll: check-square-off
+			vScrollKnob: scroll-knob-v
+		}
+	},
+	com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
+		default: {
+			titleFont: main-19,
+			background: window,
+			titleFontColor: white 
+		}
+	},
 }

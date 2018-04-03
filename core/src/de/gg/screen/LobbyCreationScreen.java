@@ -19,6 +19,7 @@ import de.gg.data.GameSessionSetup.GameDifficulty;
 import de.gg.event.ConnectionEstablishedEvent;
 import de.gg.network.NetworkHandler;
 import de.gg.util.ui.AnimationlessDialog;
+import de.gg.util.ui.OffsetableTextField;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class LobbyCreationScreen extends BaseUIScreen {
@@ -37,9 +38,9 @@ public class LobbyCreationScreen extends BaseUIScreen {
 		Label nameLabel = new Label("Name: ", skin);
 		Label portLabel = new Label("Port: ", skin);
 
-		TextField nameField = new TextField("", skin);
-		TextField portField = new TextField(
-				String.valueOf(NetworkHandler.DEFAULT_PORT), skin);
+		OffsetableTextField nameField = new OffsetableTextField("", skin, 6);
+		OffsetableTextField portField = new OffsetableTextField(
+				String.valueOf(NetworkHandler.DEFAULT_PORT), skin, 6);
 		portField.setTextFieldFilter(
 				new TextField.TextFieldFilter.DigitsOnlyFilter());
 
@@ -53,7 +54,8 @@ public class LobbyCreationScreen extends BaseUIScreen {
 		speedGroup.add(hardDifficultyCheckbox);
 		normalDifficultyCheckbox.setChecked(true);
 
-		ImageTextButton backButton = new ImageTextButton("Zurück", skin);
+		ImageTextButton backButton = new ImageTextButton("Zurück", skin,
+				"small");
 		backButton.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
@@ -63,7 +65,8 @@ public class LobbyCreationScreen extends BaseUIScreen {
 			}
 		});
 
-		ImageTextButton createButton = new ImageTextButton("Erstellen", skin);
+		ImageTextButton createButton = new ImageTextButton("Erstellen", skin,
+				"small");
 		createButton.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
@@ -91,7 +94,8 @@ public class LobbyCreationScreen extends BaseUIScreen {
 							new GameSessionSetup(difficulty,
 									GameMap.getMaps().get("Bamberg"),
 									System.currentTimeMillis()));
-					connectingDialog = new AnimationlessDialog("Starten...", skin);
+					connectingDialog = new AnimationlessDialog("Starten...",
+							skin);
 					connectingDialog.text("Server startet...");
 					connectingDialog.show(stage);
 				} else {
@@ -143,7 +147,8 @@ public class LobbyCreationScreen extends BaseUIScreen {
 			game.pushScreen("lobby");
 		} else {
 			game.setCurrentSession(null);
-			AnimationlessDialog dialog = new AnimationlessDialog("Fehler", skin);
+			AnimationlessDialog dialog = new AnimationlessDialog("Fehler",
+					skin);
 			dialog.text(event.getException().getMessage());
 			dialog.button("Ok", true);
 			dialog.key(Keys.ENTER, true);

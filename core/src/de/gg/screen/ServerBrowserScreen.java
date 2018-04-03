@@ -21,6 +21,7 @@ import de.gg.network.NetworkHandler;
 import de.gg.network.NetworkHandler.HostDiscoveryListener;
 import de.gg.network.message.DiscoveryResponsePacket;
 import de.gg.util.ui.AnimationlessDialog;
+import de.gg.util.ui.OffsetableTextField;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class ServerBrowserScreen extends BaseUIScreen {
@@ -45,12 +46,12 @@ public class ServerBrowserScreen extends BaseUIScreen {
 		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
 		clickSound = assetManager.get(BUTTON_SOUND);
 
-		// mainTable.setBackground(skin.getDrawable("parchment-small"));
 		serverTable = new Table();
+
 		ScrollPane pane = new ScrollPane(serverTable);
 
-		ImageTextButton backButton = new ImageTextButton("Zurück", skin
-		/* "small" */);
+		ImageTextButton backButton = new ImageTextButton("Zurück", skin,
+				"small");
 		backButton.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
@@ -62,7 +63,7 @@ public class ServerBrowserScreen extends BaseUIScreen {
 		});
 
 		ImageTextButton createLobbyButton = new ImageTextButton(
-				"Spiel erstellen", skin /* "small" */);
+				"Spiel erstellen", skin, "small");
 		createLobbyButton.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
@@ -74,17 +75,18 @@ public class ServerBrowserScreen extends BaseUIScreen {
 		});
 
 		ImageTextButton directConnectButton = new ImageTextButton(
-				"Direkt verbinden", skin/* "small" */);
+				"Direkt verbinden", skin, "small");
 		directConnectButton.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				clickSound.play(1F);
 
-				TextField portInputField = new TextField(
-						String.valueOf(NetworkHandler.DEFAULT_PORT), skin);
+				OffsetableTextField portInputField = new OffsetableTextField(
+						String.valueOf(NetworkHandler.DEFAULT_PORT), skin, 5);
 				portInputField.setTextFieldFilter(
 						new TextField.TextFieldFilter.DigitsOnlyFilter());
-				TextField ipInputField = new TextField("127.0.0.1", skin);
+				OffsetableTextField ipInputField = new OffsetableTextField(
+						"127.0.0.1", skin, 5);
 
 				AnimationlessDialog dialog = new AnimationlessDialog(
 						"Direkt verbinden", skin) {
@@ -115,13 +117,19 @@ public class ServerBrowserScreen extends BaseUIScreen {
 
 		Table buttonTable = new Table();
 		buttonTable.add(backButton);
-		buttonTable.add(createLobbyButton).padLeft(55);
-		buttonTable.add(directConnectButton).padLeft(55);
+		buttonTable.add(createLobbyButton).width(132).padLeft(47);
+		buttonTable.add(directConnectButton).width(152).padLeft(47);
 
 		discoverLanServers();
 
-		mainTable.add(serverTable).width(580).height(405).row();
-		mainTable.add(buttonTable).height(50).bottom();
+		Table mTable = new Table();
+		mTable.setWidth(615);
+		mTable.setHeight(475);
+		mTable.setBackground(skin.getDrawable("parchment2"));
+		mTable.add(pane).width(580).height(405).row();
+		mTable.add(buttonTable).height(50).bottom();
+
+		mainTable.add(mTable);
 	}
 
 	/**
@@ -157,9 +165,8 @@ public class ServerBrowserScreen extends BaseUIScreen {
 
 	private void addServerToUI(Table serverTable, String gameName, String ip,
 			int port) {
-		// TODO gegen echte Server-Daten austauschen
-		ImageTextButton joinButton = new ImageTextButton("Beitreten", skin
-		/* "small" */);
+		ImageTextButton joinButton = new ImageTextButton("Beitreten", skin,
+				"small");
 		joinButton.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {

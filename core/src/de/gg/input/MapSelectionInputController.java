@@ -8,13 +8,15 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.google.common.eventbus.EventBus;
 
 import de.gg.entity.Building;
+import de.gg.event.HouseEnterEvent;
+import de.gg.event.HouseSelectionEvent;
 import de.gg.setting.GameSettings;
 import de.gg.util.Log;
 
 public class MapSelectionInputController implements DefaultInputProcessor {
 
 	private GameSettings settings;
-	private EventBus bus;
+	private EventBus eventBus;
 	private PerspectiveCamera camera;
 
 	private int clickedObjectId = -1;
@@ -31,7 +33,7 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 	public MapSelectionInputController(GameSettings settings, EventBus bus,
 			PerspectiveCamera camera, List<Building> selectableObjects) {
 		this.settings = settings;
-		this.bus = bus;
+		this.eventBus = bus;
 		this.camera = camera;
 		this.selectableObjects = selectableObjects;
 	}
@@ -96,9 +98,11 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 	}
 
 	private void onDoubleSelection(int value) {
-		Log.debug("Input", "Double selection: %d", value);
+		eventBus.post(new HouseEnterEvent((short) value));
+	}
 
-		// eventBus.post(); selectedObjectID
+	public void resetSelection() {
+		onSingleSelection(-1);
 	}
 
 	private void onSingleSelection(int value) {
@@ -114,9 +118,8 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 					.getRenderData().isSelected = true;
 		}
 
-		Log.debug("Input", "Single selection: %d", value);
-
-		// eventBus.post(); selectedObjectID, clickX, clickY
+		eventBus.post(new HouseSelectionEvent((short) selectedObjectID, clickX,
+				clickY));
 	}
 
 	private int getObjectAtPositon(int screenX, int screenY) {

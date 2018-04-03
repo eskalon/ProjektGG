@@ -2,7 +2,9 @@ package de.gg.util.ui;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton.ImageTextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
 /**
  * This is a dialog without animations.
@@ -11,8 +13,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
  */
 public class AnimationlessDialog extends Dialog {
 
+	protected Skin skin;
+
 	public AnimationlessDialog(String title, Skin skin) {
 		super(title, skin);
+		this.skin = skin;
+		
+		getContentTable().defaults().space(15);
+		getButtonTable().defaults().space(15);
 	}
 
 	/**
@@ -32,6 +40,18 @@ public class AnimationlessDialog extends Dialog {
 	 */
 	public void hide() {
 		hide(null);
+	}
+
+	/**
+	 * Adds a button to the button table.
+	 * 
+	 * @param object
+	 *            The object that will be passed to {@link #result(Object)} if
+	 *            this button is clicked. May be null.
+	 */
+	public Dialog button(String text, Object object) {
+		return button(text, object,
+				skin.get("small", ImageTextButtonStyle.class));
 	}
 
 }

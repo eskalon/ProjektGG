@@ -83,9 +83,9 @@ public class LoadingScreen extends BaseLoadingScreen {
 				new SkinLoader.SkinParameter(SKIN_TEXTURE_ATLAS_PATH, fontMap));
 		assetManager.finishLoadingAsset(SKIN_PATH);
 
-		// game.setUISkin(assetManager.get(SKIN_PATH));
-		VisUI.load();
-		game.setUISkin(VisUI.getSkin());
+		game.setUISkin(assetManager.get(SKIN_PATH));
+		//VisUI.load();
+		//game.setUISkin(VisUI.getSkin());
 
 		// Notify loaded screens
 		game.getScreen("mainMenu").finishLoading();
