@@ -16,6 +16,7 @@ public class Building {
 	public int getId() {
 		return id;
 	}
+	
 	public RenderData getRenderData() {
 		return renderData;
 	}

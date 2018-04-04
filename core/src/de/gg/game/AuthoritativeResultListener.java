@@ -4,10 +4,10 @@ import de.gg.data.RoundEndData;
 
 /**
  * Classes that implement this interface take care of the
- * {@linkplain SlaveActionHandler player actions} that actually get executed. In
- * sigleplayer games all player actions trigger methods of this interface, in
- * multiplayer sessions the client informs the server of their action and after
- * the server approves an action this interface takes care of executing it.
+ * {@linkplain SlaveActionHandler player actions} that actually get executed.
+ * The client informs the server of their action via the
+ * {@linkplain SlaveActionHandlers} and after the server approves an action this
+ * interface takes care of executing it.
  */
 public interface AuthoritativeResultListener {
 

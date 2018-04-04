@@ -16,6 +16,9 @@ import com.badlogic.gdx.utils.Disposable;
 import de.gg.entity.Building;
 import de.gg.entity.City;
 
+/**
+ * This class is repsonsible for rendering the city.
+ */
 public class SceneRenderer implements Disposable {
 
 	private PerspectiveCamera camera;

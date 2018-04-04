@@ -35,14 +35,14 @@ public class GameInHouseScreen extends BaseGameScreen {
 		game.getInputMultiplexer().addProcessor(new DefaultInputProcessor() {
 			@Override
 			public boolean keyDown(int keycode) {
-				if(keycode == Keys.ESCAPE) {
+				if (keycode == Keys.ESCAPE) {
 					game.pushScreen("map");
 					return true;
 				}
 				return false;
 			}
 		});
-		
+
 		Log.info("Input", "Double selection: %d", selectedHouseId);
 	}
 

@@ -17,24 +17,26 @@ public class PlayerUtils {
 	 * 
 	 * @see Player#getName()
 	 */
-	private static String[] names = new String[] { "Franz", "Heinrich", "Marthe", "Ferdinand", "Luise", "Oskar", "Jan",
-			"Pierre", "�ve", "Michael", "Moritz", "Gregor", "Andrej Nikolajewitsch", "Peter", "Walter" };
+	private static String[] names = new String[]{"Franz", "Heinrich", "Marthe",
+			"Ferdinand", "Luise", "Oskar", "Jan", "Pierre", "�ve", "Michael",
+			"Moritz", "Gregor", "Andrej Nikolajewitsch", "Peter", "Walter"};
 	/**
 	 * All possible random surnames.
 	 * 
 	 * @see Player#getSurname()
 	 */
-	private static String[] surnames = new String[] { "Woyzeck", "Faust", "Schwerdtlein", "von Walter", "Miller",
-			"Matzerath", "Bronski", "Dumaine", "Charlier", "Kohlhaas", "J�ger", "Samsa", "Bolk�nski", "Bes�chow",
-			"Faber" };
+	private static String[] surnames = new String[]{"Woyzeck", "Faust",
+			"Schwerdtlein", "von Walter", "Miller", "Matzerath", "Bronski",
+			"Dumaine", "Charlier", "Kohlhaas", "J�ger", "Samsa",
+			"Bolk�nski", "Bes�chow", "Faber"};
 	/**
-	 * The genders to all possible names. The boolean is denoting if the person is
-	 * male.
+	 * The genders to all possible names. The boolean is denoting if the person
+	 * is male.
 	 * 
 	 * @see Player#isMale()
 	 */
-	private static boolean[] genders = new boolean[] { true, true, false, true, false, true, true, true, false, true,
-			true, true, true, true, true };
+	private static boolean[] genders = new boolean[]{true, true, false, true,
+			false, true, true, true, false, true, true, true, true, true, true};
 
 	private PlayerUtils() {
 	}
@@ -42,7 +44,8 @@ public class PlayerUtils {
 	/**
 	 * @return A list of all unused icons.
 	 */
-	public static List<PlayerIcon> getAvailableIcons(Collection<LobbyPlayer> players) {
+	public static List<PlayerIcon> getAvailableIcons(
+			Collection<LobbyPlayer> players) {
 		List<PlayerIcon> tmp = new ArrayList<>();
 
 		for (PlayerIcon i : PlayerIcon.values()) {
@@ -83,8 +86,8 @@ public class PlayerUtils {
 	}
 
 	/**
-	 * Returns whether all players except one (normally the host) set their status
-	 * to ready.
+	 * Returns whether all players except one (normally the host) set their
+	 * status to ready.
 	 * 
 	 * @param players
 	 *            The players.
@@ -92,7 +95,8 @@ public class PlayerUtils {
 	 *            The exempt player.
 	 * @return The overall ready status.
 	 */
-	public static boolean areAllPlayersReadyExcept(Collection<LobbyPlayer> players, LobbyPlayer player) {
+	public static boolean areAllPlayersReadyExcept(
+			Collection<LobbyPlayer> players, LobbyPlayer player) {
 		boolean allReady = true;
 
 		for (LobbyPlayer p : players) {
@@ -125,10 +129,12 @@ public class PlayerUtils {
 	 *            unused player icons.
 	 * @return The random player.
 	 */
-	public static LobbyPlayer getRandomPlayer(Collection<LobbyPlayer> collection) {
+	public static LobbyPlayer getRandomPlayer(
+			Collection<LobbyPlayer> collection) {
 		int index = getRandomIndex();
 
-		return new LobbyPlayer(names[index], surnames[index], PlayerUtils.getAvailableIcons(collection).get(0),
+		return new LobbyPlayer(names[index], surnames[index],
+				PlayerUtils.getAvailableIcons(collection).get(0),
 				genders[index]);
 	}
 

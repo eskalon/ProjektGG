@@ -45,7 +45,7 @@ public class GameRoundendScreen extends BaseGameScreen {
 	@Override
 	protected void initUI() {
 		Table dataTable = new Table();
-		//ScrollPane pane = new ScrollPane(dataTable);
+		// ScrollPane pane = new ScrollPane(dataTable);
 
 		nextButton = new ImageTextButton("Weiter", skin, "normal");
 

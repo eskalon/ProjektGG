@@ -18,28 +18,32 @@ public class LoadingScreen extends BaseLoadingScreen {
 		FreeTypeFontLoaderParameter font = new FreeTypeFontLoaderParameter();
 		font.fontFileName = "fonts/AlemdraSC/AlmendraSC-Regular.ttf";
 		font.fontParameters.size = 19;
-		return new AssetDescriptor<BitmapFont>("mainFont19.ttf", BitmapFont.class, font);
+		return new AssetDescriptor<BitmapFont>("mainFont19.ttf",
+				BitmapFont.class, font);
 	}
 
 	public final AssetDescriptor<BitmapFont> MAIN_FONT_22_PATH() {
 		FreeTypeFontLoaderParameter font = new FreeTypeFontLoaderParameter();
 		font.fontFileName = "fonts/AlemdraSC/AlmendraSC-Regular.ttf";
 		font.fontParameters.size = 22;
-		return new AssetDescriptor<BitmapFont>("mainFont22.ttf", BitmapFont.class, font);
+		return new AssetDescriptor<BitmapFont>("mainFont22.ttf",
+				BitmapFont.class, font);
 	}
 
 	public final AssetDescriptor<BitmapFont> LETTER_FONT_20_PATH() {
 		FreeTypeFontLoaderParameter font = new FreeTypeFontLoaderParameter();
 		font.fontFileName = "fonts/Fredericka_the_Great/FrederickatheGreat-Regular.ttf";
 		font.fontParameters.size = 20;
-		return new AssetDescriptor<BitmapFont>("letterFont20.ttf", BitmapFont.class, font);
+		return new AssetDescriptor<BitmapFont>("letterFont20.ttf",
+				BitmapFont.class, font);
 	}
 
 	public final AssetDescriptor<BitmapFont> HANDWRITTEN_FONT_20_PATH() {
 		FreeTypeFontLoaderParameter font = new FreeTypeFontLoaderParameter();
 		font.fontFileName = "fonts/ReenieBeanie/ReenieBeanie.ttf";
 		font.fontParameters.size = 20;
-		return new AssetDescriptor<BitmapFont>("handwrittenFont20.ttf", BitmapFont.class, font);
+		return new AssetDescriptor<BitmapFont>("handwrittenFont20.ttf",
+				BitmapFont.class, font);
 	}
 
 	private final String SKIN_PATH = "ui/skin/skin.json";
@@ -63,14 +67,16 @@ public class LoadingScreen extends BaseLoadingScreen {
 		BitmapFont main19Font = assetManager.get(MAIN_FONT_19_PATH());
 		BitmapFont main22Font = assetManager.get(MAIN_FONT_22_PATH());
 		BitmapFont letter20Font = assetManager.get(LETTER_FONT_20_PATH());
-		BitmapFont handwritten20Font = assetManager.get(HANDWRITTEN_FONT_20_PATH());
+		BitmapFont handwritten20Font = assetManager
+				.get(HANDWRITTEN_FONT_20_PATH());
 
 		ObjectMap<String, Object> fontMap = new ObjectMap<String, Object>();
 		fontMap.put("main-19", main19Font);
 		fontMap.put("main-22", main22Font);
 		fontMap.put("letter-20", letter20Font);
 		fontMap.put("handwritten-20", handwritten20Font);
-		assetManager.load(SKIN_PATH, Skin.class, new SkinLoader.SkinParameter(SKIN_TEXTURE_ATLAS_PATH, fontMap));
+		assetManager.load(SKIN_PATH, Skin.class,
+				new SkinLoader.SkinParameter(SKIN_TEXTURE_ATLAS_PATH, fontMap));
 		assetManager.finishLoadingAsset(SKIN_PATH);
 
 		game.setUISkin(assetManager.get(SKIN_PATH));

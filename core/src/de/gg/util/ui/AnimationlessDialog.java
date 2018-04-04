@@ -17,7 +17,7 @@ public class AnimationlessDialog extends Dialog {
 	public AnimationlessDialog(String title, Skin skin) {
 		super(title, skin);
 		this.skin = skin;
-		
+
 		getContentTable().defaults().space(15);
 		getButtonTable().defaults().space(15);
 	}
