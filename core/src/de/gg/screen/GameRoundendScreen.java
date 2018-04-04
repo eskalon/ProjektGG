@@ -7,7 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.google.common.eventbus.Subscribe;
 
@@ -46,7 +45,7 @@ public class GameRoundendScreen extends BaseGameScreen {
 	@Override
 	protected void initUI() {
 		Table dataTable = new Table();
-		ScrollPane pane = new ScrollPane(dataTable);
+		//ScrollPane pane = new ScrollPane(dataTable);
 
 		nextButton = new ImageTextButton("Weiter", skin, "normal");
 

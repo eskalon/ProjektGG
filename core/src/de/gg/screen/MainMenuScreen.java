@@ -3,12 +3,10 @@ package de.gg.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
@@ -23,8 +21,6 @@ public class MainMenuScreen extends BaseUIScreen {
 	private final String LOGO_IMAGE_PATH = "ui/images/logo.png";
 	@Asset(Sound.class)
 	private final String BUTTON_SOUND = "audio/button-tick.mp3";
-	private int xPos;
-	private int yPos;
 
 	@Override
 	protected void initUI() {

@@ -22,7 +22,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.gg.camera.CameraWrapper;
 import de.gg.exception.ScreenNotFoundException;
-import de.gg.game.GameSession;
 import de.gg.game.SlaveSession;
 import de.gg.input.GameInputMultiplexer;
 import de.gg.network.NetworkHandler;
@@ -67,8 +66,8 @@ public class ProjektGG extends Game {
 	 */
 	private Map<String, BaseScreen> screens = new ConcurrentHashMap<>();
 
-	private static int viewportWidth;
-	private static int viewportHeight;
+	private int viewportWidth;
+	private int viewportHeight;
 
 	private OrthographicCamera uiCamera;
 	private CameraWrapper gameCamera;

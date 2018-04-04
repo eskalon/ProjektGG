@@ -1,6 +1,5 @@
 package de.gg.data;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**

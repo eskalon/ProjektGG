@@ -12,7 +12,7 @@ import de.gg.data.RoundEndData;
 public interface AuthoritativeResultListener {
 
 	/**
-	 * Called when all players readied up.
+	 * Called after all players readied up.
 	 */
 	public void onAllPlayersReadied();
 

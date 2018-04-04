@@ -1,9 +1,21 @@
 package de.gg.network.message;
 
+/**
+ * This packet is sent to the client after he discovered a game server.
+ */
 public class DiscoveryResponsePacket {
 
+	/**
+	 * The tcp port the server is running on.
+	 */
 	private int port;
+	/**
+	 * The current player count.
+	 */
 	private int playerCount;
+	/**
+	 * The game's name.
+	 */
 	private String gameName;
 
 	public DiscoveryResponsePacket() {

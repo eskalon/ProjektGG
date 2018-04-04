@@ -48,13 +48,13 @@ public class LobbyCreationScreen extends BaseUIScreen {
 		CheckBox easyDifficultyCheckbox = new CheckBox("Einfach", skin);
 		CheckBox normalDifficultyCheckbox = new CheckBox("Normal", skin);
 		CheckBox hardDifficultyCheckbox = new CheckBox("Schwer", skin);
-		ButtonGroup speedGroup = new ButtonGroup();
+		ButtonGroup<CheckBox> speedGroup = new ButtonGroup<>();
 		speedGroup.add(easyDifficultyCheckbox);
 		speedGroup.add(normalDifficultyCheckbox);
 		speedGroup.add(hardDifficultyCheckbox);
 		normalDifficultyCheckbox.setChecked(true);
 
-		ImageTextButton backButton = new ImageTextButton("Zurück", skin,
+		ImageTextButton backButton = new ImageTextButton("Zurï¿½ck", skin,
 				"small");
 		backButton.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,
@@ -100,9 +100,9 @@ public class LobbyCreationScreen extends BaseUIScreen {
 					connectingDialog.show(stage);
 				} else {
 					AnimationlessDialog dialog = new AnimationlessDialog(
-							"Felder unausgefüllt", skin);
+							"Felder unausgefï¿½llt", skin);
 					dialog.text(
-							"Zum Starten müssen alle Felder ausgefüllt sein");
+							"Zum Starten mï¿½ssen alle Felder ausgefï¿½llt sein");
 					dialog.button("Ok", true);
 					dialog.key(Keys.ENTER, true);
 					dialog.show(stage);

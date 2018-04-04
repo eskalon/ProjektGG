@@ -1,5 +1,4 @@
 ## Java
-
 *.class
 *.war
 *.ear
@@ -32,7 +31,6 @@ www-test/
 com_crashlytics_export_strings.xml
 
 ## Eclipse
-
 .classpath
 .project
 .metadata/
@@ -52,7 +50,6 @@ com_crashlytics_export_strings.xml
 *.launch
 
 ## NetBeans
-
 /nbproject/private/
 /android/nbproject/private/
 /core/nbproject/private/
@@ -97,7 +94,6 @@ nbactions.xml
 nb-configuration.xml
 
 ## Gradle
-
 /local.properties
 .gradle/
 gradle-app.setting
@@ -126,3 +122,4 @@ Thumbs.db
 
 ## Project Specific
 *.log
+/bin/

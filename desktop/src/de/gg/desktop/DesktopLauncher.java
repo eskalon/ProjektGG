@@ -33,13 +33,6 @@ public class DesktopLauncher {
 		config.resizable = false;
 		config.addIcon("ui/images/icon.png", Files.FileType.Absolute);
 
-		boolean debug = false;
-		if (args != null && args.length > 0) {
-			if (args[0].equalsIgnoreCase("debug")) {
-				debug = true;
-			}
-		}
-
 		MicroOptions options = new MicroOptions();
 		options.option("novid").describedAs("no splashscreen").isUnary();
 		options.option("debug").describedAs("enables debugmode").isUnary();
@@ -55,12 +48,9 @@ public class DesktopLauncher {
 
 		try {
 			// Start the game
-			new LwjglApplication(
-					new ProjektGG(options.has("debug"), !options.has("novid")),
-					config);
+			new LwjglApplication(new ProjektGG(options.has("debug"), !options.has("novid")), config);
 		} catch (Exception e) {
-			Gdx.app.error(ProjektGG.name,
-					"An unexpected error occurred while starting the game", e);
+			Gdx.app.error(ProjektGG.name, "An unexpected error occurred while starting the game", e);
 
 			CrashLogUtils.writeCrashLogToFile(e, true);
 		}

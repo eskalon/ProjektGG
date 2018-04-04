@@ -1,5 +1,6 @@
 package de.gg.util;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 
 public class Log {
@@ -8,12 +9,12 @@ public class Log {
 	}
 
 	public static void enableDebugLogging() {
-		Gdx.app.setLogLevel(Gdx.app.LOG_DEBUG);
+		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		com.esotericsoftware.minlog.Log.INFO();
 	}
 
 	public static void disableDebugLogging() {
-		Gdx.app.setLogLevel(Gdx.app.LOG_INFO);
+		Gdx.app.setLogLevel(Application.LOG_INFO);
 		com.esotericsoftware.minlog.Log.ERROR();
 	}
 

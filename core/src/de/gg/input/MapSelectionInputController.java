@@ -11,7 +11,6 @@ import de.gg.entity.Building;
 import de.gg.event.HouseEnterEvent;
 import de.gg.event.HouseSelectionEvent;
 import de.gg.setting.GameSettings;
-import de.gg.util.Log;
 
 public class MapSelectionInputController implements DefaultInputProcessor {
 
