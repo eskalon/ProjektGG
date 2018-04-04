@@ -46,7 +46,7 @@ public class AuthoritativeSession extends GameSession
 
 		this.players = players;
 
-		// TODO Alle Spieler über die players-Liste in #city
+		// TODO Alle Spieler Ã¼ber die players-Liste in #city
 		// aufsetzen
 
 	}
@@ -97,7 +97,7 @@ public class AuthoritativeSession extends GameSession
 
 		players.get(networkId).setReady(true);
 
-		Log.info("Server", "Spieler %d ist für nächste Runde bereit",
+		Log.info("Server", "Spieler %d ist fÃ¼r nÃ¤chste Runde bereit",
 				networkId);
 
 		if (PlayerUtils.areAllPlayersReady(players.values()))
@@ -107,7 +107,7 @@ public class AuthoritativeSession extends GameSession
 	}
 
 	public void startNextRoundForEveryone() {
-		Log.info("Server", "Alle Spieler sind für die Runde bereit");
+		Log.info("Server", "Alle Spieler sind fÃ¼r die Runde bereit");
 
 		for (LobbyPlayer player : players.values()) {
 			player.setReady(false);

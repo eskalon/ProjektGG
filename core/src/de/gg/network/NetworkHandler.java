@@ -105,7 +105,7 @@ public class NetworkHandler {
 				try {
 					client.connect(6000, ip, port);
 					Log.info("Client", "Lobby beigetreten");
-					// Das Event hierfür wird beim Empfangen des Game Setups
+					// Das Event hierfÃ¼r wird beim Empfangen des Game Setups
 					// gepostet
 				} catch (IOException e) {
 					Log.error("Client", "Fehler beim Betreten der Lobby: ", e);

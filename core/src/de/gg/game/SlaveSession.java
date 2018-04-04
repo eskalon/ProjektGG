@@ -42,7 +42,7 @@ public class SlaveSession extends GameSession
 		this.localId = networkID;
 		this.game = game;
 
-		// TODO Die restlichen Spieler über die players-Liste in #city
+		// TODO Die restlichen Spieler Ã¼ber die players-Liste in #city
 		// aufsetzen
 
 	}
@@ -55,7 +55,7 @@ public class SlaveSession extends GameSession
 
 	@Override
 	public synchronized void onAllPlayersReadied() {
-		Log.debug("Client", "Alle Spieler sind bereit! Nächste Runde startet");
+		Log.debug("Client", "Alle Spieler sind bereit! NÃ¤chste Runde startet");
 
 		this.startNextRound();
 		((GameRoundendScreen) game.getScreen("roundEnd")).setData(null);

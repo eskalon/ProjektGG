@@ -53,7 +53,7 @@ public abstract class GameSession {
 		long delta = currentTime - lastTime;
 		lastTime = currentTime;
 
-		// Rundenzeit hochz‰hlen
+		// Rundenzeit hochz√§hlen
 		currentRoundTime += delta;
 
 		if (currentRoundTime >= ROUND_DURATION) {
@@ -70,7 +70,7 @@ public abstract class GameSession {
 
 			}
 		} else {
-			// Runde l‰uft noch
+			// Runde l√§uft noch
 			update(delta);
 		}
 

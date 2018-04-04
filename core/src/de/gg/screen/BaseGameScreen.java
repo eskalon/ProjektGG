@@ -13,7 +13,7 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 	private final boolean updateGame;
 
 	// TODO dieser Screen bekommt eine Player-Hashmap, um sich um alle
-	// Join/Leave und Chat-Events kümmern zu können (d.h. er kann für die
+	// Join/Leave und Chat-Events kÃ¼mmern zu kÃ¶nnen (d.h. er kann fÃ¼r die
 	// Netzwerk-IDs den jeweiligen Namen ermitteln)
 
 	public BaseGameScreen(boolean updateGame) {

@@ -50,7 +50,7 @@ public class ServerBrowserScreen extends BaseUIScreen {
 
 		ScrollPane pane = new ScrollPane(serverTable);
 
-		ImageTextButton backButton = new ImageTextButton("Zurück", skin,
+		ImageTextButton backButton = new ImageTextButton("ZurÃ¼ck", skin,
 				"small");
 		backButton.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,
@@ -103,7 +103,7 @@ public class ServerBrowserScreen extends BaseUIScreen {
 						}
 					}
 				};
-				dialog.text("IP: ").button("Zurück", false)
+				dialog.text("IP: ").button("ZurÃ¼ck", false)
 						.button("Verbinden", true).key(Keys.ENTER, true)
 						.key(Keys.ESCAPE, false);
 				dialog.getContentTable().add(ipInputField).width(170).row();
