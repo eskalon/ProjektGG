@@ -7,7 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 import com.google.common.eventbus.Subscribe;
 
 import de.gg.data.RoundEndData;
@@ -29,6 +31,7 @@ public class GameRoundendScreen extends BaseGameScreen {
 	private volatile RoundEndData data = null;
 
 	private ImageTextButton nextButton;
+	private Label lastYearTitle, comingYearTitle, lastYearData, comingYearData;
 
 	public GameRoundendScreen() {
 		super(false);
@@ -44,8 +47,17 @@ public class GameRoundendScreen extends BaseGameScreen {
 
 	@Override
 	protected void initUI() {
-		Table dataTable = new Table();
-		// ScrollPane pane = new ScrollPane(dataTable);
+		lastYearTitle = new Label("", skin, "big");
+		lastYearTitle.setAlignment(Align.topLeft);
+		comingYearTitle = new Label("", skin, "big");
+		comingYearTitle.setAlignment(Align.topLeft);
+
+		lastYearData = new Label("", skin);
+		lastYearData.setAlignment(Align.topLeft);
+		lastYearData.setWrap(true);
+		comingYearData = new Label("", skin);
+		comingYearData.setAlignment(Align.topLeft);
+		comingYearData.setWrap(true);
 
 		nextButton = new ImageTextButton("Weiter", skin, "normal");
 
@@ -62,12 +74,21 @@ public class GameRoundendScreen extends BaseGameScreen {
 
 		updateUI();
 
+		Table dataTable = new Table();
+		// ScrollPane pane = new ScrollPane(dataTable);
+		dataTable.add(lastYearTitle).top().left().width(310).padRight(20);
+		dataTable.add(comingYearTitle).padLeft(55).width(295).padBottom(6)
+				.row();
+
+		dataTable.add(lastYearData).padRight(20).width(310).height(395);
+		dataTable.add(comingYearData).padLeft(55).width(295).height(395);
+
 		Table buttonTable = new Table();
-		buttonTable.add(nextButton).width(200).padLeft(400);
+		buttonTable.add(nextButton).width(200).padLeft(405);
 
 		Table mTable = new Table();
 		mTable.setBackground(skin.getDrawable("book"));
-		mTable.add(dataTable).width(580).height(415).row();
+		mTable.add(dataTable).top().left().width(660).height(425).row();
 		mTable.add(buttonTable).height(50).bottom();
 
 		mainTable.add(mTable);
@@ -77,6 +98,12 @@ public class GameRoundendScreen extends BaseGameScreen {
 		if (data != null) {
 			Log.debug("Client", "RoundEndData angekommen: %d", data.test);
 			// Data anzeigen
+
+			lastYearTitle.setText("Das vergangene Jahr");
+			comingYearTitle.setText("Kommendes Jahr");
+
+			lastYearData.setText("-3 Gold für XYZ");
+			comingYearData.setText("-15 Gold für XYZ \n+3 AP");
 		}
 
 		nextButton.setText("Weiter");

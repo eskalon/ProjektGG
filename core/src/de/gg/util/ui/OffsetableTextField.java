@@ -25,6 +25,24 @@ public class OffsetableTextField extends TextField {
 		this.textOffset = offset;
 	}
 
+	/**
+	 * @param text
+	 *            The default text.
+	 * @param skin
+	 *            The ui skin.
+	 * @param styleName
+	 *            The name of the used style.
+	 * @param offset
+	 *            The offset applied in front of the input text.
+	 */
+	public OffsetableTextField(String text, Skin skin, String styleName,
+			int offset) {
+		super(text, skin, styleName);
+
+		this.offset = offset;
+		this.textOffset = offset;
+	}
+
 	protected void calculateOffsets() {
 		super.calculateOffsets();
 

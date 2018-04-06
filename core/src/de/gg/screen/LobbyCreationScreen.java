@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.google.common.eventbus.Subscribe;
 
-import de.gg.data.GameMap;
 import de.gg.data.GameSessionSetup;
 import de.gg.data.GameSessionSetup.GameDifficulty;
 import de.gg.event.ConnectionEstablishedEvent;
@@ -54,7 +53,7 @@ public class LobbyCreationScreen extends BaseUIScreen {
 		speedGroup.add(hardDifficultyCheckbox);
 		normalDifficultyCheckbox.setChecked(true);
 
-		ImageTextButton backButton = new ImageTextButton("Zur�ck", skin,
+		ImageTextButton backButton = new ImageTextButton("Zurück", skin,
 				"small");
 		backButton.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,
@@ -90,19 +89,17 @@ public class LobbyCreationScreen extends BaseUIScreen {
 					// Sever & Client starten
 					game.getNetworkHandler().setUpConnectionAsHost(
 							Integer.valueOf(portField.getText()),
-							nameField.getText(),
-							new GameSessionSetup(difficulty,
-									GameMap.getMaps().get("Bamberg"),
-									System.currentTimeMillis()));
+							nameField.getText(), new GameSessionSetup(
+									difficulty, 0, System.currentTimeMillis()));
 					connectingDialog = new AnimationlessDialog("Starten...",
 							skin);
 					connectingDialog.text("Server startet...");
 					connectingDialog.show(stage);
 				} else {
 					AnimationlessDialog dialog = new AnimationlessDialog(
-							"Felder unausgef�llt", skin);
+							"Felder unausgefüllt", skin);
 					dialog.text(
-							"Zum Starten m�ssen alle Felder ausgef�llt sein");
+							"Zum Starten müssen alle Felder ausgefüllt sein");
 					dialog.button("Ok", true);
 					dialog.key(Keys.ENTER, true);
 					dialog.show(stage);
@@ -123,8 +120,8 @@ public class LobbyCreationScreen extends BaseUIScreen {
 		settings2ColTable.add(portField).row();
 
 		settings3ColTable.add(difficultyLabel).colspan(3).row();
-		settings3ColTable.add(easyDifficultyCheckbox);
-		settings3ColTable.add(normalDifficultyCheckbox);
+		settings3ColTable.add(easyDifficultyCheckbox).padRight(6);
+		settings3ColTable.add(normalDifficultyCheckbox).padRight(6);
 		settings3ColTable.add(hardDifficultyCheckbox);
 
 		settingsTable.left().top().add(settings2ColTable).padBottom(40).row();
@@ -133,10 +130,14 @@ public class LobbyCreationScreen extends BaseUIScreen {
 		buttonTable.add(backButton);
 		buttonTable.add(createButton).padLeft(65);
 
-		mainTable.add(settingsTable).width(580).height(405);
-		mainTable.row();
-		mainTable.add(buttonTable).height(50).bottom();
+		Table mTable = new Table();
+		mTable.setWidth(615);
+		mTable.setHeight(475);
+		mTable.setBackground(skin.getDrawable("parchment2"));
+		mTable.add(settingsTable).width(580).height(405).row();
+		mTable.add(buttonTable).height(50).bottom();
 
+		mainTable.add(mTable);
 	}
 
 	@Subscribe

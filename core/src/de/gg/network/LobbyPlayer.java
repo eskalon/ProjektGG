@@ -1,5 +1,7 @@
 package de.gg.network;
 
+import de.gg.entity.Player.PlayerIcon;
+
 /**
  * This class describes a player.
  */
@@ -74,10 +76,6 @@ public class LobbyPlayer {
 	 */
 	public void toggleReady() {
 		setReady(!isReady());
-	}
-
-	public enum PlayerIcon {
-		ICON_1, ICON_2, ICON_3;
 	}
 
 }

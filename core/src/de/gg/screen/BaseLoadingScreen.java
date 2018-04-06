@@ -18,21 +18,25 @@ public abstract class BaseLoadingScreen extends BaseScreen {
 
 	// Assets of the loading screen itself
 	@Asset(Texture.class)
-	private static final String BACKGROUND_TEXTURE_PATH = "ui/backgrounds/market.jpg";
-	@Asset(Texture.class)
 	private static final String BAR_TOP_TEXTURE_PATH = "ui/images/bar-top.png";
 	@Asset(Texture.class)
 	private static final String BAR_BOTTOM_TEXTURE_PATH = "ui/images/bar-bottom.png";
+	private final String BACKGROUND_TEXTURE_PATH;
 
-	private Texture backgroundTexture;
+	protected Texture backgroundTexture;
 	private Texture topBarTexture;
 	private Texture bottomBarTexture;
 	private float progress;
+
+	protected BaseLoadingScreen(String backgroundTexturePath) {
+		this.BACKGROUND_TEXTURE_PATH = backgroundTexturePath;
+	}
 
 	@Override
 	protected void onInit() {
 		// since parent classes aren't automatically loaded, this screen has to
 		// take care of loading its own assets itself.
+		assetManager.load(BACKGROUND_TEXTURE_PATH, Texture.class);
 		assetManager.load(BaseLoadingScreen.class);
 		assetManager.finishLoading();
 
@@ -57,8 +61,9 @@ public abstract class BaseLoadingScreen extends BaseScreen {
 		game.getSpriteBatch().setProjectionMatrix(game.getUICamera().combined);
 
 		// Draw the background
-		game.getSpriteBatch().draw(this.backgroundTexture, 0, 0,
-				game.getViewportWidth(), game.getViewportHeight());
+		if (backgroundTexture != null)
+			game.getSpriteBatch().draw(this.backgroundTexture, 0, 0,
+					game.getViewportWidth(), game.getViewportHeight());
 
 		// Get useful values
 		float viewPortWidth = game.getViewportWidth();

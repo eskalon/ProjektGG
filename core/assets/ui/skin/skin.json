@@ -47,7 +47,24 @@
 	
 	com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		default: {
+			font: main-19
+			fontColor: white
+		},
+		big: {
 			font: main-22
+			fontColor: white
+		},
+		with-background: {
+			font: main-19
+			fontColor: white
+			background: textarea
+		},
+		title: { 
+			font: title-20
+			fontColor: white
+		},
+		handwritten: { 
+			font: handwritten-20
 			fontColor: white
 		}
 	},
@@ -70,24 +87,17 @@
 			fontColor: white
 			cursor: cursor-selection
 		},
+		large: { 
+			selection: textfield_selection
+			background: textfield_large
+			font: main-22
+			fontColor: white
+			cursor: cursor-selection
+		},
 		textarea: { 
 			selection: textfield_selection
 			background: textarea
 			font: main-19
-			fontColor: white
-			cursor: cursor-selection
-		},
-		letter: { 
-			selection: textfield_selection
-			background: textfield
-			font: letter-20
-			fontColor: white
-			cursor: cursor-selection
-		},
-		handwritten: { 
-			selection: textfield_selection
-			background: textfield
-			font: handwritten-20
 			fontColor: white
 			cursor: cursor-selection
 		}

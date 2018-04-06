@@ -1,5 +1,6 @@
 package de.gg.screen;
 
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 
 import de.gg.input.DefaultInputProcessor;
@@ -41,9 +42,19 @@ public class GameInHouseScreen extends BaseGameScreen {
 				}
 				return false;
 			}
+
+			@Override
+			public boolean touchDown(int screenX, int screenY, int pointer,
+					int button) {
+				if (button == Buttons.RIGHT) {
+					game.pushScreen("map");
+					return true;
+				}
+				return false;
+			}
 		});
 
-		Log.info("Input", "Double selection: %d", selectedHouseId);
+		Log.debug("Input", "Double selection: %d", selectedHouseId);
 	}
 
 	public void setSelectedHouseId(short selectedHouseId) {

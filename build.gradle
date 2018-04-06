@@ -50,12 +50,11 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         compile "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        compile "com.kotcrab.vis:vis-ui:1.4.0"
         compile "net.dermetfan.libgdx-utils:libgdx-utils:0.13.4"
-		compile "net.onedaybeard.artemis:artemis-odb:2.1.0"
 		compile "com.github.crykn:kryonet:2.22.2"
 		compile "commons-io:commons-io:2.6"
 		compile "com.google.guava:guava:24.1-jre"
+		compile 'com.google.code.gson:gson:2.8.2'
         //compile fileTree(dir: 'libs', include: '*.jar')
     }
 }

@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.google.common.eventbus.Subscribe;
 
 import de.gg.entity.Building;
+import de.gg.entity.BuildingSlot;
 import de.gg.event.HouseEnterEvent;
 import de.gg.event.HouseSelectionEvent;
 import de.gg.input.MapMovementInputController;
@@ -57,8 +58,9 @@ public class GameMapScreen extends BaseGameScreen {
 		sceneRenderer = new SceneRenderer(game.getGameCamera().getCamera(),
 				game.getCurrentSession().getCity(), t.getString());
 
-		// Load the scene
+		// Temp: Load the scene
 		Model scene = assetManager.get(TEST_SCENE_PATH);
+		int k = 0;
 		for (int i = 0; i < scene.nodes.size; i++) {
 			String id = scene.nodes.get(i).id;
 			RenderData instance = new RenderData(scene, id, true);
@@ -78,8 +80,11 @@ public class GameMapScreen extends BaseGameScreen {
 				continue;
 			}
 
-			game.getCurrentSession().getCity().getBuildings()
-					.add(new Building(i, instance));
+			game.getCurrentSession().getCity().getBuildingSlots().put((short) k,
+					new BuildingSlot());
+			game.getCurrentSession().getCity().getBuildingSlots().get((short) k)
+					.setBuilding(new Building(i, instance));
+			k++;
 
 			/*
 			 * if (id.equals("ship")) ship = instance; else if
@@ -109,7 +114,7 @@ public class GameMapScreen extends BaseGameScreen {
 		this.selectionInputController = new MapSelectionInputController(
 				game.getSettings(), game.getEventBus(),
 				game.getGameCamera().getCamera(),
-				game.getCurrentSession().getCity().getBuildings());
+				game.getCurrentSession().getCity().getBuildingSlots());
 
 		this.movementInputController = new MapMovementInputController(
 				game.getGameCamera().getCamera());
@@ -137,7 +142,7 @@ public class GameMapScreen extends BaseGameScreen {
 
 	@Subscribe
 	public void onHouseSelectionEvent(HouseSelectionEvent ev) {
-		Log.info("Input", "Single selection: %d", ev.getId());
+		Log.debug("Input", "Single selection: %d", ev.getId());
 
 		// TODO show house selection dialog
 	}

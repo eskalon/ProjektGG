@@ -11,11 +11,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
+import com.badlogic.gdx.utils.Align;
 import com.google.common.eventbus.Subscribe;
 
+import de.gg.data.GameMaps;
 import de.gg.data.GameSessionSetup;
 import de.gg.event.ConnectionEstablishedEvent;
 import de.gg.event.NewChatMessagEvent;
@@ -33,7 +34,7 @@ import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 public class LobbyScreen extends BaseUIScreen {
 
 	@Asset(Texture.class)
-	private final String BACKGROUND_IMAGE_PATH = "ui/backgrounds/town.jpg";
+	private final String BACKGROUND_IMAGE_PATH = "ui/backgrounds/town2.jpg";
 	@Asset(Texture.class)
 	private final String READY_IMAGE_PATH = "ui/icons/ready.png";
 	@Asset(Texture.class)
@@ -48,9 +49,11 @@ public class LobbyScreen extends BaseUIScreen {
 	private final String ICON2_IMAGE_PATH = "ui/icons/players/icon_2.png";
 	@Asset(Sound.class)
 	private final String BUTTON_SOUND = "audio/button-tick.mp3";
-	private TextArea messagesArea;
+
+	private Label messagesArea, settingsArea;
 	private Table[] playerSlots;
 	private ImageTextButton readyUpLobbyButton;
+	private ScrollPane messagesPane;
 
 	private GameSessionSetup sessionSetup;
 	private HashMap<Short, LobbyPlayer> players;
@@ -58,10 +61,21 @@ public class LobbyScreen extends BaseUIScreen {
 
 	@Override
 	protected void initUI() {
-		// backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
+		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
 		Sound clickSound = assetManager.get(BUTTON_SOUND);
 
-		// mainTable.setBackground(skin.getDrawable("parchment-small"));
+		ImageTextButton playerSetingsButton = new ImageTextButton("Anpassen",
+				skin, "small");
+		playerSetingsButton.addListener(new InputListener() {
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				clickSound.play(1F);
+
+				// TODO
+
+				return true;
+			}
+		});
 
 		ImageTextButton leaveButton = new ImageTextButton("Verlassen", skin,
 				"small");
@@ -97,21 +111,26 @@ public class LobbyScreen extends BaseUIScreen {
 			}
 		});
 
+		settingsArea = new Label("", skin);
+		settingsArea.setAlignment(Align.topLeft);
+		settingsArea.setWrap(true);
+		settingsArea.setText("Karte: "
+				+ GameMaps.getByIndex(sessionSetup.getMapId()).getName() + " \n"
+				+ "Schwierigkeit: " + sessionSetup.getDifficulty());
+
 		Table playerTable = new Table();
-		Table settingsTable = new Table();
 		Table buttonTable = new Table();
 		Table chatTable = new Table();
 
-		// settings table + player table
-
-		buttonTable.add(readyUpLobbyButton).bottom().padBottom(20).row();
-		buttonTable.add(leaveButton);
+		buttonTable.add(playerSetingsButton).bottom().padBottom(18).row();
+		buttonTable.add(readyUpLobbyButton).padBottom(18).row();
+		buttonTable.add(leaveButton).padBottom(50);
 
 		Table chatInputTable = new Table();
 		ImageTextButton sendButton = new ImageTextButton("Senden", skin,
 				"small");
 		OffsetableTextField chatInputField = new OffsetableTextField("", skin,
-				12);
+				"large", 8);
 		chatInputField.setTextFieldListener(new TextFieldListener() {
 			@Override
 			public void keyTyped(TextField textField, char key) {
@@ -141,15 +160,17 @@ public class LobbyScreen extends BaseUIScreen {
 			}
 		});
 
-		messagesArea = new TextArea("", skin, "textarea");
-		messagesArea.setDisabled(true);
-		ScrollPane messagesPane = new ScrollPane(messagesArea);
+		messagesArea = new Label("", skin, "with-background");
+		messagesArea.setAlignment(Align.topLeft);
+		messagesArea.setWrap(true);
+
+		messagesPane = new ScrollPane(messagesArea);
+		messagesPane.setForceScroll(false, true);
 
 		chatInputTable.add(chatInputField).left().width(325).padRight(15);
 		chatInputTable.add(sendButton);
 
-		chatTable.debug();
-		chatTable.add(messagesPane).height(130).width(465).top().row();
+		chatTable.add(messagesPane).height(135).width(465).top().row();
 		chatTable.add(chatInputTable).left().padTop(10).width(465).bottom();
 
 		playerSlots = new Table[6];
@@ -167,12 +188,16 @@ public class LobbyScreen extends BaseUIScreen {
 		playerTable.add(playerSlots[4]).height(29).width(465).row();
 		playerTable.add(playerSlots[5]).height(29).width(465).row();
 
-		mainTable.add(playerTable).width(465).height(185);
-		mainTable.add(settingsTable).width(155).row();
-		mainTable.add(chatTable).height(185).bottom();
-		mainTable.add(buttonTable).height(185);
+		Table mTable = new Table();
+		mTable.setWidth(615);
+		mTable.setHeight(475);
+		mTable.setBackground(skin.getDrawable("parchment1"));
+		mTable.add(playerTable).width(465).height(185);
+		mTable.add(settingsArea).width(155).height(185).row();
+		mTable.add(chatTable).height(185).bottom();
+		mTable.add(buttonTable).height(185);
 
-		mainTable.setDebug(true);
+		mainTable.add(mTable);
 
 		updateLobbyUI();
 	}
@@ -232,7 +257,7 @@ public class LobbyScreen extends BaseUIScreen {
 		t.clear();
 		if (p == null) {
 			t.add().width(25);
-			t.add(new Label(" -- Frei -- ", skin)).width(350);
+			t.add(new Label("[#D3D3D3FF] -- Frei -- ", skin)).width(350);
 			t.add().width(50);
 		} else {
 			t.add().width(25); // Icon
@@ -253,10 +278,14 @@ public class LobbyScreen extends BaseUIScreen {
 	 * @param message
 	 *            The actual message.
 	 */
-	private void addChatMessageToUI(String sender, String message) {
-		messagesArea.appendText(
-				((sender == null || sender.isEmpty()) ? "" : sender + ": ")
-						+ message + " \n");
+	private void addChatMessageToUI(LobbyPlayer sender, String message) {
+		messagesArea.setText(messagesArea.getText() + (sender == null
+				? "[#EFE22DFF]"
+				: ("[#" + sender.getIcon().getColor() + "]" + sender.getName()
+						+ " " + sender.getSurname() + ": []"))
+				+ message + (sender == null ? "[]" : "") + " \n");
+		messagesPane.layout();
+		messagesPane.scrollTo(0, 0, 0, 0);
 	}
 
 	/**
@@ -276,9 +305,7 @@ public class LobbyScreen extends BaseUIScreen {
 
 	@Subscribe
 	public void onNewChatMessage(NewChatMessagEvent event) {
-		addChatMessageToUI(
-				players.get(event.getPlayerId()).getName() + " "
-						+ players.get(event.getPlayerId()).getSurname(),
+		addChatMessageToUI(players.get(event.getPlayerId()),
 				event.getMessage());
 	}
 

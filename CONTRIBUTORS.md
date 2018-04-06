@@ -13,9 +13,19 @@ Eine Liste aller Contributor und der genutzten externen Assets:
   
 ### UI
 * **The check button textures, the scroll bar and slider, the textfield and the dialog window background**
-  Path: ui/skin/skin.png
+  Path: ui/skin/skin.png\
   Based on the work or directly the work of: Lamoon (https://opengameart.org/content/rpg-gui-construction-kit-v10)\
   License: [CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/legalcode)
+  
+* **The background images altar, baker, castle, ride, town, town2**
+  Base on public domain works:\
+  https://commons.wikimedia.org/wiki/File:Altar_frontal_from_La_Seu_d%27Urgell_or_of_the_Apostles_-_Google_Art_Project.jpg\
+  https://commons.wikimedia.org/wiki/File:Medieval_baker.jpg\
+  https://commons.wikimedia.org/wiki/File:Martellange_Avignon_165.jpg\
+  https://commons.wikimedia.org/wiki/File:Konrad_von_Gr%C3%BCnenberg_-_Beschreibung_der_Reise_von_Konstanz_nach_Jerusalem_-_Blatt_20v-21r.jpg\
+  https://commons.wikimedia.org/wiki/File:Nuremberg_chronicles_-_Nuremberga.png\
+  https://commons.wikimedia.org/wiki/File:Konrad_von_Gr%C3%BCnenberg_-_Beschreibung_der_Reise_von_Konstanz_nach_Jerusalem_-_Blatt_15v-16r.jpg\
+  https://commons.wikimedia.org/wiki/File:Weiditz_Trachtenbuch_029-030.jpg\
   
 ### Textures
 * **Dark wooden background**\
@@ -35,7 +45,7 @@ Eine Liste aller Contributor und der genutzten externen Assets:
   Author: Tart Workshop\
   License: [OFL 1.1](http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL_web)
   
-* **Reenie Beanie**\
-  Path: fonts/ReenieBeanie/\
-  Author: James Grieshaber\
-  License: [OFL 1.1](http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL_web)
+* **Homemade Apple**\
+  Path: fonts/HomemadeApple/\
+  Author: Font Diner\
+  License: [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)

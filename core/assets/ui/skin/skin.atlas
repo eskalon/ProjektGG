@@ -1,208 +1,215 @@
 
 skin.png
-size: 2048,2048
+size: 2048,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 book
   rotate: false
-  xy: 2, 203
+  xy: 2, 459
   size: 800, 560
   orig: 800, 560
   offset: 0, 0
   index: -1
 button-down
   rotate: false
-  xy: 1553, 718
+  xy: 1553, 831
   size: 325, 45
   orig: 325, 45
   offset: 0, 0
   index: -1
 button-normal-down
   rotate: false
-  xy: 1553, 531
+  xy: 1553, 522
   size: 200, 42
   orig: 200, 42
   offset: 0, 0
   index: -1
 button-normal-over
   rotate: false
-  xy: 329, 159
+  xy: 1553, 610
   size: 200, 42
   orig: 200, 42
   offset: 0, 0
   index: -1
 button-normal-up
   rotate: false
-  xy: 1131, 224
+  xy: 1553, 566
   size: 200, 42
   orig: 200, 42
   offset: 0, 0
   index: -1
 button-over
   rotate: false
-  xy: 2, 156
+  xy: 1131, 477
   size: 325, 45
   orig: 325, 45
   offset: 0, 0
   index: -1
 button-up
   rotate: false
-  xy: 804, 221
+  xy: 804, 477
   size: 325, 45
   orig: 325, 45
   offset: 0, 0
   index: -1
 check-round-off
   rotate: false
-  xy: 1553, 443
+  xy: 1816, 811
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: -1
 check-round-on
   rotate: false
-  xy: 231, 112
+  xy: 1755, 610
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: -1
 check-square-off
   rotate: false
-  xy: 1940, 2014
+  xy: 1295, 453
   size: 27, 22
   orig: 27, 22
   offset: 0, 0
   index: -1
 check-square-on
   rotate: false
-  xy: 696, 179
+  xy: 680, 435
   size: 27, 22
   orig: 27, 22
   offset: 0, 0
   index: -1
 cursor-selection
   rotate: false
-  xy: 1924, 1817
+  xy: 1880, 862
   size: 11, 14
   orig: 11, 14
   offset: 0, 0
   index: -1
-parchment
+parchment1
   rotate: false
-  xy: 2, 765
-  size: 1920, 1271
-  orig: 1920, 1271
+  xy: 2, 17
+  size: 660, 440
+  orig: 660, 440
   offset: 0, 0
   index: -1
 parchment2
   rotate: false
-  xy: 804, 268
+  xy: 804, 524
   size: 747, 495
   orig: 747, 495
   offset: 0, 0
   index: -1
 scroll-h
   rotate: false
-  xy: 804, 206
+  xy: 2, 2
   size: 203, 13
   orig: 203, 13
   offset: 0, 0
   index: -1
 scroll-knob-h
   rotate: false
-  xy: 231, 132
+  xy: 1755, 630
   size: 37, 22
   orig: 37, 22
   offset: 0, 0
   index: -1
 scroll-knob-v
   rotate: false
-  xy: 1782, 679
+  xy: 1458, 485
   size: 21, 37
   orig: 21, 37
   offset: 0, 0
   index: -1
 scroll-v
   rotate: false
-  xy: 1924, 1833
+  xy: 664, 254
   size: 14, 203
   orig: 14, 203
   offset: 0, 0
   index: -1
 slider-h
   rotate: false
-  xy: 2, 2
+  xy: 804, 466
   size: 202, 9
   orig: 202, 9
   offset: 0, 0
   index: -1
 slider-knob-down-h
   rotate: false
-  xy: 1459, 238
+  xy: 2020, 991
   size: 16, 28
   orig: 16, 28
   offset: 0, 0
   index: -1
 slider-knob-h
   rotate: false
-  xy: 1679, 501
+  xy: 1894, 923
   size: 16, 28
   orig: 16, 28
   offset: 0, 0
   index: -1
 slider-knob-over-h
   rotate: false
-  xy: 1755, 545
+  xy: 1782, 767
   size: 16, 28
   orig: 16, 28
   offset: 0, 0
   index: -1
 small-button-down
   rotate: false
-  xy: 1333, 234
+  xy: 1894, 987
   size: 124, 32
   orig: 124, 32
   offset: 0, 0
   index: -1
 small-button-over
   rotate: false
-  xy: 1553, 463
+  xy: 1169, 443
   size: 124, 32
   orig: 124, 32
   offset: 0, 0
   index: -1
 small-button-up
   rotate: false
-  xy: 1553, 497
+  xy: 1894, 953
   size: 124, 32
   orig: 124, 32
   offset: 0, 0
   index: -1
 textarea
   rotate: false
-  xy: 2, 13
-  size: 227, 141
-  orig: 227, 141
+  xy: 1553, 878
+  size: 339, 141
+  orig: 339, 141
   offset: 0, 0
   index: -1
 textfield
   rotate: false
-  xy: 531, 166
-  size: 163, 35
-  orig: 163, 35
+  xy: 1008, 443
+  size: 159, 32
+  orig: 159, 32
+  offset: 0, 0
+  index: -1
+textfield_large
+  rotate: false
+  xy: 1553, 654
+  size: 242, 32
+  orig: 242, 32
   offset: 0, 0
   index: -1
 textfield_selection
   rotate: false
-  xy: 1880, 731
+  xy: 1782, 797
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 window
   rotate: false
-  xy: 1553, 575
+  xy: 1553, 688
   size: 227, 141
   orig: 227, 141
   offset: 0, 0
