@@ -4,39 +4,23 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.common.reflect.TypeToken;
+
+import de.gg.entity.Player.PlayerIcon;
 import de.gg.network.LobbyPlayer;
-import de.gg.network.LobbyPlayer.PlayerIcon;
+import de.gg.util.asset.Text;
+import net.dermetfan.gdx.assets.AnnotationAssetManager;
+import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 /**
  * This class contains utility methods for working with players.
  */
 public class PlayerUtils {
 
-	/**
-	 * All possible random names.
-	 * 
-	 * @see Player#getName()
-	 */
-	private static String[] names = new String[]{"Franz", "Heinrich", "Marthe",
-			"Ferdinand", "Luise", "Oskar", "Jan", "Pierre", "�ve", "Michael",
-			"Moritz", "Gregor", "Andrej Nikolajewitsch", "Peter", "Walter"};
-	/**
-	 * All possible random surnames.
-	 * 
-	 * @see Player#getSurname()
-	 */
-	private static String[] surnames = new String[]{"Woyzeck", "Faust",
-			"Schwerdtlein", "von Walter", "Miller", "Matzerath", "Bronski",
-			"Dumaine", "Charlier", "Kohlhaas", "J�ger", "Samsa",
-			"Bolk�nski", "Bes�chow", "Faber"};
-	/**
-	 * The genders to all possible names. The boolean is denoting if the person
-	 * is male.
-	 * 
-	 * @see Player#isMale()
-	 */
-	private static boolean[] genders = new boolean[]{true, true, false, true,
-			false, true, true, true, false, true, true, true, true, true, true};
+	private static List<PlayerStub> VALUES;
+
+	@Asset(Text.class)
+	private static final String PLAYER_PRESETS_JSON_PATH = "data/misc/player_presets.json";
 
 	private PlayerUtils() {
 	}
@@ -112,13 +96,11 @@ public class PlayerUtils {
 	}
 
 	/**
-	 * @return A random index for the player lists.
-	 * @see #names
-	 * @see #surnames
-	 * @see #genders
+	 * @return A random index for the player list.
+	 * @see #VALUES
 	 */
 	private static int getRandomIndex() {
-		return RandomUtils.getRandomNumber(0, names.length - 1);
+		return RandomUtils.getRandomNumber(0, VALUES.size() - 1);
 	}
 
 	/**
@@ -131,11 +113,24 @@ public class PlayerUtils {
 	 */
 	public static LobbyPlayer getRandomPlayer(
 			Collection<LobbyPlayer> collection) {
-		int index = getRandomIndex();
+		PlayerStub stub = VALUES.get(getRandomIndex());
 
-		return new LobbyPlayer(names[index], surnames[index],
-				PlayerUtils.getAvailableIcons(collection).get(0),
-				genders[index]);
+		return new LobbyPlayer(stub.name, stub.surname,
+				PlayerUtils.getAvailableIcons(collection).get(0), stub.isMale);
+	}
+
+	public static class PlayerStub {
+		public String name, surname;
+		public boolean isMale;
+	}
+
+	public static void finishLoading(AnnotationAssetManager assetManager) {
+		VALUES = JSONParser
+				.parseFromJson(
+						assetManager.get(PLAYER_PRESETS_JSON_PATH, Text.class)
+								.getString(),
+						new TypeToken<ArrayList<PlayerStub>>() {
+						}.getType());
 	}
 
 }

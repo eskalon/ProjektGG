@@ -1,0 +1,6 @@
+{
+	"name": "Importzoll",
+	"defaultValue": 5,
+	"lowerBound": 0,
+	"upperBound": 15
+}

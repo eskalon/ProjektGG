@@ -38,13 +38,9 @@ public class SlaveSession extends GameSession
 	 */
 	public SlaveSession(ProjektGG game, GameSessionSetup sessionSetup,
 			HashMap<Short, LobbyPlayer> players, short networkID) {
-		super(sessionSetup);
+		super(sessionSetup, players);
 		this.localId = networkID;
 		this.game = game;
-
-		// TODO Die restlichen Spieler über die players-Liste in #city
-		// aufsetzen
-
 	}
 
 	/**

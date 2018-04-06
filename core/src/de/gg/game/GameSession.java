@@ -1,7 +1,12 @@
 package de.gg.game;
 
+import java.util.HashMap;
+import java.util.Random;
+
 import de.gg.data.GameSessionSetup;
+import de.gg.data.GameSessionSetup.GameDifficulty;
 import de.gg.entity.City;
+import de.gg.network.LobbyPlayer;
 import de.gg.util.Log;
 
 /**
@@ -11,8 +16,12 @@ import de.gg.util.Log;
 public abstract class GameSession {
 
 	private static final long ROUND_DURATION = 20 * 1000; // 8*60*1000
+	/**
+	 * Set to true when a game round is over. The next round starts, when
+	 * {{@link #startNextRound()}} is called.
+	 */
 	protected volatile boolean waitingForNextRound = false;
-	private GameSessionSetup setup;
+
 	/**
 	 * Used to calculate the time delta.
 	 */
@@ -26,19 +35,23 @@ public abstract class GameSession {
 	private volatile int currentRound = 0;
 
 	private City city;
+	protected HashMap<Short, LobbyPlayer> players;
+	private GameDifficulty difficulty;
 
 	/**
 	 * Creates a new game session.
 	 * 
 	 * @param sessionSetup
 	 *            The settings of the game session.
+	 * @param players
+	 *            A hashmap containing the players.
 	 */
-	public GameSession(GameSessionSetup sessionSetup) {
-		this.setup = sessionSetup;
+	public GameSession(GameSessionSetup sessionSetup,
+			HashMap<Short, LobbyPlayer> players) {
+		this.difficulty = sessionSetup.getDifficulty();
+		this.players = players;
 		this.city = new City();
-
-		// TODO mit Hilfe des sessionSetup das Spiel aufsetzen, d.h. die
-		// Spielwelt in #city einrichten
+		this.city.generate(sessionSetup, players);
 	}
 
 	/**
@@ -112,10 +125,10 @@ public abstract class GameSession {
 	}
 
 	/**
-	 * @return The game's setup.
+	 * @return The game's difficulty.
 	 */
-	public GameSessionSetup getSetup() {
-		return setup;
+	public GameDifficulty getDifficulty() {
+		return difficulty;
 	}
 
 	public City getCity() {

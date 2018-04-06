@@ -47,6 +47,7 @@ public class GameServer {
 		players = new HashMap<>();
 		connections = new HashMap<>();
 		this.gameName = gameName;
+		this.setup = setup;
 
 		server = new Server();
 		server.start();

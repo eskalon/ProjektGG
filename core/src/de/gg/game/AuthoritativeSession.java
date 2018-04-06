@@ -22,14 +22,7 @@ public class AuthoritativeSession extends GameSession
 	 * The network ID of the local player.
 	 */
 	private short localId;
-	/**
-	 * Set to true when a game round is over. The next round should start, when
-	 * all players issued a ready message.
-	 * 
-	 * @see GameSession#setupNewRound(RoundEndData) Method to start the next
-	 *      round
-	 */
-	private HashMap<Short, LobbyPlayer> players;
+
 	private HashMap<Short, AuthoritativeResultListener> resultListeners;
 
 	/**
@@ -42,13 +35,7 @@ public class AuthoritativeSession extends GameSession
 	 */
 	public AuthoritativeSession(GameSessionSetup sessionSetup,
 			HashMap<Short, LobbyPlayer> players) {
-		super(sessionSetup);
-
-		this.players = players;
-
-		// TODO Alle Spieler über die players-Liste in #city
-		// aufsetzen
-
+		super(sessionSetup, players);
 	}
 
 	/**

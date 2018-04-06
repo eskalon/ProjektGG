@@ -5,17 +5,22 @@ import java.util.HashMap;
 
 import com.esotericsoftware.kryo.Kryo;
 
+import de.gg.data.GameMaps.GameMap;
+import de.gg.data.GameSessionSetup;
 import de.gg.data.GameSessionSetup.GameDifficulty;
 import de.gg.data.RoundEndData;
+import de.gg.entity.Building;
+import de.gg.entity.BuildingSlot;
+import de.gg.entity.BuildingSlot.BuildingSlotType;
+import de.gg.entity.BuildingTypes.BuildingType;
+import de.gg.entity.Player.PlayerIcon;
 import de.gg.game.AuthoritativeResultListener;
 import de.gg.game.SlaveActionListener;
-import de.gg.network.LobbyPlayer.PlayerIcon;
 import de.gg.network.message.ChatMessageSentMessage;
 import de.gg.network.message.GameSetupMessage;
 import de.gg.network.message.PlayerChangedMessage;
 import de.gg.network.message.PlayerJoinedMessage;
 import de.gg.network.message.PlayerLeftMessage;
-import de.gg.setting.GameSettings;
 
 /**
  * This class takes care of registering all classes needed by the multiplayer
@@ -42,8 +47,8 @@ public class NetworkRegisterer {
 		kryo.register(LobbyPlayer.class);
 		kryo.register(PlayerIcon.class);
 
-		kryo.register(GameSettings.class);
 		kryo.register(GameDifficulty.class);
+		kryo.register(GameSessionSetup.class);
 
 		kryo.register(ChatMessageSentMessage.class);
 		kryo.register(GameSetupMessage.class);

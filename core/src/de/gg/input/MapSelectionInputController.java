@@ -1,13 +1,13 @@
 package de.gg.input;
 
-import java.util.List;
+import java.util.HashMap;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.collision.Ray;
 import com.google.common.eventbus.EventBus;
 
-import de.gg.entity.Building;
+import de.gg.entity.BuildingSlot;
 import de.gg.event.HouseEnterEvent;
 import de.gg.event.HouseSelectionEvent;
 import de.gg.setting.GameSettings;
@@ -18,19 +18,20 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 	private EventBus eventBus;
 	private PerspectiveCamera camera;
 
-	private int clickedObjectId = -1;
-	private int newSelectionId = -1;
-	private int selectedObjectID = -1;
+	private short clickedObjectId = -1;
+	private short newSelectionId = -1;
+	private short selectedObjectID = -1;
 
 	private long lastClickTime = -1;
 	private static final long DOUBLE_CLICK_TIME = 300;
 
-	private List<Building> selectableObjects;
+	private HashMap<Short, BuildingSlot> selectableObjects;
 
 	private int clickX, clickY;
 
 	public MapSelectionInputController(GameSettings settings, EventBus bus,
-			PerspectiveCamera camera, List<Building> selectableObjects) {
+			PerspectiveCamera camera,
+			HashMap<Short, BuildingSlot> selectableObjects) {
 		this.settings = settings;
 		this.eventBus = bus;
 		this.camera = camera;
@@ -89,7 +90,7 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 				clickedObjectId = -1;
 				return true;
 			} else { // Wenn neben Objekt geklickt
-				onSingleSelection(-1); // Altes Objekt deselektieren
+				resetSelection(); // Altes Objekt deselektieren
 			}
 		}
 
@@ -101,19 +102,19 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 	}
 
 	public void resetSelection() {
-		onSingleSelection(-1);
+		onSingleSelection((short) -1);
 	}
 
-	private void onSingleSelection(int value) {
+	private void onSingleSelection(short value) {
 		// Altes Objekt reseten
 		if (selectedObjectID >= 0) {
-			selectableObjects.get(selectedObjectID)
+			selectableObjects.get(selectedObjectID).getBuilding()
 					.getRenderData().isSelected = false;
 		}
 		// Neues Objekt markieren
 		selectedObjectID = value;
 		if (selectedObjectID >= 0) {
-			selectableObjects.get(selectedObjectID)
+			selectableObjects.get(selectedObjectID).getBuilding()
 					.getRenderData().isSelected = true;
 		}
 
@@ -121,13 +122,13 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 				clickY));
 	}
 
-	private int getObjectAtPositon(int screenX, int screenY) {
+	private short getObjectAtPositon(int screenX, int screenY) {
 		Ray ray = camera.getPickRay(screenX, screenY);
-		int result = -1;
+		short result = -1;
 		float distance = -1;
-		for (int i = 0; i < selectableObjects.size(); ++i) {
-			final float dist2 = selectableObjects.get(i).getRenderData()
-					.intersects(ray);
+		for (short i = 0; i < selectableObjects.size(); ++i) {
+			final float dist2 = selectableObjects.get(i).getBuilding()
+					.getRenderData().intersects(ray);
 			if (dist2 >= 0f && (distance < 0f || dist2 <= distance)) {
 				result = i;
 				distance = dist2;

@@ -16,16 +16,16 @@ public class GameSessionSetup {
 	 */
 	private GameDifficulty difficulty;
 	/**
-	 * The map. Should not change after it is set.
+	 * The map id. Should not change after it is set.
 	 */
-	private GameMap map;
+	private int mapId;
 
 	public GameSessionSetup() {
 	}
 
-	public GameSessionSetup(GameDifficulty difficulty, GameMap map, long seed) {
+	public GameSessionSetup(GameDifficulty difficulty, int mapId, long seed) {
 		this.difficulty = difficulty;
-		this.map = map;
+		this.mapId = mapId;
 		this.seed = seed;
 	}
 
@@ -45,12 +45,15 @@ public class GameSessionSetup {
 		this.difficulty = difficulty;
 	}
 
-	public GameMap getMap() {
-		return map;
+	/**
+	 * @return The index of the used map.
+	 */
+	public int getMapId() {
+		return mapId;
 	}
 
-	public void setMap(GameMap map) {
-		this.map = map;
+	public void setMapId(int mapId) {
+		this.mapId = mapId;
 	}
 
 	/**
@@ -58,6 +61,16 @@ public class GameSessionSetup {
 	 */
 	public enum GameDifficulty {
 		EASY, NORMAL, HARD;
+
+		/**
+		 * This modifier is multiplied with the starting gold.
+		 */
+		private float startingGoldMoifier;
+		/**
+		 * This value influences the probability a npc does something in favor
+		 * of the player.
+		 */
+		private float actionModifer;
 	}
 
 }
