@@ -3,15 +3,19 @@ package de.gg.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextTooltip;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
+import de.gg.util.asset.Text;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 /**
@@ -50,8 +54,18 @@ public class MainMenuScreen extends BaseUIScreen {
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				clickSound.play(1F);
+				// game.pushScreen("settings");
+				return true;
+			}
+		});
 
-				// Gdx.app.exit();
+		ImageTextButton creditsButton = new ImageTextButton("Credits", skin);
+		creditsButton.addListener(new InputListener() {
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				clickSound.play(1F);
+				if (!game.isInDevEnv())
+					game.pushScreen("credits");
 				return true;
 			}
 		});
@@ -80,16 +94,29 @@ public class MainMenuScreen extends BaseUIScreen {
 				return true;
 			}
 		});
+
+		Label versionLabel = new Label(game.getVersion(), skin);
+		Table versionTable = new Table();
+		versionTable.add(versionLabel);
+
 		// githubRepoButton.addListener(
 		// new TextTooltip("Zu unserem Gihtub-Repository", skin));
 
 		mainTable.add(logoImage).padBottom(25f).padTop(-120f).row();
 		mainTable.add(multiplayerButton).padBottom(11f).row();
 		mainTable.add(settingsButton).padBottom(11f).row();
+		mainTable.add(creditsButton).padBottom(11f).row();
 		mainTable.add(exitButton).row();
 
 		githubRepoButton.padLeft(3).padBottom(3).bottom().left();
+
+		GlyphLayout layout = new GlyphLayout(skin.getFont("main-19"),
+				game.getVersion());
+		versionTable.padBottom(28)
+				.padLeft(game.getViewportWidth() * 2 - layout.width - 8);
+
 		stage.addActor(githubRepoButton);
+		stage.addActor(versionTable);
 	}
 
 }

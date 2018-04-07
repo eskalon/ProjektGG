@@ -28,7 +28,8 @@ jar {
 
     manifest {
         attributes (
-        	"Main-Class": project.mainClassName
+        	"Main-Class": project.mainClassName,
+        	"Implementation-Version": project.version
         )
     }
 }
@@ -38,6 +39,8 @@ jar.dependsOn classes
 task dist(type: Zip){
 	archiveName appName+'_'+version+'.zip'
 
+	from file("../LICENSE");
+	from file("../CONTRIBUTORS.md");
 	from files(project.assetsDir);
 	from jar.outputs.files
 }

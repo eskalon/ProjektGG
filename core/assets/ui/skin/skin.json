@@ -60,7 +60,7 @@
 			background: textarea
 		},
 		title: { 
-			font: title-20
+			font: title-24
 			fontColor: white
 		},
 		handwritten: { 

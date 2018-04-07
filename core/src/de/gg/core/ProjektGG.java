@@ -27,6 +27,7 @@ import de.gg.input.GameInputMultiplexer;
 import de.gg.network.NetworkHandler;
 import de.gg.screen.BaseScreen;
 import de.gg.screen.BaseUIScreen;
+import de.gg.screen.CreditsScreen;
 import de.gg.screen.GameInHouseScreen;
 import de.gg.screen.GameLoadingScreen;
 import de.gg.screen.GameMapScreen;
@@ -55,6 +56,9 @@ import net.dermetfan.gdx.assets.AnnotationAssetManager;
 public class ProjektGG extends Game {
 
 	public static final String name = "ProjektGG";
+	private final String version;
+	private final boolean inDevEnv;
+
 	private SpriteBatch batch;
 	/**
 	 * The asset manager.
@@ -92,6 +96,11 @@ public class ProjektGG extends Game {
 	public ProjektGG(boolean debug, boolean showSplashscreen,
 			boolean fpsCounter) {
 		super();
+
+		inDevEnv = getClass().getPackage().getImplementationVersion() == null;
+		version = inDevEnv
+				? "Development"
+				: getClass().getPackage().getImplementationVersion();
 
 		this.debug = debug;
 		this.showSplashscreen = showSplashscreen;
@@ -145,6 +154,7 @@ public class ProjektGG extends Game {
 		Gdx.input.setInputProcessor(inputProcessor);
 
 		// Add screens
+		addScreen("credits", new CreditsScreen());
 		addScreen("splash", new SplashScreen());
 		addScreen("mainMenu", new MainMenuScreen());
 		addScreen("loading", new LoadingScreen());
@@ -372,6 +382,14 @@ public class ProjektGG extends Game {
 
 	public boolean showFPSCounter() {
 		return fpsCounter;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public boolean isInDevEnv() {
+		return inDevEnv;
 	}
 
 }

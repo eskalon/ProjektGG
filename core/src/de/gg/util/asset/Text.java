@@ -1,5 +1,7 @@
 package de.gg.util.asset;
 
+import java.nio.charset.Charset;
+
 import com.badlogic.gdx.files.FileHandle;
 
 /**
@@ -11,6 +13,9 @@ import com.badlogic.gdx.files.FileHandle;
  */
 public class Text {
 
+	private static final Charset CHARSET = Charset.isSupported("UTF-8")
+			? Charset.forName("UTF-8")
+			: Charset.defaultCharset();
 	private String string;
 
 	public Text() {
@@ -18,19 +23,19 @@ public class Text {
 	}
 
 	public Text(byte[] data) {
-		this.string = new String(data);
+		this.string = new String(data, CHARSET);
 	}
 
 	public Text(String string) {
-		this.string = new String(string.getBytes());
+		this.string = new String(string.getBytes(), CHARSET);
 	}
 
 	public Text(FileHandle file) {
-		this.string = new String(file.readBytes());
+		this.string = new String(file.readBytes(), CHARSET);
 	}
 
 	public Text(Text text) {
-		this.string = new String(text.getString().getBytes());
+		this.string = new String(text.getString().getBytes(), CHARSET);
 	}
 
 	public void setString(String string) {

@@ -34,11 +34,11 @@ public class LoadingScreen extends BaseLoadingScreen {
 				BitmapFont.class, font);
 	}
 
-	public final AssetDescriptor<BitmapFont> TITLE_FONT_20_PATH() {
+	public final AssetDescriptor<BitmapFont> TITLE_FONT_24_PATH() {
 		FreeTypeFontLoaderParameter font = new FreeTypeFontLoaderParameter();
 		font.fontFileName = "fonts/Fredericka_the_Great/FrederickatheGreat-Regular.ttf";
-		font.fontParameters.size = 20;
-		return new AssetDescriptor<BitmapFont>("titleFont20.ttf",
+		font.fontParameters.size = 24;
+		return new AssetDescriptor<BitmapFont>("titleFont24.ttf",
 				BitmapFont.class, font);
 	}
 
@@ -52,7 +52,6 @@ public class LoadingScreen extends BaseLoadingScreen {
 
 	private final String SKIN_PATH = "ui/skin/skin.json";
 	private final String SKIN_TEXTURE_ATLAS_PATH = "ui/skin/skin.atlas";
-	
 
 	public LoadingScreen() {
 		super("ui/backgrounds/baker.jpg");
@@ -66,9 +65,11 @@ public class LoadingScreen extends BaseLoadingScreen {
 
 		assetManager.load(MAIN_FONT_19_PATH());
 		assetManager.load(MAIN_FONT_22_PATH());
-		assetManager.load(TITLE_FONT_20_PATH());
+		assetManager.load(TITLE_FONT_24_PATH());
 		assetManager.load(HANDWRITTEN_FONT_20_PATH());
 
+		if (!game.isInDevEnv())
+			assetManager.load(game.getScreen("credits"));
 		assetManager.load(game.getScreen("mainMenu"));
 		assetManager.load(game.getScreen("serverBrowser"));
 		assetManager.load(game.getScreen("lobby"));
@@ -80,14 +81,14 @@ public class LoadingScreen extends BaseLoadingScreen {
 		BitmapFont main19Font = assetManager.get(MAIN_FONT_19_PATH());
 		main19Font.getData().markupEnabled = true;
 		BitmapFont main22Font = assetManager.get(MAIN_FONT_22_PATH());
-		BitmapFont letter20Font = assetManager.get(TITLE_FONT_20_PATH());
+		BitmapFont title24Font = assetManager.get(TITLE_FONT_24_PATH());
 		BitmapFont handwritten20Font = assetManager
 				.get(HANDWRITTEN_FONT_20_PATH());
 
 		ObjectMap<String, Object> fontMap = new ObjectMap<String, Object>();
 		fontMap.put("main-19", main19Font);
 		fontMap.put("main-22", main22Font);
-		fontMap.put("title-20", letter20Font);
+		fontMap.put("title-24", title24Font);
 		fontMap.put("handwritten-20", handwritten20Font);
 		assetManager.load(SKIN_PATH, Skin.class,
 				new SkinLoader.SkinParameter(SKIN_TEXTURE_ATLAS_PATH, fontMap));
