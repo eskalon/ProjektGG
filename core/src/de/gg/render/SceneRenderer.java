@@ -39,9 +39,9 @@ public class SceneRenderer implements Disposable {
 
 		Config config = new Config();
 		config.fragmentShader = fragmentShader;
-		outlineModelBatch = new ModelBatch(new DefaultShaderProvider(config));
+		outlineModelBatch = new CullingModelBatch(new DefaultShaderProvider(config));
 
-		modelBatch = new ModelBatch();
+		modelBatch = new CullingModelBatch();
 		environment = new Environment();
 		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f,
 				0.4f, 0.4f, 1f));

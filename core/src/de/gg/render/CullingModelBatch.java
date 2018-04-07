@@ -2,10 +2,10 @@ package de.gg.render;
 
 import java.util.Iterator;
 
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.Renderable;
+import com.badlogic.gdx.graphics.g3d.utils.ShaderProvider;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ObjectMap;
 
@@ -22,20 +22,29 @@ public class CullingModelBatch extends ModelBatch {
 
 	private Vector3 tmp = new Vector3();
 
+	public CullingModelBatch() {
+		super();
+	}
+
+	public CullingModelBatch(ShaderProvider shaderProvider) {
+		super(shaderProvider);
+	}
+
 	@Override
 	public void flush() {
 		Iterator<Renderable> iter = renderables.iterator();
 
 		while (iter.hasNext()) {
 			Renderable renderable = iter.next();
+
 			renderable.worldTransform.getTranslation(tmp);
 			if (!camera.frustum.sphereInFrustumWithoutNearFar(tmp,
-					getRadiusOfMesh(renderable.meshPart.mesh))) {
+					getRadiusOfMesh(renderable.meshPart.mesh))
+					&& renderable.environment != null) {
 				iter.remove();
 			}
 		}
 
-		System.out.println(renderables.size);
 		super.flush();
 	}
 
