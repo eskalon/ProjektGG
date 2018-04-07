@@ -50,6 +50,8 @@ public class AuthoritativeSession extends GameSession
 		}
 
 		this.resultListeners = resultListeners;
+
+		super.setupGame();
 	}
 
 	public void stopGame() {

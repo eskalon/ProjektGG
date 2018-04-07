@@ -1,7 +1,6 @@
 package de.gg.game;
 
 import java.util.HashMap;
-import java.util.Random;
 
 import de.gg.data.GameSessionSetup;
 import de.gg.data.GameSessionSetup.GameDifficulty;
@@ -34,9 +33,11 @@ public abstract class GameSession {
 	private volatile long currentRoundTime = ROUND_DURATION;
 	private volatile int currentRound = 0;
 
+	private volatile boolean initialized = false;
+
 	private City city;
 	protected HashMap<Short, LobbyPlayer> players;
-	private GameDifficulty difficulty;
+	private GameSessionSetup sessionSetup;
 
 	/**
 	 * Creates a new game session.
@@ -48,10 +49,17 @@ public abstract class GameSession {
 	 */
 	public GameSession(GameSessionSetup sessionSetup,
 			HashMap<Short, LobbyPlayer> players) {
-		this.difficulty = sessionSetup.getDifficulty();
+		this.sessionSetup = sessionSetup;
 		this.players = players;
 		this.city = new City();
+	}
+
+	/**
+	 * Sets the city and the game entities up.
+	 */
+	public synchronized void setupGame() {
 		this.city.generate(sessionSetup, players);
+		this.initialized = true;
 	}
 
 	/**
@@ -65,6 +73,12 @@ public abstract class GameSession {
 		long currentTime = System.currentTimeMillis();
 		long delta = currentTime - lastTime;
 		lastTime = currentTime;
+
+		if (!initialized) {
+			Log.error("Server",
+					"Der Server updated, obwohl er noch nicht fertig aufgesetzt ist");
+			return false;
+		}
 
 		// Rundenzeit hochzählen
 		currentRoundTime += delta;
@@ -128,7 +142,7 @@ public abstract class GameSession {
 	 * @return The game's difficulty.
 	 */
 	public GameDifficulty getDifficulty() {
-		return difficulty;
+		return sessionSetup.getDifficulty();
 	}
 
 	public City getCity() {

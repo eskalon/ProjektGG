@@ -1,6 +1,5 @@
 package de.gg.render;
 
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
@@ -18,9 +17,17 @@ public class RenderData extends ModelInstance {
 
 	public boolean isSelected = false;
 
+	public RenderData(Model model) {
+		super(model);
+		this.calculateBoundingBox(bounds);
+		bounds.getCenter(center);
+		bounds.getDimensions(dimensions);
+		radius = dimensions.len() / 2f;
+	}
+
 	public RenderData(Model model, String rootNode, boolean mergeTransform) {
 		super(model, rootNode, mergeTransform);
-		calculateBoundingBox(bounds);
+		this.calculateBoundingBox(bounds);
 		bounds.getCenter(center);
 		bounds.getDimensions(dimensions);
 		radius = dimensions.len() / 2f;
@@ -41,18 +48,6 @@ public class RenderData extends ModelInstance {
 				ray.origin.y + ray.direction.y * len,
 				ray.origin.z + ray.direction.z * len);
 		return (dist2 <= radius * radius) ? dist2 : -1f;
-	}
-
-	/**
-	 * Takes care of the frustum culling calculations.
-	 * 
-	 * @param cam
-	 *            The camera.
-	 * @return Whether the object is visible for the camera.
-	 */
-	public boolean isVisibleForCamera(final Camera cam) {
-		return cam.frustum.sphereInFrustum(
-				transform.getTranslation(position).add(center), radius);
 	}
 
 }

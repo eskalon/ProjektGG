@@ -1,13 +1,12 @@
 package de.gg.input;
 
-import java.util.HashMap;
-
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.collision.Ray;
 import com.google.common.eventbus.EventBus;
 
 import de.gg.entity.BuildingSlot;
+import de.gg.entity.City;
 import de.gg.event.HouseEnterEvent;
 import de.gg.event.HouseSelectionEvent;
 import de.gg.setting.GameSettings;
@@ -25,17 +24,16 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 	private long lastClickTime = -1;
 	private static final long DOUBLE_CLICK_TIME = 300;
 
-	private HashMap<Short, BuildingSlot> selectableObjects;
+	private City city;
 
 	private int clickX, clickY;
 
 	public MapSelectionInputController(GameSettings settings, EventBus bus,
-			PerspectiveCamera camera,
-			HashMap<Short, BuildingSlot> selectableObjects) {
+			PerspectiveCamera camera, City city) {
 		this.settings = settings;
 		this.eventBus = bus;
 		this.camera = camera;
-		this.selectableObjects = selectableObjects;
+		this.city = city;
 	}
 
 	public void update() {
@@ -108,13 +106,13 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 	private void onSingleSelection(short value) {
 		// Altes Objekt reseten
 		if (selectedObjectID >= 0) {
-			selectableObjects.get(selectedObjectID).getBuilding()
+			city.getBuildingSlots()[selectedObjectID].getBuilding()
 					.getRenderData().isSelected = false;
 		}
 		// Neues Objekt markieren
 		selectedObjectID = value;
 		if (selectedObjectID >= 0) {
-			selectableObjects.get(selectedObjectID).getBuilding()
+			city.getBuildingSlots()[selectedObjectID].getBuilding()
 					.getRenderData().isSelected = true;
 		}
 
@@ -126,8 +124,8 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 		Ray ray = camera.getPickRay(screenX, screenY);
 		short result = -1;
 		float distance = -1;
-		for (short i = 0; i < selectableObjects.size(); ++i) {
-			final float dist2 = selectableObjects.get(i).getBuilding()
+		for (short i = 0; i < city.getBuildingSlots().length; ++i) {
+			final float dist2 = city.getBuildingSlots()[i].getBuilding()
 					.getRenderData().intersects(ray);
 			if (dist2 >= 0f && (distance < 0f || dist2 <= distance)) {
 				result = i;

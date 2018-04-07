@@ -6,7 +6,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.shaders.DepthShader.Config;
@@ -16,6 +18,7 @@ import com.badlogic.gdx.utils.Disposable;
 import de.gg.entity.Building;
 import de.gg.entity.BuildingSlot;
 import de.gg.entity.City;
+import de.gg.screen.GameMapScreen;
 
 /**
  * This class is repsonsible for rendering the city.
@@ -70,7 +73,7 @@ public class SceneRenderer implements Disposable {
 		Gdx.gl.glClear(GL20.GL_STENCIL_BUFFER_BIT);
 
 		modelBatch.begin(camera);
-		renderModels(city.getBuildingSlots().values());
+		renderModels(city.getBuildingSlots());
 		modelBatch.end();
 
 		// Now only draw, where previously not drawn
@@ -79,34 +82,32 @@ public class SceneRenderer implements Disposable {
 		Gdx.gl.glStencilMask(0x00);
 
 		outlineModelBatch.begin(camera);
-		renderOutlines(city.getBuildingSlots().values());
+		renderOutlines(city.getBuildingSlots());
 		outlineModelBatch.end();
 
 		Gdx.gl.glDisable(GL20.GL_STENCIL_TEST);
 	}
 
-	public void renderModels(Collection<BuildingSlot> buildings) {
+	public void renderModels(BuildingSlot[] buildings) {
 		for (final BuildingSlot slot : buildings) {
 			if (slot.isBuiltOn()) {
 				Building building = slot.getBuilding();
 
-				if (!building.getRenderData().isSelected // diese Bedingung nur
+				if (!building.getRenderData().isSelected) {// diese Bedingung
+															// nur
 															// testweise
-						&& building.getRenderData()
-								.isVisibleForCamera(camera)) {
 					modelBatch.render(building.getRenderData(), environment);
 				}
 			}
 		}
 	}
 
-	public void renderOutlines(Collection<BuildingSlot> buildings) {
+	public void renderOutlines(BuildingSlot[] buildings) {
 		// TODO scale models
 		for (final BuildingSlot slot : buildings) {
 			if (slot.isBuiltOn()) {
 				Building building = slot.getBuilding();
-				if (building.getRenderData().isSelected && building
-						.getRenderData().isVisibleForCamera(camera)) {
+				if (building.getRenderData().isSelected) {
 					outlineModelBatch.render(building.getRenderData(),
 							environment);
 				}

@@ -19,7 +19,7 @@ public class City {
 
 	private ModelInstance skyBox;
 	private List<RenderData> staticProps;
-	private HashMap<Short, BuildingSlot> buildingSlots;
+	private BuildingSlot[] buildingSlots;
 
 	private HashMap<Short, Character> characters;
 	private HashMap<Short, Player> players;
@@ -38,7 +38,7 @@ public class City {
 	public City() {
 	}
 
-	public void generate(GameSessionSetup setup,
+	public synchronized void generate(GameSessionSetup setup,
 			HashMap<Short, LobbyPlayer> players) {
 		// TODO mit Hilfe des sessionSetup das Spiel aufsetzen, d.h. die
 		// Spielwelt sowie die Spieler in #city einrichten
@@ -46,8 +46,14 @@ public class City {
 		Random r = new Random(setup.getSeed());
 		GameMap map = GameMaps.getByIndex(setup.getMapId());
 
-		// temp:
-		this.buildingSlots = new HashMap<>();
+		this.buildingSlots = map.getBuildingSlots()
+				.toArray(new BuildingSlot[0]);
+
+		// Test:
+		BuildingSlot slot = buildingSlots[0];
+		Building b = new Building();
+		b.setType(BuildingTypes.FORGE_1);
+		slot.setBuilding(b);
 	}
 
 	public void setSkybox(ModelInstance skyBox) {
@@ -58,7 +64,7 @@ public class City {
 		return skyBox;
 	}
 
-	public HashMap<Short, BuildingSlot> getBuildingSlots() {
+	public BuildingSlot[] getBuildingSlots() {
 		return buildingSlots;
 	}
 

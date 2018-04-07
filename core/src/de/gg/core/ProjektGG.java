@@ -74,7 +74,7 @@ public class ProjektGG extends Game {
 
 	private GameSettings settings;
 
-	private boolean debug, showSplashscreen;
+	private boolean debug, showSplashscreen, fpsCounter;
 
 	private GameInputMultiplexer inputProcessor = new GameInputMultiplexer();
 
@@ -89,11 +89,13 @@ public class ProjektGG extends Game {
 	private EventQueueBus eventBus;
 	private NetworkHandler networkHandler;
 
-	public ProjektGG(boolean debug, boolean showSplashscreen) {
+	public ProjektGG(boolean debug, boolean showSplashscreen,
+			boolean fpsCounter) {
 		super();
 
 		this.debug = debug;
 		this.showSplashscreen = showSplashscreen;
+		this.fpsCounter = fpsCounter;
 	}
 
 	@Override
@@ -366,6 +368,10 @@ public class ProjektGG extends Game {
 	 */
 	public boolean showDebugStuff() {
 		return debug;
+	}
+
+	public boolean showFPSCounter() {
+		return fpsCounter;
 	}
 
 }

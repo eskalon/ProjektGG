@@ -18,7 +18,7 @@ public class Building {
 	public Building() {
 	}
 
-	public Building(int id, RenderData renderData) {
+	public void setRenderData(RenderData renderData) {
 		this.renderData = renderData;
 	}
 

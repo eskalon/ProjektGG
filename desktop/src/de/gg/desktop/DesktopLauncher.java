@@ -36,6 +36,7 @@ public class DesktopLauncher {
 		MicroOptions options = new MicroOptions();
 		options.option("novid").describedAs("no splashscreen").isUnary();
 		options.option("debug").describedAs("enables debugmode").isUnary();
+		options.option("fps").describedAs("enables a fps counter").isUnary();
 		try {
 			options.parse(args);
 		} catch (MicroOptions.OptionException e) {
@@ -48,9 +49,11 @@ public class DesktopLauncher {
 
 		try {
 			// Start the game
-			new LwjglApplication(new ProjektGG(options.has("debug"), !options.has("novid")), config);
+			new LwjglApplication(new ProjektGG(options.has("debug"),
+					!options.has("novid"), options.has("fps")), config);
 		} catch (Exception e) {
-			Gdx.app.error(ProjektGG.name, "An unexpected error occurred while starting the game", e);
+			Gdx.app.error(ProjektGG.name,
+					"An unexpected error occurred while starting the game", e);
 
 			CrashLogUtils.writeCrashLogToFile(e, true);
 		}

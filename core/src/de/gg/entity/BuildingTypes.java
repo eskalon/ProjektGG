@@ -52,6 +52,8 @@ public final class BuildingTypes {
 	public class BuildingType {
 
 		private String name;
+		private String nodeName;
+
 		private int maxHealth;
 		private int upgradeOptionIndex = -1;
 		/**
@@ -129,6 +131,14 @@ public final class BuildingTypes {
 
 		public int getMaxStackCount() {
 			return maxStackCount;
+		}
+
+		/**
+		 * @return The name of the node that holds the model for this building
+		 *         type.
+		 */
+		public String getNodeName() {
+			return nodeName;
 		}
 
 	}
