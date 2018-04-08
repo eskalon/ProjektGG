@@ -48,6 +48,10 @@ public class PositionTypes {
 			return level;
 		}
 
+		/**
+		 * @return The required status for this position. Null if not status is
+		 *         needed.
+		 */
 		public SocialStatus getStatusRequirement() {
 			return SocialStatusS.getByIndex(statusRequirementIndex);
 		}

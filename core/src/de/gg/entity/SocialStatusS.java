@@ -79,6 +79,10 @@ public class SocialStatusS {
 			return positionLevelRequirement;
 		}
 
+		/**
+		 * @return Whether the characters name has to include the appropriate
+		 *         nobility title.
+		 */
 		public boolean isTitle() {
 			return isTitle;
 		}

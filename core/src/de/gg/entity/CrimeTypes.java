@@ -26,10 +26,10 @@ public class CrimeTypes {
 	}
 
 	public class CrimeType {
-		
+
 		private String name;
 		private boolean punishableByDeath;
-		
+
 		public String getName() {
 			return name;
 		}

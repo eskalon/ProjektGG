@@ -18,11 +18,6 @@ public class AuthoritativeSession extends GameSession
 		implements
 			SlaveActionListener {
 
-	/**
-	 * The network ID of the local player.
-	 */
-	private short localId;
-
 	private HashMap<Short, AuthoritativeResultListener> resultListeners;
 
 	/**
@@ -34,8 +29,8 @@ public class AuthoritativeSession extends GameSession
 	 *            A hashmap containing the players.
 	 */
 	public AuthoritativeSession(GameSessionSetup sessionSetup,
-			HashMap<Short, LobbyPlayer> players) {
-		super(sessionSetup, players);
+			HashMap<Short, LobbyPlayer> players, short localNetworkId) {
+		super(sessionSetup, players, localNetworkId);
 	}
 
 	/**

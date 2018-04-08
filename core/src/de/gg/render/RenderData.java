@@ -6,6 +6,9 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 
+/**
+ * This class represents a concrete instance of a model.
+ */
 public class RenderData extends ModelInstance {
 
 	public final Vector3 center = new Vector3();
@@ -25,8 +28,8 @@ public class RenderData extends ModelInstance {
 		radius = dimensions.len() / 2f;
 	}
 
-	public RenderData(Model model, String rootNode, boolean mergeTransform) {
-		super(model, rootNode, mergeTransform);
+	public RenderData(Model scene, String rootNode, boolean mergeTransform) {
+		super(scene, rootNode, mergeTransform);
 		this.calculateBoundingBox(bounds);
 		bounds.getCenter(center);
 		bounds.getDimensions(dimensions);

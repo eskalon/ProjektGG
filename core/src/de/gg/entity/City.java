@@ -43,7 +43,7 @@ public class City {
 		// TODO mit Hilfe des sessionSetup das Spiel aufsetzen, d.h. die
 		// Spielwelt sowie die Spieler in #city einrichten
 
-		Random r = new Random(setup.getSeed());
+		Random random = new Random(setup.getSeed());
 		GameMap map = GameMaps.getByIndex(setup.getMapId());
 
 		this.buildingSlots = map.getBuildingSlots()

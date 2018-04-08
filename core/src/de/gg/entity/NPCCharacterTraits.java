@@ -5,11 +5,6 @@ import java.util.List;
 
 import com.badlogic.gdx.assets.AssetManager;
 
-import de.gg.entity.LawTypes.LawType;
-import de.gg.util.JSONParser;
-import de.gg.util.asset.Text;
-import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
-
 public class NPCCharacterTraits {
 
 	/**
@@ -54,6 +49,10 @@ public class NPCCharacterTraits {
 		return VALUES.get(index);
 	}
 
+	/**
+	 * This class represents a trait npc characters have. Traits influence the
+	 * decisions these characters make.
+	 */
 	public class NPCCharacterTrait {
 
 		// TODO Modifikatoren für bestimmte Situationen

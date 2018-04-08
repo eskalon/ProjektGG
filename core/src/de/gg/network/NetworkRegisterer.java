@@ -5,14 +5,9 @@ import java.util.HashMap;
 
 import com.esotericsoftware.kryo.Kryo;
 
-import de.gg.data.GameMaps.GameMap;
 import de.gg.data.GameSessionSetup;
 import de.gg.data.GameSessionSetup.GameDifficulty;
 import de.gg.data.RoundEndData;
-import de.gg.entity.Building;
-import de.gg.entity.BuildingSlot;
-import de.gg.entity.BuildingSlot.BuildingSlotType;
-import de.gg.entity.BuildingTypes.BuildingType;
 import de.gg.entity.Player.PlayerIcon;
 import de.gg.game.AuthoritativeResultListener;
 import de.gg.game.SlaveActionListener;

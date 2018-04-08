@@ -66,4 +66,12 @@ public class Building {
 		this.employees = employees;
 	}
 
+	public List<ItemStack> getStoredStacks() {
+		return stacks;
+	}
+
+	public void setStoredStacks(List<ItemStack> stacks) {
+		this.stacks = stacks;
+	}
+
 }

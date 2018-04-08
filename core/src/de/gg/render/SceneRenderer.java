@@ -1,14 +1,10 @@
 package de.gg.render;
 
-import java.util.Collection;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.shaders.DepthShader.Config;
@@ -18,7 +14,6 @@ import com.badlogic.gdx.utils.Disposable;
 import de.gg.entity.Building;
 import de.gg.entity.BuildingSlot;
 import de.gg.entity.City;
-import de.gg.screen.GameMapScreen;
 
 /**
  * This class is repsonsible for rendering the city.
@@ -39,7 +34,8 @@ public class SceneRenderer implements Disposable {
 
 		Config config = new Config();
 		config.fragmentShader = fragmentShader;
-		outlineModelBatch = new CullingModelBatch(new DefaultShaderProvider(config));
+		outlineModelBatch = new CullingModelBatch(
+				new DefaultShaderProvider(config));
 
 		modelBatch = new CullingModelBatch();
 		environment = new Environment();

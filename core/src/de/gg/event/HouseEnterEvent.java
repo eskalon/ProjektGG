@@ -1,5 +1,8 @@
 package de.gg.event;
 
+/**
+ * Is posted when the local player enters a house.
+ */
 public class HouseEnterEvent {
 
 	private short id;
@@ -8,6 +11,9 @@ public class HouseEnterEvent {
 		this.id = id;
 	}
 
+	/**
+	 * @return The id of the entered house.
+	 */
 	public short getId() {
 		return id;
 	}

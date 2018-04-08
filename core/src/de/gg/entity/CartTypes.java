@@ -35,7 +35,7 @@ public class CartTypes {
 	}
 
 	public class CartType {
-		
+
 		private String name;
 		private int maxHP;
 		private int price;
@@ -45,8 +45,8 @@ public class CartTypes {
 		private int accidentRate;
 		private int maxStackSize;
 		private int maxStackCount;
-		
-		CartType(){
+
+		CartType() {
 		}
 
 		public String getName() {
@@ -72,6 +72,6 @@ public class CartTypes {
 		public int getMaxStackCount() {
 			return maxStackCount;
 		}
-		
+
 	}
 }

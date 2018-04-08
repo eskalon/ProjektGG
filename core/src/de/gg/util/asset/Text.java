@@ -5,7 +5,8 @@ import java.nio.charset.Charset;
 import com.badlogic.gdx.files.FileHandle;
 
 /**
- * A simple asset type for text files.
+ * A simple asset type for text files. Uses the UTF-8-encoding if supported by
+ * the local JVM.
  *
  * @see TextLoader The respective asset loader.
  * @see <a href=

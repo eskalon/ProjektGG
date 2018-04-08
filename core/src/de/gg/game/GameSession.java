@@ -40,6 +40,11 @@ public abstract class GameSession {
 	private GameSessionSetup sessionSetup;
 
 	/**
+	 * The network ID of the local player.
+	 */
+	protected short localNetworkId;
+
+	/**
 	 * Creates a new game session.
 	 * 
 	 * @param sessionSetup
@@ -48,9 +53,10 @@ public abstract class GameSession {
 	 *            A hashmap containing the players.
 	 */
 	public GameSession(GameSessionSetup sessionSetup,
-			HashMap<Short, LobbyPlayer> players) {
+			HashMap<Short, LobbyPlayer> players, short localNetworkId) {
 		this.sessionSetup = sessionSetup;
 		this.players = players;
+		this.localNetworkId = localNetworkId;
 		this.city = new City();
 	}
 

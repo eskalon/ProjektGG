@@ -10,7 +10,7 @@ public class Cart {
 	private List<ItemStack> stacks;
 	private int hp;
 	private Player owner;
-	
+
 	public CartType getType() {
 		return type;
 	}

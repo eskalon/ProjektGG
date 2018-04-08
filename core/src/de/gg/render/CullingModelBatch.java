@@ -40,7 +40,7 @@ public class CullingModelBatch extends ModelBatch {
 			renderable.worldTransform.getTranslation(tmp);
 			if (!camera.frustum.sphereInFrustumWithoutNearFar(tmp,
 					getRadiusOfMesh(renderable.meshPart.mesh))
-					&& renderable.environment != null) {
+					&& renderable.environment != null) { // excludes the skybox
 				iter.remove();
 			}
 		}

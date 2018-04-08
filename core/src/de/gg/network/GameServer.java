@@ -191,7 +191,7 @@ public class GameServer {
 		System.out.println("Player changed " + msg.getId());
 
 		if (PlayerUtils.areAllPlayersReady(players.values())) {
-			session = new AuthoritativeSession(setup, players);
+			session = new AuthoritativeSession(setup, players, (short) 0);
 
 			// Register the RMI handler
 			HashMap<Short, AuthoritativeResultListener> resultListeners = new HashMap<>();

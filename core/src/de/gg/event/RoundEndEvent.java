@@ -3,7 +3,7 @@ package de.gg.event;
 import de.gg.data.RoundEndData;
 
 /**
- * Posted after a round ended.
+ * Posted after a the client received the round end data.
  */
 public class RoundEndEvent {
 

@@ -119,6 +119,10 @@ public class PlayerUtils {
 				PlayerUtils.getAvailableIcons(collection).get(0), stub.isMale);
 	}
 
+	/**
+	 * This class represents the player data read via {@linkplain JSONParser
+	 * json}.
+	 */
 	public static class PlayerStub {
 		public String name, surname;
 		public boolean isMale;

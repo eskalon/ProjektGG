@@ -3,7 +3,8 @@ package de.gg.network;
 import de.gg.entity.Player.PlayerIcon;
 
 /**
- * This class describes a player.
+ * This class describes a client in the lobby. It is alos used by the server to
+ * save the ready state of its clients.
  */
 public class LobbyPlayer {
 

@@ -18,10 +18,6 @@ public class SlaveSession extends GameSession
 		implements
 			AuthoritativeResultListener {
 
-	/**
-	 * The network ID of the local player.
-	 */
-	private short localId;
 	private ProjektGG game;
 
 	/**
@@ -38,8 +34,7 @@ public class SlaveSession extends GameSession
 	 */
 	public SlaveSession(ProjektGG game, GameSessionSetup sessionSetup,
 			HashMap<Short, LobbyPlayer> players, short networkID) {
-		super(sessionSetup, players);
-		this.localId = networkID;
+		super(sessionSetup, players, networkID);
 		this.game = game;
 	}
 

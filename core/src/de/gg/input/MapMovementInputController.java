@@ -38,6 +38,7 @@ public class MapMovementInputController implements DefaultInputProcessor {
 	public float translateUnits = 10f;
 	public float scrollFactor = -0.1f;
 
+	// TODO target überarbeiten!!
 	/** The target to rotate around. */
 	public Vector3 target = new Vector3();
 	/** Whether to update the target on forward */

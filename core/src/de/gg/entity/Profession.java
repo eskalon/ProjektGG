@@ -1,6 +1,5 @@
 package de.gg.entity;
 
-import de.gg.entity.PlayerTasks.PlayerTask;
 import de.gg.entity.ProfessionTypes.ProfessionType;
 
 public class Profession {
@@ -13,5 +12,29 @@ public class Profession {
 	 */
 	private int level;
 	private int experience;
+
+	public ProfessionType getProfession() {
+		return profession;
+	}
+
+	public void setProfession(ProfessionType profession) {
+		this.profession = profession;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	public int getExperience() {
+		return experience;
+	}
+
+	public void setExperience(int experience) {
+		this.experience = experience;
+	}
 
 }

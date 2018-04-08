@@ -9,6 +9,9 @@ public class Evidence {
 	 * Can either be a character or a building.
 	 */
 	private Object victim;
+	/**
+	 * Whether the evidence is fabricated.
+	 */
 	private boolean isStaged;
 	private CrimeType crime;
 
