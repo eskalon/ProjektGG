@@ -80,7 +80,7 @@ public class ProjektGG extends Game {
 
 	private boolean debug, showSplashscreen, fpsCounter;
 
-	private GameInputMultiplexer inputProcessor = new GameInputMultiplexer();
+	private GameInputMultiplexer inputProcessor;
 
 	private Skin uiSkin;
 
@@ -143,6 +143,9 @@ public class ProjektGG extends Game {
 
 		// Load game settings
 		this.settings = new GameSettings("projekt-gg");
+
+		// Create the input multiplexer
+		this.inputProcessor = new GameInputMultiplexer(this);
 
 		// Create the event bus
 		this.eventBus = new EventQueueBus();
@@ -380,14 +383,29 @@ public class ProjektGG extends Game {
 		return debug;
 	}
 
+	/**
+	 * @return Whether a fps counter should get shown.
+	 */
 	public boolean showFPSCounter() {
 		return fpsCounter;
 	}
 
+	public void setFPSCounter(boolean fpsCounter) {
+		this.fpsCounter = fpsCounter;
+	}
+
+	/**
+	 * @return The version the application is running on. Set via the jar
+	 *         manifest. Is "Development" if the game is started in a
+	 *         development environment.
+	 */
 	public String getVersion() {
 		return version;
 	}
 
+	/**
+	 * @return Whether the application is running in a development environment.
+	 */
 	public boolean isInDevEnv() {
 		return inDevEnv;
 	}

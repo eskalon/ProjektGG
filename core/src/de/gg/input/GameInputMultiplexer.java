@@ -3,6 +3,7 @@ package de.gg.input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 
+import de.gg.core.ProjektGG;
 import de.gg.util.Log;
 import de.gg.util.ScreenshotUtils;
 
@@ -12,14 +13,21 @@ import de.gg.util.ScreenshotUtils;
  */
 public class GameInputMultiplexer extends InputMultiplexer {
 
-	public GameInputMultiplexer() {
+	private ProjektGG game;
+
+	public GameInputMultiplexer(ProjektGG game) {
+		this.game = game;
 	}
 
 	@Override
 	public boolean keyDown(int keycode) {
-		if (keycode == Keys.F12) {
+		if (keycode == Keys.F12) { // SCREENSHOTS
 			Log.info("Input", "Screenshot taken");
 			ScreenshotUtils.takeScreenshot();
+
+			return true;
+		} else if (keycode == Keys.F2) { // FPS COUNTER
+			game.setFPSCounter(!game.showFPSCounter());
 
 			return true;
 		}
