@@ -1,6 +1,8 @@
 package de.gg.game;
 
 import java.util.HashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import de.gg.data.GameSessionSetup;
 import de.gg.data.RoundEndData;
@@ -19,6 +21,7 @@ public class AuthoritativeSession extends GameSession
 			SlaveActionListener {
 
 	private HashMap<Short, AuthoritativeResultListener> resultListeners;
+	private ThreadPoolExecutor executor;
 
 	/**
 	 * Creates a new multiplayer session.
@@ -31,6 +34,8 @@ public class AuthoritativeSession extends GameSession
 	public AuthoritativeSession(GameSessionSetup sessionSetup,
 			HashMap<Short, LobbyPlayer> players, short localNetworkId) {
 		super(sessionSetup, players, localNetworkId);
+
+		this.executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 	}
 
 	/**
@@ -70,13 +75,13 @@ public class AuthoritativeSession extends GameSession
 		Log.debug("Server", "Runde zu Ende");
 
 		// Alle Clienten informieren
-		(new AuthoritativeResultListenerThread() {
+		executor.submit(new AuthoritativeResultListenerThread() {
 			@Override
 			protected void informListener(
 					AuthoritativeResultListener resultListener) {
 				resultListener.onRoundEnd(data);
 			}
-		}).start();
+		});
 
 		// TODO Auch auf dem Server die neue Runde aufsetzen ->
 		// RoundEndData anwenden
@@ -107,23 +112,23 @@ public class AuthoritativeSession extends GameSession
 		}
 
 		// Alle Clienten informieren
-		(new AuthoritativeResultListenerThread() {
+		executor.submit(new AuthoritativeResultListenerThread() {
 			@Override
 			protected void informListener(
 					AuthoritativeResultListener resultListener) {
 				resultListener.onAllPlayersReadied();
 			}
-		}).start();
+		});
 
 		startNextRound();
 	}
 
 	/**
-	 * This thread takes care of informing every
+	 * This runnable is used to easily inform every
 	 * {@linkplain AuthoritativeSession#resultListeners result listener} on a
-	 * thread separate of the one updating the server.
+	 * separate thread.
 	 */
-	abstract class AuthoritativeResultListenerThread extends Thread {
+	abstract class AuthoritativeResultListenerThread implements Runnable {
 		@Override
 		public void run() {
 			for (AuthoritativeResultListener resultListener : resultListeners
