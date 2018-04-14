@@ -6,6 +6,29 @@ package de.gg.data;
  */
 public class RoundEndData {
 
-	public int test;
+	private int openingHourNextDay;
+	private int closingHourNextDay;
+
+	/**
+	 * @return The hour the market work begins on the next day.
+	 */
+	public int getOpeningHourNextDay() {
+		return openingHourNextDay;
+	}
+
+	public void setOpeningHourNextDay(int openingHourNextDay) {
+		this.openingHourNextDay = openingHourNextDay;
+	}
+
+	/**
+	 * @return The hour the market work ends on the next day.
+	 */
+	public int getClosingHourNextDay() {
+		return closingHourNextDay;
+	}
+
+	public void setClosingHourNextDay(int closingHourNextDay) {
+		this.closingHourNextDay = closingHourNextDay;
+	}
 
 }

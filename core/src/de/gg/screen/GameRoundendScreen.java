@@ -14,7 +14,6 @@ import com.google.common.eventbus.Subscribe;
 
 import de.gg.data.RoundEndData;
 import de.gg.event.RoundEndEvent;
-import de.gg.util.Log;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 /**
@@ -95,15 +94,15 @@ public class GameRoundendScreen extends BaseGameScreen {
 	}
 
 	private void updateUI() {
+		// Data anzeigen
 		if (data != null) {
-			Log.debug("Client", "RoundEndData angekommen: %d", data.test);
-			// Data anzeigen
-
 			lastYearTitle.setText("Das vergangene Jahr");
 			comingYearTitle.setText("Kommendes Jahr");
 
 			lastYearData.setText("-3 Gold für XYZ");
-			comingYearData.setText("-15 Gold für XYZ \n+3 AP");
+			comingYearData.setText(String.format(
+					"-15 Gold für XYZ \n+3 AP\n Die Geschäfte öffnen um %d",
+					data.getOpeningHourNextDay()));
 		}
 
 		nextButton.setText("Weiter");

@@ -33,6 +33,19 @@ public abstract class GameSession {
 	private volatile long currentRoundTime = ROUND_DURATION;
 	private volatile int currentRound = 0;
 
+	/**
+	 * This time is used to calculate the update ticks.
+	 */
+	private volatile long updateTime;
+	private static final long TICK_DURATION = 1000 / 10;
+	/**
+	 * The current tick. Is used to calculate whether an action should get
+	 * executed.
+	 * 
+	 * @see #isRightTick(int)
+	 */
+	private volatile int currentTick = 0;
+
 	private volatile boolean initialized = false;
 
 	private City city;
@@ -104,19 +117,36 @@ public abstract class GameSession {
 			}
 		} else {
 			// Runde läuft noch
-			update(delta);
+			updateTime += delta;
+
+			if (updateTime >= TICK_DURATION) {
+				updateTime -= TICK_DURATION;
+				currentTick++;
+				fixedUpdate();
+			}
 		}
 
 		return false;
 	}
 
 	/**
-	 * This method can be used to process the game.
-	 * 
-	 * @param delta
-	 *            The time delta in milliseconds.
+	 * This method can be used to process the game. It is called ten times per
+	 * second.
 	 */
-	public void update(long delta) {
+	public void fixedUpdate() {
+	}
+
+	/**
+	 * Returns whether the specified interval is over and an action should get
+	 * executed.
+	 * 
+	 * @param tickInterval
+	 *            The interval after which this method is supposed to return
+	 *            true.
+	 * @return True after the specified tick interval is over.
+	 */
+	protected boolean isRightTick(int tickInterval) {
+		return currentTick % tickInterval == 0;
 	}
 
 	/**
@@ -126,6 +156,8 @@ public abstract class GameSession {
 		currentRound++;
 		currentRoundTime = 0;
 		lastTime = System.currentTimeMillis();
+		updateTime = 0;
+		currentTick = 0;
 		waitingForNextRound = false;
 	}
 

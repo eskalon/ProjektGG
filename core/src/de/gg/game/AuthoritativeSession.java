@@ -53,12 +53,22 @@ public class AuthoritativeSession extends GameSession
 		// TODO save the game
 	}
 
+	@Override
+	public void fixedUpdate() {
+		super.fixedUpdate();
+
+		if (isRightTick(15)) {
+			// Update production progress
+			System.out.println("Production Tick");
+		}
+	}
+
 	public void onRoundEnd() {
 		// RoundEndData generieren
 		RoundEndData data = new RoundEndData();
-		data.test = RandomUtils.getRandomNumber(1, 100);
+		data.setOpeningHourNextDay(RandomUtils.getRandomNumber(6, 9));
 
-		Log.debug("Server", "Runde zu Ende: %d", data.test);
+		Log.debug("Server", "Runde zu Ende");
 
 		// Alle Clienten informieren
 		(new AuthoritativeResultListenerThread() {
