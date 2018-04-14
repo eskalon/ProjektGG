@@ -114,6 +114,7 @@ public class GameRoundendScreen extends BaseGameScreen {
 
 	@Override
 	public void renderGame(float delta) {
+		game.getNetworkHandler().updatePing(delta);
 		game.getNetworkHandler().updateServer();
 	}
 

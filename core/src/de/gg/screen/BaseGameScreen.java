@@ -47,6 +47,7 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 				game.pushScreen("roundEnd");
 			}
 
+			game.getNetworkHandler().updatePing(delta);
 			game.getNetworkHandler().updateServer();
 		}
 
