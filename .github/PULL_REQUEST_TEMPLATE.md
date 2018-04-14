@@ -2,17 +2,17 @@
 <!-- Bitte vor dem Erstellen der Pull Request erledigen -->
 - [ ] Die Anwendung kompiliert
 - [ ] Alle Tests funktionieren
-- [ ] Die Veränderungen sind soweit notwendig dokumentiert
-- [ ] Ich habe mich ggf. zur CONTRIBUTORS.md hinzugefügt
+- [ ] Die Verï¿½nderungen sind soweit notwendig dokumentiert
+- [ ] Ich habe mich ggf. zur CONTRIBUTORS.md hinzugefï¿½gt
 
 **[Eine einleitende, kurze Beschreibung dessen, was durch die Pull Request bezweckt wird]**
 
 ### Deatils
-[Eine Aufzählung der konkret durchgeführten Veränderungen:]
-- [Veränderung 1]
-- [Veränderung 2]
+[Eine Aufzï¿½hlung der konkret durchgefï¿½hrten Verï¿½nderungen:]
+- [Verï¿½nderung 1]
+- [Verï¿½nderung 2]
 
-[Abschließend ein Verweis auf evtl. anfallende weiterreichende Auswirkungen, wie bspw. _breaking changes_]
+[Abschlieï¿½end ein Verweis auf evtl. anfallende weiterreichende Auswirkungen, wie bspw. _breaking changes_]
 
 ### Motivation
-[Ggf. eine Begründung dafür, warum das Feature/die Veränderung notwendig geworden ist; hier ist ein Verweis zu einem einschlägigen Ticket im Issuetracker angebracht]
+[Ggf. eine Begrï¿½ndung dafï¿½r, warum das Feature/die Verï¿½nderung notwendig geworden ist; hier ist ein Verweis zu einem einschlï¿½gigen Ticket im Issuetracker angebracht]

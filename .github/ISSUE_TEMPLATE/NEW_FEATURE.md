@@ -1,13 +1,13 @@
 **[Eine einleitende, kurze Beschreibung des geplanten Features]**
 
 ### Deatils
-[Eine deatilierte Auflistung aller Dinge, die in den Scope dieses Tickets fallen; insb. auch ob dadurch an anderen Stellen Veränderungen notwendig werden]
+[Eine deatilierte Auflistung aller Dinge, die in den Scope dieses Tickets fallen; insb. auch ob dadurch an anderen Stellen Verï¿½nderungen notwendig werden]
 
 ### Motivation
-[Ggf. eine Begründung dafür, warum das Feature/die Veränderung notwendig geworden ist]
+[Ggf. eine Begrï¿½ndung dafï¿½r, warum das Feature/die Verï¿½nderung notwendig geworden ist]
 
 ### Aufgaben 
-[Nur für Issues von Entwicklern; gibt eine Übersicht über alles, was zur Implementierung des Features notwendig ist]
+[Nur fï¿½r Issues von Entwicklern; gibt eine ï¿½bersicht ï¿½ber alles, was zur Implementierung des Features notwendig ist]
 - [ ] Task 1
 - [ ] Task 2
 - [ ] Task 3
