@@ -37,7 +37,8 @@ public abstract class GameSession {
 	 * This time is used to calculate the update ticks.
 	 */
 	private volatile long updateTime;
-	private static final long TICK_DURATION = 1000 / 10;
+	private static final int TICKS_PER_SECOND = 10;
+	private static final long TICK_DURATION = 1000 / TICKS_PER_SECOND;
 	/**
 	 * The current tick. Is used to calculate whether an action should get
 	 * executed.
@@ -47,6 +48,8 @@ public abstract class GameSession {
 	private volatile int currentTick = 0;
 
 	private volatile boolean initialized = false;
+
+	private GameClock clock;
 
 	private City city;
 	protected HashMap<Short, LobbyPlayer> players;
@@ -71,6 +74,7 @@ public abstract class GameSession {
 		this.players = players;
 		this.localNetworkId = localNetworkId;
 		this.city = new City();
+		this.clock = new GameClock();
 	}
 
 	/**
@@ -130,10 +134,13 @@ public abstract class GameSession {
 	}
 
 	/**
-	 * This method can be used to process the game. It is called ten times per
-	 * second.
+	 * This is used to process the game. It is called ten times per second if
+	 * the game is running on normal speed.
 	 */
-	public void fixedUpdate() {
+	public synchronized void fixedUpdate() {
+		if (isRightTick(10)) {
+			clock.update();
+		}
 	}
 
 	/**
@@ -158,6 +165,7 @@ public abstract class GameSession {
 		lastTime = System.currentTimeMillis();
 		updateTime = 0;
 		currentTick = 0;
+		clock.resetClock();
 		waitingForNextRound = false;
 	}
 
@@ -185,6 +193,58 @@ public abstract class GameSession {
 
 	public City getCity() {
 		return city;
+	}
+
+	public GameClock getClock() {
+		return clock;
+	}
+
+	/**
+	 * This class takes care of translating the update ticks to the ingame time.
+	 * Every ten ticks {@link #update()} has to get called.
+	 */
+	public class GameClock {
+
+		/**
+		 * The duration of an ingame day in ingame minutes.
+		 */
+		private static final int MINUTES_PER_DAY = 17 * 60;
+		/**
+		 * The ingame minutes passing per update.
+		 */
+		private static final float MINUTES_PER_UPDATE = MINUTES_PER_DAY
+				/ (ROUND_DURATION / 1000);
+
+		private int minute, hour;
+
+		/**
+		 * Should get called every ten ticks (= 1 second). Updates the clock.
+		 */
+		protected void update() {
+			minute += MINUTES_PER_UPDATE;
+
+			if (minute >= 60) {
+				minute -= 60;
+				hour++;
+			}
+		}
+
+		/**
+		 * Resets the clock.
+		 */
+		protected void resetClock() {
+			hour = 6;
+			minute = 0;
+		}
+
+		public int getHour() {
+			return hour;
+		}
+
+		public int getMinute() {
+			return minute;
+		}
+
 	}
 
 }

@@ -59,7 +59,6 @@ public class AuthoritativeSession extends GameSession
 
 		if (isRightTick(15)) {
 			// Update production progress
-			System.out.println("Production Tick");
 		}
 	}
 

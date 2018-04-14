@@ -45,6 +45,16 @@ public class SlaveSession extends GameSession
 	}
 
 	@Override
+	public synchronized void fixedUpdate() {
+		super.fixedUpdate();
+
+		if (isRightTick(15)) {
+			Log.debug("CLOCK", "%02d:%02d", getClock().getHour(),
+					getClock().getMinute());
+		}
+	}
+
+	@Override
 	public synchronized void onAllPlayersReadied() {
 		Log.debug("Client", "Alle Spieler sind bereit! Nächste Runde startet");
 
