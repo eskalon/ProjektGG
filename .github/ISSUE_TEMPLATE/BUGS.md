@@ -6,14 +6,14 @@
 3. [usw.]
 
 **Erwartetes Verhalten:** [Was als Verhalten erwartet wurde]
-**Tats�chliches Verhalten:** [Was tats�chlich passiert ist; falls notwendig gerne auch mit einem  Screenshot]
+**Tatsächliches Verhalten:** [Was tatsächlich passiert ist; falls notwendig gerne auch mit einem  Screenshot]
 
 ### Weitere Informationen
-[Informationen �ber das verwendete **Betriebssystem**, die verwendete **Softwareversion**, etc.]
-[Falls die Anwendung einen **Error-Log** (_crash.log_-Datei) generiert hat, diesen bitte mit anh�ngen.]
+[Informationen über das verwendete **Betriebssystem**, die verwendete **Softwareversion**, etc.]
+[Falls die Anwendung einen **Error-Log** (_crash.log_-Datei) generiert hat, diesen bitte mit anhängen.]
 
 ### Aufgaben 
-[Nur f�r Issues von Entwicklern; gibt eine �bersicht �ber alles, was zur L�sung des Problems notwendig ist]
+[Nur für Issues von Entwicklern; gibt eine Übersicht über alles, was zur Lösung des Problems notwendig ist]
 - [ ] Task 1
 - [ ] Task 2
 - [ ] Task 3
