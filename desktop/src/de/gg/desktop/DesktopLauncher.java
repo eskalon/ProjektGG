@@ -20,23 +20,17 @@ public class DesktopLauncher {
 	 * <ul>
 	 * <li>--debug: sets the game to debug mode.
 	 * <li>--novid: skips the splash screen.
+	 * <li>--fps: shows a fps counter in-game.
 	 * </ul>
 	 *
 	 * @param args
 	 *            The start arguments.
 	 */
 	public static void main(String[] args) {
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.title = ProjektGG.name;
-		config.height = 720;
-		config.width = 1280;
-		config.resizable = false;
-		config.addIcon("ui/images/icon.png", Files.FileType.Absolute);
-
 		MicroOptions options = new MicroOptions();
-		options.option("novid").describedAs("no splashscreen").isUnary();
 		options.option("debug").describedAs("enables debugmode").isUnary();
 		options.option("fps").describedAs("enables a fps counter").isUnary();
+		options.option("novid").describedAs("no splashscreen").isUnary();
 		try {
 			options.parse(args);
 		} catch (MicroOptions.OptionException e) {
@@ -46,6 +40,13 @@ public class DesktopLauncher {
 		}
 
 		// options.getArg("file", "/tmp/out");
+
+		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.title = ProjektGG.name;
+		config.height = 720;
+		config.width = 1280;
+		config.resizable = false;
+		config.addIcon("ui/images/icon.png", Files.FileType.Absolute);
 
 		try {
 			// Start the game
