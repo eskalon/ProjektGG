@@ -54,15 +54,17 @@ public class GameSessionSetup {
 		private float actionModifer;
 
 		/**
-		 * @return This modifier is multiplied with the starting gold.
+		 * @return a modifier that is multiplied with the starting gold.
 		 */
 		public float getStartingGoldMoifier() {
 			return startingGoldMoifier;
 		}
 
 		/**
-		 * @return This value influences the probability a npc does something in
-		 *         favor of the player.
+		 * This value influences the probability a npc does something in favor
+		 * of the player.
+		 * 
+		 * @return a modifier for npc actions.
 		 */
 		public float getActionModifer() {
 			return actionModifer;

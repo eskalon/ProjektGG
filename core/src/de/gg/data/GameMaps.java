@@ -30,7 +30,7 @@ public class GameMaps {
 	}
 
 	/**
-	 * @return A list of all supported maps.
+	 * @return a list of all supported maps.
 	 */
 	public static List<GameMap> getMaps() {
 		return VALUES;
@@ -51,6 +51,9 @@ public class GameMaps {
 		return VALUES.get(index);
 	}
 
+	/**
+	 * An in-game map.
+	 */
 	public class GameMap {
 
 		private String name;
@@ -61,10 +64,16 @@ public class GameMaps {
 			return name;
 		}
 
+		/**
+		 * @return all buildings slots in the city.
+		 */
 		public List<BuildingSlot> getBuildingSlots() {
 			return buildingSlots;
 		}
 
+		/**
+		 * @return all static props in the city.
+		 */
 		public List<RenderData> getCityProps() {
 			return cityProps;
 		}

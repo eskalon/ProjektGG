@@ -64,9 +64,9 @@ public abstract class GameSession {
 	 * Creates a new game session.
 	 * 
 	 * @param sessionSetup
-	 *            The settings of the game session.
+	 *            the settings of the game session.
 	 * @param players
-	 *            A hashmap containing the players.
+	 *            a hashmap containing the players.
 	 */
 	public GameSession(GameSessionSetup sessionSetup,
 			HashMap<Short, LobbyPlayer> players, short localNetworkId) {
@@ -89,7 +89,7 @@ public abstract class GameSession {
 	 * Updates the game session. Returns true once, when a round is over. To
 	 * start the next round call {@link #startNextRound()}.
 	 * 
-	 * @return Whether the ingame day is over (8 minutes).
+	 * @return whether the ingame day is over (8 minutes).
 	 */
 	public synchronized boolean update() {
 		// Zeit-Delta ermitteln
@@ -148,9 +148,9 @@ public abstract class GameSession {
 	 * executed.
 	 * 
 	 * @param tickInterval
-	 *            The interval after which this method is supposed to return
+	 *            the interval after which this method is supposed to return
 	 *            true.
-	 * @return True after the specified tick interval is over.
+	 * @return <code>true</code> after the specified tick interval is over.
 	 */
 	protected boolean isRightTick(int tickInterval) {
 		return currentTick % tickInterval == 0;
@@ -170,14 +170,14 @@ public abstract class GameSession {
 	}
 
 	/**
-	 * @return The current round.
+	 * @return the current round.
 	 */
 	public int getCurrentRound() {
 		return currentRound;
 	}
 
 	/**
-	 * @return The progress of the current round (in a range of 0 to 1). Can be
+	 * @return the progress of the current round (in a range of 0 to 1). Can be
 	 *         >1 right after a round ended and before the next round started.
 	 */
 	public float getRoundProgress() {
@@ -185,7 +185,7 @@ public abstract class GameSession {
 	}
 
 	/**
-	 * @return The game's difficulty.
+	 * @return the game's difficulty.
 	 */
 	public GameDifficulty getDifficulty() {
 		return sessionSetup.getDifficulty();

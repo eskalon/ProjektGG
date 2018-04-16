@@ -37,10 +37,20 @@ public abstract class ButtonClickListener extends InputListener {
 		return false;
 	}
 
+	/**
+	 * If the button click should only trigger in certain circumstances this can
+	 * be handled by overriding this method.
+	 * 
+	 * @return Whether the preconditions for this button click are met. Per
+	 *         default this is always <code>true</code>.
+	 */
 	protected boolean arePreconditionsMet() {
 		return true;
 	}
 
+	/**
+	 * This method is responsible for taking care of the input event.
+	 */
 	protected abstract void onClick();
 
 }

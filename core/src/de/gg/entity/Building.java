@@ -4,7 +4,11 @@ import java.util.List;
 
 import de.gg.entity.BuildingTypes.BuildingType;
 import de.gg.render.RenderData;
+import de.gg.render.SceneRenderer;
 
+/**
+ * A building located on an {@link BuildingSlot}.
+ */
 public class Building {
 
 	private RenderData renderData;
@@ -22,6 +26,10 @@ public class Building {
 		this.renderData = renderData;
 	}
 
+	/**
+	 * @return the model data of the building.
+	 * @see SceneRenderer
+	 */
 	public RenderData getRenderData() {
 		return renderData;
 	}
@@ -50,6 +58,9 @@ public class Building {
 		this.health = health;
 	}
 
+	/**
+	 * @return the carts currently located inside the building.
+	 */
 	public List<Cart> getCartsOnSite() {
 		return cartsOnSite;
 	}
@@ -58,6 +69,10 @@ public class Building {
 		this.cartsOnSite = cartsOnSite;
 	}
 
+	/**
+	 * @return The employees working in this building. <code>Null</code> if this
+	 *         isn't a production building.
+	 */
 	public List<Employee> getEmployees() {
 		return employees;
 	}
@@ -66,6 +81,9 @@ public class Building {
 		this.employees = employees;
 	}
 
+	/**
+	 * @return The item stacks stored in this building.
+	 */
 	public List<ItemStack> getStoredStacks() {
 		return stacks;
 	}

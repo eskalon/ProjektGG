@@ -81,10 +81,18 @@ public final class BuildingTypes {
 			return maxHealth;
 		}
 
+		/**
+		 * @return the upgraded version of this building. <code>Null</code> if
+		 *         this building cannot be upgraded.
+		 */
 		public BuildingType getUpgradeOption() {
 			return getByIndex(upgradeOptionIndex);
 		}
 
+		/**
+		 * @return whether this is a residence and therefore a player can live
+		 *         inside this building.
+		 */
 		public boolean isResidence() {
 			return isResidence;
 		}
@@ -134,7 +142,7 @@ public final class BuildingTypes {
 		}
 
 		/**
-		 * @return The name of the node that holds the model for this building
+		 * @return the name of the node that holds the model for this building
 		 *         type.
 		 */
 		public String getNodeName() {

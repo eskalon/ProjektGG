@@ -26,9 +26,9 @@ public class AuthoritativeSession extends GameSession
 	 * Creates a new multiplayer session.
 	 * 
 	 * @param sessionSetup
-	 *            The settings of the game session.
+	 *            the settings of the game session.
 	 * @param players
-	 *            A hashmap containing the players.
+	 *            a hashmap containing the players.
 	 */
 	public AuthoritativeSession(GameSessionSetup sessionSetup,
 			HashMap<Short, LobbyPlayer> players, short localNetworkId) {

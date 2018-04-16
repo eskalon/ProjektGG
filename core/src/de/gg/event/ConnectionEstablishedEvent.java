@@ -12,22 +12,23 @@ import de.gg.network.LobbyPlayer;
 public class ConnectionEstablishedEvent {
 
 	/**
-	 * <i>Not<i> null if a problem occurred while starting the client.
+	 * <i>Not<i> <code>null</code> if a problem occurred while starting the
+	 * client.
 	 */
 	private IOException e = null;
 	/**
-	 * A hashmap of all players and their respective IDs. Null if a problem
-	 * occurred while starting the client.
+	 * A hashmap of all players and their respective IDs. <code>Null</code> if a
+	 * problem occurred while starting the client.
 	 */
 	private HashMap<Short, LobbyPlayer> players = null;
 	/**
-	 * The ID of the client player. -1 if a problem occurred while starting the
-	 * client.
+	 * The ID of the client player. <code>-1</code> if a problem occurred while
+	 * starting the client.
 	 */
 	private short clientId = -1;
 	/**
-	 * The game's settings. Null if a problem occurred while starting the
-	 * client.
+	 * The game's settings. <code>Null</code> if a problem occurred while
+	 * starting the client.
 	 */
 	private GameSessionSetup settings = null;
 

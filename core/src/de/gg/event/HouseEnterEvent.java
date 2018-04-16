@@ -12,7 +12,7 @@ public class HouseEnterEvent {
 	}
 
 	/**
-	 * @return The id of the entered house.
+	 * @return the id of the entered house.
 	 */
 	public short getId() {
 		return id;

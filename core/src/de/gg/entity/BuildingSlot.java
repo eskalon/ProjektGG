@@ -12,21 +12,21 @@ public class BuildingSlot {
 	}
 
 	/**
-	 * @return The center x-position of this building slot.
+	 * @return the center x-position of this building slot.
 	 */
 	public int getPosX() {
 		return posX;
 	}
 
 	/**
-	 * @return The center y-position of this building slot.
+	 * @return the center y-position of this building slot.
 	 */
 	public int getPosY() {
 		return posY;
 	}
 
 	/**
-	 * @return This rotation has to get applied to the model so that it faces
+	 * @return this rotation has to get applied to the model so that it faces
 	 *         the street.
 	 */
 	public int getRotationToStreet() {
@@ -34,16 +34,22 @@ public class BuildingSlot {
 	}
 
 	/**
-	 * @return THe building standing on this slot.
+	 * @return the building standing on this slot.
 	 */
 	public Building getBuilding() {
 		return building;
 	}
 
+	/**
+	 * @return whether a building is built on this slot.
+	 */
 	public boolean isBuiltOn() {
 		return building != null;
 	}
 
+	/**
+	 * @return the type of this building slot.
+	 */
 	public BuildingSlotType getType() {
 		return type;
 	}

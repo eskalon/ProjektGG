@@ -188,9 +188,9 @@ public class ProjektGG extends Game {
 	 * 
 	 * 
 	 * @param name
-	 *            The name of the screen.
+	 *            the name of the screen.
 	 * @param screen
-	 *            The screen.
+	 *            the screen.
 	 */
 	public void addScreen(String name, BaseScreen screen) {
 		screen.init(this, this.getAssetManager());
@@ -207,7 +207,7 @@ public class ProjektGG extends Game {
 	 * screen.
 	 * 
 	 * @param name
-	 *            The name of the pushed screen.
+	 *            the name of the pushed screen.
 	 */
 	public synchronized void pushScreen(String name) {
 		Gdx.app.postRunnable(new Runnable() {
@@ -243,8 +243,8 @@ public class ProjektGG extends Game {
 	 * Returns a screen in the game.
 	 * 
 	 * @param name
-	 *            The name of the screen.
-	 * @return The screen.
+	 *            the name of the screen.
+	 * @return the screen.
 	 */
 	public BaseScreen getScreen(String name) {
 		BaseScreen screen = this.screens.get(name);
@@ -270,21 +270,21 @@ public class ProjektGG extends Game {
 	}
 
 	/**
-	 * @return The asset manager used by the game.
+	 * @return the asset manager used by the game.
 	 */
 	public AnnotationAssetManager getAssetManager() {
 		return this.assetManager;
 	}
 
 	/**
-	 * @return The camera used in the actual game.
+	 * @return the camera used in the actual game.
 	 */
 	public CameraWrapper getGameCamera() {
 		return this.gameCamera;
 	}
 
 	/**
-	 * @return The camera used by the UI screens.
+	 * @return the camera used by the UI screens.
 	 * @see BaseUIScreen#render(float)
 	 */
 	public Camera getUICamera() {
@@ -292,14 +292,14 @@ public class ProjektGG extends Game {
 	}
 
 	/**
-	 * @return An instance of the game settings handler.
+	 * @return an instance of the game settings handler.
 	 */
 	public GameSettings getSettings() {
 		return settings;
 	}
 
 	/**
-	 * @return The events bus. See {@link EventQueueBus}. Events are processed
+	 * @return the events bus. See {@link EventQueueBus}. Events are processed
 	 *         in the rendering thread.
 	 */
 	public EventQueueBus getEventBus() {
@@ -310,14 +310,14 @@ public class ProjektGG extends Game {
 	 * Sets the UI skin.
 	 * 
 	 * @param skin
-	 *            The UI skin.
+	 *            the UI skin.
 	 */
 	public void setUISkin(Skin skin) {
 		this.uiSkin = skin;
 	}
 
 	/**
-	 * @return The UI skin that got loaded in the {@link LoadingScreen}.
+	 * @return the UI skin that got loaded in the {@link LoadingScreen}.
 	 */
 	public Skin getUISkin() {
 		return uiSkin;
@@ -328,21 +328,21 @@ public class ProjektGG extends Game {
 	}
 
 	/**
-	 * @return The initial viewport width.
+	 * @return the initial viewport width.
 	 */
 	public int getViewportWidth() {
 		return this.viewportWidth;
 	}
 
 	/**
-	 * @return The initial viewport height.
+	 * @return the initial viewport height.
 	 */
 	public int getViewportHeight() {
 		return this.viewportHeight;
 	}
 
 	/**
-	 * @return The current game session. Null if no session is played at the
+	 * @return the current game session. Null if no session is played at the
 	 *         moment.
 	 */
 	public SlaveSession getCurrentSession() {
@@ -354,7 +354,7 @@ public class ProjektGG extends Game {
 	}
 
 	/**
-	 * @return The network handler for this client. Can be null.
+	 * @return the network handler for this client. Can be null.
 	 */
 	public NetworkHandler getNetworkHandler() {
 		return networkHandler;
@@ -368,14 +368,14 @@ public class ProjektGG extends Game {
 	 * Returns the input multiplexer of the game. Should be used instead of
 	 * {@link Input#setInputProcessor(InputProcessor)}.
 	 * 
-	 * @return The game's input multiplexer.
+	 * @return the game's input multiplexer.
 	 */
 	public GameInputMultiplexer getInputMultiplexer() {
 		return inputProcessor;
 	}
 
 	/**
-	 * @return Whether the debug flag is set and thus debug stuff should get
+	 * @return whether the debug flag is set and thus debug stuff should get
 	 *         rendered.
 	 */
 	public boolean showDebugStuff() {
@@ -383,7 +383,7 @@ public class ProjektGG extends Game {
 	}
 
 	/**
-	 * @return Whether a fps counter should get shown.
+	 * @return whether a fps counter should get shown.
 	 */
 	public boolean showFPSCounter() {
 		return fpsCounter;
@@ -394,7 +394,7 @@ public class ProjektGG extends Game {
 	}
 
 	/**
-	 * @return The version the application is running on. Set via the jar
+	 * @return the version the application is running on. Set via the jar
 	 *         manifest. Is "Development" if the game is started in a
 	 *         development environment.
 	 */
@@ -403,7 +403,7 @@ public class ProjektGG extends Game {
 	}
 
 	/**
-	 * @return Whether the application is running in a development environment.
+	 * @return whether the application is running in a development environment.
 	 */
 	public boolean isInDevEnv() {
 		return inDevEnv;

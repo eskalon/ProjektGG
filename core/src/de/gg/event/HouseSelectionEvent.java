@@ -19,7 +19,7 @@ public class HouseSelectionEvent {
 	}
 
 	/**
-	 * @return The id of the selected object. Can be -1 to denote a click not on
+	 * @return the id of the selected object. Can be -1 to denote a click not on
 	 *         an object.
 	 */
 	public short getId() {
@@ -27,14 +27,14 @@ public class HouseSelectionEvent {
 	}
 
 	/**
-	 * @return The x position of the user's click on the screen.
+	 * @return the x position of the user's click on the screen.
 	 */
 	public int getClickX() {
 		return clickX;
 	}
 
 	/**
-	 * @return The y position of the user's click on the screen.
+	 * @return the y position of the user's click on the screen.
 	 */
 	public int getClickY() {
 		return clickY;

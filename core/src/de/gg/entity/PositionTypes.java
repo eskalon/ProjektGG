@@ -49,7 +49,7 @@ public class PositionTypes {
 		}
 
 		/**
-		 * @return The required status for this position. Null if not status is
+		 * @return The required status for this position. Null if no status is
 		 *         needed.
 		 */
 		public SocialStatus getStatusRequirement() {

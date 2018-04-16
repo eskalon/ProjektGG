@@ -10,7 +10,7 @@ public class RoundEndData {
 	private int closingHourNextDay;
 
 	/**
-	 * @return The hour the market work begins on the next day.
+	 * @return the hour the market work begins on the next day.
 	 */
 	public int getOpeningHourNextDay() {
 		return openingHourNextDay;
@@ -21,7 +21,7 @@ public class RoundEndData {
 	}
 
 	/**
-	 * @return The hour the market work ends on the next day.
+	 * @return the hour the market work ends on the next day.
 	 */
 	public int getClosingHourNextDay() {
 		return closingHourNextDay;

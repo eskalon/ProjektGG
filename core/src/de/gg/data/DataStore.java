@@ -27,9 +27,9 @@ public class DataStore {
 	 * is replaced by the specified data.
 	 * 
 	 * @param key
-	 *            The key.
+	 *            the key.
 	 * @param data
-	 *            The data.
+	 *            the data.
 	 */
 	public void put(String key, Object data) {
 		Preconditions.checkNotNull(key, KEY_CANNOT_BE_NULL_MSG);
@@ -43,7 +43,7 @@ public class DataStore {
 	 * Removes the key (and its corresponding value) from this map.
 	 * 
 	 * @param key
-	 *            The key to remove.
+	 *            the key to remove.
 	 */
 	public void remove(String key) {
 		Preconditions.checkNotNull(key, KEY_CANNOT_BE_NULL_MSG);
@@ -57,8 +57,9 @@ public class DataStore {
 	 * Returns true if this data store contains a mapping for the specified key.
 	 * 
 	 * @param key
-	 *            The key of the value.
-	 * @return true if the data store contains a mapping for the specified tag.
+	 *            the key of the value.
+	 * @return <code>true</code> if the data store contains a mapping for the
+	 *         specified tag.
 	 */
 	public boolean contains(String key) {
 		Preconditions.checkNotNull(key, KEY_CANNOT_BE_NULL_MSG);
@@ -72,8 +73,8 @@ public class DataStore {
 	 * data store contains no mapping for the key.
 	 * 
 	 * @param key
-	 *            The key.
-	 * @return The value or null if the key wasn't added before.
+	 *            the key.
+	 * @return the value or <code>null</code> if the key wasn't added before.
 	 */
 	public Object get(String key) {
 		Preconditions.checkNotNull(key, KEY_CANNOT_BE_NULL_MSG);
@@ -88,10 +89,10 @@ public class DataStore {
 	 * the key.
 	 * 
 	 * @param key
-	 *            The key.
+	 *            the key.
 	 * @param clazz
-	 *            The class to which the data has to be casted.
-	 * @return The value or null if the key wasn't added before.
+	 *            the class to which the data has to be casted.
+	 * @return the value or <code>null</code> if the key wasn't added before.
 	 */
 	public <T> T get(String key, Class<T> clazz) {
 		Preconditions.checkNotNull(key, KEY_CANNOT_BE_NULL_MSG);

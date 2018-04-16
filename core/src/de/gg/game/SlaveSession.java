@@ -23,13 +23,13 @@ public class SlaveSession extends GameSession
 	 * Creates a new multiplayer session.
 	 * 
 	 * @param game
-	 *            An instance of the game.
+	 *            an instance of the game.
 	 * @param sessionSetup
-	 *            The settings of the game session.
+	 *            the settings of the game session.
 	 * @param players
-	 *            A hashmap containing the players.
+	 *            a hashmap containing the players.
 	 * @param networkID
-	 *            The networkID of the local player.
+	 *            the networkID of the local player.
 	 */
 	public SlaveSession(ProjektGG game, GameSessionSetup sessionSetup,
 			HashMap<Short, LobbyPlayer> players, short networkID) {
