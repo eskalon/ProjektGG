@@ -1,10 +1,12 @@
 package de.gg.entity;
 
 import java.util.HashMap;
+import java.util.Random;
 
-import de.gg.entity.NPCCharacterTraits.NPCCharacterTrait;
+import de.gg.entity.NPCCharacterTraits.CharacterTrait;
 import de.gg.entity.PositionTypes.PositionType;
 import de.gg.entity.SocialStatusS.SocialStatus;
+import de.gg.util.RandomUtils;
 
 public class Character {
 
@@ -21,10 +23,35 @@ public class Character {
 	private int age;
 	private HashMap<Character, Integer> popularityModifiers;
 	/**
-	 * A trait denoting the npcs behaviour in certain situations. Only set for
+	 * A trait denoting the npc's behavior in certain situations. Only set for
 	 * non-player characters.
 	 */
-	private NPCCharacterTrait trait;
+	private CharacterTrait trait;
+
+	public int getReputation() {
+		return highestPositionLevel + reputationModifiers;
+	}
+
+	/**
+	 * Returns the popularity modifier of a character towards another character
+	 * in this specific round.
+	 * 
+	 * @param gameSeed
+	 *            The seed of this game session.
+	 * @param characterIdA
+	 *            The id of character a.
+	 * @param characterIdB
+	 *            The id of character b.
+	 * @param round
+	 *            The current round.
+	 * @return The popularity modifier of character a towards character b in
+	 *         this specific round.
+	 */
+	public int getPerRoundAndCharacterPopularityModifier(long gameSeed,
+			int characterIdA, int characterIdB, int round) {
+		Random r = new Random(gameSeed * characterIdA * characterIdB * round);
+		return RandomUtils.getRandomNumber(r, -5, 6);
+	}
 
 	public String getName() {
 		return name;
@@ -114,16 +141,12 @@ public class Character {
 		return popularityModifiers;
 	}
 
-	public NPCCharacterTrait getNPCTrait() {
+	public CharacterTrait getNPCTrait() {
 		return trait;
 	}
 
-	public void setNPCTrait(NPCCharacterTrait trait) {
+	public void setNPCTrait(CharacterTrait trait) {
 		this.trait = trait;
-	}
-
-	public int getReputation() {
-		return highestPositionLevel + reputationModifiers;
 	}
 
 	public enum Religion {

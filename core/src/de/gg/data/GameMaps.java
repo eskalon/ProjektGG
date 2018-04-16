@@ -60,9 +60,11 @@ public class GameMaps {
 		public String getName() {
 			return name;
 		}
+
 		public List<BuildingSlot> getBuildingSlots() {
 			return buildingSlots;
 		}
+
 		public List<RenderData> getCityProps() {
 			return cityProps;
 		}

@@ -35,12 +35,15 @@ public class ItemTypes {
 		public String getName() {
 			return name;
 		}
+
 		public String getIconFileName() {
 			return iconFileName;
 		}
+
 		public int getBasePrice() {
 			return basePrice;
 		}
+
 		public boolean isEquipableByPlayer() {
 			return equipableByPlayer;
 		}

@@ -53,6 +53,7 @@ public class ServerBrowserScreen extends BaseUIScreen {
 		ImageTextButton backButton = new ImageTextButton("Zurück", skin,
 				"small");
 		backButton.addListener(new InputListener() {
+
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				clickSound.play(1F);
@@ -65,6 +66,7 @@ public class ServerBrowserScreen extends BaseUIScreen {
 		ImageTextButton createLobbyButton = new ImageTextButton(
 				"Spiel erstellen", skin, "small");
 		createLobbyButton.addListener(new InputListener() {
+
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				clickSound.play(1F);
@@ -77,6 +79,7 @@ public class ServerBrowserScreen extends BaseUIScreen {
 		ImageTextButton directConnectButton = new ImageTextButton(
 				"Direkt verbinden", skin, "small");
 		directConnectButton.addListener(new InputListener() {
+
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				clickSound.play(1F);
@@ -90,6 +93,7 @@ public class ServerBrowserScreen extends BaseUIScreen {
 
 				AnimationlessDialog dialog = new AnimationlessDialog(
 						"Direkt verbinden", skin) {
+
 					public void result(Object obj) {
 						if ((Boolean) obj) {
 							game.getNetworkHandler().setUpConnectionAsClient(
@@ -139,10 +143,12 @@ public class ServerBrowserScreen extends BaseUIScreen {
 		serverTable.clear();
 		dicoveredServers.clear();
 		discoveryThread = new Runnable() {
+
 			@Override
 			public void run() {
 				game.getNetworkHandler()
 						.discoverHosts(new HostDiscoveryListener() {
+
 							@Override
 							public void onHostDiscovered(String address,
 									DiscoveryResponsePacket datagramPacket) {
@@ -168,6 +174,7 @@ public class ServerBrowserScreen extends BaseUIScreen {
 		ImageTextButton joinButton = new ImageTextButton("Beitreten", skin,
 				"small");
 		joinButton.addListener(new InputListener() {
+
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				clickSound.play(1F);

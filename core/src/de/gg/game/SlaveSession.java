@@ -15,8 +15,7 @@ import de.gg.util.Log;
  * is also implementing the interface used for the RMI by the server.
  */
 public class SlaveSession extends GameSession
-		implements
-			AuthoritativeResultListener {
+		implements AuthoritativeResultListener {
 
 	private ProjektGG game;
 

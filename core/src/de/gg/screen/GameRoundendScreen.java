@@ -61,6 +61,7 @@ public class GameRoundendScreen extends BaseGameScreen {
 		nextButton = new ImageTextButton("Weiter", skin, "normal");
 
 		nextButton.addListener(new InputListener() {
+
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				flipSound.play(1F);

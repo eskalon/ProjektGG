@@ -67,6 +67,7 @@ public class LobbyScreen extends BaseUIScreen {
 		ImageTextButton playerSetingsButton = new ImageTextButton("Anpassen",
 				skin, "small");
 		playerSetingsButton.addListener(new InputListener() {
+
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				clickSound.play(1F);
@@ -80,6 +81,7 @@ public class LobbyScreen extends BaseUIScreen {
 		ImageTextButton leaveButton = new ImageTextButton("Verlassen", skin,
 				"small");
 		leaveButton.addListener(new InputListener() {
+
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				clickSound.play(1F);
@@ -99,6 +101,7 @@ public class LobbyScreen extends BaseUIScreen {
 			readyUpLobbyButton.setText("Spiel starten");
 		}
 		readyUpLobbyButton.addListener(new InputListener() {
+
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				clickSound.play(1F);
@@ -132,6 +135,7 @@ public class LobbyScreen extends BaseUIScreen {
 		OffsetableTextField chatInputField = new OffsetableTextField("", skin,
 				"large", 8);
 		chatInputField.setTextFieldListener(new TextFieldListener() {
+
 			@Override
 			public void keyTyped(TextField textField, char key) {
 				if (!textField.getText().isEmpty() && (key == (char) 13)) { // Enter
@@ -145,6 +149,7 @@ public class LobbyScreen extends BaseUIScreen {
 			}
 		});
 		sendButton.addListener(new InputListener() {
+
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				if (!chatInputField.getText().isEmpty()) {
@@ -209,28 +214,22 @@ public class LobbyScreen extends BaseUIScreen {
 		Object[] playersArray = players.values().toArray();
 
 		updatePlayerSlot(playerSlots[0],
-				(playersArray.length >= 1
-						? (LobbyPlayer) playersArray[0]
+				(playersArray.length >= 1 ? (LobbyPlayer) playersArray[0]
 						: null));
 		updatePlayerSlot(playerSlots[1],
-				(playersArray.length >= 2
-						? (LobbyPlayer) playersArray[1]
+				(playersArray.length >= 2 ? (LobbyPlayer) playersArray[1]
 						: null));
 		updatePlayerSlot(playerSlots[2],
-				(playersArray.length >= 3
-						? (LobbyPlayer) playersArray[2]
+				(playersArray.length >= 3 ? (LobbyPlayer) playersArray[2]
 						: null));
 		updatePlayerSlot(playerSlots[3],
-				(playersArray.length >= 4
-						? (LobbyPlayer) playersArray[3]
+				(playersArray.length >= 4 ? (LobbyPlayer) playersArray[3]
 						: null));
 		updatePlayerSlot(playerSlots[4],
-				(playersArray.length >= 5
-						? (LobbyPlayer) playersArray[4]
+				(playersArray.length >= 5 ? (LobbyPlayer) playersArray[4]
 						: null));
 		updatePlayerSlot(playerSlots[5],
-				(playersArray.length >= 6
-						? (LobbyPlayer) playersArray[5]
+				(playersArray.length >= 6 ? (LobbyPlayer) playersArray[5]
 						: null));
 
 		if (game.getNetworkHandler().isHost()) {
@@ -279,10 +278,11 @@ public class LobbyScreen extends BaseUIScreen {
 	 *            The actual message.
 	 */
 	private void addChatMessageToUI(LobbyPlayer sender, String message) {
-		messagesArea.setText(messagesArea.getText() + (sender == null
-				? "[#EFE22DFF]"
-				: ("[#" + sender.getIcon().getColor() + "]" + sender.getName()
-						+ " " + sender.getSurname() + ": []"))
+		messagesArea.setText(messagesArea.getText()
+				+ (sender == null ? "[#EFE22DFF]"
+						: ("[#" + sender.getIcon().getColor() + "]"
+								+ sender.getName() + " " + sender.getSurname()
+								+ ": []"))
 				+ message + (sender == null ? "[]" : "") + " \n");
 		messagesPane.layout();
 		messagesPane.scrollTo(0, 0, 0, 0);

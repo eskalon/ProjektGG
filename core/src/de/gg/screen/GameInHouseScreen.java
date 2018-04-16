@@ -34,6 +34,7 @@ public class GameInHouseScreen extends BaseGameScreen {
 	public void show() {
 		super.show();
 		game.getInputMultiplexer().addProcessor(new DefaultInputProcessor() {
+
 			@Override
 			public boolean keyDown(int keycode) {
 				if (keycode == Keys.ESCAPE) {

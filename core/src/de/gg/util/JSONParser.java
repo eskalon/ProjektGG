@@ -84,8 +84,8 @@ public class JSONParser {
 	 * serialization.
 	 */
 	public class ExcludeAnnotationExclusionStrategy
-			implements
-				ExclusionStrategy {
+			implements ExclusionStrategy {
+
 		@Override
 		public boolean shouldSkipClass(Class<?> arg0) {
 			return false;
@@ -104,7 +104,7 @@ public class JSONParser {
 	 * @see ExcludeAnnotationExclusionStrategy
 	 */
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ElementType.FIELD})
+	@Target({ ElementType.FIELD })
 	public @interface ExcludeFromJSON {
 	}
 }

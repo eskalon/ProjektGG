@@ -61,7 +61,7 @@ public class RandomUtils {
 	 * @return Whether the roll succeeded.
 	 */
 	public static boolean rollTheDice(Random random, int x) {
-		return getRandomNumber(1, x) == 1;
+		return getRandomNumber(random, 1, x) == 1;
 	}
 
 }

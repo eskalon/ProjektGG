@@ -12,6 +12,7 @@ import de.gg.util.asset.Text;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class TestShader implements Shader {
+
 	public ShaderProgram program;
 	Camera camera;
 	RenderContext context;
@@ -40,6 +41,7 @@ public class TestShader implements Shader {
 		u_projViewTrans = program.getUniformLocation("u_projViewTrans");
 		u_worldTrans = program.getUniformLocation("u_worldTrans");
 	}
+
 	@Override
 	public void begin(Camera camera, RenderContext context) {
 		this.camera = camera;

@@ -200,19 +200,23 @@ public abstract class GameSession {
 	}
 
 	/**
-	 * This class takes care of translating the update ticks to the ingame time.
-	 * Every ten ticks {@link #update()} has to get called.
+	 * This class takes care of translating the update ticks to the in-game
+	 * time. Every ten ticks {@link #update()} has to get called.
 	 */
 	public class GameClock {
 
 		/**
-		 * The duration of an ingame day in ingame minutes.
+		 * The duration of an in-game day in in-game hours.
 		 */
-		private static final int MINUTES_PER_DAY = 17 * 60;
+		private static final int HOURS_PER_DAY = 17;
 		/**
-		 * The ingame minutes passing per update.
+		 * The hour the in-game day starts.
 		 */
-		private static final float MINUTES_PER_UPDATE = MINUTES_PER_DAY
+		private static final int STARTING_HOUR = 6;
+		/**
+		 * The in-game minutes passing per update.
+		 */
+		private static final float MINUTES_PER_UPDATE = HOURS_PER_DAY * 60
 				/ (ROUND_DURATION / 1000);
 
 		private int minute, hour;
@@ -233,7 +237,7 @@ public abstract class GameSession {
 		 * Resets the clock.
 		 */
 		protected void resetClock() {
-			hour = 6;
+			hour = STARTING_HOUR;
 			minute = 0;
 		}
 

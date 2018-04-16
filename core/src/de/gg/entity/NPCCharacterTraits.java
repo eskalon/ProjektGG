@@ -10,21 +10,21 @@ public class NPCCharacterTraits {
 	/**
 	 * Values his own benefit higher than the average citizen.
 	 */
-	public NPCCharacterTrait AMBITIOUS;
+	public CharacterTrait AMBITIOUS;
 	/**
 	 * The default trait.
 	 */
-	public NPCCharacterTrait EVEN_TEMPERED;
+	public CharacterTrait EVEN_TEMPERED;
 	/**
 	 * Tries to do the right thing. Bribes aren't as effective.
 	 */
-	public NPCCharacterTrait RIGHTEOUS;
+	public CharacterTrait RIGHTEOUS;
 	/**
 	 * Doesn't like heretics.
 	 */
-	public NPCCharacterTrait RELIGIOUS_FANATIC;
+	public CharacterTrait RELIGIOUS_FANATIC;
 
-	private static List<NPCCharacterTrait> VALUES;
+	private static List<CharacterTrait> VALUES;
 
 	// @Asset(Text.class)
 	// private static final String AMBITIOUS_JSON_PATH =
@@ -43,7 +43,7 @@ public class NPCCharacterTraits {
 		 */
 	}
 
-	public static NPCCharacterTrait getByIndex(int index) {
+	public static CharacterTrait getByIndex(int index) {
 		if (index == -1 || index > VALUES.size() - 1)
 			return null;
 		return VALUES.get(index);
@@ -53,7 +53,7 @@ public class NPCCharacterTraits {
 	 * This class represents a trait npc characters have. Traits influence the
 	 * decisions these characters make.
 	 */
-	public class NPCCharacterTrait {
+	public class CharacterTrait {
 
 		// TODO Modifikatoren für bestimmte Situationen
 

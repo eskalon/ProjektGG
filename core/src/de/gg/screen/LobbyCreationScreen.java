@@ -56,6 +56,7 @@ public class LobbyCreationScreen extends BaseUIScreen {
 		ImageTextButton backButton = new ImageTextButton("Zurück", skin,
 				"small");
 		backButton.addListener(new InputListener() {
+
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				game.pushScreen("serverBrowser");
@@ -67,6 +68,7 @@ public class LobbyCreationScreen extends BaseUIScreen {
 		ImageTextButton createButton = new ImageTextButton("Erstellen", skin,
 				"small");
 		createButton.addListener(new InputListener() {
+
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				clickSound.play(1F);

@@ -98,8 +98,7 @@ public class ProjektGG extends Game {
 		super();
 
 		inDevEnv = getClass().getPackage().getImplementationVersion() == null;
-		version = inDevEnv
-				? "Development"
+		version = inDevEnv ? "Development"
 				: getClass().getPackage().getImplementationVersion();
 
 		this.debug = debug;
@@ -212,6 +211,7 @@ public class ProjektGG extends Game {
 	 */
 	public synchronized void pushScreen(String name) {
 		Gdx.app.postRunnable(new Runnable() {
+
 			@Override
 			public void run() {
 				Log.debug("Client", "Pushed screen: %s", name);

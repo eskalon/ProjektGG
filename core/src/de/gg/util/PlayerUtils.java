@@ -124,8 +124,10 @@ public class PlayerUtils {
 	 * json}.
 	 */
 	public static class PlayerStub {
+
 		public String name, surname;
 		public boolean isMale;
+
 	}
 
 	public static void finishLoading(AnnotationAssetManager assetManager) {

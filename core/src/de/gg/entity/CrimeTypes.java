@@ -33,6 +33,7 @@ public class CrimeTypes {
 		public String getName() {
 			return name;
 		}
+
 		public boolean isPunishableByDeath() {
 			return punishableByDeath;
 		}

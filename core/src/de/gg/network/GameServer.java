@@ -56,6 +56,7 @@ public class GameServer {
 
 		// ON NEW CONNECTION & ON DICONNECTED
 		server.addListener(new ConnectionListener() {
+
 			@Override
 			public void connected(Connection con) {
 				onNewConnection(con);
@@ -81,6 +82,7 @@ public class GameServer {
 		server.addListener(typeListener);
 
 		Thread t = new Thread(new Runnable() {
+
 			public void run() {
 				try {
 					// Server starten
@@ -94,6 +96,7 @@ public class GameServer {
 							.register(DiscoveryResponsePacket.class);
 					broadcastServer
 							.setDiscoveryHandler(new ServerDiscoveryHandler() {
+
 								@Override
 								public boolean onDiscoverHost(
 										DatagramChannel datagramChannel,
@@ -224,6 +227,7 @@ public class GameServer {
 	}
 
 	interface IHostCallback {
+
 		public void onHostStarted(IOException e);
 	}
 

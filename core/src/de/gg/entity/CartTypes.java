@@ -10,6 +10,7 @@ import de.gg.util.asset.Text;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class CartTypes {
+
 	public static CartType CART_1;
 	private static List<CartType> VALUES;
 

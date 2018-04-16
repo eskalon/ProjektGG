@@ -15,8 +15,7 @@ import com.badlogic.gdx.utils.Array;
  *      "https://gamedev.stackexchange.com/a/101331">https://gamedev.stackexchange.com/a/101331</a>
  */
 public class TextLoader
-		extends
-			AsynchronousAssetLoader<Text, TextLoader.TextParameter> {
+		extends AsynchronousAssetLoader<Text, TextLoader.TextParameter> {
 
 	public TextLoader(FileHandleResolver resolver) {
 		super(resolver);

@@ -17,8 +17,7 @@ import de.gg.util.RandomUtils;
  * the client.
  */
 public class AuthoritativeSession extends GameSession
-		implements
-			SlaveActionListener {
+		implements SlaveActionListener {
 
 	private HashMap<Short, AuthoritativeResultListener> resultListeners;
 	private ThreadPoolExecutor executor;
@@ -76,6 +75,7 @@ public class AuthoritativeSession extends GameSession
 
 		// Alle Clienten informieren
 		executor.submit(new AuthoritativeResultListenerThread() {
+
 			@Override
 			protected void informListener(
 					AuthoritativeResultListener resultListener) {
@@ -113,6 +113,7 @@ public class AuthoritativeSession extends GameSession
 
 		// Alle Clienten informieren
 		executor.submit(new AuthoritativeResultListenerThread() {
+
 			@Override
 			protected void informListener(
 					AuthoritativeResultListener resultListener) {
@@ -129,6 +130,7 @@ public class AuthoritativeSession extends GameSession
 	 * separate thread.
 	 */
 	abstract class AuthoritativeResultListenerThread implements Runnable {
+
 		@Override
 		public void run() {
 			for (AuthoritativeResultListener resultListener : resultListeners

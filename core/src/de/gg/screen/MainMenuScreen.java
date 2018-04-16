@@ -38,6 +38,7 @@ public class MainMenuScreen extends BaseUIScreen {
 		ImageTextButton multiplayerButton = new ImageTextButton("Multiplayer",
 				skin);
 		multiplayerButton.addListener(new InputListener() {
+
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				clickSound.play(1F);
@@ -49,6 +50,7 @@ public class MainMenuScreen extends BaseUIScreen {
 		ImageTextButton settingsButton = new ImageTextButton("Einstellungen",
 				skin);
 		settingsButton.addListener(new InputListener() {
+
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				clickSound.play(1F);
@@ -59,6 +61,7 @@ public class MainMenuScreen extends BaseUIScreen {
 
 		ImageTextButton creditsButton = new ImageTextButton("Credits", skin);
 		creditsButton.addListener(new InputListener() {
+
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				clickSound.play(1F);
@@ -70,6 +73,7 @@ public class MainMenuScreen extends BaseUIScreen {
 
 		ImageTextButton exitButton = new ImageTextButton("Beenden", skin);
 		exitButton.addListener(new InputListener() {
+
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				clickSound.play(1F);
@@ -86,6 +90,7 @@ public class MainMenuScreen extends BaseUIScreen {
 				new TextureRegionDrawable(new TextureRegion(
 						assetManager.get(GITHUB_ICON_PATH, Texture.class))));
 		githubRepoButton.addListener(new InputListener() {
+
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				Gdx.net.openURI("https://github.com/eskalon/ProjektGG");

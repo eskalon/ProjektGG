@@ -1,6 +1,9 @@
 package de.gg.entity;
 
+import java.util.Random;
+
 import de.gg.entity.ItemTypes.ItemType;
+import de.gg.util.RandomUtils;
 
 public class Employee {
 
@@ -10,8 +13,24 @@ public class Employee {
 	private int agilitySkill;
 	private int strengthSkill;
 
-	private ItemType itemInProduction;
-	private int productionProgress;
+	private ItemType itemInProduction = null;
+	private int productionProgress = 0;
+
+	public static Employee getRandomEmployee(Random r) {
+		Employee e = new Employee();
+		e.age = RandomUtils.getRandomNumber(r, 16, 70);
+		e.agilitySkill = RandomUtils.rollTheDice(r, 2)
+				? (RandomUtils.rollTheDice(r, 3) ? 3 : 2)
+				: 1;
+		e.craftingSkill = RandomUtils.rollTheDice(r, 2)
+				? (RandomUtils.rollTheDice(r, 3) ? 3 : 2)
+				: 1;
+		e.strengthSkill = RandomUtils.rollTheDice(r, 2)
+				? (RandomUtils.rollTheDice(r, 3) ? 3 : 2)
+				: 1;
+
+		return e;
+	}
 
 	public int getCraftingSkill() {
 		return craftingSkill;
