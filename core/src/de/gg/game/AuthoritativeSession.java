@@ -75,7 +75,6 @@ public class AuthoritativeSession extends GameSession
 
 		// Alle Clienten informieren
 		executor.submit(new AuthoritativeResultListenerThread() {
-
 			@Override
 			protected void informListener(
 					AuthoritativeResultListener resultListener) {
@@ -113,7 +112,6 @@ public class AuthoritativeSession extends GameSession
 
 		// Alle Clienten informieren
 		executor.submit(new AuthoritativeResultListenerThread() {
-
 			@Override
 			protected void informListener(
 					AuthoritativeResultListener resultListener) {

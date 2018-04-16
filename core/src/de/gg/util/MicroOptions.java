@@ -26,7 +26,6 @@ public class MicroOptions {
 	 * All option-related exceptions are instances of this base class.
 	 */
 	public static class OptionException extends RuntimeException {
-
 		public OptionException(String message) {
 			super(message);
 		}
@@ -36,7 +35,6 @@ public class MicroOptions {
 	 * Thrown when the parser encounters an option that has not been defined.
 	 */
 	public static class UnsupportedOptionException extends OptionException {
-
 		public UnsupportedOptionException(String o) {
 			super("Unsupported option '" + o + "'");
 		}
@@ -46,7 +44,6 @@ public class MicroOptions {
 	 * Thrown when the parser can't find the argument for a non-unary option.
 	 */
 	public static class MissingArgException extends OptionException {
-
 		public MissingArgException(String o) {
 			super("Missing argument for option '" + o + "'");
 		}
@@ -56,7 +53,6 @@ public class MicroOptions {
 	 * Thrown when the parser can't find a required option.
 	 */
 	public static class RequiredOptionException extends OptionException {
-
 		public RequiredOptionException(String o) {
 			super("Missing required option '" + o + "'");
 		}

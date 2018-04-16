@@ -119,7 +119,6 @@ public class NetworkHandler {
 		client.addListener(listener);
 
 		final Thread connectingThread = new Thread(new Runnable() {
-
 			public void run() {
 				try {
 					client.connect(6000, ip, port);
@@ -149,7 +148,6 @@ public class NetworkHandler {
 	public void setUpConnectionAsHost(int port, String gameName,
 			GameSessionSetup setup) {
 		server = new GameServer(port, gameName, setup, new IHostCallback() {
-
 			@Override
 			public void onHostStarted(IOException e) {
 				if (e == null) {
@@ -286,7 +284,6 @@ public class NetworkHandler {
 	}
 
 	public interface HostDiscoveryListener {
-
 		public void onHostDiscovered(String address,
 				DiscoveryResponsePacket datagramPacket);
 	}

@@ -67,7 +67,6 @@ public class LobbyScreen extends BaseUIScreen {
 		ImageTextButton playerSetingsButton = new ImageTextButton("Anpassen",
 				skin, "small");
 		playerSetingsButton.addListener(new InputListener() {
-
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				clickSound.play(1F);
@@ -81,7 +80,6 @@ public class LobbyScreen extends BaseUIScreen {
 		ImageTextButton leaveButton = new ImageTextButton("Verlassen", skin,
 				"small");
 		leaveButton.addListener(new InputListener() {
-
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				clickSound.play(1F);
@@ -101,7 +99,6 @@ public class LobbyScreen extends BaseUIScreen {
 			readyUpLobbyButton.setText("Spiel starten");
 		}
 		readyUpLobbyButton.addListener(new InputListener() {
-
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				clickSound.play(1F);
@@ -135,7 +132,6 @@ public class LobbyScreen extends BaseUIScreen {
 		OffsetableTextField chatInputField = new OffsetableTextField("", skin,
 				"large", 8);
 		chatInputField.setTextFieldListener(new TextFieldListener() {
-
 			@Override
 			public void keyTyped(TextField textField, char key) {
 				if (!textField.getText().isEmpty() && (key == (char) 13)) { // Enter
@@ -149,7 +145,6 @@ public class LobbyScreen extends BaseUIScreen {
 			}
 		});
 		sendButton.addListener(new InputListener() {
-
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				if (!chatInputField.getText().isEmpty()) {

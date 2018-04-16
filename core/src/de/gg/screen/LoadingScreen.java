@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ObjectMap;
 
 import de.gg.data.GameMaps;
+import de.gg.input.ButtonClickListener;
 import de.gg.util.PlayerUtils;
 
 /**
@@ -62,6 +63,8 @@ public class LoadingScreen extends BaseLoadingScreen {
 		// Add assets to loading queue
 		assetManager.load(PlayerUtils.class);
 		assetManager.load(GameMaps.class);
+
+		assetManager.load(ButtonClickListener.class);
 
 		assetManager.load(MAIN_FONT_19_PATH());
 		assetManager.load(MAIN_FONT_22_PATH());

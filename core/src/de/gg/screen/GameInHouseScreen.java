@@ -1,9 +1,6 @@
 package de.gg.screen;
 
-import com.badlogic.gdx.Input.Buttons;
-import com.badlogic.gdx.Input.Keys;
-
-import de.gg.input.DefaultInputProcessor;
+import de.gg.input.BackInputProcessor;
 import de.gg.util.Log;
 
 /**
@@ -33,25 +30,10 @@ public class GameInHouseScreen extends BaseGameScreen {
 	@Override
 	public void show() {
 		super.show();
-		game.getInputMultiplexer().addProcessor(new DefaultInputProcessor() {
-
+		game.getInputMultiplexer().addProcessor(new BackInputProcessor() {
 			@Override
-			public boolean keyDown(int keycode) {
-				if (keycode == Keys.ESCAPE) {
-					game.pushScreen("map");
-					return true;
-				}
-				return false;
-			}
-
-			@Override
-			public boolean touchDown(int screenX, int screenY, int pointer,
-					int button) {
-				if (button == Buttons.RIGHT) {
-					game.pushScreen("map");
-					return true;
-				}
-				return false;
+			public void onBackAction() {
+				game.pushScreen("map");
 			}
 		});
 

@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -17,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.google.common.eventbus.Subscribe;
 
 import de.gg.event.ConnectionEstablishedEvent;
+import de.gg.input.ButtonClickListener;
 import de.gg.network.NetworkHandler;
 import de.gg.network.NetworkHandler.HostDiscoveryListener;
 import de.gg.network.message.DiscoveryResponsePacket;
@@ -30,10 +28,7 @@ public class ServerBrowserScreen extends BaseUIScreen {
 	private final String BACKGROUND_IMAGE_PATH = "ui/backgrounds/town.jpg";
 	@Asset(Texture.class)
 	private final String TICK_IMAGE_PATH = "ui/icons/ready.png";
-	@Asset(Sound.class)
-	private final String BUTTON_SOUND = "audio/button-tick.mp3";
 	private AnimationlessDialog connectingDialog;
-	private Sound clickSound;
 	private Table serverTable;
 	/**
 	 * This list holds all local LAN servers that were discovered.
@@ -44,7 +39,6 @@ public class ServerBrowserScreen extends BaseUIScreen {
 	@Override
 	protected void initUI() {
 		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
-		clickSound = assetManager.get(BUTTON_SOUND);
 
 		serverTable = new Table();
 
@@ -52,38 +46,27 @@ public class ServerBrowserScreen extends BaseUIScreen {
 
 		ImageTextButton backButton = new ImageTextButton("Zurück", skin,
 				"small");
-		backButton.addListener(new InputListener() {
-
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				clickSound.play(1F);
-
+		backButton.addListener(new ButtonClickListener(assetManager) {
+			@Override
+			protected void onClick() {
 				game.pushScreen("mainMenu");
-				return true;
 			}
 		});
 
 		ImageTextButton createLobbyButton = new ImageTextButton(
 				"Spiel erstellen", skin, "small");
-		createLobbyButton.addListener(new InputListener() {
-
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				clickSound.play(1F);
-
+		createLobbyButton.addListener(new ButtonClickListener(assetManager) {
+			@Override
+			protected void onClick() {
 				game.pushScreen("lobbyCreation");
-				return true;
 			}
 		});
 
 		ImageTextButton directConnectButton = new ImageTextButton(
 				"Direkt verbinden", skin, "small");
-		directConnectButton.addListener(new InputListener() {
-
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				clickSound.play(1F);
-
+		directConnectButton.addListener(new ButtonClickListener(assetManager) {
+			@Override
+			protected void onClick() {
 				OffsetableTextField portInputField = new OffsetableTextField(
 						String.valueOf(NetworkHandler.DEFAULT_PORT), skin, 5);
 				portInputField.setTextFieldFilter(
@@ -93,7 +76,6 @@ public class ServerBrowserScreen extends BaseUIScreen {
 
 				AnimationlessDialog dialog = new AnimationlessDialog(
 						"Direkt verbinden", skin) {
-
 					public void result(Object obj) {
 						if ((Boolean) obj) {
 							game.getNetworkHandler().setUpConnectionAsClient(
@@ -114,8 +96,6 @@ public class ServerBrowserScreen extends BaseUIScreen {
 				dialog.getContentTable().add(new Label("Port:", skin));
 				dialog.getContentTable().add(portInputField).width(90).left();
 				dialog.show(stage);
-
-				return true;
 			}
 		});
 
@@ -143,12 +123,10 @@ public class ServerBrowserScreen extends BaseUIScreen {
 		serverTable.clear();
 		dicoveredServers.clear();
 		discoveryThread = new Runnable() {
-
 			@Override
 			public void run() {
 				game.getNetworkHandler()
 						.discoverHosts(new HostDiscoveryListener() {
-
 							@Override
 							public void onHostDiscovered(String address,
 									DiscoveryResponsePacket datagramPacket) {
@@ -173,20 +151,15 @@ public class ServerBrowserScreen extends BaseUIScreen {
 			int port) {
 		ImageTextButton joinButton = new ImageTextButton("Beitreten", skin,
 				"small");
-		joinButton.addListener(new InputListener() {
-
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				clickSound.play(1F);
-
+		joinButton.addListener(new ButtonClickListener(assetManager) {
+			@Override
+			protected void onClick() {
 				game.getNetworkHandler().setUpConnectionAsClient(ip, port);
 
 				connectingDialog = new AnimationlessDialog("Verbinden...",
 						skin);
 				connectingDialog.text("Spiel beitreten...");
 				connectingDialog.show(stage);
-
-				return true;
 			}
 		});
 

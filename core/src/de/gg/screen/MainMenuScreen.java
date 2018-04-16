@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
+import de.gg.input.ButtonClickListener;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 /**
@@ -38,7 +39,6 @@ public class MainMenuScreen extends BaseUIScreen {
 		ImageTextButton multiplayerButton = new ImageTextButton("Multiplayer",
 				skin);
 		multiplayerButton.addListener(new InputListener() {
-
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				clickSound.play(1F);
@@ -49,37 +49,27 @@ public class MainMenuScreen extends BaseUIScreen {
 
 		ImageTextButton settingsButton = new ImageTextButton("Einstellungen",
 				skin);
-		settingsButton.addListener(new InputListener() {
-
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				clickSound.play(1F);
+		settingsButton.addListener(new ButtonClickListener(assetManager) {
+			@Override
+			protected void onClick() {
 				// game.pushScreen("settings");
-				return true;
 			}
 		});
 
 		ImageTextButton creditsButton = new ImageTextButton("Credits", skin);
-		creditsButton.addListener(new InputListener() {
-
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				clickSound.play(1F);
+		creditsButton.addListener(new ButtonClickListener(assetManager) {
+			@Override
+			protected void onClick() {
 				if (!game.isInDevEnv())
 					game.pushScreen("credits");
-				return true;
 			}
 		});
 
 		ImageTextButton exitButton = new ImageTextButton("Beenden", skin);
-		exitButton.addListener(new InputListener() {
-
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				clickSound.play(1F);
-
+		exitButton.addListener(new ButtonClickListener(assetManager) {
+			@Override
+			protected void onClick() {
 				Gdx.app.exit();
-				return true;
 			}
 		});
 
@@ -90,7 +80,6 @@ public class MainMenuScreen extends BaseUIScreen {
 				new TextureRegionDrawable(new TextureRegion(
 						assetManager.get(GITHUB_ICON_PATH, Texture.class))));
 		githubRepoButton.addListener(new InputListener() {
-
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				Gdx.net.openURI("https://github.com/eskalon/ProjektGG");

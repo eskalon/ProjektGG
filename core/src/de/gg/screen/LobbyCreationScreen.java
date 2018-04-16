@@ -1,10 +1,7 @@
 package de.gg.screen;
 
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
@@ -16,6 +13,7 @@ import com.google.common.eventbus.Subscribe;
 import de.gg.data.GameSessionSetup;
 import de.gg.data.GameSessionSetup.GameDifficulty;
 import de.gg.event.ConnectionEstablishedEvent;
+import de.gg.input.ButtonClickListener;
 import de.gg.network.NetworkHandler;
 import de.gg.util.ui.AnimationlessDialog;
 import de.gg.util.ui.OffsetableTextField;
@@ -23,8 +21,6 @@ import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class LobbyCreationScreen extends BaseUIScreen {
 
-	@Asset(Sound.class)
-	private final String BUTTON_SOUND = "audio/button-tick.mp3";
 	@Asset(Texture.class)
 	private final String BACKGROUND_IMAGE_PATH = "ui/backgrounds/town.jpg";
 	private AnimationlessDialog connectingDialog;
@@ -32,7 +28,6 @@ public class LobbyCreationScreen extends BaseUIScreen {
 	@Override
 	protected void initUI() {
 		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
-		Sound clickSound = assetManager.get(BUTTON_SOUND);
 
 		Label nameLabel = new Label("Name: ", skin);
 		Label portLabel = new Label("Port: ", skin);
@@ -55,24 +50,18 @@ public class LobbyCreationScreen extends BaseUIScreen {
 
 		ImageTextButton backButton = new ImageTextButton("Zurück", skin,
 				"small");
-		backButton.addListener(new InputListener() {
-
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
+		backButton.addListener(new ButtonClickListener(assetManager) {
+			@Override
+			protected void onClick() {
 				game.pushScreen("serverBrowser");
-				clickSound.play(1F);
-				return true;
 			}
 		});
 
 		ImageTextButton createButton = new ImageTextButton("Erstellen", skin,
 				"small");
-		createButton.addListener(new InputListener() {
-
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				clickSound.play(1F);
-
+		createButton.addListener(new ButtonClickListener(assetManager) {
+			@Override
+			protected void onClick() {
 				if (!nameField.getText().isEmpty()
 						&& !portField.getText().isEmpty()) {
 					GameDifficulty difficulty = GameDifficulty.NORMAL;
@@ -106,8 +95,6 @@ public class LobbyCreationScreen extends BaseUIScreen {
 					dialog.key(Keys.ENTER, true);
 					dialog.show(stage);
 				}
-
-				return true;
 			}
 		});
 
