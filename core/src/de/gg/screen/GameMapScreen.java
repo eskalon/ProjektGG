@@ -129,6 +129,7 @@ public class GameMapScreen extends BaseGameScreen {
 	public void show() {
 		super.show();
 		game.getInputMultiplexer().addProcessor(selectionInputController);
+		movementInputController.resetInput();
 		game.getInputMultiplexer().addProcessor(movementInputController);
 	}
 

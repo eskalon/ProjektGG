@@ -84,6 +84,15 @@ public class MapMovementInputController implements DefaultInputProcessor {
 		}
 	}
 
+	public void resetInput() {
+		rightPressed = false;
+		leftPressed = false;
+		forwardPressed = false;
+		backwardPressed = false;
+
+		button = -1;
+	}
+
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer,
 			int button) {
