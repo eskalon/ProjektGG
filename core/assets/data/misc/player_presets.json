@@ -1,77 +1,77 @@
 ﻿[
-   {
-      "name":"Franz",
-      "surname":"Woyzeck",
-      "isMale":true
-   },
-   {
-      "name":"Heinrich",
-      "surname":"Faust",
-      "isMale":true
-   },
-   {
-      "name":"Marthe",
-      "surname":"Schwerdtlein",
-      "isMale":false
-   },
-   {
-      "name":"Ferdinand",
-      "surname":"von Walter",
-      "isMale":true
-   },
-   {
-      "name":"Luise",
-      "surname":"Miller",
-      "isMale":false
-   },
-   {
-      "name":"Oskar",
-      "surname":"Matzerath",
-      "isMale":true
-   },
-   {
-      "name":"Jan",
-      "surname":"Bronski",
-      "isMale":true
-   },
-   {
-      "name":"Pierre",
-      "surname":"Dumaine",
-      "isMale":true
-   },
-   {
-      "name":"Ève",
-      "surname":"Charlier",
-      "isMale":false
-   },
-   {
-      "name":"Michael",
-      "surname":"Kohlhaas",
-      "isMale":true
-   },
-   {
-      "name":"Moritz",
-      "surname":"Jäger",
-      "isMale":true
-   },
-   {
-      "name":"Gregor",
-      "surname":"Samsa",
-      "isMale":true
-   },
-   {
-      "name":"Andrej Nikolajewitsch",
-      "surname":"Bolkónski",
-      "isMale":true
-   },
-   {
-      "name":"Peter",
-      "surname":"Besúchow",
-      "isMale":true
-   },
-   {
-      "name":"Walter",
-      "surname":"Faber",
-      "isMale":true
-   }
+	{
+		"name": "Franz",
+		"surname": "Woyzeck",
+		"isMale": true
+	},
+	{
+		"name": "Heinrich",
+		"surname": "Faust",
+		"isMale": true
+	},
+	{
+		"name": "Marthe",
+		"surname": "Schwerdtlein",
+		"isMale": false
+	},
+	{
+		"name": "Ferdinand",
+		"surname": "von Walter",
+		"isMale": true
+	},
+	{
+		"name": "Luise",
+		"surname": "Miller",
+		"isMale": false
+	},
+	{
+		"name": "Oskar",
+		"surname": "Matzerath",
+		"isMale": true
+	},
+	{
+		"name": "Jan",
+		"surname": "Bronski",
+		"isMale": true
+	},
+	{
+		"name": "Pierre",
+		"surname": "Dumaine",
+		"isMale": true
+	},
+	{
+		"name": "Ève",
+		"surname": "Charlier",
+		"isMale": false
+	},
+	{
+		"name": "Michael",
+		"surname": "Kohlhaas",
+		"isMale": true
+	},
+	{
+		"name": "Moritz",
+		"surname": "Jäger",
+		"isMale": true
+	},
+	{
+		"name": "Gregor",
+		"surname": "Samsa",
+		"isMale": true
+	},
+	{
+		"name": "Andrej Nikolajewitsch",
+		"surname": "Bolkónski",
+		"isMale": true
+	},
+	{
+		"name": "Peter",
+		"surname": "Besúchow",
+		"isMale": true
+	},
+	{
+		"name": "Walter",
+		"surname": "Faber",
+		"isMale": true
+	}
 ]

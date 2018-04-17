@@ -1,11 +1,6 @@
 {
-	com.badlogic.gdx.graphics.Color: {
-		white: {
-			r: 1
-			g: 1
-			b: 1
-			a: 1
-		},
+	
+},
 		grey: {
 			r: 0.7
 			g: 0.7

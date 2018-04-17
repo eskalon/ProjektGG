@@ -6,9 +6,15 @@ package de.gg.setting;
 public class GameSettings {
 
 	private final ConfigHandler configHandler;
-	private final String MASTER_VOLUME = "masterVolume";
-	private final String EFFECT_VOLUME = "effectVolume";
-	private final String MUSIC_VOLUME = "musicVolume";
+	// Volume
+	public static final String MASTER_VOLUME = "masterVolume";
+	public static final String EFFECT_VOLUME = "effectVolume";
+	public static final String MUSIC_VOLUME = "musicVolume";
+	// Keys
+	public static final String FORWARD_KEY = "forwardKey";
+	public static final String LEFT_KEY = "leftKey";
+	public static final String BACKWARD_KEY = "backwardKey";
+	public static final String RIGHT_KEY = "rightKey";
 
 	/**
 	 * @param fileName
@@ -43,6 +49,42 @@ public class GameSettings {
 
 	public void setMusicVolume(float musicVolume) {
 		configHandler.setFloat(MUSIC_VOLUME, musicVolume);
+	}
+
+	// Forward key
+	public int getForwardKey() {
+		return configHandler.getInt(FORWARD_KEY);
+	}
+
+	public void setForwardKey(int key) {
+		configHandler.setInt(FORWARD_KEY, key);
+	}
+
+	// Left key
+	public int getLeftKey() {
+		return configHandler.getInt(LEFT_KEY);
+	}
+
+	public void setLeftKey(int key) {
+		configHandler.setInt(LEFT_KEY, key);
+	}
+
+	// Backward key
+	public int getBackwardKey() {
+		return configHandler.getInt(BACKWARD_KEY);
+	}
+
+	public void setBackwardKey(int key) {
+		configHandler.setInt(BACKWARD_KEY, key);
+	}
+
+	// Right key
+	public int getRightKey() {
+		return configHandler.getInt(RIGHT_KEY);
+	}
+
+	public void setRightKey(int key) {
+		configHandler.setInt(RIGHT_KEY, key);
 	}
 
 }

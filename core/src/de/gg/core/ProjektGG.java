@@ -37,6 +37,7 @@ import de.gg.screen.LobbyCreationScreen;
 import de.gg.screen.LobbyScreen;
 import de.gg.screen.MainMenuScreen;
 import de.gg.screen.ServerBrowserScreen;
+import de.gg.screen.SettingsScreen;
 import de.gg.screen.SplashScreen;
 import de.gg.setting.GameSettings;
 import de.gg.util.EventQueueBus;
@@ -167,6 +168,7 @@ public class ProjektGG extends Game {
 		addScreen("map", new GameMapScreen());
 		addScreen("house", new GameInHouseScreen());
 		addScreen("roundEnd", new GameRoundendScreen());
+		addScreen("settings", new SettingsScreen());
 
 		// Push screen
 		if (showSplashscreen)
