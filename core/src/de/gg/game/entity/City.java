@@ -1,4 +1,4 @@
-package de.gg.entity;
+package de.gg.game.entity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,9 +9,9 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import de.gg.data.GameMaps;
 import de.gg.data.GameMaps.GameMap;
 import de.gg.data.GameSessionSetup;
-import de.gg.entity.ItemTypes.ItemType;
-import de.gg.entity.LawTypes.LawType;
-import de.gg.entity.PositionTypes.PositionType;
+import de.gg.game.entity.ItemTypes.ItemType;
+import de.gg.game.entity.LawTypes.LawType;
+import de.gg.game.entity.PositionTypes.PositionType;
 import de.gg.network.LobbyPlayer;
 import de.gg.render.RenderData;
 

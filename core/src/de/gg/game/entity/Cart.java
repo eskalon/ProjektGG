@@ -1,8 +1,8 @@
-package de.gg.entity;
+package de.gg.game.entity;
 
 import java.util.List;
 
-import de.gg.entity.CartTypes.CartType;
+import de.gg.game.entity.CartTypes.CartType;
 
 public class Cart {
 

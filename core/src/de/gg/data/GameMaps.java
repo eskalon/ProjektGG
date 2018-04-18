@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.badlogic.gdx.assets.AssetManager;
 
-import de.gg.entity.BuildingSlot;
+import de.gg.game.entity.BuildingSlot;
 import de.gg.render.RenderData;
 import de.gg.util.JSONParser;
 import de.gg.util.asset.Text;

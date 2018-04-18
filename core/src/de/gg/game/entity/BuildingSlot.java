@@ -1,4 +1,4 @@
-package de.gg.entity;
+package de.gg.game.entity;
 
 public class BuildingSlot {
 

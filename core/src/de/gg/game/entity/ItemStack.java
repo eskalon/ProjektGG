@@ -1,6 +1,6 @@
-package de.gg.entity;
+package de.gg.game.entity;
 
-import de.gg.entity.ItemTypes.ItemType;
+import de.gg.game.entity.ItemTypes.ItemType;
 
 public class ItemStack {
 

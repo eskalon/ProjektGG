@@ -5,9 +5,9 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.collision.Ray;
 import com.google.common.eventbus.EventBus;
 
-import de.gg.entity.City;
 import de.gg.event.HouseEnterEvent;
 import de.gg.event.HouseSelectionEvent;
+import de.gg.game.entity.City;
 import de.gg.setting.GameSettings;
 
 public class MapSelectionInputController implements DefaultInputProcessor {

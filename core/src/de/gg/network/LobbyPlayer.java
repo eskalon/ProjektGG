@@ -1,6 +1,6 @@
 package de.gg.network;
 
-import de.gg.entity.Player.PlayerIcon;
+import de.gg.game.entity.Player.PlayerIcon;
 
 /**
  * This class describes a client in the lobby. It is alos used by the server to

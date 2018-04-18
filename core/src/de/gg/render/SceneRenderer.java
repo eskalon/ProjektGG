@@ -11,9 +11,9 @@ import com.badlogic.gdx.graphics.g3d.shaders.DepthShader.Config;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.utils.Disposable;
 
-import de.gg.entity.Building;
-import de.gg.entity.BuildingSlot;
-import de.gg.entity.City;
+import de.gg.game.entity.Building;
+import de.gg.game.entity.BuildingSlot;
+import de.gg.game.entity.City;
 
 /**
  * This class is repsonsible for rendering the city.

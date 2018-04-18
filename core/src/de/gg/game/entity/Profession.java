@@ -1,6 +1,6 @@
-package de.gg.entity;
+package de.gg.game.entity;
 
-import de.gg.entity.ProfessionTypes.ProfessionType;
+import de.gg.game.entity.ProfessionTypes.ProfessionType;
 
 public class Profession {
 

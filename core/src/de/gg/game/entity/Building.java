@@ -1,8 +1,8 @@
-package de.gg.entity;
+package de.gg.game.entity;
 
 import java.util.List;
 
-import de.gg.entity.BuildingTypes.BuildingType;
+import de.gg.game.entity.BuildingTypes.BuildingType;
 import de.gg.render.RenderData;
 import de.gg.render.SceneRenderer;
 

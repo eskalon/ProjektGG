@@ -1,10 +1,13 @@
 package de.gg.game;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.gg.data.GameSessionSetup;
 import de.gg.data.GameSessionSetup.GameDifficulty;
-import de.gg.entity.City;
+import de.gg.game.entity.Character;
+import de.gg.game.entity.City;
+import de.gg.game.system.ProcessingSystem;
 import de.gg.network.LobbyPlayer;
 import de.gg.util.Log;
 
@@ -60,6 +63,8 @@ public abstract class GameSession {
 	 */
 	protected short localNetworkId;
 
+	protected ArrayList<ProcessingSystem<Character>> characterSystems;
+
 	/**
 	 * Creates a new game session.
 	 * 
@@ -83,6 +88,8 @@ public abstract class GameSession {
 	public synchronized void setupGame() {
 		this.city.generate(sessionSetup, players);
 		this.initialized = true;
+
+		// TODO add and initialize the systems
 	}
 
 	/**
@@ -140,7 +147,23 @@ public abstract class GameSession {
 	public synchronized void fixedUpdate() {
 		if (isRightTick(10)) {
 			clock.update();
+
+			// Executes the processing systems
+			for (ProcessingSystem<Character> sys : characterSystems) {
+				if (sys.isProcessedContinuously() || (!sys.wasProcessed())) {
+					if (isRightTick(sys.getTickRate())) {
+						for (Character c : city.getCharacters().values()) {
+							sys.process(c);
+						}
+
+						if (!sys.isProcessedContinuously()) {
+							sys.setAsProcessed(true);
+						}
+					}
+				}
+			}
 		}
+
 	}
 
 	/**
@@ -166,6 +189,13 @@ public abstract class GameSession {
 		updateTime = 0;
 		currentTick = 0;
 		clock.resetClock();
+
+		// Reset the processing systems
+		for (ProcessingSystem<Character> sys : characterSystems) {
+			if (!sys.isProcessedContinuously())
+				sys.setAsProcessed(false);
+		}
+
 		waitingForNextRound = false;
 	}
 

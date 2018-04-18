@@ -1,8 +1,8 @@
-package de.gg.entity;
+package de.gg.game.entity;
 
 import java.util.List;
 
-import de.gg.entity.PlayerTasks.PlayerTask;
+import de.gg.game.entity.PlayerTasks.PlayerTask;
 
 public class Player {
 

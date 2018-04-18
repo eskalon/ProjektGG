@@ -1,11 +1,11 @@
-package de.gg.entity;
+package de.gg.game.entity;
 
 import java.util.HashMap;
 import java.util.Random;
 
-import de.gg.entity.NPCCharacterTraits.CharacterTrait;
-import de.gg.entity.PositionTypes.PositionType;
-import de.gg.entity.SocialStatusS.SocialStatus;
+import de.gg.game.entity.NPCCharacterTraits.CharacterTrait;
+import de.gg.game.entity.PositionTypes.PositionType;
+import de.gg.game.entity.SocialStatusS.SocialStatus;
 import de.gg.util.RandomUtils;
 
 public class Character {
@@ -19,8 +19,12 @@ public class Character {
 	private SocialStatus status;
 	private int highestPositionLevel;
 	private int reputationModifiers;
-	private int hp;
+	private int hp = 100;
 	private int age;
+	/**
+	 * Whether this character is currently ill.
+	 */
+	private boolean ill;
 	private HashMap<Character, Integer> popularityModifiers;
 	/**
 	 * A trait denoting the npc's behavior in certain situations. Only set for
@@ -47,7 +51,7 @@ public class Character {
 	 * @return The popularity modifier of character a towards character b in
 	 *         this specific round.
 	 */
-	public int getPerRoundAndCharacterPopularityModifier(long gameSeed,
+	public static int getPerRoundAndCharacterPopularityModifier(long gameSeed,
 			int characterIdA, int characterIdB, int round) {
 		Random r = new Random(gameSeed * characterIdA * characterIdB * round);
 		return RandomUtils.getRandomNumber(r, -5, 6);
@@ -121,6 +125,9 @@ public class Character {
 		this.reputationModifiers = reputationModifiers;
 	}
 
+	/**
+	 * @return the character's health. Is 100 at the birth.
+	 */
 	public int getHp() {
 		return hp;
 	}
@@ -147,6 +154,14 @@ public class Character {
 
 	public void setNPCTrait(CharacterTrait trait) {
 		this.trait = trait;
+	}
+
+	public boolean isIll() {
+		return ill;
+	}
+
+	public void setIll(boolean ill) {
+		this.ill = ill;
 	}
 
 	public enum Religion {

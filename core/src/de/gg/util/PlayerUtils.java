@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.google.common.reflect.TypeToken;
 
-import de.gg.entity.Player.PlayerIcon;
+import de.gg.game.entity.Player.PlayerIcon;
 import de.gg.network.LobbyPlayer;
 import de.gg.util.asset.Text;
 import net.dermetfan.gdx.assets.AnnotationAssetManager;

@@ -1,12 +1,12 @@
-package de.gg.entity;
+package de.gg.game.entity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.assets.AssetManager;
 
-import de.gg.entity.ItemTypes.ItemType;
-import de.gg.entity.ProfessionTypes.ProfessionType;
+import de.gg.game.entity.ItemTypes.ItemType;
+import de.gg.game.entity.ProfessionTypes.ProfessionType;
 import de.gg.util.JSONParser;
 import de.gg.util.asset.Text;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
