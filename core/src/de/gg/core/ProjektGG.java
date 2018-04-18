@@ -87,6 +87,14 @@ public class ProjektGG extends Game {
 
 	private SlaveSession currentSession;
 
+	
+	
+	//----------NEU-------------//
+	
+	private SettingsScreen settingsScreen;
+	
+	//----------NEU------------//
+	
 	/**
 	 * Event bus. All events are queued first and then taken care of in the
 	 * rendering thread.
@@ -157,6 +165,11 @@ public class ProjektGG extends Game {
 		Gdx.input.setInputProcessor(inputProcessor);
 
 		// Add screens
+		
+		settingsScreen = new SettingsScreen();
+		
+		
+		
 		addScreen("credits", new CreditsScreen());
 		addScreen("splash", new SplashScreen());
 		addScreen("mainMenu", new MainMenuScreen());
@@ -168,13 +181,17 @@ public class ProjektGG extends Game {
 		addScreen("map", new GameMapScreen());
 		addScreen("house", new GameInHouseScreen());
 		addScreen("roundEnd", new GameRoundendScreen());
-		addScreen("settings", new SettingsScreen());
+		addScreen("settings", settingsScreen);
 
 		// Push screen
 		if (showSplashscreen)
 			pushScreen("splash");
 		else
 			pushScreen("loading");
+	}
+	
+	public SettingsScreen getSettingsScreen() {
+		return settingsScreen;
 	}
 
 	@Override

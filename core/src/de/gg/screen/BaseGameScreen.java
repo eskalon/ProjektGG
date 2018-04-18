@@ -1,12 +1,16 @@
 package de.gg.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.google.common.eventbus.Subscribe;
 
 import de.gg.event.NewChatMessagEvent;
 import de.gg.event.PlayerDisconnectedEvent;
 import de.gg.event.RoundEndEvent;
+import de.gg.ui.AnimationlessDialog;
 
 public abstract class BaseGameScreen extends BaseUIScreen {
 
@@ -39,6 +43,32 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 		((GameRoundendScreen) game.getScreen("roundEnd"))
 				.setData(event.getData());
 	}
+	
+	@Override
+	public void show() {
+		super.show();
+		super.stage.addListener(new InputListener() {
+			@Override
+			public boolean keyDown(InputEvent event, int keycode) {
+				if(keycode == Keys.ESCAPE) {
+					AnimationlessDialog dialog = new AnimationlessDialog(
+							"Taste belegen", skin) {
+						protected void result(Object object) {
+							if(object.equals("settings")) {
+								game.getSettingsScreen().setCaller(getInstance());
+								game.pushScreen("settings");
+							}
+						};
+					};
+					
+					dialog.button("Settings", "settings");
+					
+					dialog.show(stage);
+				}
+				return super.keyDown(event, keycode);
+			}
+		});
+	}
 
 	@Override
 	public void render(float delta) {
@@ -69,6 +99,10 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 		stage.getBatch().setProjectionMatrix(game.getUICamera().combined);
 		stage.act(delta);
 		stage.draw();
+	}
+	
+	private BaseGameScreen getInstance() {
+		return this;
 	}
 
 	public abstract void renderGame(float delta);

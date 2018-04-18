@@ -21,6 +21,8 @@ public class SettingsScreen extends BaseUIScreen {
 	private final String BACKGROUND_IMAGE_PATH = "ui/backgrounds/town3.jpg";
 	@Asset(Sound.class)
 	private final String BUTTON_SOUND = "audio/button-tick.mp3";
+	
+	private BaseScreen caller;
 
 	@Override
 	protected void initUI() {
@@ -121,7 +123,10 @@ public class SettingsScreen extends BaseUIScreen {
 		backButton.addListener(new ButtonClickListener(assetManager) {
 			@Override
 			protected void onClick() {
-				game.pushScreen("mainMenu");
+				if(caller instanceof BaseGameScreen)
+					game.pushScreen("map");
+				else if(caller instanceof MainMenuScreen)
+					game.pushScreen("mainMenu");
 			}
 		});
 
@@ -165,4 +170,11 @@ public class SettingsScreen extends BaseUIScreen {
 		mainTable.add(mTable);
 	}
 
+	public BaseScreen getCaller() {
+		return caller;
+	}
+	
+	public void setCaller(BaseScreen caller) {
+		this.caller = caller;
+	}
 }
