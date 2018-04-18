@@ -63,7 +63,7 @@ public abstract class GameSession {
 	 */
 	protected short localNetworkId;
 
-	protected ArrayList<ProcessingSystem<Character>> characterSystems;
+	protected ArrayList<ProcessingSystem<Character>> characterSystems = new ArrayList<>();
 
 	/**
 	 * Creates a new game session.
