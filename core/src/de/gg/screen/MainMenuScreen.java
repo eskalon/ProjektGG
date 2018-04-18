@@ -38,12 +38,10 @@ public class MainMenuScreen extends BaseUIScreen {
 
 		ImageTextButton multiplayerButton = new ImageTextButton("Multiplayer",
 				skin);
-		multiplayerButton.addListener(new InputListener() {
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				clickSound.play(1F);
+		multiplayerButton.addListener(new ButtonClickListener(assetManager) {
+			@Override
+			protected void onClick() {
 				game.pushScreen("serverBrowser");
-				return true;
 			}
 		});
 

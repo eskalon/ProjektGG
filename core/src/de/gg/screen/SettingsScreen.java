@@ -1,14 +1,18 @@
 package de.gg.screen;
 
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-import de.gg.setting.GameSettings;
-import de.gg.util.ui.SettingKeyInputField;
+import de.gg.input.ButtonClickListener;
+import de.gg.ui.KeySelectionInputField;
+import de.gg.ui.KeySelectionInputField.KeySelectionEventListener;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class SettingsScreen extends BaseUIScreen {
@@ -23,37 +27,101 @@ public class SettingsScreen extends BaseUIScreen {
 		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
 
 		Label masterVolume = new Label("Master Volume: ", skin);
-		Slider masterSlider = new Slider(0, 100, 1, false, skin);
+		Slider masterSlider = new Slider(0, 1, 0.05F, false, skin);
+		masterSlider.setValue(game.getSettings().getMasterVolume());
+		masterSlider.addListener(new InputListener() {
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer,
+					int button) {
+				game.getSettings().setMasterVolume(masterSlider.getValue());
+			}
+
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				return true;
+			}
+		});
 
 		Label effectVolume = new Label("Effect Volume: ", skin);
-		Slider effectSlider = new Slider(0, 100, 1, false, skin);
+		Slider effectSlider = new Slider(0, 1, 0.05F, false, skin);
+		effectSlider.setValue(game.getSettings().getEffectVolume());
+		effectSlider.addListener(new InputListener() {
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer,
+					int button) {
+				game.getSettings().setEffectVolume(effectSlider.getValue());
+			}
+
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				return true;
+			}
+		});
 
 		Label musicVolume = new Label("Music Volume: ", skin);
-		Slider musicSlider = new Slider(0, 100, 1, false, skin);
+		Slider musicSlider = new Slider(0, 1, 0.05F, false, skin);
+		musicSlider.setValue(game.getSettings().getMusicVolume());
+		musicSlider.addListener(new InputListener() {
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer,
+					int button) {
+				game.getSettings().setMusicVolume(musicSlider.getValue());
+			}
+
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				return true;
+			}
+		});
 
 		Label forwardLabel = new Label("Forward: ", skin);
-		SettingKeyInputField forwardButton = new SettingKeyInputField("W", skin,
-				stage, assetManager, game.getSettings(),
-				GameSettings.FORWARD_KEY);
-
+		KeySelectionInputField forwardButton = new KeySelectionInputField(
+				Keys.toString(game.getSettings().getForwardKey()), skin, stage,
+				assetManager, new KeySelectionEventListener() {
+					@Override
+					public void onKeySelection(int key) {
+						game.getSettings().setForwardKey(key);
+					}
+				});
 		Label leftLabel = new Label("Left: ", skin);
-		SettingKeyInputField leftButton = new SettingKeyInputField("A", skin,
-				stage, assetManager, game.getSettings(), GameSettings.LEFT_KEY);
-
+		KeySelectionInputField leftButton = new KeySelectionInputField(
+				Keys.toString(game.getSettings().getLeftKey()), skin, stage,
+				assetManager, new KeySelectionEventListener() {
+					@Override
+					public void onKeySelection(int key) {
+						game.getSettings().setLeftKey(key);
+					}
+				});
 		Label backwardLabel = new Label("Backward: ", skin);
-		SettingKeyInputField backwardButton = new SettingKeyInputField("S",
-				skin, stage, assetManager, game.getSettings(),
-				GameSettings.BACKWARD_KEY);
-
+		KeySelectionInputField backwardButton = new KeySelectionInputField(
+				Keys.toString(game.getSettings().getBackwardKey()), skin, stage,
+				assetManager, new KeySelectionEventListener() {
+					@Override
+					public void onKeySelection(int key) {
+						game.getSettings().setBackwardKey(key);
+					}
+				});
 		Label rightLabel = new Label("Right: ", skin);
-		SettingKeyInputField rightButton = new SettingKeyInputField("D", skin,
-				stage, assetManager, game.getSettings(),
-				GameSettings.RIGHT_KEY);
+		KeySelectionInputField rightButton = new KeySelectionInputField(
+				Keys.toString(game.getSettings().getRightKey()), skin, stage,
+				assetManager, new KeySelectionEventListener() {
+					@Override
+					public void onKeySelection(int key) {
+						game.getSettings().setRightKey(key);
+					}
+				});
 
 		ImageTextButton backButton = new ImageTextButton("Zurück", skin,
 				"small");
-		ImageTextButton createButton = new ImageTextButton("Erstellen", skin,
-				"small");
+		backButton.addListener(new ButtonClickListener(assetManager) {
+			@Override
+			protected void onClick() {
+				game.pushScreen("mainMenu");
+			}
+		});
 
 		Table settingsTable = new Table();
 		Table settings2ColTable = new Table();
@@ -84,7 +152,6 @@ public class SettingsScreen extends BaseUIScreen {
 		settingsTable.left().top().add(settings2ColTable).padBottom(40).row();
 
 		buttonTable.add(backButton);
-		buttonTable.add(createButton).padLeft(65);
 
 		Table mTable = new Table();
 		mTable.setWidth(615);

@@ -26,9 +26,9 @@ import de.gg.event.PlayerDisconnectedEvent;
 import de.gg.game.SlaveSession;
 import de.gg.network.LobbyPlayer;
 import de.gg.network.NetworkHandler;
+import de.gg.ui.OffsetableTextField;
 import de.gg.util.Log;
 import de.gg.util.PlayerUtils;
-import de.gg.util.ui.OffsetableTextField;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class LobbyScreen extends BaseUIScreen {

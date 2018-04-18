@@ -15,8 +15,8 @@ import de.gg.data.GameSessionSetup.GameDifficulty;
 import de.gg.event.ConnectionEstablishedEvent;
 import de.gg.input.ButtonClickListener;
 import de.gg.network.NetworkHandler;
-import de.gg.util.ui.AnimationlessDialog;
-import de.gg.util.ui.OffsetableTextField;
+import de.gg.ui.AnimationlessDialog;
+import de.gg.ui.OffsetableTextField;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class LobbyCreationScreen extends BaseUIScreen {

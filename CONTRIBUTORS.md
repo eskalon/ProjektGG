@@ -2,6 +2,7 @@ Eine Liste aller Contributor und der genutzten externen Assets:
 
 ## Contributors
 - [damios](https://github.com/crykn)
+- [dominator1999](https://github.com/dominator1999)
 - [Meidimax](https://github.com/Meidimax99)
 
 ## External assets and code

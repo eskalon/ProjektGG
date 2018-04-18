@@ -1,5 +1,7 @@
 package de.gg.setting;
 
+import com.badlogic.gdx.Input.Keys;
+
 /**
  * Manages the actual game settings. Encapsulates {@link ConfigHandler}.
  */
@@ -53,7 +55,7 @@ public class GameSettings {
 
 	// Forward key
 	public int getForwardKey() {
-		return configHandler.getInt(FORWARD_KEY);
+		return configHandler.getInt(FORWARD_KEY, Keys.W);
 	}
 
 	public void setForwardKey(int key) {
@@ -62,7 +64,7 @@ public class GameSettings {
 
 	// Left key
 	public int getLeftKey() {
-		return configHandler.getInt(LEFT_KEY);
+		return configHandler.getInt(LEFT_KEY, Keys.A);
 	}
 
 	public void setLeftKey(int key) {
@@ -71,7 +73,7 @@ public class GameSettings {
 
 	// Backward key
 	public int getBackwardKey() {
-		return configHandler.getInt(BACKWARD_KEY);
+		return configHandler.getInt(BACKWARD_KEY, Keys.S);
 	}
 
 	public void setBackwardKey(int key) {
@@ -80,7 +82,7 @@ public class GameSettings {
 
 	// Right key
 	public int getRightKey() {
-		return configHandler.getInt(RIGHT_KEY);
+		return configHandler.getInt(RIGHT_KEY, Keys.D);
 	}
 
 	public void setRightKey(int key) {

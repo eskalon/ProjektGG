@@ -1,4 +1,4 @@
-package de.gg.util.ui;
+package de.gg.ui;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.assets.AssetManager;
@@ -9,34 +9,30 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.gg.input.ButtonClickListener;
-import de.gg.setting.GameSettings;
 
-public class SettingKeyInputField extends ImageTextButton {
+public class KeySelectionInputField extends ImageTextButton {
 
-	private GameSettings settings;
-
-	public SettingKeyInputField(String text, Skin skin, Stage stage,
-			AssetManager assetManager, GameSettings settings, String key) {
+	public KeySelectionInputField(String text, Skin skin, Stage stage,
+			AssetManager assetManager, KeySelectionEventListener listener) {
 		super(text, skin, "small");
-		this.settings = settings;
+
 		addListener(new ButtonClickListener(assetManager) {
 			@Override
 			protected void onClick() {
 				AnimationlessDialog dialog = new AnimationlessDialog(
-						"Neue Taste", skin) {
+						"Taste belegen", skin) {
 				};
-				dialog.text("Dr�cke eine Taste").button("Zurück", false)
+				dialog.text("Drücke eine Taste").button("Zurück", false)
 						.key(Keys.ESCAPE, false);
 				dialog.addListener(new InputListener() {
 					@Override
 					public boolean keyDown(InputEvent event, int keycode) {
-						if (!keyIsAlreadySet(keycode)) {
-							setText(Keys.toString(keycode));
-							dialog.hide();
-						} else {
+						listener.onKeySelection(keycode);
 
-						}
-						return super.keyDown(event, keycode);
+						setText(Keys.toString(keycode));
+						dialog.hide();
+
+						return true;
 					}
 				});
 				dialog.show(stage);
@@ -44,10 +40,14 @@ public class SettingKeyInputField extends ImageTextButton {
 		});
 	}
 
-	private boolean keyIsAlreadySet(int key) {
-		return settings.getForwardKey() == key || settings.getLeftKey() == key
-				|| settings.getBackwardKey() == key
-				|| settings.getRightKey() == key;
+	public interface KeySelectionEventListener {
+		/**
+		 * Called when a key is selected by the {@link KeySelectionInputField}
+		 * 
+		 * @param key
+		 *            The selected key's code
+		 */
+		public void onKeySelection(int key);
 	}
 
 }
