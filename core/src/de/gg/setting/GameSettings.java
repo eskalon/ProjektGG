@@ -12,6 +12,7 @@ public class GameSettings {
 	public static final String MASTER_VOLUME = "masterVolume";
 	public static final String EFFECT_VOLUME = "effectVolume";
 	public static final String MUSIC_VOLUME = "musicVolume";
+
 	// Keys
 	public static final String FORWARD_KEY = "forwardKey";
 	public static final String LEFT_KEY = "leftKey";

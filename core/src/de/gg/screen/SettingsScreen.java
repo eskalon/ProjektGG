@@ -26,6 +26,7 @@ public class SettingsScreen extends BaseUIScreen {
 	protected void initUI() {
 		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
 
+		// VOLUME
 		Label masterVolume = new Label("Master Volume: ", skin);
 		Slider masterSlider = new Slider(0, 1, 0.05F, false, skin);
 		masterSlider.setValue(game.getSettings().getMasterVolume());
@@ -77,6 +78,7 @@ public class SettingsScreen extends BaseUIScreen {
 			}
 		});
 
+		// KEYS
 		Label forwardLabel = new Label("Forward: ", skin);
 		KeySelectionInputField forwardButton = new KeySelectionInputField(
 				Keys.toString(game.getSettings().getForwardKey()), skin, stage,

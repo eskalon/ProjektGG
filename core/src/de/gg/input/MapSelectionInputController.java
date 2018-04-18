@@ -1,6 +1,6 @@
 package de.gg.input;
 
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.collision.Ray;
 import com.google.common.eventbus.EventBus;
@@ -11,6 +11,8 @@ import de.gg.event.HouseSelectionEvent;
 import de.gg.setting.GameSettings;
 
 public class MapSelectionInputController implements DefaultInputProcessor {
+
+	private int SELECTION_BUTTON = Buttons.LEFT;
 
 	private GameSettings settings;
 	private EventBus eventBus;
@@ -51,7 +53,7 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer,
 			int button) {
-		if (button == Input.Buttons.LEFT) {
+		if (button == SELECTION_BUTTON) {
 			clickedObjectId = getObjectAtPositon(screenX, screenY);
 			this.clickX = screenX;
 			this.clickY = screenY;
@@ -68,7 +70,7 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		if (button == Input.Buttons.LEFT) {
+		if (button == SELECTION_BUTTON) {
 			if (clickedObjectId >= 0) { // Wenn auf Objekt geklickt
 				if (clickedObjectId == getObjectAtPositon(screenX, screenY)) {
 					if (System.currentTimeMillis()

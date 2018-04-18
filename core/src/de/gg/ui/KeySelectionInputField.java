@@ -10,8 +10,24 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.gg.input.ButtonClickListener;
 
+/**
+ * An input field with which a keyboard key can get queried.
+ */
 public class KeySelectionInputField extends ImageTextButton {
 
+	/**
+	 * @param text
+	 *            The text of the input field. Normally the currently set key
+	 *            bind.
+	 * @param skin
+	 *            The ui skin.
+	 * @param stage
+	 *            The stage this input field gets added to.
+	 * @param assetManager
+	 *            The game's asset manager.
+	 * @param listener
+	 *            The listener for the key selection event.
+	 */
 	public KeySelectionInputField(String text, Skin skin, Stage stage,
 			AssetManager assetManager, KeySelectionEventListener listener) {
 		super(text, skin, "small");

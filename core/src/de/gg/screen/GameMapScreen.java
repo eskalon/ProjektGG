@@ -79,7 +79,7 @@ public class GameMapScreen extends BaseGameScreen {
 				game.getCurrentSession().getCity());
 
 		this.movementInputController = new MapMovementInputController(
-				game.getGameCamera().getCamera());
+				game.getGameCamera().getCamera(), game.getSettings());
 	}
 
 	@Override

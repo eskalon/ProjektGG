@@ -2,10 +2,11 @@ package de.gg.input;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.math.Vector3;
+
+import de.gg.setting.GameSettings;
 
 /**
  * @see CameraInputController The libgdx class this is based on.
@@ -16,10 +17,10 @@ public class MapMovementInputController implements DefaultInputProcessor {
 
 	// Key binds
 	public int rotateButton = Buttons.RIGHT;
-	public int forwardKey = Keys.W;
-	public int backwardKey = Keys.S;
-	public int rightKey = Keys.A;
-	public int leftKey = Keys.D;
+	public int forwardKey;
+	public int backwardKey;
+	public int rightKey;
+	public int leftKey;
 
 	protected boolean forwardPressed;
 	protected boolean backwardPressed;
@@ -46,8 +47,14 @@ public class MapMovementInputController implements DefaultInputProcessor {
 	/** Whether to update the target on scroll */
 	public boolean scrollTarget = false;
 
-	public MapMovementInputController(final Camera camera) {
+	public MapMovementInputController(final Camera camera,
+			final GameSettings settings) {
 		this.camera = camera;
+
+		this.forwardKey = settings.getForwardKey();
+		this.backwardKey = settings.getBackwardKey();
+		this.rightKey = settings.getRightKey();
+		this.leftKey = settings.getLeftKey();
 	}
 
 	public void update() {
@@ -57,13 +64,13 @@ public class MapMovementInputController implements DefaultInputProcessor {
 
 			if (rightPressed) {
 				camera.translate(
-						tmp.rotate(Y_AXIS, 90).scl(delta * translateUnits));
+						tmp.rotate(Y_AXIS, 270).scl(delta * translateUnits));
 				if (forwardTarget)
 					target.add(tmp);
 			}
 			if (leftPressed) {
 				camera.translate(
-						tmp.rotate(Y_AXIS, 270).scl(delta * translateUnits));
+						tmp.rotate(Y_AXIS, 90).scl(delta * translateUnits));
 				if (forwardTarget)
 					target.add(tmp);
 			}
