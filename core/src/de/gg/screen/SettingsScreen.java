@@ -9,7 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.google.common.eventbus.Subscribe;
 
+import de.gg.event.RoundEndEvent;
 import de.gg.input.ButtonClickListener;
 import de.gg.ui.KeySelectionInputField;
 import de.gg.ui.KeySelectionInputField.KeySelectionEventListener;
@@ -125,7 +127,7 @@ public class SettingsScreen extends BaseUIScreen {
 			protected void onClick() {
 				if(caller instanceof BaseGameScreen)
 					game.pushScreen("map");
-				else if(caller instanceof MainMenuScreen)
+				else
 					game.pushScreen("mainMenu");
 			}
 		});
@@ -168,6 +170,22 @@ public class SettingsScreen extends BaseUIScreen {
 		mTable.add(buttonTable).height(50).bottom();
 
 		mainTable.add(mTable);
+	}
+	
+	@Override
+	public void render(float delta) {
+		if (game.getCurrentSession().update()) {
+			game.pushScreen("roundEnd");
+		}
+
+		game.getNetworkHandler().updatePing(delta);
+		game.getNetworkHandler().updateServer();
+		super.render(delta);
+	}
+	
+	@Subscribe
+	public void onRoundEndDataArrived(RoundEndEvent event) {
+		((GameRoundendScreen) game.getScreen("roundEnd")).setData(event.getData());
 	}
 
 	public BaseScreen getCaller() {

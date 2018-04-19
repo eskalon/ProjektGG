@@ -34,7 +34,6 @@ public class MainMenuScreen extends BaseUIScreen {
 	@Override
 	protected void initUI() {
 		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
-		Sound clickSound = assetManager.get(BUTTON_SOUND);
 
 		ImageTextButton multiplayerButton = new ImageTextButton("Multiplayer",
 				skin);
@@ -50,7 +49,7 @@ public class MainMenuScreen extends BaseUIScreen {
 		settingsButton.addListener(new ButtonClickListener(assetManager) {
 			@Override
 			protected void onClick() {
-				game.getSettingsScreen().setCaller(getInstance());
+				((SettingsScreen) game.getScreen("settings")).setCaller(getInstance());
 				game.pushScreen("settings");
 			}
 		});

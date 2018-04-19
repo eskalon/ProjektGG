@@ -16,6 +16,8 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 
 	private final boolean updateGame;
 
+	private AnimationlessDialog pauseDialog;
+
 	// TODO dieser Screen bekommt eine Player-Hashmap, um sich um alle
 	// Join/Leave und Chat-Events kümmern zu können (d.h. er kann für die
 	// Netzwerk-IDs den jeweiligen Namen ermitteln)
@@ -28,6 +30,23 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 		this(true);
 	}
 
+	@Override
+	protected void initUI() {
+		pauseDialog = new AnimationlessDialog("Taste belegen", skin) {
+			protected void result(Object object) {
+				if (object.equals("settings")) {
+					((SettingsScreen) game.getScreen("settings")).setCaller(getInstance());
+					game.pushScreen("settings");
+				} else {
+					game.getNetworkHandler().disconnect();
+					game.setCurrentSession(null);
+					game.pushScreen("mainMenu");
+				}
+			};
+		};
+		pauseDialog.button("Settings", "settings").button("Verbindung trennen", "disconnect");
+	}
+
 	@Subscribe
 	public void onNewChatMessage(NewChatMessagEvent event) {
 		// TODO
@@ -35,35 +54,22 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 
 	@Subscribe
 	public void onPlayerDisconnect(PlayerDisconnectedEvent event) {
-		// TODO
+
 	}
 
 	@Subscribe
 	public void onRoundEndDataArrived(RoundEndEvent event) {
-		((GameRoundendScreen) game.getScreen("roundEnd"))
-				.setData(event.getData());
+		((GameRoundendScreen) game.getScreen("roundEnd")).setData(event.getData());
 	}
-	
+
 	@Override
 	public void show() {
 		super.show();
 		super.stage.addListener(new InputListener() {
 			@Override
 			public boolean keyDown(InputEvent event, int keycode) {
-				if(keycode == Keys.ESCAPE) {
-					AnimationlessDialog dialog = new AnimationlessDialog(
-							"Taste belegen", skin) {
-						protected void result(Object object) {
-							if(object.equals("settings")) {
-								game.getSettingsScreen().setCaller(getInstance());
-								game.pushScreen("settings");
-							}
-						};
-					};
-					
-					dialog.button("Settings", "settings");
-					
-					dialog.show(stage);
+				if (keycode == Keys.ESCAPE) {
+					pauseDialog.show(stage);
 				}
 				return super.keyDown(event, keycode);
 			}
@@ -81,16 +87,13 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 			game.getNetworkHandler().updateServer();
 		}
 
-		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g,
-				backgroundColor.b, backgroundColor.a);
+		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		if (backgroundTexture != null) {
 			game.getSpriteBatch().begin();
-			game.getSpriteBatch()
-					.setProjectionMatrix(game.getUICamera().combined);
-			game.getSpriteBatch().draw(this.backgroundTexture, 0, 0,
-					game.getViewportWidth(), game.getViewportHeight());
+			game.getSpriteBatch().setProjectionMatrix(game.getUICamera().combined);
+			game.getSpriteBatch().draw(this.backgroundTexture, 0, 0, game.getViewportWidth(), game.getViewportHeight());
 			game.getSpriteBatch().end();
 		}
 
@@ -100,7 +103,7 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 		stage.act(delta);
 		stage.draw();
 	}
-	
+
 	private BaseGameScreen getInstance() {
 		return this;
 	}
