@@ -84,6 +84,7 @@ public class GameMapScreen extends BaseGameScreen {
 
 	@Override
 	protected void initUI() {
+		super.initUI();
 	}
 
 	@Override

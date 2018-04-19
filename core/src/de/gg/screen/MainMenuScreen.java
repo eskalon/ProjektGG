@@ -49,7 +49,7 @@ public class MainMenuScreen extends BaseUIScreen {
 		settingsButton.addListener(new ButtonClickListener(assetManager) {
 			@Override
 			protected void onClick() {
-				((SettingsScreen) game.getScreen("settings")).setCaller(getInstance());
+				((SettingsScreen) game.getScreen("settings")).setCaller(MainMenuScreen.this);
 				game.pushScreen("settings");
 			}
 		});
@@ -108,9 +108,4 @@ public class MainMenuScreen extends BaseUIScreen {
 		stage.addActor(githubRepoButton);
 		stage.addActor(versionTable);
 	}
-	
-	private MainMenuScreen getInstance() {
-		return this;
-	}
-
 }

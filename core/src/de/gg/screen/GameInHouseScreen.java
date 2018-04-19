@@ -18,7 +18,7 @@ public class GameInHouseScreen extends BaseGameScreen {
 
 	@Override
 	protected void initUI() {
-		// TODO Auto-generated method stub
+		super.initUI();
 	}
 
 	@Override

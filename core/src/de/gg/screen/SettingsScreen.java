@@ -23,7 +23,7 @@ public class SettingsScreen extends BaseUIScreen {
 	private final String BACKGROUND_IMAGE_PATH = "ui/backgrounds/town3.jpg";
 	@Asset(Sound.class)
 	private final String BUTTON_SOUND = "audio/button-tick.mp3";
-	
+
 	private BaseScreen caller;
 
 	@Override
@@ -125,7 +125,7 @@ public class SettingsScreen extends BaseUIScreen {
 		backButton.addListener(new ButtonClickListener(assetManager) {
 			@Override
 			protected void onClick() {
-				if(caller instanceof BaseGameScreen)
+				if (caller instanceof BaseGameScreen)
 					game.pushScreen("map");
 				else
 					game.pushScreen("mainMenu");
@@ -171,27 +171,30 @@ public class SettingsScreen extends BaseUIScreen {
 
 		mainTable.add(mTable);
 	}
-	
+
 	@Override
 	public void render(float delta) {
-		if (game.getCurrentSession().update()) {
-			game.pushScreen("roundEnd");
-		}
+		if (caller instanceof BaseGameScreen) {
+			if (game.getCurrentSession().update()) {
+				game.pushScreen("roundEnd");
+			}
 
-		game.getNetworkHandler().updatePing(delta);
-		game.getNetworkHandler().updateServer();
+			game.getNetworkHandler().updatePing(delta);
+			game.getNetworkHandler().updateServer();
+		}
 		super.render(delta);
 	}
-	
+
 	@Subscribe
 	public void onRoundEndDataArrived(RoundEndEvent event) {
-		((GameRoundendScreen) game.getScreen("roundEnd")).setData(event.getData());
+		((GameRoundendScreen) game.getScreen("roundEnd"))
+				.setData(event.getData());
 	}
 
 	public BaseScreen getCaller() {
 		return caller;
 	}
-	
+
 	public void setCaller(BaseScreen caller) {
 		this.caller = caller;
 	}

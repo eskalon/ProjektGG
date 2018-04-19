@@ -35,7 +35,7 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 		pauseDialog = new AnimationlessDialog("Taste belegen", skin) {
 			protected void result(Object object) {
 				if (object.equals("settings")) {
-					((SettingsScreen) game.getScreen("settings")).setCaller(getInstance());
+					((SettingsScreen) game.getScreen("settings")).setCaller(BaseGameScreen.this);
 					game.pushScreen("settings");
 				} else {
 					game.getNetworkHandler().disconnect();
@@ -68,7 +68,8 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 		super.stage.addListener(new InputListener() {
 			@Override
 			public boolean keyDown(InputEvent event, int keycode) {
-				if (keycode == Keys.ESCAPE) {
+				// You can't open the pause dialog when GameRoundendScreen is opened.
+				if (keycode == Keys.ESCAPE  && !(game.getScreen() instanceof GameRoundendScreen)) {
 					pauseDialog.show(stage);
 				}
 				return super.keyDown(event, keycode);
@@ -78,7 +79,7 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 
 	@Override
 	public void render(float delta) {
-		if (updateGame) {
+		if (updateGame && game.getCurrentSession() != null) {
 			if (game.getCurrentSession().update()) {
 				game.pushScreen("roundEnd");
 			}
@@ -102,10 +103,6 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 		stage.getBatch().setProjectionMatrix(game.getUICamera().combined);
 		stage.act(delta);
 		stage.draw();
-	}
-
-	private BaseGameScreen getInstance() {
-		return this;
 	}
 
 	public abstract void renderGame(float delta);

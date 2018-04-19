@@ -46,6 +46,7 @@ public class GameRoundendScreen extends BaseGameScreen {
 
 	@Override
 	protected void initUI() {
+		super.initUI();
 		lastYearTitle = new Label("", skin, "big");
 		lastYearTitle.setAlignment(Align.topLeft);
 		comingYearTitle = new Label("", skin, "big");
