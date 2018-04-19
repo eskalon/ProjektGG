@@ -49,7 +49,8 @@ public class MainMenuScreen extends BaseUIScreen {
 		settingsButton.addListener(new ButtonClickListener(assetManager) {
 			@Override
 			protected void onClick() {
-				((SettingsScreen) game.getScreen("settings")).setCaller(MainMenuScreen.this);
+				((SettingsScreen) game.getScreen("settings"))
+						.setCaller(MainMenuScreen.this);
 				game.pushScreen("settings");
 			}
 		});

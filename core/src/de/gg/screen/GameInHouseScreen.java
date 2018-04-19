@@ -18,7 +18,6 @@ public class GameInHouseScreen extends BaseGameScreen {
 
 	@Override
 	protected void initUI() {
-		super.initUI();
 	}
 
 	@Override

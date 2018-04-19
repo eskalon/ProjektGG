@@ -86,7 +86,7 @@ public class ProjektGG extends Game {
 	private Skin uiSkin;
 
 	private SlaveSession currentSession;
-	
+
 	/**
 	 * Event bus. All events are queued first and then taken care of in the
 	 * rendering thread.
@@ -156,7 +156,7 @@ public class ProjektGG extends Game {
 		// Set input processor
 		Gdx.input.setInputProcessor(inputProcessor);
 
-		// Add screens		
+		// Add screens
 		addScreen("credits", new CreditsScreen());
 		addScreen("splash", new SplashScreen());
 		addScreen("mainMenu", new MainMenuScreen());

@@ -120,12 +120,12 @@ public class SettingsScreen extends BaseUIScreen {
 					}
 				});
 
-		ImageTextButton backButton = new ImageTextButton("Zurück", skin,
+		ImageTextButton backButton = new ImageTextButton("Fertig", skin,
 				"small");
 		backButton.addListener(new ButtonClickListener(assetManager) {
 			@Override
 			protected void onClick() {
-				if (caller instanceof BaseGameScreen)
+				if (caller instanceof GameMapScreen)
 					game.pushScreen("map");
 				else
 					game.pushScreen("mainMenu");
@@ -174,7 +174,9 @@ public class SettingsScreen extends BaseUIScreen {
 
 	@Override
 	public void render(float delta) {
-		if (caller instanceof BaseGameScreen) {
+		// Wenn der SettingsScreen während des Spiels geöffnet ist, dieses
+		// weiter updaten
+		if (caller instanceof GameMapScreen) {
 			if (game.getCurrentSession().update()) {
 				game.pushScreen("roundEnd");
 			}

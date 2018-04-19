@@ -1,6 +1,7 @@
 package de.gg.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g3d.Material;
@@ -11,6 +12,8 @@ import com.badlogic.gdx.graphics.g3d.model.NodePart;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultTextureBinder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.google.common.eventbus.Subscribe;
 
 import de.gg.event.HouseEnterEvent;
@@ -19,6 +22,7 @@ import de.gg.input.MapMovementInputController;
 import de.gg.input.MapSelectionInputController;
 import de.gg.render.SceneRenderer;
 import de.gg.render.TestShader;
+import de.gg.ui.AnimationlessDialog;
 import de.gg.util.Log;
 import de.gg.util.asset.Text;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
@@ -41,6 +45,12 @@ public class GameMapScreen extends BaseGameScreen {
 
 	private BitmapFont font;
 
+	/**
+	 * The pause dialog.
+	 */
+	private AnimationlessDialog pauseDialog;
+	private boolean pauseShown = false;
+
 	// Sphere stuff (temp)
 	private Shader shader;
 	private RenderContext renderContext;
@@ -48,7 +58,6 @@ public class GameMapScreen extends BaseGameScreen {
 	@Override
 	protected void onInit() {
 		super.onInit();
-
 		font = skin.getFont("main-19");
 
 		Text t = game.getAssetManager().get(FRAGMENT_SHADER_PATH);
@@ -84,7 +93,21 @@ public class GameMapScreen extends BaseGameScreen {
 
 	@Override
 	protected void initUI() {
-		super.initUI();
+		pauseDialog = new AnimationlessDialog("", skin) {
+			protected void result(Object object) {
+				pauseShown = false;
+				if (object == (Integer) 1) {
+					((SettingsScreen) game.getScreen("settings"))
+							.setCaller(GameMapScreen.this);
+					game.pushScreen("settings");
+				} else {
+					game.getNetworkHandler().disconnect();
+					game.setCurrentSession(null);
+					game.pushScreen("mainMenu");
+				}
+			};
+		};
+		pauseDialog.button("Settings", 1).button("Verbindung trennen", 2);
 	}
 
 	@Override
@@ -129,6 +152,23 @@ public class GameMapScreen extends BaseGameScreen {
 	@Override
 	public void show() {
 		super.show();
+		stage.addListener(new InputListener() {
+			@Override
+			public boolean keyDown(InputEvent event, int keycode) {
+				if (keycode == Keys.ESCAPE) {
+					if (pauseShown)
+						pauseDialog.hide();
+					else
+						pauseDialog.show(stage);
+
+					pauseShown = !pauseShown;
+
+					return true;
+				}
+				return false;
+			}
+		});
+
 		game.getInputMultiplexer().addProcessor(selectionInputController);
 		movementInputController.resetInput();
 		game.getInputMultiplexer().addProcessor(movementInputController);
