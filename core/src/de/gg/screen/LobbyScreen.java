@@ -292,7 +292,8 @@ public class LobbyScreen extends BaseUIScreen {
 			game.getInputMultiplexer().removeInputProcessors();
 			game.setCurrentSession(new SlaveSession(game, sessionSetup, players,
 					localNetworkId));
-			game.getNetworkHandler().startGame(game.getCurrentSession());
+			game.getNetworkHandler()
+					.establishRMIConnection(game.getCurrentSession());
 			Log.info("Client", "Spiel wird geladen...");
 			game.pushScreen("gameLoading");
 		}

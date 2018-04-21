@@ -44,10 +44,11 @@ public class SlaveSession extends GameSession
 	}
 
 	/**
-	 * Sets up the game session.
+	 * {@inheritDoc}
 	 */
-	public void startGame() {
-		setupGame();
+	@Override
+	public void setupGame() {
+		super.setupGame();
 
 		// Setup the client systems
 		ProcessingSystem s;
@@ -85,7 +86,7 @@ public class SlaveSession extends GameSession
 		game.getEventBus().post(new RoundEndEvent(data));
 
 		// Process the last round
-		super.onRoundEnd(); // Inherited from GameSession
+		super.processRoundEnd(data); // Inherited from GameSession
 	}
 
 	@Override

@@ -42,18 +42,19 @@ public class AuthoritativeSession extends GameSession
 				this);
 	}
 
-	/**
-	 * Starts the game session. {@link #update()} has to get called to update
-	 * the session. To resume the game after a round ended
-	 * {@link #setupNewRound(RoundEndData)} has to get called.
-	 */
-	public void startGame(
+	public void setResultListeners(
 			HashMap<Short, AuthoritativeResultListener> resultListeners) {
+		this.resultListeners = resultListeners;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setupGame() {
 		for (LobbyPlayer player : players.values()) {
 			player.setReady(false);
 		}
-
-		this.resultListeners = resultListeners;
 
 		super.setupGame();
 
@@ -80,7 +81,7 @@ public class AuthoritativeSession extends GameSession
 		this.characterSystems.add(s);
 	}
 
-	public void stopGame() {
+	public void saveGame() {
 		// TODO save the game
 	}
 
@@ -93,7 +94,6 @@ public class AuthoritativeSession extends GameSession
 		}
 	}
 
-	@Override
 	public void onRoundEnd() {
 		// RoundEndData generieren
 		RoundEndData data = new RoundEndData();
@@ -105,7 +105,7 @@ public class AuthoritativeSession extends GameSession
 		resultListenerStub.onRoundEnd(data);
 
 		// Process the last round
-		super.onRoundEnd();
+		super.processRoundEnd(data);
 
 		// Save the stats
 		saveStats();

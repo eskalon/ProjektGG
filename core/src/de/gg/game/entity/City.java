@@ -1,5 +1,6 @@
 package de.gg.game.entity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -9,10 +10,10 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import de.gg.data.GameMaps;
 import de.gg.data.GameMaps.GameMap;
 import de.gg.data.GameSessionSetup;
-import de.gg.game.entity.Character.Religion;
 import de.gg.game.entity.ItemTypes.ItemType;
 import de.gg.game.entity.LawTypes.LawType;
 import de.gg.game.entity.PositionTypes.PositionType;
+import de.gg.game.factory.CharacterFactory;
 import de.gg.network.LobbyPlayer;
 import de.gg.render.RenderData;
 import de.gg.util.RandomUtils;
@@ -20,21 +21,21 @@ import de.gg.util.RandomUtils;
 public class City {
 
 	private ModelInstance skyBox;
-	private List<RenderData> staticProps;
+	private List<RenderData> staticProps = new ArrayList<>();
 	private BuildingSlot[] buildingSlots;
 
-	private HashMap<Short, Character> characters;
-	private HashMap<Short, Player> players;
-	private List<Character> prisonPopulation;
+	private HashMap<Short, Character> characters = new HashMap<>();
+	private HashMap<Short, Player> players = new HashMap<>();
+	private List<Short> prisonPopulation = new ArrayList<>();
 
-	private HashMap<PositionType, Character> positions;
+	private HashMap<PositionType, Short> positions = new HashMap<>();
 	/**
 	 * A hashmap with all laws. The value object is either a boolean or an
 	 * integer.
 	 */
-	private HashMap<LawType, Object> laws;
+	private HashMap<LawType, Object> laws = new HashMap<>();
 
-	private HashMap<ItemType, ItemPrice> prices;
+	private HashMap<ItemType, ItemPrice> prices = new HashMap<>();
 	private List<Cart> cartsOnTour;
 
 	public City() {
@@ -48,40 +49,31 @@ public class City {
 		Random random = new Random(setup.getSeed());
 		GameMap map = GameMaps.getByIndex(setup.getMapId());
 
+		// Building-Slots
 		this.buildingSlots = map.getBuildingSlots()
 				.toArray(new BuildingSlot[0]);
 
-		// Test:
+		// [Test] Buildings
 		BuildingSlot slot = buildingSlots[0];
 		Building b = new Building();
 		b.setType(BuildingTypes.FORGE_1);
 		slot.setBuilding(b);
 
-		this.characters = new HashMap<>();
-		this.players = new HashMap<>();
+		// Mayor
+		characters.put((short) 1,
+				CharacterFactory.createCharacterWithStatus(random,
+						RandomUtils.rollTheDice(random, 2)
+								? SocialStatusS.PATRICIAN
+								: SocialStatusS.CAVALIER));
+		characters.get((short) 1).setHighestPositionLevel(6);
+		characters.get((short) 1).setPosition(PositionTypes.MAYOR);
+		positions.put(PositionTypes.MAYOR, (short) 1);
 
-		for (short i = 1; i <= 100; i++) {
-			characters.put(i, generateRandomCharacter());
+		// [Test] Characters
+		for (short i = 2; i <= 100; i++) {
+			characters.put(i, CharacterFactory.createCharacterWithStatus(random,
+					SocialStatusS.CITIZEN));
 		}
-	}
-
-	private static Character generateRandomCharacter() {
-		Character c = new Character();
-		c.setAge(RandomUtils.getRandomNumber(0, 5));
-		c.setGold(RandomUtils.getRandomNumber(0, 5));
-		c.setHighestPositionLevel(RandomUtils.getRandomNumber(0, 5));
-		c.setHp(RandomUtils.getRandomNumber(0, 5));
-		c.setMale(RandomUtils.rollTheDice(1555));
-		c.setMarried(RandomUtils.rollTheDice(1555));
-		c.setName("" + RandomUtils.getRandomNumber(1, 100000));
-		c.setNPCTrait(NPCCharacterTraits.EVEN_TEMPERED);
-		c.setPosition(PositionTypes.MAYOR);
-		c.setReligion(Religion.CATHOLIC);
-		c.setReputationModifiers(15);
-		c.setStatus(SocialStatusS.NON_CITIZEN);
-		c.setSurname("" + RandomUtils.getRandomNumber(1, 100000));
-
-		return c;
 	}
 
 	/**
@@ -125,11 +117,11 @@ public class City {
 		return players;
 	}
 
-	public List<Character> getPrisonPopulation() {
+	public List<Short> getPrisonPopulation() {
 		return prisonPopulation;
 	}
 
-	public HashMap<PositionType, Character> getPositions() {
+	public HashMap<PositionType, Short> getPositions() {
 		return positions;
 	}
 

@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import de.gg.data.GameSessionSetup;
 import de.gg.data.GameSessionSetup.GameDifficulty;
+import de.gg.data.RoundEndData;
 import de.gg.game.entity.Character;
 import de.gg.game.entity.City;
 import de.gg.game.entity.Player;
@@ -92,9 +93,12 @@ public abstract class GameSession {
 	}
 
 	/**
-	 * Sets the city and the game entities up.
+	 * Sets the city, the game entities and the processing systems up.
+	 * <p>
+	 * To update the session {@link #update()} has to get called. To resume the
+	 * game after a round ended {@link #startNextRound()} has to get called.
 	 */
-	protected synchronized void setupGame() {
+	public synchronized void setupGame() {
 		this.city.generate(sessionSetup, players);
 		this.initialized = true;
 
@@ -116,8 +120,8 @@ public abstract class GameSession {
 		lastTime = currentTime;
 
 		if (!initialized) {
-			Log.error("Server",
-					"Der Server updated, obwohl er noch nicht fertig aufgesetzt ist");
+			Log.error(localNetworkId == -1 ? "Server" : "Client",
+					"The session has to get initialized first before it can be updated");
 			return false;
 		}
 
@@ -131,8 +135,8 @@ public abstract class GameSession {
 
 				if (getRoundProgress() < 1)
 					for (int i = 0; i < 6; i++)
-						Log.error("Client", "Thread-Bug in Runde %s",
-								getCurrentRound());
+						Log.error(localNetworkId == -1 ? "Server" : "Client",
+								"Thread-Bug in Runde %s", getCurrentRound());
 
 				return true;
 
@@ -203,7 +207,7 @@ public abstract class GameSession {
 		}
 	}
 
-	protected void onRoundEnd() {
+	protected void processRoundEnd(RoundEndData data) {
 		measuringUtil.start();
 		// Character
 		for (Entry<Short, Character> e : city.getCharacters().entrySet()) {

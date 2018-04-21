@@ -17,6 +17,7 @@ import com.esotericsoftware.kryonet.rmi.ObjectSpace;
 import de.gg.data.GameSessionSetup;
 import de.gg.game.AuthoritativeResultListener;
 import de.gg.game.AuthoritativeSession;
+import de.gg.game.GameSession;
 import de.gg.game.SlaveActionListener;
 import de.gg.network.message.ChatMessageSentMessage;
 import de.gg.network.message.DiscoveryResponsePacket;
@@ -143,11 +144,21 @@ public class GameServer {
 	}
 
 	/**
+	 * Sets up the game session.
+	 * 
+	 * @see GameSession#setupGame()
+	 */
+	public void setupGame() {
+		session.setupGame();
+		Log.info("Server", "Spiel gestartet");
+	}
+
+	/**
 	 * Stops the server. Also takes care of saving the game.
 	 */
 	public void stop() {
 		if (session != null)
-			session.stopGame();
+			session.saveGame();
 		server.stop();
 		if (broadcastServer != null)
 			broadcastServer.stop();
@@ -189,8 +200,6 @@ public class GameServer {
 
 		players.put(msg.getId(), msg.getPlayer());
 
-		System.out.println("Player changed " + msg.getId());
-
 		if (PlayerUtils.areAllPlayersReady(players.values())) {
 			session = new AuthoritativeSession(setup, players, (short) 0);
 
@@ -215,12 +224,14 @@ public class GameServer {
 
 			}
 
-			session.startGame(resultListeners);
-			Log.info("Server", "Spiel gestartet");
+			session.setResultListeners(resultListeners);
+			Log.info("Server",
+					"RMI-Netzwerkverbindung zu den Clienten eingerichtet");
 
 			broadcastServer.close();
 			broadcastServer = null;
 			Log.info("Server", "Broadcast Server geschlossen");
+
 		}
 	}
 

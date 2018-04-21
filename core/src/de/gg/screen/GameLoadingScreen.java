@@ -63,10 +63,12 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 		// TODO folgendes als Worker, der in eigenen Loading-Screen integriert
 		// ist, umsetzen, sodass sich für den Nutzer sichtbar ein Balken bewegt
 
-		// Das Spiel aufsetzen
-		game.getCurrentSession().startGame();
+		// Set up the game (server and client side)
+		if (game.getNetworkHandler().isHost())
+			game.getNetworkHandler().setupGameOnServer();
+		game.getCurrentSession().setupGame();
 
-		// Die ModelInstances erstellen
+		// Create the ModelInstances
 		for (BuildingSlot s : game.getCurrentSession().getCity()
 				.getBuildingSlots()) {
 			if (s.isBuiltOn()) {
@@ -86,7 +88,7 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 		game.getCurrentSession().getCity().setSkybox(new ModelInstance(
 				assetManager.get(SKYBOX_MODEL_PATH, Model.class)));
 
-		// Screen wechseln
+		// Change the screen
 		Log.info("Client", "Spiel gestartet");
 		game.pushScreen("roundEnd");
 	}

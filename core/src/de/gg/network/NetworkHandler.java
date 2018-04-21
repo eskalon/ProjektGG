@@ -191,6 +191,15 @@ public class NetworkHandler {
 	}
 
 	/**
+	 * Sets up the game session on the server.
+	 * 
+	 * @see GameServer#setupGame()
+	 */
+	public void setupGameOnServer() {
+		server.setupGame();
+	}
+
+	/**
 	 * @return Whether this player is also hosting the server.
 	 */
 	public boolean isHost() {
@@ -233,9 +242,10 @@ public class NetworkHandler {
 	}
 
 	/**
-	 * ...
+	 * Establishes the RMI connection to the server.
 	 */
-	public void startGame(AuthoritativeResultListener resultListener) {
+	public void establishRMIConnection(
+			AuthoritativeResultListener resultListener) {
 		ObjectSpace.registerClasses(client.getKryo());
 		ObjectSpace objectSpace = new ObjectSpace();
 		objectSpace.register(localClientId, resultListener);
