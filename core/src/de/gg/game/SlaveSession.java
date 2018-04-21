@@ -1,11 +1,16 @@
 package de.gg.game;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import de.gg.core.ProjektGG;
 import de.gg.data.GameSessionSetup;
+import de.gg.data.NotificationData;
 import de.gg.data.RoundEndData;
 import de.gg.event.RoundEndEvent;
+import de.gg.game.system.ProcessingSystem;
+import de.gg.game.system.client.FirstEventWaveClientSystem;
 import de.gg.network.LobbyPlayer;
 import de.gg.screen.GameRoundendScreen;
 import de.gg.util.Log;
@@ -18,6 +23,7 @@ public class SlaveSession extends GameSession
 		implements AuthoritativeResultListener {
 
 	private ProjektGG game;
+	private List<NotificationData> notifications = new ArrayList<>();
 
 	/**
 	 * Creates a new multiplayer session.
@@ -38,9 +44,16 @@ public class SlaveSession extends GameSession
 	}
 
 	/**
-	 * Currently unused.
+	 * Sets up the game session.
 	 */
 	public void startGame() {
+		setupGame();
+
+		// Setup the client systems
+		ProcessingSystem s;
+		s = new FirstEventWaveClientSystem();
+		s.init(city, getGameSeed());
+		this.playerSystems.add(s);
 	}
 
 	@Override
@@ -53,6 +66,10 @@ public class SlaveSession extends GameSession
 		}
 	}
 
+	public List<NotificationData> getNotifications() {
+		return notifications;
+	}
+
 	@Override
 	public synchronized void onAllPlayersReadied() {
 		Log.debug("Client", "Alle Spieler sind bereit! Nächste Runde startet");
@@ -63,9 +80,34 @@ public class SlaveSession extends GameSession
 	}
 
 	@Override
-	public void onRoundEnd(RoundEndData data) {
-		// TODO apply round end data
+	public void onRoundEnd(RoundEndData data) { // Inherited from
+												// AuthoritativeResultListener
 		game.getEventBus().post(new RoundEndEvent(data));
+
+		// Process the last round
+		super.onRoundEnd(); // Inherited from GameSession
+	}
+
+	@Override
+	public void onCharacterDeath(short characterId) {
+		// TODO Todeseffekte (siehe
+		// FirstCharacterEventWaveServerSystem#process())
+
+		// außerdem wenn lokaler Spieler oder Verwandter dann
+		// Notification-Banner (-> Banner-Event das UI Reloaded für
+		// MapScreen; Notification-List in GameSession)
+	}
+
+	@Override
+	public void onCharacterDamage(short characterId, short damage) {
+		city.getCharacters().get(characterId)
+				.setHp(city.getCharacters().get(characterId).getHp() - damage);
+
+	}
+
+	@Override
+	public void onPlayerIllnessChange(short playerId, boolean isIll) {
+		city.getPlayers().get(playerId).setIll(isIll);
 	}
 
 }

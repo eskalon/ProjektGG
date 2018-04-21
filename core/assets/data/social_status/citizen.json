@@ -1,4 +1,5 @@
 {
 	"name": "Bürger",
-	"fortuneRequirement": 1000
+	"fortuneRequirement": 1000,
+	"level": 1
 }

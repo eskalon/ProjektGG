@@ -40,12 +40,17 @@ public class PositionTypes {
 
 		private int level;
 		private int statusRequirementIndex;
+		private int salary;
 
 		PositionType() {
 		}
 
 		public int getLevel() {
 			return level;
+		}
+
+		public int getSalary() {
+			return salary;
 		}
 
 		/**

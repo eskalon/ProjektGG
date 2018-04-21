@@ -1,5 +1,6 @@
 package de.gg.game.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.gg.game.entity.CartTypes.CartType;
@@ -7,7 +8,7 @@ import de.gg.game.entity.CartTypes.CartType;
 public class Cart {
 
 	private CartType type;
-	private List<ItemStack> stacks;
+	private List<ItemStack> stacks = new ArrayList<>();
 	private int hp;
 	private Player owner;
 

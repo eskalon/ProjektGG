@@ -48,16 +48,30 @@ public class GameSessionSetup {
 	 * An enum describing the game difficulty.
 	 */
 	public enum GameDifficulty {
-		EASY, NORMAL, HARD;
+		EASY(9), NORMAL(4), HARD(-4);
 
 		private float startingGoldMoifier;
 		private float actionModifer;
+		private float opinionModifer;
+
+		GameDifficulty(float opinionModifer) {
+			this.opinionModifer = opinionModifer;
+		}
 
 		/**
 		 * @return a modifier that is multiplied with the starting gold.
 		 */
 		public float getStartingGoldMoifier() {
 			return startingGoldMoifier;
+		}
+
+		/**
+		 * This value is applied to the opinion of every character.
+		 * 
+		 * @return a modifier for the opinion.
+		 */
+		public float getOpinionModifer() {
+			return opinionModifer;
 		}
 
 		/**

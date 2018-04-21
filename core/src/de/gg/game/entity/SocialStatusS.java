@@ -11,8 +11,7 @@ import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class SocialStatusS {
 
-	private static SocialStatus NON_CITIZEN, CITIZEN, PATRICIAN, CAVALIER,
-			BARON;
+	public static SocialStatus NON_CITIZEN, CITIZEN, PATRICIAN, CAVALIER, BARON;
 	private static List<SocialStatus> VALUES;
 
 	@Asset(Text.class)
@@ -62,6 +61,7 @@ public class SocialStatusS {
 
 	public class SocialStatus {
 
+		private int level;
 		private String name;
 		private int fortuneRequirement;
 		private int positionLevelRequirement = -1;
@@ -85,6 +85,10 @@ public class SocialStatusS {
 		 */
 		public boolean isTitle() {
 			return isTitle;
+		}
+
+		public int getLevel() {
+			return level;
 		}
 
 	}

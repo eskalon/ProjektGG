@@ -14,6 +14,7 @@ public class LawTypes {
 
 	// FINANCIAL LAWS
 	public static LawType IMPORT_TARIFF;
+	public static LawType INHERITANCE_TAX;
 	// CIRMINAL LAWS
 	// [...]
 
@@ -21,6 +22,8 @@ public class LawTypes {
 
 	@Asset(Text.class)
 	private static final String IMPORT_TARIFF_JSON_PATH = "data/laws/import_tariff.json";
+	@Asset(Text.class)
+	private static final String INHERITANCE_TAX_JSON_PATH = "data/laws/inheritance_tax.json";
 
 	private LawTypes() {
 	}
@@ -32,6 +35,11 @@ public class LawTypes {
 				.get(IMPORT_TARIFF_JSON_PATH, Text.class).getString(),
 				LawType.class);
 		VALUES.add(IMPORT_TARIFF);
+
+		INHERITANCE_TAX = JSONParser.parseFromJson(assetManager
+				.get(INHERITANCE_TAX_JSON_PATH, Text.class).getString(),
+				LawType.class);
+		VALUES.add(INHERITANCE_TAX);
 	}
 
 	public static LawType getByIndex(int index) {

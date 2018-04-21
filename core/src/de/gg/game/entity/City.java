@@ -9,11 +9,13 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import de.gg.data.GameMaps;
 import de.gg.data.GameMaps.GameMap;
 import de.gg.data.GameSessionSetup;
+import de.gg.game.entity.Character.Religion;
 import de.gg.game.entity.ItemTypes.ItemType;
 import de.gg.game.entity.LawTypes.LawType;
 import de.gg.game.entity.PositionTypes.PositionType;
 import de.gg.network.LobbyPlayer;
 import de.gg.render.RenderData;
+import de.gg.util.RandomUtils;
 
 public class City {
 
@@ -54,6 +56,49 @@ public class City {
 		Building b = new Building();
 		b.setType(BuildingTypes.FORGE_1);
 		slot.setBuilding(b);
+
+		this.characters = new HashMap<>();
+		this.players = new HashMap<>();
+
+		for (short i = 1; i <= 100; i++) {
+			characters.put(i, generateRandomCharacter());
+		}
+	}
+
+	private static Character generateRandomCharacter() {
+		Character c = new Character();
+		c.setAge(RandomUtils.getRandomNumber(0, 5));
+		c.setGold(RandomUtils.getRandomNumber(0, 5));
+		c.setHighestPositionLevel(RandomUtils.getRandomNumber(0, 5));
+		c.setHp(RandomUtils.getRandomNumber(0, 5));
+		c.setMale(RandomUtils.rollTheDice(1555));
+		c.setMarried(RandomUtils.rollTheDice(1555));
+		c.setName("" + RandomUtils.getRandomNumber(1, 100000));
+		c.setNPCTrait(NPCCharacterTraits.EVEN_TEMPERED);
+		c.setPosition(PositionTypes.MAYOR);
+		c.setReligion(Religion.CATHOLIC);
+		c.setReputationModifiers(15);
+		c.setStatus(SocialStatusS.NON_CITIZEN);
+		c.setSurname("" + RandomUtils.getRandomNumber(1, 100000));
+
+		return c;
+	}
+
+	/**
+	 * @param characterId
+	 *            The id of the character.
+	 * @return the player this character is played by. <code>Null</code> if no
+	 *         player plays this character.
+	 */
+	public Player getPlayerByCharacterId(short characterId) {
+		for (Player p : players.values()) {
+			if (p.getCurrentlyPlayedCharacter() == characters
+					.get(characterId)) {
+				return p;
+			}
+		}
+
+		return null;
 	}
 
 	public void setSkybox(ModelInstance skyBox) {

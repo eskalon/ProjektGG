@@ -25,4 +25,10 @@ public interface AuthoritativeResultListener {
 	 */
 	public void onRoundEnd(RoundEndData data);
 
+	public void onCharacterDeath(short characterId);
+
+	public void onCharacterDamage(short characterId, short damage);
+
+	public void onPlayerIllnessChange(short playerId, boolean isIll);
+
 }

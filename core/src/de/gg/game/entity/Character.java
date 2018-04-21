@@ -3,6 +3,7 @@ package de.gg.game.entity;
 import java.util.HashMap;
 import java.util.Random;
 
+import de.gg.game.GameSession;
 import de.gg.game.entity.NPCCharacterTraits.CharacterTrait;
 import de.gg.game.entity.PositionTypes.PositionType;
 import de.gg.game.entity.SocialStatusS.SocialStatus;
@@ -14,26 +15,111 @@ public class Character {
 	private boolean isMale;
 	private Religion religion;
 
+	private boolean isMarried;
+
 	private int gold;
+
 	private PositionType position;
 	private SocialStatus status;
 	private int highestPositionLevel;
+	/**
+	 * The reputation modifiers. Should be between <code>-20</code> and
+	 * <code>+15</code>. Slowly shifts back to <code>0</code>.
+	 */
 	private int reputationModifiers;
+	/**
+	 * The health points of the character.
+	 */
 	private int hp = 100;
 	private int age;
 	/**
-	 * Whether this character is currently ill.
+	 * Contains all temporary opinion modifiers other characters have of this
+	 * character. I.e. if this character does something good/bad for someone
+	 * else that changes their opinion, the respective opinion modifier is saved
+	 * in this list.
+	 * <p>
+	 * Should be <i>at max</i> <code>+/-50</code> .
 	 */
-	private boolean ill;
-	private HashMap<Character, Integer> popularityModifiers;
+	private HashMap<Short, Integer> opinionModifiers = new HashMap<>();
 	/**
 	 * A trait denoting the npc's behavior in certain situations. Only set for
 	 * non-player characters.
 	 */
 	private CharacterTrait trait;
 
+	/**
+	 * The opinion <code>otherCharacter</code> has of
+	 * <code>thisCharacter</code>.
+	 * <p>
+	 * Has to get compared with the specific skill and trait modifiers as well
+	 * as the own usefulness and threat modifiers to determine whether a npc
+	 * should execute a specific action.
+	 * 
+	 * @param thisCharacterId
+	 *            The id of the character that the opinion is held of.
+	 * @param otherCharacterId
+	 *            The id of the character that has the opinion.
+	 * @param session
+	 *            The game session.
+	 * @return the opinion <code>otherCharacter</code> has of
+	 *         <code>thisCharacter</code>. Is never lower than <code>0</code>
+	 *         and normally around <code>55</code>.
+	 */
+	public static int getOpinionOfAnotherCharacter(short thisCharacterId,
+			short otherCharacterId, GameSession session) {
+		Character thisCharacter = session.getCity().getCharacters()
+				.get(thisCharacterId);
+		Character otherCharacter = session.getCity().getCharacters()
+				.get(otherCharacterId);
+
+		int opinion = 0;
+
+		// Difficulty (-4, 10)
+		opinion += session.getDifficulty().getOpinionModifer();
+
+		// Base Opinion (14, 43)
+		Random r = new Random(thisCharacterId * otherCharacterId);
+		opinion += RandomUtils.getRandomNumber(r, -9, 20) + 23;
+
+		// NPC Opinion Modifier (0, 10)
+		opinion += otherCharacter.getNPCTrait().getBaseOpinionModifier();
+
+		// Reputation (0, 20)
+		opinion += thisCharacter.getReputation();
+
+		// TODO Kinship
+		// +20 für Kinder und Eltern
+
+		// Religion (5, 12)
+		boolean isReligionImportant = otherCharacter.getNPCTrait()
+				.isReligionImportant();
+		if (thisCharacter.getReligion() == otherCharacter.getReligion())
+			opinion += isReligionImportant ? 16 : 11;
+		else
+			opinion += isReligionImportant ? 0 : 5;
+
+		// Temporary Opinion Modifiers
+		if (thisCharacter.getOpinionModifiers().containsKey(otherCharacterId))
+			opinion += Math.round(
+					thisCharacter.getOpinionModifiers().get(otherCharacterId));
+
+		// Temporary Round Modifier (-3, 4)
+		opinion += getPerRoundAndCharacterPopularityModifier(
+				session.getGameSeed(), thisCharacterId, otherCharacterId,
+				session.getRound());
+
+		return opinion < 0 ? 0 : opinion;
+	}
+
+	/**
+	 * @return the character's reputation. Is never lower than <code>0</code>
+	 *         and <i>usually</i> in the range of <code>0</code> and
+	 *         <code>20</code>.
+	 */
 	public int getReputation() {
-		return highestPositionLevel + reputationModifiers;
+		int reputation = ((int) (highestPositionLevel * 1.5))
+				+ (status.getLevel() * 3) + reputationModifiers;
+		return reputation < 0 ? 0 : reputation;
 	}
 
 	/**
@@ -52,9 +138,9 @@ public class Character {
 	 *         this specific round.
 	 */
 	public static int getPerRoundAndCharacterPopularityModifier(long gameSeed,
-			int characterIdA, int characterIdB, int round) {
+			short characterIdA, short characterIdB, int round) {
 		Random r = new Random(gameSeed * characterIdA * characterIdB * round);
-		return RandomUtils.getRandomNumber(r, -5, 6);
+		return RandomUtils.getRandomNumber(r, -3, 4);
 	}
 
 	public String getName() {
@@ -113,10 +199,6 @@ public class Character {
 		this.status = status;
 	}
 
-	public void setHighestPositionLevel(int highestPositionLevel) {
-		this.highestPositionLevel = highestPositionLevel;
-	}
-
 	public int getReputationModifiers() {
 		return reputationModifiers;
 	}
@@ -144,8 +226,8 @@ public class Character {
 		this.age = age;
 	}
 
-	public HashMap<Character, Integer> getPopularityModifiers() {
-		return popularityModifiers;
+	public HashMap<Short, Integer> getOpinionModifiers() {
+		return opinionModifiers;
 	}
 
 	public CharacterTrait getNPCTrait() {
@@ -156,12 +238,23 @@ public class Character {
 		this.trait = trait;
 	}
 
-	public boolean isIll() {
-		return ill;
+	public int getHighestPositionLevel() {
+		return highestPositionLevel;
 	}
 
-	public void setIll(boolean ill) {
-		this.ill = ill;
+	public void setHighestPositionLevel(int highestPositionLevel) {
+		this.highestPositionLevel = highestPositionLevel;
+	}
+
+	/**
+	 * @return whether this character is married to a player.
+	 */
+	public boolean isMarried() {
+		return isMarried;
+	}
+
+	public void setMarried(boolean isMarried) {
+		this.isMarried = isMarried;
 	}
 
 	public enum Religion {

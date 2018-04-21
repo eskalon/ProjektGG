@@ -1,5 +1,6 @@
 package de.gg.game.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.gg.game.entity.BuildingTypes.BuildingType;
@@ -15,11 +16,20 @@ public class Building {
 	private BuildingType type;
 	private Player owner;
 	private int health;
-	private List<Cart> cartsOnSite;
-	private List<Employee> employees;
-	private List<ItemStack> stacks;
+	private List<Cart> cartsOnSite = new ArrayList<>();
+	private List<Employee> employees = new ArrayList<>();
+	private List<ItemStack> stacks = new ArrayList<>();
 
 	public Building() {
+	}
+
+	/**
+	 * @return the monetary value this building has.
+	 */
+	public int getValue() {
+		float healthPercentage = health / (float) type.getMaxHealth();
+		return Math.round(type.getValue()
+				* (healthPercentage > 0.25f ? healthPercentage : 0.25f));
 	}
 
 	public void setRenderData(RenderData renderData) {

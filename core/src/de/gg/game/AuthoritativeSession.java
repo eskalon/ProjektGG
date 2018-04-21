@@ -1,11 +1,15 @@
 package de.gg.game;
 
 import java.util.HashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import de.gg.data.GameSessionSetup;
 import de.gg.data.RoundEndData;
+import de.gg.game.system.ProcessingSystem;
+import de.gg.game.system.server.FirstCharacterEventWaveServerSystem;
+import de.gg.game.system.server.FirstPlayerEventWaveServerSystem;
+import de.gg.game.system.server.IllnessDamageSystem;
+import de.gg.game.system.server.NpcActionSystem;
+import de.gg.game.system.server.NpcActionSystem2;
 import de.gg.network.LobbyPlayer;
 import de.gg.util.Log;
 import de.gg.util.PlayerUtils;
@@ -20,7 +24,7 @@ public class AuthoritativeSession extends GameSession
 		implements SlaveActionListener {
 
 	private HashMap<Short, AuthoritativeResultListener> resultListeners;
-	private ThreadPoolExecutor executor;
+	private AuthoritativeResultListener resultListenerStub;
 
 	/**
 	 * Creates a new multiplayer session.
@@ -32,9 +36,10 @@ public class AuthoritativeSession extends GameSession
 	 */
 	public AuthoritativeSession(GameSessionSetup sessionSetup,
 			HashMap<Short, LobbyPlayer> players, short localNetworkId) {
-		super(sessionSetup, players, localNetworkId);
+		super(sessionSetup, players, (short) -1);
 
-		this.executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+		this.resultListenerStub = new ServerAuthoritativResultListenerStub(
+				this);
 	}
 
 	/**
@@ -51,6 +56,28 @@ public class AuthoritativeSession extends GameSession
 		this.resultListeners = resultListeners;
 
 		super.setupGame();
+
+		// Setup the server processing systems
+		ProcessingSystem s;
+		s = new FirstCharacterEventWaveServerSystem(this);
+		s.init(city, getGameSeed());
+		this.characterSystems.add(s);
+
+		s = new FirstPlayerEventWaveServerSystem(this);
+		s.init(city, getGameSeed());
+		this.playerSystems.add(s);
+
+		s = new IllnessDamageSystem(this);
+		s.init(city, getGameSeed());
+		this.playerSystems.add(s);
+
+		s = new NpcActionSystem(this);
+		s.init(city, getGameSeed());
+		this.characterSystems.add(s);
+
+		s = new NpcActionSystem2(this);
+		s.init(city, getGameSeed());
+		this.characterSystems.add(s);
 	}
 
 	public void stopGame() {
@@ -66,6 +93,7 @@ public class AuthoritativeSession extends GameSession
 		}
 	}
 
+	@Override
 	public void onRoundEnd() {
 		// RoundEndData generieren
 		RoundEndData data = new RoundEndData();
@@ -73,17 +101,18 @@ public class AuthoritativeSession extends GameSession
 
 		Log.debug("Server", "Runde zu Ende");
 
-		// Alle Clienten informieren
-		executor.submit(new AuthoritativeResultListenerThread() {
-			@Override
-			protected void informListener(
-					AuthoritativeResultListener resultListener) {
-				resultListener.onRoundEnd(data);
-			}
-		});
+		// Inform the clients
+		resultListenerStub.onRoundEnd(data);
 
-		// TODO Auch auf dem Server die neue Runde aufsetzen ->
-		// RoundEndData anwenden
+		// Process the last round
+		super.onRoundEnd();
+
+		// Save the stats
+		saveStats();
+	}
+
+	public void saveStats() {
+		// TODO generate & save stats
 	}
 
 	@Override
@@ -110,35 +139,24 @@ public class AuthoritativeSession extends GameSession
 			player.setReady(false);
 		}
 
-		// Alle Clienten informieren
-		executor.submit(new AuthoritativeResultListenerThread() {
-			@Override
-			protected void informListener(
-					AuthoritativeResultListener resultListener) {
-				resultListener.onAllPlayersReadied();
-			}
-		});
+		resultListenerStub.onAllPlayersReadied();
 
 		startNextRound();
 	}
 
 	/**
-	 * This runnable is used to easily inform every
-	 * {@linkplain AuthoritativeSession#resultListeners result listener} on a
-	 * separate thread.
+	 * @return the result listener stub used to distribute events to all
+	 *         clients.
 	 */
-	abstract class AuthoritativeResultListenerThread implements Runnable {
+	public AuthoritativeResultListener getResultListenerStub() {
+		return resultListenerStub;
+	}
 
-		@Override
-		public void run() {
-			for (AuthoritativeResultListener resultListener : resultListeners
-					.values()) {
-				informListener(resultListener);
-			}
-		}
-
-		protected abstract void informListener(
-				AuthoritativeResultListener resultListener);
+	/**
+	 * @return a hashmap of all registered result listeners.
+	 */
+	HashMap<Short, AuthoritativeResultListener> getResultListeners() {
+		return resultListeners;
 	}
 
 }

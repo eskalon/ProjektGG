@@ -54,6 +54,8 @@ public final class BuildingTypes {
 		private String name;
 		private String nodeName;
 
+		private int value;
+
 		private int maxHealth;
 		private int upgradeOptionIndex = -1;
 		/**
@@ -147,6 +149,13 @@ public final class BuildingTypes {
 		 */
 		public String getNodeName() {
 			return nodeName;
+		}
+
+		/**
+		 * @return the cost/value of this building type.
+		 */
+		public float getValue() {
+			return value;
 		}
 
 	}

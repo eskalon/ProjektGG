@@ -2,7 +2,7 @@ package de.gg.data;
 
 /**
  * This data is sent after a round ends to setup the next round. It contains all
- * end round calculations i.e. the salary costs, tuition effects, etc.
+ * the needed (random) data for next round i.e. the next opening hours.
  */
 public class RoundEndData {
 

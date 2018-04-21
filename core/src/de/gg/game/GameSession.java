@@ -2,14 +2,18 @@ package de.gg.game;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import de.gg.data.GameSessionSetup;
 import de.gg.data.GameSessionSetup.GameDifficulty;
 import de.gg.game.entity.Character;
 import de.gg.game.entity.City;
+import de.gg.game.entity.Player;
 import de.gg.game.system.ProcessingSystem;
+import de.gg.game.system.smp.RoundEndSystem;
 import de.gg.network.LobbyPlayer;
 import de.gg.util.Log;
+import de.gg.util.MeasuringUtil;
 
 /**
  * This class holds the game data and takes care of calculating when a round
@@ -17,7 +21,7 @@ import de.gg.util.Log;
  */
 public abstract class GameSession {
 
-	private static final long ROUND_DURATION = 20 * 1000; // 8*60*1000
+	private static final long ROUND_DURATION = 35 * 1000; // 8*60*1000
 	/**
 	 * Set to true when a game round is over. The next round starts, when
 	 * {{@link #startNextRound()}} is called.
@@ -54,7 +58,7 @@ public abstract class GameSession {
 
 	private GameClock clock;
 
-	private City city;
+	protected City city;
 	protected HashMap<Short, LobbyPlayer> players;
 	private GameSessionSetup sessionSetup;
 
@@ -64,6 +68,11 @@ public abstract class GameSession {
 	protected short localNetworkId;
 
 	protected ArrayList<ProcessingSystem<Character>> characterSystems = new ArrayList<>();
+	protected ArrayList<ProcessingSystem<Player>> playerSystems = new ArrayList<>();
+
+	private RoundEndSystem roundEndSystem;
+
+	private MeasuringUtil measuringUtil = new MeasuringUtil();
 
 	/**
 	 * Creates a new game session.
@@ -85,11 +94,13 @@ public abstract class GameSession {
 	/**
 	 * Sets the city and the game entities up.
 	 */
-	public synchronized void setupGame() {
+	protected synchronized void setupGame() {
 		this.city.generate(sessionSetup, players);
 		this.initialized = true;
 
-		// TODO add and initialize the systems
+		// Add and initialize the smp systems
+		this.roundEndSystem = new RoundEndSystem(localNetworkId);
+		this.roundEndSystem.init(city);
 	}
 
 	/**
@@ -148,13 +159,40 @@ public abstract class GameSession {
 		if (isRightTick(10)) {
 			clock.update();
 
-			// Executes the processing systems
+			// PROCESSING SYSTEMS
+			// Character
 			for (ProcessingSystem<Character> sys : characterSystems) {
 				if (sys.isProcessedContinuously() || (!sys.wasProcessed())) {
 					if (isRightTick(sys.getTickRate())) {
-						for (Character c : city.getCharacters().values()) {
-							sys.process(c);
+						measuringUtil.start();
+						for (Entry<Short, Character> e : city.getCharacters()
+								.entrySet()) {
+							sys.process(e.getKey(), e.getValue());
 						}
+						Log.info(localNetworkId == -1 ? "Server" : "Client",
+								"Processed the %s-System in %d miliseconds",
+								sys.getClass().getSimpleName(),
+								measuringUtil.stop());
+
+						if (!sys.isProcessedContinuously()) {
+							sys.setAsProcessed(true);
+						}
+					}
+				}
+			}
+			// Player
+			for (ProcessingSystem<Player> sys : playerSystems) {
+				if (sys.isProcessedContinuously() || (!sys.wasProcessed())) {
+					if (isRightTick(sys.getTickRate())) {
+						measuringUtil.start();
+						for (Entry<Short, Player> e : city.getPlayers()
+								.entrySet()) {
+							sys.process(e.getKey(), e.getValue());
+						}
+						Log.info(localNetworkId == -1 ? "Server" : "Client",
+								"Processed the %s-System in %d miliseconds",
+								sys.getClass().getSimpleName(),
+								measuringUtil.stop());
 
 						if (!sys.isProcessedContinuously()) {
 							sys.setAsProcessed(true);
@@ -163,7 +201,22 @@ public abstract class GameSession {
 				}
 			}
 		}
+	}
 
+	protected void onRoundEnd() {
+		measuringUtil.start();
+		// Character
+		for (Entry<Short, Character> e : city.getCharacters().entrySet()) {
+			roundEndSystem.processCharacter(e.getKey(), e.getValue());
+		}
+
+		// Player
+		for (Entry<Short, Player> e : city.getPlayers().entrySet()) {
+			roundEndSystem.processPlayer(e.getKey(), e.getValue());
+		}
+		Log.info(localNetworkId == -1 ? "Server" : "Client",
+				"Processed the RoundEnd-System in %d miliseconds",
+				measuringUtil.stop());
 	}
 
 	/**
@@ -212,6 +265,17 @@ public abstract class GameSession {
 	 */
 	public float getRoundProgress() {
 		return currentRoundTime / (float) ROUND_DURATION;
+	}
+
+	public long getGameSeed() {
+		return sessionSetup.getSeed();
+	}
+
+	/**
+	 * @return the current round.
+	 */
+	public int getRound() {
+		return currentRound;
 	}
 
 	/**

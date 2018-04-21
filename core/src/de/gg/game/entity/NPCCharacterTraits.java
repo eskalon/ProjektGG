@@ -10,19 +10,19 @@ public class NPCCharacterTraits {
 	/**
 	 * Values his own benefit higher than the average citizen.
 	 */
-	public CharacterTrait AMBITIOUS;
+	public static CharacterTrait AMBITIOUS;
 	/**
 	 * The default trait.
 	 */
-	public CharacterTrait EVEN_TEMPERED;
+	public static CharacterTrait EVEN_TEMPERED;
 	/**
 	 * Tries to do the right thing. Bribes aren't as effective.
 	 */
-	public CharacterTrait RIGHTEOUS;
+	public static CharacterTrait RIGHTEOUS;
 	/**
 	 * Doesn't like heretics.
 	 */
-	public CharacterTrait RELIGIOUS_FANATIC;
+	public static CharacterTrait RELIGIOUS_FANATIC;
 
 	private static List<CharacterTrait> VALUES;
 
@@ -55,7 +55,26 @@ public class NPCCharacterTraits {
 	 */
 	public class CharacterTrait {
 
-		// TODO Modifikatoren für bestimmte Situationen
+		/**
+		 * The base opinion modifier a character with this trait has of other
+		 * characters. Is in the range of <code>0</code> and <code>10</code>.
+		 */
+		private int baseOpinionModifier;
+		/**
+		 * Whether the religion of a character is important.
+		 */
+		private boolean religionIsImportant;
+
+		// TODO Modifikatoren für bestimmte Situationen (Bestechung, Erpressung,
+		// Anklage, Amtsabwahl, etc.)
+
+		public int getBaseOpinionModifier() {
+			return baseOpinionModifier;
+		}
+
+		public boolean isReligionImportant() {
+			return religionIsImportant;
+		}
 
 	}
 

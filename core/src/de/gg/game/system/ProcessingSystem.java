@@ -33,10 +33,12 @@ public abstract class ProcessingSystem<E> {
 	 * I responsible for processing one entity. Is called either once per round
 	 * or at a steady tick rate depending on {@link #isProcessedContinuously()}.
 	 * 
+	 * @param id
+	 *            The id of the entity in question.
 	 * @param e
-	 *            The entity in question.
+	 *            The entity itself.
 	 */
-	public abstract void process(E e);
+	public abstract void process(short id, E e);
 
 	/**
 	 * @return whether this system is processed continuously in the given

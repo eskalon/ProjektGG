@@ -64,7 +64,8 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 		// ist, umsetzen, sodass sich für den Nutzer sichtbar ein Balken bewegt
 
 		// Das Spiel aufsetzen
-		game.getCurrentSession().setupGame();
+		game.getCurrentSession().startGame();
+
 		// Die ModelInstances erstellen
 		for (BuildingSlot s : game.getCurrentSession().getCity()
 				.getBuildingSlots()) {

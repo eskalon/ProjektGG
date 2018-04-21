@@ -1,5 +1,6 @@
 {
 	"name": "Ritter",
 	"fortuneRequirement": 5500,
-	"isTitle": true
+	"isTitle": true,
+	"level": 3
 }

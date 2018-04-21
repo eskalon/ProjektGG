@@ -1,4 +1,5 @@
 {
 	"name": "Patrizier",
-	"fortuneRequirement": 2500
+	"fortuneRequirement": 2500,
+	"level": 2
 }

@@ -1,14 +1,22 @@
 package de.gg.game.system.server;
 
-import de.gg.game.entity.Character;
-import de.gg.game.system.ProcessingSystem;
+import de.gg.game.AuthoritativeSession;
+import de.gg.game.entity.Player;
 
-public class IllnessDamageSystem extends ProcessingSystem<Character> {
+public class IllnessDamageSystem extends ServerProcessingSystem<Player> {
+
+	public IllnessDamageSystem(AuthoritativeSession serverSession) {
+		super(serverSession);
+	}
 
 	@Override
-	public void process(Character c) {
-		if (c.isIll()) {
-			c.setHp(c.getHp() - 1);
+	public void process(short id, Player p) {
+		if (p.isIll()) {
+			p.getCurrentlyPlayedCharacter()
+					.setHp(p.getCurrentlyPlayedCharacter().getHp() - 1);
+
+			serverSession.getResultListenerStub().onCharacterDamage(id,
+					(short) 1);
 		}
 	}
 
