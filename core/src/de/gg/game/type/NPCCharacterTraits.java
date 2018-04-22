@@ -31,6 +31,7 @@ public class NPCCharacterTraits {
 	// "data/traits/ambitious.json";
 
 	private NPCCharacterTraits() {
+		// shouldn't get instantiated
 	}
 
 	public static void finishLoading(AssetManager assetManager) {
@@ -64,6 +65,9 @@ public class NPCCharacterTraits {
 		 * Whether the religion of a character is important.
 		 */
 		private boolean religionIsImportant;
+
+		CharacterTrait() {
+		}
 
 		// TODO Modifikatoren für bestimmte Situationen (Bestechung, Erpressung,
 		// Anklage, Amtsabwahl, etc.)

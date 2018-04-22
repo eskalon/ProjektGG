@@ -11,22 +11,23 @@ import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class CartTypes {
 
-	public static CartType CART_1;
+	public static CartType BASIC;
 	private static List<CartType> VALUES;
 
 	@Asset(Text.class)
-	private static final String CART_1_JSON_PATH = "data/carts/cart_1.json";
+	private static final String BASIC_JSON_PATH = "data/carts/cart_1.json";
 
 	private CartTypes() {
+		// shouldn't get instantiated
 	}
 
 	public static void finishLoading(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 
-		CART_1 = JSONParser.parseFromJson(
-				assetManager.get(CART_1_JSON_PATH, Text.class).getString(),
+		BASIC = JSONParser.parseFromJson(
+				assetManager.get(BASIC_JSON_PATH, Text.class).getString(),
 				CartType.class);
-		VALUES.add(CART_1);
+		VALUES.add(BASIC);
 	}
 
 	public static CartType getByIndex(int index) {

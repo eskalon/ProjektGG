@@ -24,6 +24,7 @@ public final class BuildingTypes {
 	private static final String FORGE_2_JSON_PATH = "data/buildings/forge_2.json";
 
 	private BuildingTypes() {
+		// shouldn't get instantiated
 	}
 
 	public static void finishLoading(AssetManager assetManager) {

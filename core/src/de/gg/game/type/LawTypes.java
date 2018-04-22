@@ -26,6 +26,7 @@ public class LawTypes {
 	private static final String INHERITANCE_TAX_JSON_PATH = "data/laws/inheritance_tax.json";
 
 	private LawTypes() {
+		// shouldn't get instantiated
 	}
 
 	public static void finishLoading(AssetManager assetManager) {
@@ -54,6 +55,9 @@ public class LawTypes {
 		private int upperBound;
 		private int lowerBound;
 		private Object defaultValue;
+
+		LawType() {
+		}
 
 		public String getName() {
 			return name;

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.assets.AssetManager;
 
+import de.gg.game.type.PositionTypes.PositionType;
 import de.gg.util.JSONParser;
 import de.gg.util.asset.Text;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
@@ -26,6 +27,7 @@ public class SocialStatusS {
 	private static final String BARON_JSON_PATH = "data/social_status/baron.json";
 
 	private SocialStatusS() {
+		// shouldn't get instantiated
 	}
 
 	public static void finishLoading(AssetManager assetManager) {
@@ -75,6 +77,11 @@ public class SocialStatusS {
 			return fortuneRequirement;
 		}
 
+		/**
+		 * @return the {@linkplain PositionType#getLevel() level of a position}
+		 *         if this is required for this social status. Else
+		 *         <code>-1</code>.
+		 */
 		public int getPositionLevelRequirement() {
 			return positionLevelRequirement;
 		}

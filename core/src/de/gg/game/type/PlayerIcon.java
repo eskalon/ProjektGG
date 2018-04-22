@@ -12,6 +12,9 @@ public enum PlayerIcon {
 		this.iconFileName = iconFileName;
 	}
 
+	/**
+	 * @return the (chat) color for the player with this icon.
+	 */
 	public String getColor() {
 		return color;
 	}

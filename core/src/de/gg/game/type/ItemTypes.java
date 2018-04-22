@@ -5,9 +5,15 @@ import java.util.List;
 
 import com.badlogic.gdx.assets.AssetManager;
 
+import de.gg.game.entity.ItemPrice;
+
 public class ItemTypes {
 
 	private static List<ItemType> VALUES;
+	
+	private ItemTypes() {
+		// shouldn't get instantiated
+	}
 
 	public static void finishLoading(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
@@ -32,6 +38,9 @@ public class ItemTypes {
 		private int basePrice;
 		private boolean equipableByPlayer = false;
 
+		ItemType() {
+		}
+
 		public String getName() {
 			return name;
 		}
@@ -40,10 +49,17 @@ public class ItemTypes {
 			return iconFileName;
 		}
 
+		/**
+		 * @return the base price for this item.
+		 * @see ItemPrice
+		 */
 		public int getBasePrice() {
 			return basePrice;
 		}
 
+		/**
+		 * @return whether this item can get used/equipped by the player.
+		 */
 		public boolean isEquipableByPlayer() {
 			return equipableByPlayer;
 		}

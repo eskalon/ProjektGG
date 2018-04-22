@@ -19,6 +19,7 @@ public class ProfessionTypes {
 	private static final String SMITH_JSON_PATH = "data/professions/smith.json";
 
 	private ProfessionTypes() {
+		// shouldn't get instantiated
 	}
 
 	public static void finishLoading(AssetManager assetManager) {
@@ -46,6 +47,9 @@ public class ProfessionTypes {
 		private String nameLevel6;
 		private int startingGold;
 		private int startingBuildingIndex;
+
+		ProfessionType() {
+		}
 
 		public BuildingType getStartingBuilding() {
 			return BuildingTypes.getByIndex(startingBuildingIndex);

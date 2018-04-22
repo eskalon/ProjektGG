@@ -19,6 +19,7 @@ public class PositionTypes {
 	private static final String MAYOR_JSON_PATH = "data/positions/mayor.json";
 
 	private PositionTypes() {
+		// shouldn't get instantiated
 	}
 
 	public static void finishLoading(AssetManager assetManager) {
@@ -36,6 +37,9 @@ public class PositionTypes {
 		return VALUES.get(index);
 	}
 
+	/**
+	 * Represents a position/post a character can take in the city or state.
+	 */
 	public class PositionType {
 
 		private int level;

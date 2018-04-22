@@ -8,6 +8,10 @@ import com.badlogic.gdx.assets.AssetManager;
 public class CrimeTypes {
 
 	private static List<CrimeType> VALUES;
+	
+	private CrimeTypes() {
+		// shouldn't get instantiated
+	}
 
 	public static void finishLoading(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
@@ -28,14 +32,20 @@ public class CrimeTypes {
 	public class CrimeType {
 
 		private String name;
-		private boolean punishableByDeath;
+		private boolean captialCrime;
+
+		CrimeType() {
+		}
 
 		public String getName() {
 			return name;
 		}
 
-		public boolean isPunishableByDeath() {
-			return punishableByDeath;
+		/**
+		 * @return whether this crime is punishable by death.
+		 */
+		public boolean isCaptialCrime() {
+			return captialCrime;
 		}
 
 	}

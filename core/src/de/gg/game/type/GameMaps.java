@@ -27,6 +27,7 @@ public class GameMaps {
 	private static final String BAMBERG_JSON_PATH = "data/maps/bamberg.json";
 
 	private GameMaps() {
+		// shouldn't get instantiated
 	}
 
 	/**
@@ -59,6 +60,9 @@ public class GameMaps {
 		private String name;
 		private List<BuildingSlot> buildingSlots;
 		private List<RenderData> cityProps;
+
+		GameMap() {
+		}
 
 		public String getName() {
 			return name;

@@ -20,11 +20,11 @@ public class Cart {
 		this.type = type;
 	}
 
-	public List<ItemStack> getStacks() {
+	public List<ItemStack> getStoredStacks() {
 		return stacks;
 	}
 
-	public void setStacks(List<ItemStack> stacks) {
+	public void setStoredStacks(List<ItemStack> stacks) {
 		this.stacks = stacks;
 	}
 
