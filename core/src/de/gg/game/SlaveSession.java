@@ -84,6 +84,8 @@ public class SlaveSession extends GameSession
 	public void onRoundEnd(RoundEndData data) { // Inherited from
 												// AuthoritativeResultListener
 		game.getEventBus().post(new RoundEndEvent(data));
+		
+		System.out.println("ON ROUDN END");
 
 		// Process the last round
 		super.processRoundEnd(data); // Inherited from GameSession

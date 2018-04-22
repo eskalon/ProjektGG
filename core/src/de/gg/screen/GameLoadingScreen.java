@@ -3,7 +3,9 @@ package de.gg.screen;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
+import com.google.common.eventbus.Subscribe;
 
+import de.gg.event.RoundEndEvent;
 import de.gg.game.entity.BuildingSlot;
 import de.gg.game.type.BuildingTypes;
 import de.gg.game.type.ItemTypes;
@@ -91,6 +93,26 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 		// Change the screen
 		Log.info("Client", "Spiel gestartet");
 		game.pushScreen("roundEnd");
+	}
+
+	@Override
+	public void show() {
+		super.show();
+
+		game.getEventBus().register(this);
+	}
+
+	@Override
+	public void hide() {
+		super.hide();
+
+		game.getEventBus().unregister(this);
+	}
+
+	@Subscribe
+	public void onRoundEndDataArrived(RoundEndEvent event) {
+		((GameRoundendScreen) game.getScreen("roundEnd"))
+				.setData(event.getData());
 	}
 
 }
