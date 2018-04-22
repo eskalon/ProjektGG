@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.gg.core.ProjektGG;
-import de.gg.data.GameSessionSetup;
-import de.gg.data.NotificationData;
-import de.gg.data.RoundEndData;
 import de.gg.event.RoundEndEvent;
+import de.gg.game.data.GameSessionSetup;
+import de.gg.game.data.NotificationData;
+import de.gg.game.data.RoundEndData;
 import de.gg.game.system.ProcessingSystem;
 import de.gg.game.system.client.FirstEventWaveClientSystem;
 import de.gg.network.LobbyPlayer;

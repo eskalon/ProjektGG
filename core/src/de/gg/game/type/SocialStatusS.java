@@ -1,4 +1,4 @@
-package de.gg.game.entity;
+package de.gg.game.type;
 
 import java.util.ArrayList;
 import java.util.List;

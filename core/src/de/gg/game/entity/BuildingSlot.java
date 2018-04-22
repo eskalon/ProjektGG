@@ -1,5 +1,7 @@
 package de.gg.game.entity;
 
+import de.gg.game.type.BuildingSlotType;
+
 public class BuildingSlot {
 
 	private int posX, posY;
@@ -56,10 +58,6 @@ public class BuildingSlot {
 
 	public void setBuilding(Building building) {
 		this.building = building;
-	}
-
-	public enum BuildingSlotType {
-		CITY_NORMAL, FOREST;
 	}
 
 }

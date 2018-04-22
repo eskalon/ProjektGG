@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import de.gg.data.GameSessionSetup;
-import de.gg.data.GameSessionSetup.GameDifficulty;
-import de.gg.data.RoundEndData;
+import de.gg.game.data.GameSessionSetup;
+import de.gg.game.data.RoundEndData;
+import de.gg.game.data.GameSessionSetup.GameDifficulty;
 import de.gg.game.entity.Character;
 import de.gg.game.entity.City;
 import de.gg.game.entity.Player;

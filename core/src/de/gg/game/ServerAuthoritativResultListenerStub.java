@@ -3,7 +3,7 @@ package de.gg.game;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import de.gg.data.RoundEndData;
+import de.gg.game.data.RoundEndData;
 
 /**
  * A result listener stub for the server to easily distribute an event to all

@@ -2,8 +2,8 @@ package de.gg.game;
 
 import java.util.HashMap;
 
-import de.gg.data.GameSessionSetup;
-import de.gg.data.RoundEndData;
+import de.gg.game.data.GameSessionSetup;
+import de.gg.game.data.RoundEndData;
 import de.gg.game.system.ProcessingSystem;
 import de.gg.game.system.server.FirstCharacterEventWaveServerSystem;
 import de.gg.game.system.server.FirstPlayerEventWaveServerSystem;

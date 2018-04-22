@@ -2,18 +2,36 @@ package de.gg.game.factory;
 
 import java.util.Random;
 
+import de.gg.game.data.GameSessionSetup.GameDifficulty;
 import de.gg.game.entity.Character;
-import de.gg.game.entity.Character.Religion;
-import de.gg.game.entity.NPCCharacterTraits;
-import de.gg.game.entity.SocialStatusS;
-import de.gg.game.entity.SocialStatusS.SocialStatus;
+import de.gg.game.type.NPCCharacterTraits;
+import de.gg.game.type.Religion;
+import de.gg.game.type.SocialStatusS;
+import de.gg.game.type.ProfessionTypes.ProfessionType;
+import de.gg.game.type.SocialStatusS.SocialStatus;
 import de.gg.util.RandomUtils;
 
+/**
+ * This class is responsible for creating the character entities.
+ */
 public class CharacterFactory {
 
 	private static final String[] SURNAMES = { "Vorname" };
 	private static final String[] NAMES = { "Nachname" };
 
+	private CharacterFactory() {
+	}
+
+	/**
+	 * Creates a random non-player character specified by its social status.
+	 * 
+	 * @param random
+	 *            The random generator for this session.
+	 * @param status
+	 *            The social status of this character. Is used as guideline for
+	 *            all other values.
+	 * @return a random non-player character.
+	 */
 	public static Character createCharacterWithStatus(Random random,
 			SocialStatus status) {
 		Character c = new Character();
@@ -47,7 +65,7 @@ public class CharacterFactory {
 				NAMES.length - 1)]);
 		c.setReligion(RandomUtils.rollTheDice(random, 2) ? Religion.CATHOLIC
 				: Religion.ORTHODOX);
-		c.setStatus(SocialStatusS.NON_CITIZEN);
+		c.setStatus(status);
 		c.setSurname(SURNAMES[RandomUtils.getRandomNumber(random, 0,
 				SURNAMES.length - 1)]);
 
@@ -73,6 +91,39 @@ public class CharacterFactory {
 			break;
 		}
 		}
+
+		return c;
+	}
+
+	/**
+	 * Creates a character for a player.
+	 * 
+	 * @param random
+	 *            The random generator for this session.
+	 * @param profession
+	 *            The player's profession.
+	 * @param difficulty
+	 *            The game's difficutly level.
+	 * @return the character.
+	 */
+	public static Character createPlayerCharacter(Random random,
+			ProfessionType profession, GameDifficulty difficulty,
+			boolean isMale, Religion religion, String name, String surname) {
+		Character c = new Character();
+		c.setAge(RandomUtils.getRandomNumber(random, 17, 23));
+		c.setGold(profession.getStartingGold()
+				+ difficulty.getAdditionalStartingGold());
+
+		c.setHighestPositionLevel(0);
+
+		c.setHp(RandomUtils.getRandomNumber(random, 96, 104));
+		c.setMale(isMale);
+		c.setMarried(false);
+		c.setName(name);
+		c.setReligion(religion);
+		c.setStatus(SocialStatusS.NON_CITIZEN);
+		c.setSurname(surname);
+		c.setNPCTrait(null);
 
 		return c;
 	}

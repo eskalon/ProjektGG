@@ -1,4 +1,4 @@
-package de.gg.data;
+package de.gg.game.data;
 
 /**
  * This data is sent after a round ends to setup the next round. It contains all

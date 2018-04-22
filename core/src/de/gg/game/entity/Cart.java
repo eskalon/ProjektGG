@@ -3,7 +3,7 @@ package de.gg.game.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.gg.game.entity.CartTypes.CartType;
+import de.gg.game.type.CartTypes.CartType;
 
 public class Cart {
 

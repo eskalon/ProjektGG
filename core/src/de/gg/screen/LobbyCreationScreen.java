@@ -10,9 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.google.common.eventbus.Subscribe;
 
-import de.gg.data.GameSessionSetup;
-import de.gg.data.GameSessionSetup.GameDifficulty;
 import de.gg.event.ConnectionEstablishedEvent;
+import de.gg.game.data.GameSessionSetup;
+import de.gg.game.data.GameSessionSetup.GameDifficulty;
 import de.gg.input.ButtonClickListener;
 import de.gg.network.NetworkHandler;
 import de.gg.ui.AnimationlessDialog;

@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ObjectMap;
 
-import de.gg.data.GameMaps;
+import de.gg.game.type.GameMaps;
 import de.gg.input.ButtonClickListener;
 import de.gg.util.PlayerUtils;
 

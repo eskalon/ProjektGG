@@ -7,13 +7,16 @@ import java.util.Random;
 
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 
-import de.gg.data.GameMaps;
-import de.gg.data.GameMaps.GameMap;
-import de.gg.data.GameSessionSetup;
-import de.gg.game.entity.ItemTypes.ItemType;
-import de.gg.game.entity.LawTypes.LawType;
-import de.gg.game.entity.PositionTypes.PositionType;
+import de.gg.game.data.GameSessionSetup;
 import de.gg.game.factory.CharacterFactory;
+import de.gg.game.type.BuildingTypes;
+import de.gg.game.type.GameMaps;
+import de.gg.game.type.PositionTypes;
+import de.gg.game.type.SocialStatusS;
+import de.gg.game.type.GameMaps.GameMap;
+import de.gg.game.type.ItemTypes.ItemType;
+import de.gg.game.type.LawTypes.LawType;
+import de.gg.game.type.PositionTypes.PositionType;
 import de.gg.network.LobbyPlayer;
 import de.gg.render.RenderData;
 import de.gg.util.RandomUtils;

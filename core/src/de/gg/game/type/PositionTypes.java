@@ -1,11 +1,11 @@
-package de.gg.game.entity;
+package de.gg.game.type;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.assets.AssetManager;
 
-import de.gg.game.entity.SocialStatusS.SocialStatus;
+import de.gg.game.type.SocialStatusS.SocialStatus;
 import de.gg.util.JSONParser;
 import de.gg.util.asset.Text;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;

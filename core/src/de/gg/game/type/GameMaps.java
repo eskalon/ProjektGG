@@ -1,5 +1,5 @@
 
-package de.gg.data;
+package de.gg.game.type;
 
 import java.util.ArrayList;
 import java.util.List;

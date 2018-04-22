@@ -1,0 +1,54 @@
+package de.gg.game.factory;
+
+import de.gg.game.entity.Character;
+import de.gg.game.entity.Player;
+import de.gg.game.entity.Profession;
+import de.gg.game.type.PlayerIcon;
+
+/**
+ * This class is responsible for creating the player entities.
+ */
+public class PlayerFactory {
+
+	private PlayerFactory() {
+	}
+
+	/**
+	 * Creates a player.
+	 * 
+	 * @param character
+	 * @param icon
+	 * @param profession
+	 * @param residenceIndex
+	 * @param productionBuildingIndex
+	 * @param agilitySkill
+	 * @param bargainSkill
+	 * @param combatSkill
+	 * @param craftingSkill
+	 * @param rhetoricalSkill
+	 * @param stealthSkill
+	 * @return the player entity.
+	 */
+	public static Player createPlayerCharacter(Character character,
+			PlayerIcon icon, Profession profession, short residenceIndex,
+			short productionBuildingIndex, int agilitySkill, int bargainSkill,
+			int combatSkill, int craftingSkill, int rhetoricalSkill,
+			int stealthSkill) {
+		Player p = new Player();
+		p.setAvailableAp(4);
+		p.setCurrentlyPlayedCharacter(character);
+		p.setIcon(icon);
+		p.getLearnedProfessions().add(profession);
+		p.getOwnedBuidings().add(residenceIndex);
+		p.getOwnedBuidings().add(productionBuildingIndex);
+		p.getSkills().setAgilitySkill(agilitySkill);
+		p.getSkills().setBargainSkill(bargainSkill);
+		p.getSkills().setCombatSkill(combatSkill);
+		p.getSkills().setCraftingSkill(craftingSkill);
+		p.getSkills().setRhetoricalSkill(rhetoricalSkill);
+		p.getSkills().setStealthSkill(stealthSkill);
+
+		return p;
+	}
+
+}

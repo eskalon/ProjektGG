@@ -2,7 +2,7 @@ package de.gg.network.message;
 
 import java.util.HashMap;
 
-import de.gg.data.GameSessionSetup;
+import de.gg.game.data.GameSessionSetup;
 import de.gg.network.LobbyPlayer;
 
 /**

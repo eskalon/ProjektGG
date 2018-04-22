@@ -12,8 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.google.common.eventbus.Subscribe;
 
-import de.gg.data.RoundEndData;
 import de.gg.event.RoundEndEvent;
+import de.gg.game.data.RoundEndData;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 /**

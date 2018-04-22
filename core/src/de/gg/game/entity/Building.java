@@ -3,7 +3,7 @@ package de.gg.game.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.gg.game.entity.BuildingTypes.BuildingType;
+import de.gg.game.type.BuildingTypes.BuildingType;
 import de.gg.render.RenderData;
 import de.gg.render.SceneRenderer;
 

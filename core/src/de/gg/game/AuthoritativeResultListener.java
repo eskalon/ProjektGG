@@ -1,6 +1,6 @@
 package de.gg.game;
 
-import de.gg.data.RoundEndData;
+import de.gg.game.data.RoundEndData;
 
 /**
  * Classes that implement this interface take care of the

@@ -44,6 +44,10 @@ public class FirstPlayerEventWaveServerSystem
 						true);
 			}
 		}
+
+		// AP
+		// if(p.getAvailableAp() > 17)
+		// TODO remove some aps
 	}
 
 	@Override

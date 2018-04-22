@@ -1,4 +1,4 @@
-package de.gg.data;
+package de.gg.game.data;
 
 /**
  * Holds all the information about the settings of a game session. The
@@ -50,7 +50,7 @@ public class GameSessionSetup {
 	public enum GameDifficulty {
 		EASY(9), NORMAL(4), HARD(-4);
 
-		private float startingGoldMoifier;
+		private int additionalStartingGold;
 		private float actionModifer;
 		private float opinionModifer;
 
@@ -59,10 +59,10 @@ public class GameSessionSetup {
 		}
 
 		/**
-		 * @return a modifier that is multiplied with the starting gold.
+		 * @return the additional gold a player gets at the game start.
 		 */
-		public float getStartingGoldMoifier() {
-			return startingGoldMoifier;
+		public int getAdditionalStartingGold() {
+			return additionalStartingGold;
 		}
 
 		/**

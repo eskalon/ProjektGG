@@ -1,4 +1,4 @@
-package de.gg.data;
+package de.gg.game.data;
 
 public class NotificationData {
 

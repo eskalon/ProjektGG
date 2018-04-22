@@ -1,6 +1,6 @@
 package de.gg.game.entity;
 
-import de.gg.game.entity.CrimeTypes.CrimeType;
+import de.gg.game.type.CrimeTypes.CrimeType;
 
 public class Evidence {
 

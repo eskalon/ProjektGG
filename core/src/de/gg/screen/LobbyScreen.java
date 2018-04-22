@@ -16,14 +16,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.utils.Align;
 import com.google.common.eventbus.Subscribe;
 
-import de.gg.data.GameMaps;
-import de.gg.data.GameSessionSetup;
 import de.gg.event.ConnectionEstablishedEvent;
 import de.gg.event.NewChatMessagEvent;
 import de.gg.event.PlayerChangedEvent;
 import de.gg.event.PlayerConnectedEvent;
 import de.gg.event.PlayerDisconnectedEvent;
 import de.gg.game.SlaveSession;
+import de.gg.game.data.GameSessionSetup;
+import de.gg.game.type.GameMaps;
 import de.gg.network.LobbyPlayer;
 import de.gg.network.NetworkHandler;
 import de.gg.ui.OffsetableTextField;

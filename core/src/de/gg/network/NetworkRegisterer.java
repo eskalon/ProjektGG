@@ -5,12 +5,12 @@ import java.util.HashMap;
 
 import com.esotericsoftware.kryo.Kryo;
 
-import de.gg.data.GameSessionSetup;
-import de.gg.data.GameSessionSetup.GameDifficulty;
-import de.gg.data.RoundEndData;
 import de.gg.game.AuthoritativeResultListener;
 import de.gg.game.SlaveActionListener;
-import de.gg.game.entity.Player.PlayerIcon;
+import de.gg.game.data.GameSessionSetup;
+import de.gg.game.data.RoundEndData;
+import de.gg.game.data.GameSessionSetup.GameDifficulty;
+import de.gg.game.type.PlayerIcon;
 import de.gg.network.message.ChatMessageSentMessage;
 import de.gg.network.message.GameSetupMessage;
 import de.gg.network.message.PlayerChangedMessage;

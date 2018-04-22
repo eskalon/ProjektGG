@@ -4,11 +4,11 @@ import java.util.Map.Entry;
 
 import de.gg.game.entity.Character;
 import de.gg.game.entity.City;
-import de.gg.game.entity.LawTypes;
 import de.gg.game.entity.Player;
-import de.gg.game.entity.PositionTypes.PositionType;
-import de.gg.game.entity.SocialStatusS;
-import de.gg.game.entity.SocialStatusS.SocialStatus;
+import de.gg.game.type.LawTypes;
+import de.gg.game.type.SocialStatusS;
+import de.gg.game.type.PositionTypes.PositionType;
+import de.gg.game.type.SocialStatusS.SocialStatus;
 
 public class RoundEndSystem {
 
@@ -132,6 +132,9 @@ public class RoundEndSystem {
 		}
 		}
 
+		// AP
+		p.setAvailableAp(
+				p.getAvailableAp() + 4 + p.getSkills().getAgilitySkill());
 	}
 
 }

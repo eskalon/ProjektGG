@@ -5,11 +5,11 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 
 import de.gg.game.entity.BuildingSlot;
-import de.gg.game.entity.BuildingTypes;
-import de.gg.game.entity.ItemTypes;
-import de.gg.game.entity.PositionTypes;
-import de.gg.game.entity.ProfessionTypes;
-import de.gg.game.entity.SocialStatusS;
+import de.gg.game.type.BuildingTypes;
+import de.gg.game.type.ItemTypes;
+import de.gg.game.type.PositionTypes;
+import de.gg.game.type.ProfessionTypes;
+import de.gg.game.type.SocialStatusS;
 import de.gg.render.RenderData;
 import de.gg.render.TestShader;
 import de.gg.util.Log;

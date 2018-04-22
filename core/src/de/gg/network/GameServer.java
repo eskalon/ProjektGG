@@ -14,11 +14,11 @@ import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.kryonet.ServerDiscoveryHandler;
 import com.esotericsoftware.kryonet.rmi.ObjectSpace;
 
-import de.gg.data.GameSessionSetup;
 import de.gg.game.AuthoritativeResultListener;
 import de.gg.game.AuthoritativeSession;
 import de.gg.game.GameSession;
 import de.gg.game.SlaveActionListener;
+import de.gg.game.data.GameSessionSetup;
 import de.gg.network.message.ChatMessageSentMessage;
 import de.gg.network.message.DiscoveryResponsePacket;
 import de.gg.network.message.GameSetupMessage;

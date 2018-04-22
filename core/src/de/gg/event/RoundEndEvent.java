@@ -1,6 +1,6 @@
 package de.gg.event;
 
-import de.gg.data.RoundEndData;
+import de.gg.game.data.RoundEndData;
 
 /**
  * Posted after a the client received the round end data.

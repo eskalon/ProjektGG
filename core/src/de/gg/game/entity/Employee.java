@@ -2,7 +2,7 @@ package de.gg.game.entity;
 
 import java.util.Random;
 
-import de.gg.game.entity.ItemTypes.ItemType;
+import de.gg.game.type.ItemTypes.ItemType;
 import de.gg.util.RandomUtils;
 
 public class Employee {

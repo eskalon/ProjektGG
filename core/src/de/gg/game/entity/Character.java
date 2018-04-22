@@ -4,9 +4,10 @@ import java.util.HashMap;
 import java.util.Random;
 
 import de.gg.game.GameSession;
-import de.gg.game.entity.NPCCharacterTraits.CharacterTrait;
-import de.gg.game.entity.PositionTypes.PositionType;
-import de.gg.game.entity.SocialStatusS.SocialStatus;
+import de.gg.game.type.Religion;
+import de.gg.game.type.NPCCharacterTraits.CharacterTrait;
+import de.gg.game.type.PositionTypes.PositionType;
+import de.gg.game.type.SocialStatusS.SocialStatus;
 import de.gg.util.RandomUtils;
 
 public class Character {
@@ -255,10 +256,6 @@ public class Character {
 
 	public void setMarried(boolean isMarried) {
 		this.isMarried = isMarried;
-	}
-
-	public enum Religion {
-		CATHOLIC, ORTHODOX;
 	}
 
 }

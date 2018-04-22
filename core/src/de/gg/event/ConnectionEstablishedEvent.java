@@ -3,7 +3,7 @@ package de.gg.event;
 import java.io.IOException;
 import java.util.HashMap;
 
-import de.gg.data.GameSessionSetup;
+import de.gg.game.data.GameSessionSetup;
 import de.gg.network.LobbyPlayer;
 
 /**

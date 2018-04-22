@@ -13,7 +13,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
 import de.gg.core.ProjektGG;
-import de.gg.data.GameSessionSetup;
 import de.gg.event.ConnectionEstablishedEvent;
 import de.gg.event.NewChatMessagEvent;
 import de.gg.event.PlayerChangedEvent;
@@ -21,6 +20,7 @@ import de.gg.event.PlayerConnectedEvent;
 import de.gg.event.PlayerDisconnectedEvent;
 import de.gg.game.AuthoritativeResultListener;
 import de.gg.game.SlaveActionListener;
+import de.gg.game.data.GameSessionSetup;
 import de.gg.network.GameServer.IHostCallback;
 import de.gg.network.message.ChatMessageSentMessage;
 import de.gg.network.message.DiscoveryResponsePacket;
