@@ -255,13 +255,9 @@ public class LobbyScreen extends BaseUIScreen {
 			t.add().width(50);
 		} else {
 			t.add().width(25); // Icon
-			t.add(new Label(p.getName() + "  "
-					+ p.getSurname().replace(" ", "  ") + " ", skin)) // Der
-																		// Lesbarkeit
-																		// halber
-																		// zwei
-																		// Leerzeichen
-																		// verwenden
+			t.add(new Label(p.getName() + "  " // Der Lesbarkeit halber zwei
+												// Leerzeichen verwenden
+					+ p.getSurname().replace(" ", "  ") + " ", skin))
 					.width(350);
 			t.add().width(25); // Bereit
 			t.add().width(25); // Kicken

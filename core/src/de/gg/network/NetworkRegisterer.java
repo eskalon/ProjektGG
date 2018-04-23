@@ -9,6 +9,7 @@ import de.gg.game.AuthoritativeResultListener;
 import de.gg.game.SlaveActionListener;
 import de.gg.game.data.GameDifficulty;
 import de.gg.game.data.GameSessionSetup;
+import de.gg.game.data.GameSpeed;
 import de.gg.game.data.RoundEndData;
 import de.gg.game.type.PlayerIcon;
 import de.gg.network.message.ChatMessageSentMessage;
@@ -16,6 +17,8 @@ import de.gg.network.message.GameSetupMessage;
 import de.gg.network.message.PlayerChangedMessage;
 import de.gg.network.message.PlayerJoinedMessage;
 import de.gg.network.message.PlayerLeftMessage;
+import de.gg.network.message.ServerFullMessage;
+import de.gg.network.message.ServerRejectionMessage;
 
 /**
  * This class takes care of registering all classes needed by the multiplayer
@@ -36,25 +39,36 @@ public class NetworkRegisterer {
 	 *            The kryo serialization manager.
 	 */
 	public static void registerClasses(Kryo kryo) {
+		// Basic classes
 		kryo.register(ArrayList.class);
 		kryo.register(HashMap.class);
 
+		// Lobby (Player) Stuff
 		kryo.register(LobbyPlayer.class);
 		kryo.register(PlayerIcon.class);
 
+		// Map Stuff
 		kryo.register(GameDifficulty.class);
 		kryo.register(GameSessionSetup.class);
 
+		// Round End Stuff
+		kryo.register(RoundEndData.class);
+
+		// Messages
 		kryo.register(ChatMessageSentMessage.class);
 		kryo.register(GameSetupMessage.class);
 		kryo.register(PlayerChangedMessage.class);
 		kryo.register(PlayerJoinedMessage.class);
 		kryo.register(PlayerLeftMessage.class);
+		kryo.register(ServerRejectionMessage.class);
+		kryo.register(ServerFullMessage.class);
 
+		// Listeners
 		kryo.register(AuthoritativeResultListener.class);
 		kryo.register(SlaveActionListener.class);
 
-		kryo.register(RoundEndData.class);
+		// RMI
+		kryo.register(GameSpeed.class);
 	}
 
 }

@@ -1,40 +1,29 @@
 package de.gg.event;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 import de.gg.game.data.GameSessionSetup;
 import de.gg.network.LobbyPlayer;
 
 /**
- * Is posted when the client is connected to the server.
+ * Is posted when the client connected to the server successfully.
+ * 
+ * @see ConnectionFailedEvent
  */
 public class ConnectionEstablishedEvent {
 
 	/**
-	 * <i>Not<i> <code>null</code> if a problem occurred while starting the
-	 * client.
+	 * A hashmap of all players and their respective IDs.
 	 */
-	private IOException e = null;
+	private HashMap<Short, LobbyPlayer> players;
 	/**
-	 * A hashmap of all players and their respective IDs. <code>Null</code> if a
-	 * problem occurred while starting the client.
+	 * The ID of the client player.
 	 */
-	private HashMap<Short, LobbyPlayer> players = null;
+	private short clientId;
 	/**
-	 * The ID of the client player. <code>-1</code> if a problem occurred while
-	 * starting the client.
+	 * The game's settings.
 	 */
-	private short clientId = -1;
-	/**
-	 * The game's settings. <code>Null</code> if a problem occurred while
-	 * starting the client.
-	 */
-	private GameSessionSetup settings = null;
-
-	public ConnectionEstablishedEvent(IOException e) {
-		this.e = e;
-	}
+	private GameSessionSetup settings;
 
 	public ConnectionEstablishedEvent(HashMap<Short, LobbyPlayer> players,
 			short clientId, GameSessionSetup settings) {
@@ -53,10 +42,6 @@ public class ConnectionEstablishedEvent {
 
 	public GameSessionSetup getSettings() {
 		return settings;
-	}
-
-	public IOException getException() {
-		return e;
 	}
 
 }

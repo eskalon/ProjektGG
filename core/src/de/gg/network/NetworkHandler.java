@@ -14,6 +14,7 @@ import com.google.common.eventbus.EventBus;
 
 import de.gg.core.ProjektGG;
 import de.gg.event.ConnectionEstablishedEvent;
+import de.gg.event.ConnectionFailedEvent;
 import de.gg.event.NewChatMessagEvent;
 import de.gg.event.PlayerChangedEvent;
 import de.gg.event.PlayerConnectedEvent;
@@ -29,6 +30,7 @@ import de.gg.network.message.GameSetupMessage;
 import de.gg.network.message.PlayerChangedMessage;
 import de.gg.network.message.PlayerJoinedMessage;
 import de.gg.network.message.PlayerLeftMessage;
+import de.gg.network.message.ServerFullMessage;
 import de.gg.util.Log;
 
 /**
@@ -75,7 +77,7 @@ public class NetworkHandler {
 	private int ping;
 
 	public NetworkHandler(EventBus eventBus) {
-		Preconditions.checkNotNull(eventBus, "Event handler cannot be null.");
+		Preconditions.checkNotNull(eventBus, "Event bus cannot be null.");
 
 		this.eventBus = eventBus;
 	}
@@ -102,7 +104,14 @@ public class NetworkHandler {
 			eventBus.post(new ConnectionEstablishedEvent(msg.getPlayers(),
 					msg.getId(), msg.getSettings()));
 			localClientId = msg.getId();
-			Log.info("Client", "Netzwerk ID: %d", localClientId);
+			Log.info("Client", "Verbindung hergestellt. Netzwerk ID: %d",
+					localClientId);
+		});
+		// SERVER FULL MESSAGE
+		listener.addTypeHandler(ServerFullMessage.class, (con, msg) -> {
+			eventBus.post(new ConnectionFailedEvent(msg));
+			con.close();
+			Log.info("Client", "Fehler beim verbinden: %s", msg.getMessage());
 		});
 		// NEW CHAT MESSAGE
 		listener.addTypeHandler(ChatMessageSentMessage.class, (con, msg) -> {
@@ -139,8 +148,8 @@ public class NetworkHandler {
 					// Das Event hierfür wird beim Empfangen des Game Setups
 					// gepostet
 				} catch (IOException e) {
-					Log.error("Client", "Fehler beim Betreten der Lobby: ", e);
-					eventBus.post(new ConnectionEstablishedEvent(e));
+					Log.error("Client", "Fehler beim Verbinden: ", e);
+					eventBus.post(new ConnectionFailedEvent(e));
 				}
 			}
 		});
@@ -152,21 +161,21 @@ public class NetworkHandler {
 	 * {@link ConnectionEstablishedEvent} is posted on the
 	 * {@linkplain ProjektGG#getEventBus() event bus}.
 	 * 
-	 * @param port
-	 *            The used port.
-	 * @param gameName
-	 *            The name of the game.
+	 * @param serverSetup
+	 *            The server's settings, especially containing the port.
+	 * @param sessionSetup
+	 *            The game session's setup.
 	 * @see ClientNetworkHandler#setUpConnectionAsClient(String, int)
 	 */
-	public void setUpConnectionAsHost(int port, String gameName,
-			GameSessionSetup setup) {
-		server = new GameServer(port, gameName, setup, new IHostCallback() {
+	public void setUpConnectionAsHost(ServerSetup serverSetup,
+			GameSessionSetup sessionSetup) {
+		server = new GameServer(serverSetup, sessionSetup, new IHostCallback() {
 			@Override
 			public void onHostStarted(IOException e) {
 				if (e == null) {
-					setUpConnectionAsClient("localhost", port);
+					setUpConnectionAsClient("localhost", serverSetup.getPort());
 				} else {
-					eventBus.post(new ConnectionEstablishedEvent(e));
+					eventBus.post(new ConnectionFailedEvent(e));
 				}
 			}
 		});

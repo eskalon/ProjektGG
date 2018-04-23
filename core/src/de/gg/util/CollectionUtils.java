@@ -20,8 +20,9 @@ public class CollectionUtils {
 	 * @param value
 	 *            The value.
 	 * @return The first key whose value matches the given one.
+	 *         <Code>Null</code> if the map doesn't contain this value.
 	 */
-	public static <T, E> T getKeyByValue(Map<T, E> map, E value) {
+	public static synchronized <T, E> T getKeyByValue(Map<T, E> map, E value) {
 		for (Entry<T, E> entry : map.entrySet()) {
 			if (Objects.equals(value, entry.getValue())) {
 				return entry.getKey();

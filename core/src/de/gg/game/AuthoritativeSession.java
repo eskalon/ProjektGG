@@ -33,10 +33,12 @@ public class AuthoritativeSession extends GameSession
 	 *            the settings of the game session.
 	 * @param players
 	 *            a hashmap containing the players.
+	 * @param localNetworkId
+	 *            the local player's network id.
 	 */
 	public AuthoritativeSession(GameSessionSetup sessionSetup,
 			HashMap<Short, LobbyPlayer> players, short localNetworkId) {
-		super(sessionSetup, players, (short) -1);
+		super(sessionSetup, players, localNetworkId);
 
 		this.resultListenerStub = new ServerAuthoritativResultListenerStub(
 				this);
@@ -155,7 +157,7 @@ public class AuthoritativeSession extends GameSession
 	/**
 	 * @return a hashmap of all registered result listeners.
 	 */
-	HashMap<Short, AuthoritativeResultListener> getResultListeners() {
+	public HashMap<Short, AuthoritativeResultListener> getResultListeners() {
 		return resultListeners;
 	}
 

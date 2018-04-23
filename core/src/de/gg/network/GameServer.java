@@ -25,38 +25,44 @@ import de.gg.network.message.GameSetupMessage;
 import de.gg.network.message.PlayerChangedMessage;
 import de.gg.network.message.PlayerJoinedMessage;
 import de.gg.network.message.PlayerLeftMessage;
+import de.gg.network.message.ServerFullMessage;
 import de.gg.util.CollectionUtils;
 import de.gg.util.Log;
 import de.gg.util.PlayerUtils;
 
 public class GameServer {
 
+	/**
+	 * The network id of the local player. Is always <code>0</code>.
+	 */
+	public static final short HOST_PLAYER_NETWORK_ID = 0;
 	private Server server;
 	private Server broadcastServer;
-	private GameSessionSetup setup;
+	private GameSessionSetup sessionSetup;
 	private AuthoritativeSession session;
-	private String gameName;
+	private ServerSetup serverSetup;
 	/**
 	 * A count of all joined players. Used to generate the player IDs.
 	 */
-	private short playersJoinedCount = 0;
+	private short playerIdIterator = 0;
 	private HashMap<Short, LobbyPlayer> players;
 	private HashMap<Short, Connection> connections;
 
-	public GameServer(int port, String gameName, GameSessionSetup setup,
+	public GameServer(ServerSetup serverSetup, GameSessionSetup sessionSetup,
 			IHostCallback callback) {
-		players = new HashMap<>();
-		connections = new HashMap<>();
-		this.gameName = gameName;
-		this.setup = setup;
+		this.players = new HashMap<>();
+		this.connections = new HashMap<>();
 
-		server = new Server();
-		server.start();
+		this.sessionSetup = sessionSetup;
+		this.serverSetup = serverSetup;
+
+		this.server = new Server();
+		this.server.start();
 
 		NetworkRegisterer.registerClasses(server.getKryo());
 
 		// ON NEW CONNECTION & ON DICONNECTED
-		server.addListener(new ConnectionListener() {
+		this.server.addListener(new ConnectionListener() {
 			@Override
 			public void connected(Connection con) {
 				onNewConnection(con);
@@ -79,52 +85,58 @@ public class GameServer {
 		typeListener.addTypeHandler(PlayerChangedMessage.class,
 				(con, msg) -> onPlayerChange(con, msg));
 
-		server.addListener(typeListener);
+		this.server.addListener(typeListener);
 
 		Thread t = new Thread(new Runnable() {
 			public void run() {
 				try {
 					// Server starten
-					server.bind(port);
+					server.bind(serverSetup.getPort());
 					Log.info("Server", "Server gestartet");
 
 					// Wenn das erfolgreich war, einen Broadcast Server starten
-					broadcastServer = new Server();
-					broadcastServer.start();
-					broadcastServer.getKryo()
-							.register(DiscoveryResponsePacket.class);
-					broadcastServer
-							.setDiscoveryHandler(new ServerDiscoveryHandler() {
+					if (serverSetup.isPublic()) {
+						broadcastServer = new Server();
+						broadcastServer.start();
+						broadcastServer.getKryo()
+								.register(DiscoveryResponsePacket.class);
+						broadcastServer.setDiscoveryHandler(
+								new ServerDiscoveryHandler() {
 
-								@Override
-								public boolean onDiscoverHost(
-										DatagramChannel datagramChannel,
-										InetSocketAddress fromAddress)
-										throws IOException {
-									DiscoveryResponsePacket packet = new DiscoveryResponsePacket(
-											port, gameName, players.size());
+									@Override
+									public boolean onDiscoverHost(
+											DatagramChannel datagramChannel,
+											InetSocketAddress fromAddress)
+											throws IOException {
+										DiscoveryResponsePacket packet = new DiscoveryResponsePacket(
+												serverSetup.getPort(),
+												serverSetup.getGameName(),
+												players.size());
 
-									ByteBuffer buffer = ByteBuffer
-											.allocate(256);
-									broadcastServer.getSerializationFactory()
-											.newInstance(null)
-											.write(buffer, packet);
-									buffer.flip();
+										ByteBuffer buffer = ByteBuffer
+												.allocate(256);
+										broadcastServer
+												.getSerializationFactory()
+												.newInstance(null)
+												.write(buffer, packet);
+										buffer.flip();
 
-									datagramChannel.send(buffer, fromAddress);
+										datagramChannel.send(buffer,
+												fromAddress);
 
-									return true;
-								}
-							});
+										return true;
+									}
+								});
 
-					try {
-						broadcastServer.bind(0,
-								NetworkHandler.UDP_DISCOVER_PORT);
-						Log.info("Server", "Broadcast Server gestartet");
-					} catch (IOException e) {
-						Log.error("Server",
-								"Der Broadcast Server konnte nicht gestartet werden: %s",
-								e);
+						try {
+							broadcastServer.bind(0,
+									NetworkHandler.UDP_DISCOVER_PORT);
+							Log.info("Server", "Broadcast Server gestartet");
+						} catch (IOException e) {
+							Log.error("Server",
+									"Der Broadcast Server konnte nicht gestartet werden: %s",
+									e);
+						}
 					}
 					callback.onHostStarted(null);
 				} catch (IOException e) {
@@ -167,31 +179,42 @@ public class GameServer {
 	// LISTENER METHDOS
 	// ON NEW CONNECTION
 	private synchronized void onNewConnection(Connection con) {
-		Log.info("Server", "Client connected");
+		Log.info("Server", "Client verbunden");
 
-		LobbyPlayer p = PlayerUtils.getRandomPlayer(players.values());
-		players.put(playersJoinedCount, p);
-		connections.put(playersJoinedCount, con);
+		if (players.size() >= serverSetup.getMaxPlayerCount()) {
+			// Spiel voll
+			con.sendTCP(new ServerFullMessage());
+		} else {
+			// Noch Platz
+			LobbyPlayer p = PlayerUtils.getRandomPlayer(players.values());
+			players.put(playerIdIterator, p);
+			connections.put(playerIdIterator, con);
 
-		// Inform the other clients
-		server.sendToAllExceptTCP(con.getID(), new PlayerJoinedMessage(
-				playersJoinedCount, players.get(playersJoinedCount)));
+			// Inform the other clients
+			server.sendToAllExceptTCP(con.getID(), new PlayerJoinedMessage(
+					playerIdIterator, players.get(playerIdIterator)));
 
-		// Send the setup response
-		con.sendTCP(new GameSetupMessage(players, playersJoinedCount, setup));
+			// Send the setup response
+			con.sendTCP(new GameSetupMessage(players, playerIdIterator,
+					sessionSetup));
 
-		playersJoinedCount++;
+			playerIdIterator++;
+		}
 	}
 
 	// ON DISCONNECT
 	private synchronized void onDisconnect(Connection con) {
-		short id = CollectionUtils.getKeyByValue(connections, con);
-		Log.info("Server", "Player %d disconnected", id);
+		Short id = CollectionUtils.getKeyByValue(connections, con);
 
-		server.sendToAllExceptTCP(con.getID(), new PlayerLeftMessage(id));
+		if (id != null) {
+			Log.info("Server", "Spieler %d hat die Verbindung getrennt", id);
 
-		connections.remove(id);
-		players.remove(id);
+			server.sendToAllExceptTCP(con.getID(), new PlayerLeftMessage(id));
+
+			session.getResultListeners().remove(id);
+			connections.remove(id);
+			players.remove(id);
+		}
 	}
 
 	// ON PLAYER CHANGE
@@ -201,7 +224,8 @@ public class GameServer {
 		players.put(msg.getId(), msg.getPlayer());
 
 		if (PlayerUtils.areAllPlayersReady(players.values())) {
-			session = new AuthoritativeSession(setup, players, (short) 0);
+			session = new AuthoritativeSession(sessionSetup, players,
+					(short) -1);
 
 			// Register the RMI handler
 			HashMap<Short, AuthoritativeResultListener> resultListeners = new HashMap<>();

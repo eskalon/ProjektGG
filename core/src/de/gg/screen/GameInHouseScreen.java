@@ -1,7 +1,6 @@
 package de.gg.screen;
 
 import de.gg.input.BackInputProcessor;
-import de.gg.util.Log;
 
 /**
  * This screen is rendered, when the player is inside of a house.
@@ -35,8 +34,6 @@ public class GameInHouseScreen extends BaseGameScreen {
 				game.pushScreen("map");
 			}
 		});
-
-		Log.debug("Input", "Double selection: %d", selectedHouseId);
 	}
 
 	public void setSelectedHouseId(short selectedHouseId) {

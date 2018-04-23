@@ -11,10 +11,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.google.common.eventbus.Subscribe;
 
 import de.gg.event.ConnectionEstablishedEvent;
+import de.gg.event.ConnectionFailedEvent;
 import de.gg.game.data.GameDifficulty;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.input.ButtonClickListener;
 import de.gg.network.NetworkHandler;
+import de.gg.network.ServerSetup;
 import de.gg.ui.AnimationlessDialog;
 import de.gg.ui.OffsetableTextField;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
@@ -78,10 +80,14 @@ public class LobbyCreationScreen extends BaseUIScreen {
 					}
 
 					// Sever & Client starten
-					game.getNetworkHandler().setUpConnectionAsHost(
-							Integer.valueOf(portField.getText()),
-							nameField.getText(), new GameSessionSetup(
-									difficulty, 0, System.currentTimeMillis()));
+					game.getNetworkHandler()
+							.setUpConnectionAsHost(
+									new ServerSetup(nameField.getText(), 8,
+											Integer.valueOf(
+													portField.getText()),
+											true),
+									new GameSessionSetup(difficulty, 0,
+											System.currentTimeMillis()));
 					connectingDialog = new AnimationlessDialog("Starten...",
 							skin);
 					connectingDialog.text("Server startet...");
@@ -132,18 +138,23 @@ public class LobbyCreationScreen extends BaseUIScreen {
 	@Subscribe
 	public void onHostStarted(ConnectionEstablishedEvent event) {
 		connectingDialog.setVisible(false);
-		if (event.getException() == null) {
-			((LobbyScreen) game.getScreen("lobby")).setupLobby(event);
-			game.pushScreen("lobby");
-		} else {
-			game.setCurrentSession(null);
-			AnimationlessDialog dialog = new AnimationlessDialog("Fehler",
-					skin);
+		((LobbyScreen) game.getScreen("lobby")).setupLobby(event);
+		game.pushScreen("lobby");
+	}
+
+	@Subscribe
+	public void onHostStartingFailed(ConnectionFailedEvent event) {
+		connectingDialog.setVisible(false);
+
+		game.setCurrentSession(null);
+		AnimationlessDialog dialog = new AnimationlessDialog("Fehler", skin);
+		if (event.getException() != null)
 			dialog.text(event.getException().getMessage());
-			dialog.button("Ok", true);
-			dialog.key(Keys.ENTER, true);
-			dialog.show(stage);
-		}
+		else
+			dialog.text(event.getServerRejectionMessage().getMessage());
+		dialog.button("Ok", true);
+		dialog.key(Keys.ENTER, true);
+		dialog.show(stage);
 	}
 
 }

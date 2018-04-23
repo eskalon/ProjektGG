@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.google.common.eventbus.Subscribe;
 
 import de.gg.event.ConnectionEstablishedEvent;
+import de.gg.event.ConnectionFailedEvent;
 import de.gg.input.ButtonClickListener;
 import de.gg.network.NetworkHandler;
 import de.gg.network.NetworkHandler.HostDiscoveryListener;
@@ -174,19 +175,25 @@ public class ServerBrowserScreen extends BaseUIScreen {
 	@Subscribe
 	public void onClientConnected(ConnectionEstablishedEvent event) {
 		connectingDialog.setVisible(false);
-		if (event.getException() == null) {
-			((LobbyScreen) game.getScreen("lobby")).setupLobby(event);
-			game.pushScreen("lobby");
-		} else {
-			game.setCurrentSession(null);
 
-			AnimationlessDialog dialog = new AnimationlessDialog("Fehler",
-					skin);
+		((LobbyScreen) game.getScreen("lobby")).setupLobby(event);
+		game.pushScreen("lobby");
+
+	}
+
+	@Subscribe
+	public void onConnectionFailed(ConnectionFailedEvent event) {
+		connectingDialog.setVisible(false);
+		game.setCurrentSession(null);
+
+		AnimationlessDialog dialog = new AnimationlessDialog("Fehler", skin);
+		if (event.getException() != null)
 			dialog.text(event.getException().getMessage());
-			dialog.button("Ok", true);
-			dialog.key(Keys.ENTER, true);
-			dialog.show(stage);
-		}
+		else
+			dialog.text(event.getServerRejectionMessage().getMessage());
+		dialog.button("Ok", true);
+		dialog.key(Keys.ENTER, true);
+		dialog.show(stage);
 	}
 
 }

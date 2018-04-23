@@ -137,7 +137,7 @@ public class GameMapScreen extends BaseGameScreen {
 
 	@Subscribe
 	public void onHouseSelectionEvent(HouseSelectionEvent ev) {
-		Log.debug("Input", "Single selection: %d", ev.getId());
+		Log.debug("Input", "Gebäude ausgewählt: %d", ev.getId());
 
 		// TODO show house selection dialog
 	}
