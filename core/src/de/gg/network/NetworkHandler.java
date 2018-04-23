@@ -19,6 +19,7 @@ import de.gg.event.PlayerChangedEvent;
 import de.gg.event.PlayerConnectedEvent;
 import de.gg.event.PlayerDisconnectedEvent;
 import de.gg.game.AuthoritativeResultListener;
+import de.gg.game.AuthoritativeSession;
 import de.gg.game.SlaveActionListener;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.network.GameServer.IHostCallback;
@@ -34,9 +35,21 @@ import de.gg.util.Log;
  * This class takes care of handling the networking part of the game. It holds
  * an instance of the used kryonet {@linkplain #client client} and the
  * {@linkplain #server game server} (if the client is also the
- * {@linkplain #isHost() host}).
+ * {@linkplain #isHost() host}). It is further responsible for relaying all user
+ * actions to the server.
  * <p>
- * It is further responsible for relaying all user actions to the server.
+ * Following are the methods relevant to using the handler:
+ * <ul>
+ * <li>{@link #setUpConnectionAsClient(String, int)}/{@link #setUpConnectionAsHost(int, String, GameSessionSetup)}:
+ * Initializes the network handler</li>
+ * <li>{@link #establishRMIConnection(AuthoritativeResultListener)}: Establishes
+ * the client's rmi connection; has to get called after the network handler was
+ * {@linkplain #setUpConnectionAsClient(String, int) initialized}</li>
+ * <li>{@link #setupGameOnServer()}: Initializes the
+ * {@linkplain AuthoritativeSession game session} on the server</li>
+ * <li>{@link #updateServer()()}: Has to get called continually to update the
+ * {@linkplain AuthoritativeSession game session} on the server</li>
+ * </ul>
  */
 public class NetworkHandler {
 

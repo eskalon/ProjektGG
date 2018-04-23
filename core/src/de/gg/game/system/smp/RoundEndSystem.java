@@ -6,8 +6,8 @@ import de.gg.game.entity.Character;
 import de.gg.game.entity.City;
 import de.gg.game.entity.Player;
 import de.gg.game.type.LawTypes;
-import de.gg.game.type.SocialStatusS;
 import de.gg.game.type.PositionTypes.PositionType;
+import de.gg.game.type.SocialStatusS;
 import de.gg.game.type.SocialStatusS.SocialStatus;
 
 public class RoundEndSystem {

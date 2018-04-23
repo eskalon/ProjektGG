@@ -2,12 +2,12 @@ package de.gg.game.factory;
 
 import java.util.Random;
 
-import de.gg.game.data.GameSessionSetup.GameDifficulty;
+import de.gg.game.data.GameDifficulty;
 import de.gg.game.entity.Character;
 import de.gg.game.type.NPCCharacterTraits;
+import de.gg.game.type.ProfessionTypes.ProfessionType;
 import de.gg.game.type.Religion;
 import de.gg.game.type.SocialStatusS;
-import de.gg.game.type.ProfessionTypes.ProfessionType;
 import de.gg.game.type.SocialStatusS.SocialStatus;
 import de.gg.util.RandomUtils;
 

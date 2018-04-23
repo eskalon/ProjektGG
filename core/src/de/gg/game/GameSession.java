@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import de.gg.game.data.GameDifficulty;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.data.RoundEndData;
-import de.gg.game.data.GameSessionSetup.GameDifficulty;
 import de.gg.game.entity.Character;
 import de.gg.game.entity.City;
 import de.gg.game.entity.Player;
@@ -17,8 +17,20 @@ import de.gg.util.Log;
 import de.gg.util.MeasuringUtil;
 
 /**
- * This class holds the game data and takes care of calculating when a round
- * ends.
+ * This class holds the game data and takes care of processing the rounds.
+ * <p>
+ * Following are the different phases a game session can be in:
+ * <ul>
+ * <li>{@link #setupGame()}: Initializes the game session, has to get called
+ * before the first {@link #update()}-call</li>
+ * <li>{@link #update()}: Processes the current round; has to get called
+ * continually; returns <code>true</code> when the current round is over</li>
+ * <li>{@link #processRoundEnd(RoundEndData)}: Has to get called (internally) to
+ * set up the next round after a round ended</li>
+ * <li>{@link #startNextRound()}: Has to get called (internally) to start the
+ * next round</li>
+ * </ul>
+ * 
  */
 public abstract class GameSession {
 
@@ -207,6 +219,11 @@ public abstract class GameSession {
 		}
 	}
 
+	/**
+	 * Called after a round ended to setup the next round.
+	 * 
+	 * @param data
+	 */
 	protected void processRoundEnd(RoundEndData data) {
 		measuringUtil.start();
 		// Character
@@ -244,7 +261,7 @@ public abstract class GameSession {
 		currentRoundTime = 0;
 		lastTime = System.currentTimeMillis();
 		updateTime = 0;
-		currentTick = 0;
+		
 		clock.resetClock();
 
 		// Reset the processing systems
