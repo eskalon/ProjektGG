@@ -84,6 +84,17 @@ public class ServerAuthoritativResultListenerStub
 		});
 	}
 
+	@Override
+	public void setGameSpeed(int index) {
+		executor.submit(new AuthoritativeResultListenerRunnable() {
+			@Override
+			protected void informListener(
+					AuthoritativeResultListener resultListener) {
+				resultListener.setGameSpeed(index);
+			}
+		});
+	}
+
 	/**
 	 * This runnable is used to easily inform every
 	 * {@linkplain AuthoritativeSession#resultListeners result listener} on a

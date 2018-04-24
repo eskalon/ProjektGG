@@ -16,4 +16,8 @@ public interface SlaveActionListener {
 
 	public boolean readyUp(short networkId);
 
+	public void increaseGameSpeed(short clientId);
+
+	public void decreaseGameSpeed(short clientId);
+
 }

@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.gg.core.ProjektGG;
+import de.gg.event.ChangedGameSpeedEvent;
 import de.gg.event.RoundEndEvent;
 import de.gg.game.data.GameSessionSetup;
+import de.gg.game.data.GameSpeed;
 import de.gg.game.data.NotificationData;
 import de.gg.game.data.RoundEndData;
 import de.gg.game.system.ProcessingSystem;
@@ -109,6 +111,13 @@ public class SlaveSession extends GameSession
 	@Override
 	public void onPlayerIllnessChange(short playerId, boolean isIll) {
 		city.getPlayers().get(playerId).setIll(isIll);
+	}
+
+	@Override
+	public void setGameSpeed(int index) {
+		setGameSpeed(GameSpeed.values()[index]);
+		
+		game.getEventBus().post(new ChangedGameSpeedEvent(gameSpeed));
 	}
 
 }

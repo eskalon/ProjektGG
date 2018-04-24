@@ -18,6 +18,7 @@ import com.google.common.eventbus.Subscribe;
 
 import de.gg.event.HouseEnterEvent;
 import de.gg.event.HouseSelectionEvent;
+import de.gg.input.GameSpeedInputProcessor;
 import de.gg.input.MapMovementInputController;
 import de.gg.input.MapSelectionInputController;
 import de.gg.render.SceneRenderer;
@@ -40,6 +41,7 @@ public class GameMapScreen extends BaseGameScreen {
 
 	private MapMovementInputController movementInputController;
 	private MapSelectionInputController selectionInputController;
+	private GameSpeedInputProcessor gameSpeedInputProcessor;
 
 	private Renderable renderable;
 
@@ -89,6 +91,9 @@ public class GameMapScreen extends BaseGameScreen {
 
 		this.movementInputController = new MapMovementInputController(
 				game.getGameCamera().getCamera(), game.getSettings());
+
+		this.gameSpeedInputProcessor = new GameSpeedInputProcessor(
+				game.getNetworkHandler());
 	}
 
 	@Override
@@ -172,6 +177,7 @@ public class GameMapScreen extends BaseGameScreen {
 		game.getInputMultiplexer().addProcessor(selectionInputController);
 		movementInputController.resetInput();
 		game.getInputMultiplexer().addProcessor(movementInputController);
+		game.getInputMultiplexer().addProcessor(gameSpeedInputProcessor);
 	}
 
 	@Override

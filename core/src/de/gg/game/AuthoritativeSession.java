@@ -3,6 +3,7 @@ package de.gg.game;
 import java.util.HashMap;
 
 import de.gg.game.data.GameSessionSetup;
+import de.gg.game.data.GameSpeed;
 import de.gg.game.data.RoundEndData;
 import de.gg.game.system.ProcessingSystem;
 import de.gg.game.system.server.FirstCharacterEventWaveServerSystem;
@@ -10,7 +11,9 @@ import de.gg.game.system.server.FirstPlayerEventWaveServerSystem;
 import de.gg.game.system.server.IllnessDamageSystem;
 import de.gg.game.system.server.NpcActionSystem;
 import de.gg.game.system.server.NpcActionSystem2;
+import de.gg.network.GameServer;
 import de.gg.network.LobbyPlayer;
+import de.gg.network.ServerSetup;
 import de.gg.util.Log;
 import de.gg.util.PlayerUtils;
 import de.gg.util.RandomUtils;
@@ -26,6 +29,8 @@ public class AuthoritativeSession extends GameSession
 	private HashMap<Short, AuthoritativeResultListener> resultListeners;
 	private AuthoritativeResultListener resultListenerStub;
 
+	private ServerSetup serverSetup;
+
 	/**
 	 * Creates a new multiplayer session.
 	 * 
@@ -37,11 +42,12 @@ public class AuthoritativeSession extends GameSession
 	 *            the local player's network id.
 	 */
 	public AuthoritativeSession(GameSessionSetup sessionSetup,
-			HashMap<Short, LobbyPlayer> players, short localNetworkId) {
-		super(sessionSetup, players, localNetworkId);
+			ServerSetup serverSetup, HashMap<Short, LobbyPlayer> players) {
+		super(sessionSetup, players, (short) -1);
 
 		this.resultListenerStub = new ServerAuthoritativResultListenerStub(
 				this);
+		this.serverSetup = serverSetup;
 	}
 
 	public void setResultListeners(
@@ -159,6 +165,31 @@ public class AuthoritativeSession extends GameSession
 	 */
 	public HashMap<Short, AuthoritativeResultListener> getResultListeners() {
 		return resultListeners;
+	}
+
+	@Override
+	public void increaseGameSpeed(short clientId) {
+		if (!serverSetup.isHostOnlyCommands()
+				|| clientId == GameServer.HOST_PLAYER_NETWORK_ID) {
+			int index = gameSpeed.ordinal() + 1;
+
+			gameSpeed = GameSpeed
+					.values()[index >= GameSpeed.values().length ? 0 : index];
+			resultListenerStub.setGameSpeed(gameSpeed.ordinal());
+		}
+	}
+
+	@Override
+	public void decreaseGameSpeed(short clientId) {
+		if (!serverSetup.isHostOnlyCommands()
+				|| clientId == GameServer.HOST_PLAYER_NETWORK_ID) {
+			int index = gameSpeed.ordinal() - 1;
+
+			gameSpeed = GameSpeed.values()[index < 0
+					? GameSpeed.values().length - 1
+					: index];
+			resultListenerStub.setGameSpeed(gameSpeed.ordinal());
+		}
 	}
 
 }

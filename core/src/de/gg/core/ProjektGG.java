@@ -151,7 +151,7 @@ public class ProjektGG extends Game {
 		this.eventBus = new EventQueueBus();
 
 		// Create the network handler
-		this.networkHandler = new NetworkHandler(eventBus);
+		this.networkHandler = new NetworkHandler(eventBus, version);
 
 		// Set input processor
 		Gdx.input.setInputProcessor(inputProcessor);
@@ -397,7 +397,7 @@ public class ProjektGG extends Game {
 
 	/**
 	 * @return the version the application is running on. Set via the jar
-	 *         manifest. Is "Development" if the game is started in a
+	 *         manifest. Is <code>Development</code> if the game is started in a
 	 *         development environment.
 	 */
 	public String getVersion() {

@@ -131,10 +131,10 @@ public class GameServer {
 						try {
 							broadcastServer.bind(0,
 									NetworkHandler.UDP_DISCOVER_PORT);
-							Log.info("Server", "Broadcast Server gestartet");
+							Log.info("Server", "Broadcast-Server gestartet");
 						} catch (IOException e) {
 							Log.error("Server",
-									"Der Broadcast Server konnte nicht gestartet werden: %s",
+									"Der Broadcast-Server konnte nicht gestartet werden: %s",
 									e);
 						}
 					}
@@ -181,11 +181,9 @@ public class GameServer {
 	private synchronized void onNewConnection(Connection con) {
 		Log.info("Server", "Client verbunden");
 
-		if (players.size() >= serverSetup.getMaxPlayerCount()) {
-			// Spiel voll
+		if (players.size() >= serverSetup.getMaxPlayerCount()) { // Match full
 			con.sendTCP(new ServerFullMessage());
-		} else {
-			// Noch Platz
+		} else { // Still free slots
 			LobbyPlayer p = PlayerUtils.getRandomPlayer(players.values());
 			players.put(playerIdIterator, p);
 			connections.put(playerIdIterator, con);
@@ -196,7 +194,7 @@ public class GameServer {
 
 			// Send the setup response
 			con.sendTCP(new GameSetupMessage(players, playerIdIterator,
-					sessionSetup));
+					sessionSetup, serverSetup.getVersion()));
 
 			playerIdIterator++;
 		}
@@ -224,8 +222,8 @@ public class GameServer {
 		players.put(msg.getId(), msg.getPlayer());
 
 		if (PlayerUtils.areAllPlayersReady(players.values())) {
-			session = new AuthoritativeSession(sessionSetup, players,
-					(short) -1);
+			session = new AuthoritativeSession(sessionSetup, serverSetup,
+					players);
 
 			// Register the RMI handler
 			HashMap<Short, AuthoritativeResultListener> resultListeners = new HashMap<>();
@@ -254,7 +252,7 @@ public class GameServer {
 
 			broadcastServer.close();
 			broadcastServer = null;
-			Log.info("Server", "Broadcast Server geschlossen");
+			Log.info("Server", "Broadcast-Server geschlossen");
 
 		}
 	}

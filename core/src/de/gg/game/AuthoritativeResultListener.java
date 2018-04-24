@@ -31,4 +31,6 @@ public interface AuthoritativeResultListener {
 
 	public void onPlayerIllnessChange(short playerId, boolean isIll);
 
+	public void setGameSpeed(int index);
+
 }

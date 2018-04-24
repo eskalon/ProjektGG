@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import de.gg.game.data.GameDifficulty;
 import de.gg.game.data.GameSessionSetup;
+import de.gg.game.data.GameSpeed;
 import de.gg.game.data.RoundEndData;
 import de.gg.game.entity.Character;
 import de.gg.game.entity.City;
@@ -34,7 +35,9 @@ import de.gg.util.MeasuringUtil;
  */
 public abstract class GameSession {
 
-	static final long ROUND_DURATION = 35 * 1000; // 8*60*1000
+	private static final long ROUND_DURATION_IN_SECONDS = 35; // 8*60
+	static final long ROUND_DURATION = ROUND_DURATION_IN_SECONDS * 1000
+			* GameSpeed.NORMAL.getDeltaTimeMultiplied();
 	/**
 	 * Set to true when a game round is over. The next round starts, when
 	 * {{@link #startNextRound()}} is called.
@@ -52,6 +55,7 @@ public abstract class GameSession {
 	 */
 	private volatile long currentRoundTime = ROUND_DURATION;
 	private volatile int currentRound = 0;
+	protected GameSpeed gameSpeed = GameSpeed.NORMAL;
 
 	/**
 	 * This time is used to calculate the update ticks.
@@ -128,7 +132,8 @@ public abstract class GameSession {
 	public synchronized boolean update() {
 		// Zeit-Delta ermitteln
 		long currentTime = System.currentTimeMillis();
-		long delta = currentTime - lastTime;
+		long delta = (currentTime - lastTime)
+				* gameSpeed.getDeltaTimeMultiplied();
 		lastTime = currentTime;
 
 		if (!initialized) {
@@ -153,7 +158,8 @@ public abstract class GameSession {
 				return true;
 
 			}
-		} else {
+		} else { // durch das else hier können (bei großen deltas) einige Ticks
+					// wegfallen
 			// Runde läuft noch
 			updateTime += delta;
 
@@ -165,6 +171,10 @@ public abstract class GameSession {
 		}
 
 		return false;
+	}
+
+	protected void setGameSpeed(GameSpeed gameSpeed) {
+		this.gameSpeed = gameSpeed;
 	}
 
 	/**

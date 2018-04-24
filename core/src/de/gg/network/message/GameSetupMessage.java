@@ -23,15 +23,20 @@ public class GameSetupMessage {
 	 * The game's settings.
 	 */
 	private GameSessionSetup settings;
+	/**
+	 * The version of the game server.
+	 */
+	private String serverVersion;
 
 	public GameSetupMessage() {
 	}
 
 	public GameSetupMessage(HashMap<Short, LobbyPlayer> players, short clientId,
-			GameSessionSetup settings) {
+			GameSessionSetup settings, String serverVersion) {
 		this.players = players;
 		this.settings = settings;
 		this.clientId = clientId;
+		this.serverVersion = serverVersion;
 	}
 
 	public HashMap<Short, LobbyPlayer> getPlayers() {
@@ -44,6 +49,10 @@ public class GameSetupMessage {
 
 	public GameSessionSetup getSettings() {
 		return settings;
+	}
+
+	public String getServerVersion() {
+		return serverVersion;
 	}
 
 }

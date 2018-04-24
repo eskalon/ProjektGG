@@ -85,7 +85,7 @@ public class LobbyCreationScreen extends BaseUIScreen {
 									new ServerSetup(nameField.getText(), 8,
 											Integer.valueOf(
 													portField.getText()),
-											true),
+											true, game.getVersion(), true),
 									new GameSessionSetup(difficulty, 0,
 											System.currentTimeMillis()));
 					connectingDialog = new AnimationlessDialog("Starten...",

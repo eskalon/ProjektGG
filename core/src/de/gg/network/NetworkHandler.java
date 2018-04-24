@@ -31,6 +31,7 @@ import de.gg.network.message.PlayerChangedMessage;
 import de.gg.network.message.PlayerJoinedMessage;
 import de.gg.network.message.PlayerLeftMessage;
 import de.gg.network.message.ServerFullMessage;
+import de.gg.network.message.ServerRejectionMessage;
 import de.gg.util.Log;
 
 /**
@@ -75,11 +76,17 @@ public class NetworkHandler {
 	 * The last measured ping.
 	 */
 	private int ping;
+	/**
+	 * The version of the game.
+	 */
+	private String gameVersion;
 
-	public NetworkHandler(EventBus eventBus) {
-		Preconditions.checkNotNull(eventBus, "Event bus cannot be null.");
+	public NetworkHandler(EventBus eventBus, String gameVersion) {
+		Preconditions.checkNotNull(eventBus, "eventBus cannot be null.");
+		Preconditions.checkNotNull(eventBus, "gameVersion cannot be null.");
 
 		this.eventBus = eventBus;
+		this.gameVersion = gameVersion;
 	}
 
 	/**
@@ -99,39 +106,59 @@ public class NetworkHandler {
 		NetworkRegisterer.registerClasses(client.getKryo());
 
 		TypeListener listener = new TypeListener();
-		// GAME SETUP MESSAGE (ON CLIENT CONNECT)
+		// CLIENT CONNECTION
+		// Game setup (on client connect)
 		listener.addTypeHandler(GameSetupMessage.class, (con, msg) -> {
-			eventBus.post(new ConnectionEstablishedEvent(msg.getPlayers(),
-					msg.getId(), msg.getSettings()));
-			localClientId = msg.getId();
-			Log.info("Client", "Verbindung hergestellt. Netzwerk ID: %d",
-					localClientId);
+			if (gameVersion.equals(msg.getServerVersion())) { // right server
+																// version
+				eventBus.post(new ConnectionEstablishedEvent(msg.getPlayers(),
+						msg.getId(), msg.getSettings()));
+				localClientId = msg.getId();
+				Log.info("Client", "Verbindung hergestellt. Netzwerk ID: %d",
+						localClientId);
+			} else { // wrong server version
+				eventBus.post(
+						new ConnectionFailedEvent(new ServerRejectionMessage() {
+							@Override
+							public String getMessage() {
+								return "Falsche Server-Version: "
+										+ msg.getServerVersion();
+							}
+						}));
+				con.close();
+				Log.info("Client",
+						"Fehler beim verbinden: Falsche Server-Version (%s)",
+						msg.getServerVersion());
+			}
 		});
-		// SERVER FULL MESSAGE
+		// Server full
 		listener.addTypeHandler(ServerFullMessage.class, (con, msg) -> {
 			eventBus.post(new ConnectionFailedEvent(msg));
 			con.close();
 			Log.info("Client", "Fehler beim verbinden: %s", msg.getMessage());
 		});
-		// NEW CHAT MESSAGE
-		listener.addTypeHandler(ChatMessageSentMessage.class, (con, msg) -> {
-			eventBus.post(new NewChatMessagEvent(msg.getSenderId(),
-					msg.getMessage()));
-		});
-		// PLAYER CHANGED
-		listener.addTypeHandler(PlayerChangedMessage.class, (con, msg) -> {
-			eventBus.post(new PlayerChangedEvent(msg.getId(), msg.getPlayer()));
-		});
-		// PLAYER JOINED
+
+		// PLAYER CHANGES
+		// Player joined
 		listener.addTypeHandler(PlayerJoinedMessage.class, (con, msg) -> {
 			eventBus.post(
 					new PlayerConnectedEvent(msg.getId(), msg.getPlayer()));
 		});
-		// PLAYER LEFT
+		// Player left
 		listener.addTypeHandler(PlayerLeftMessage.class, (con, msg) -> {
 			eventBus.post(new PlayerDisconnectedEvent(msg.getId()));
 		});
-		// PING
+		// Player changed
+		listener.addTypeHandler(PlayerChangedMessage.class, (con, msg) -> {
+			eventBus.post(new PlayerChangedEvent(msg.getId(), msg.getPlayer()));
+		});
+
+		// New chat message
+		listener.addTypeHandler(ChatMessageSentMessage.class, (con, msg) -> {
+			eventBus.post(new NewChatMessagEvent(msg.getSenderId(),
+					msg.getMessage()));
+		});
+		// Ping
 		listener.addTypeHandler(Ping.class, (con, msg) -> {
 			if (msg.isReply) {
 				this.ping = con.getReturnTripTime();
@@ -229,6 +256,26 @@ public class NetworkHandler {
 	}
 
 	/**
+	 * Establishes the RMI connection to the server.
+	 */
+	public void establishRMIConnection(
+			AuthoritativeResultListener resultListener) {
+		ObjectSpace.registerClasses(client.getKryo());
+		ObjectSpace objectSpace = new ObjectSpace();
+		objectSpace.register(localClientId, resultListener);
+		objectSpace.addConnection(client);
+
+		SlaveActionListener actionListener = ObjectSpace.getRemoteObject(client,
+				254, SlaveActionListener.class);
+
+		if (actionListener == null)
+			Log.error("Client", "Der actionListener des Spielers %d ist null",
+					localClientId);
+
+		this.actionListener = actionListener;
+	}
+
+	/**
 	 * Disconnects the client.
 	 */
 	public void disconnect() {
@@ -256,31 +303,19 @@ public class NetworkHandler {
 		sendObject(new ChatMessageSentMessage(localClientId, message));
 	}
 
+	public void increaseGameSpeed() {
+		actionListener.increaseGameSpeed(localClientId);
+	}
+
+	public void decreaseGameSpeed() {
+		actionListener.decreaseGameSpeed(localClientId);
+	}
+
 	/**
 	 * Updates the player on the server.
 	 */
 	public void onLocalPlayerChange(LobbyPlayer player) {
 		sendObject(new PlayerChangedMessage(localClientId, player));
-	}
-
-	/**
-	 * Establishes the RMI connection to the server.
-	 */
-	public void establishRMIConnection(
-			AuthoritativeResultListener resultListener) {
-		ObjectSpace.registerClasses(client.getKryo());
-		ObjectSpace objectSpace = new ObjectSpace();
-		objectSpace.register(localClientId, resultListener);
-		objectSpace.addConnection(client);
-
-		SlaveActionListener actionListener = ObjectSpace.getRemoteObject(client,
-				254, SlaveActionListener.class);
-
-		if (actionListener == null)
-			Log.error("Client", "Der actionListener des Spielers %d ist null",
-					localClientId);
-
-		this.actionListener = actionListener;
 	}
 
 	public boolean readyUp() {
