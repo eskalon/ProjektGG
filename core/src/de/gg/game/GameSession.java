@@ -35,8 +35,9 @@ import de.gg.util.MeasuringUtil;
  */
 public abstract class GameSession {
 
-	private static final long ROUND_DURATION_IN_SECONDS = 35; // 8*60
-	static final long ROUND_DURATION = ROUND_DURATION_IN_SECONDS * 1000
+	private static final int ROUND_DURATION_IN_SECONDS = 35; // 8*60
+
+	static final int ROUND_DURATION = ROUND_DURATION_IN_SECONDS * 1000
 			* GameSpeed.NORMAL.getDeltaTimeMultiplied();
 	/**
 	 * Set to true when a game round is over. The next round starts, when
@@ -47,7 +48,7 @@ public abstract class GameSession {
 	/**
 	 * Used to calculate the time delta.
 	 */
-	private long lastTime = System.currentTimeMillis();
+	private long lastTime = -1;
 	/**
 	 * Used to determine when the current round ends and the end round screen is
 	 * shown. To start the following round, the server needs to receive every
@@ -57,19 +58,23 @@ public abstract class GameSession {
 	private volatile int currentRound = 0;
 	protected GameSpeed gameSpeed = GameSpeed.NORMAL;
 
+	private static final int TICKS_PER_SECOND = 10;
+
+	private static final int TICKS_PER_ROUND = ROUND_DURATION_IN_SECONDS
+			* TICKS_PER_SECOND;
+	private static final int TICK_DURATION = 1000 / TICKS_PER_SECOND;
 	/**
 	 * This time is used to calculate the update ticks.
 	 */
-	private volatile long updateTime;
-	private static final int TICKS_PER_SECOND = 10;
-	private static final long TICK_DURATION = 1000 / TICKS_PER_SECOND;
+	private volatile long updateTime = 0;
+
 	/**
 	 * The current tick. Is used to calculate whether an action should get
 	 * executed.
 	 * 
 	 * @see #isRightTick(int)
 	 */
-	private volatile int currentTick = 0;
+	private volatile int currentTick = TICKS_PER_ROUND;
 
 	private volatile boolean initialized = false;
 
@@ -130,6 +135,9 @@ public abstract class GameSession {
 	 * @return whether the ingame day is over (8 minutes).
 	 */
 	public synchronized boolean update() {
+		// Die Zeit für das erste Update setzen
+		if (lastTime == -1)
+			lastTime = System.currentTimeMillis();
 		// Zeit-Delta ermitteln
 		long currentTime = System.currentTimeMillis();
 		long delta = (currentTime - lastTime)
@@ -138,35 +146,30 @@ public abstract class GameSession {
 
 		if (!initialized) {
 			Log.error(localNetworkId == -1 ? "Server" : "Client",
-					"The session has to get initialized first before it can be updated");
+					"Die Session muss zuerst initialisiert werden, bevor sie geupdated werden kann");
 			return false;
 		}
 
 		// Rundenzeit hochzählen
 		currentRoundTime += delta;
+		updateTime += delta;
 
+		// Ticks berechnen
+		while (currentTick < TICKS_PER_ROUND && updateTime >= TICK_DURATION) {
+			// Neuer Update Tick
+			updateTime -= TICK_DURATION;
+			currentTick++;
+			fixedUpdate();
+		}
+
+		// Rundenende berechnen
 		if (currentRoundTime >= ROUND_DURATION) {
 			// Runde zuende
 			if (!waitingForNextRound) {
 				waitingForNextRound = true;
 
-				if (getRoundProgress() < 1)
-					for (int i = 0; i < 6; i++)
-						Log.error(localNetworkId == -1 ? "Server" : "Client",
-								"Thread-Bug in Runde %s", getCurrentRound());
-
 				return true;
 
-			}
-		} else { // durch das else hier können (bei großen deltas) einige Ticks
-					// wegfallen
-			// Runde läuft noch
-			updateTime += delta;
-
-			if (updateTime >= TICK_DURATION) {
-				updateTime -= TICK_DURATION;
-				currentTick++;
-				fixedUpdate();
 			}
 		}
 
@@ -182,7 +185,7 @@ public abstract class GameSession {
 	 * the game is running on normal speed.
 	 */
 	public synchronized void fixedUpdate() {
-		if (isRightTick(10)) {
+		if (isRightTick(TICKS_PER_SECOND)) {
 			clock.update();
 
 			// PROCESSING SYSTEMS
@@ -267,6 +270,10 @@ public abstract class GameSession {
 	 * Called after a round ended to start the next round.
 	 */
 	protected synchronized void startNextRound() {
+		Log.debug(localNetworkId == -1 ? "Server" : "Client",
+				"Runde %s zuende; %s Ticks verarbeitet", currentRound,
+				currentTick);
+
 		currentRound++;
 		currentRoundTime = 0;
 		lastTime = System.currentTimeMillis();

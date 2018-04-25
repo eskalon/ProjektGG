@@ -2,6 +2,7 @@ package de.gg.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g3d.Material;
@@ -41,7 +42,7 @@ public class GameMapScreen extends BaseGameScreen {
 
 	private MapMovementInputController movementInputController;
 	private MapSelectionInputController selectionInputController;
-	private GameSpeedInputProcessor gameSpeedInputProcessor;
+	private InputMultiplexer gameInputProcessors;
 
 	private Renderable renderable;
 
@@ -51,6 +52,7 @@ public class GameMapScreen extends BaseGameScreen {
 	 * The pause dialog.
 	 */
 	private AnimationlessDialog pauseDialog;
+	private AnimationlessDialog houseSelectionDialog;
 	private boolean pauseShown = false;
 
 	// Sphere stuff (temp)
@@ -84,20 +86,26 @@ public class GameMapScreen extends BaseGameScreen {
 		shader = new TestShader(game.getAssetManager());
 		shader.init();
 
+		this.gameInputProcessors = new InputMultiplexer();
 		this.selectionInputController = new MapSelectionInputController(
 				game.getSettings(), game.getEventBus(),
 				game.getGameCamera().getCamera(),
 				game.getCurrentSession().getCity());
+		this.gameInputProcessors.addProcessor(selectionInputController);
 
 		this.movementInputController = new MapMovementInputController(
 				game.getGameCamera().getCamera(), game.getSettings());
+		this.gameInputProcessors.addProcessor(movementInputController);
 
-		this.gameSpeedInputProcessor = new GameSpeedInputProcessor(
+		GameSpeedInputProcessor gameSpeedInputProcessor = new GameSpeedInputProcessor(
 				game.getNetworkHandler());
+		this.gameInputProcessors.addProcessor(gameSpeedInputProcessor);
 	}
 
 	@Override
 	protected void initUI() {
+		// TODO
+
 		pauseDialog = new AnimationlessDialog("", skin) {
 			protected void result(Object object) {
 				pauseShown = false;
@@ -113,6 +121,9 @@ public class GameMapScreen extends BaseGameScreen {
 			};
 		};
 		pauseDialog.button("Settings", 1).button("Verbindung trennen", 2);
+
+		houseSelectionDialog = new AnimationlessDialog("", skin);
+		houseSelectionDialog.button("Test");
 	}
 
 	@Override
@@ -144,7 +155,19 @@ public class GameMapScreen extends BaseGameScreen {
 	public void onHouseSelectionEvent(HouseSelectionEvent ev) {
 		Log.debug("Input", "Gebäude ausgewählt: %d", ev.getId());
 
-		// TODO show house selection dialog
+		if (ev.getId() == -1) {
+			houseSelectionDialog.hide();
+			return;
+		}
+
+		houseSelectionDialog.show(stage);
+		houseSelectionDialog.setModal(false);
+		// houseSelectionDialog.setPosition(ev.getClickX(),
+		// game.getViewportHeight() - ev.getClickY());
+		houseSelectionDialog.setPosition(
+				game.getViewportWidth() - houseSelectionDialog.getWidth(),
+				game.getViewportHeight() - 230
+						- houseSelectionDialog.getHeight());
 	}
 
 	@Subscribe
@@ -163,8 +186,10 @@ public class GameMapScreen extends BaseGameScreen {
 				if (keycode == Keys.ESCAPE) {
 					if (pauseShown)
 						pauseDialog.hide();
-					else
+					else {
 						pauseDialog.show(stage);
+						// selectionInputController.resetSelection();
+					}
 
 					pauseShown = !pauseShown;
 
@@ -174,10 +199,8 @@ public class GameMapScreen extends BaseGameScreen {
 			}
 		});
 
-		game.getInputMultiplexer().addProcessor(selectionInputController);
 		movementInputController.resetInput();
-		game.getInputMultiplexer().addProcessor(movementInputController);
-		game.getInputMultiplexer().addProcessor(gameSpeedInputProcessor);
+		game.getInputMultiplexer().addProcessor(gameInputProcessors);
 	}
 
 	@Override
