@@ -35,7 +35,7 @@ import de.gg.util.MeasuringUtil;
  */
 public abstract class GameSession {
 
-	private static final int ROUND_DURATION_IN_SECONDS = 35; // 8*60
+	static final int ROUND_DURATION_IN_SECONDS = 35; // 8*60
 
 	static final int ROUND_DURATION = ROUND_DURATION_IN_SECONDS * 1000
 			* GameSpeed.NORMAL.getDeltaTimeMultiplied();
@@ -58,11 +58,12 @@ public abstract class GameSession {
 	private volatile int currentRound = 0;
 	protected GameSpeed gameSpeed = GameSpeed.NORMAL;
 
-	private static final int TICKS_PER_SECOND = 10;
+	protected static final int TICKS_PER_SECOND = 10;
 
 	private static final int TICKS_PER_ROUND = ROUND_DURATION_IN_SECONDS
 			* TICKS_PER_SECOND;
-	private static final int TICK_DURATION = 1000 / TICKS_PER_SECOND;
+	private static final int TICK_DURATION = 1000
+			* GameSpeed.NORMAL.getDeltaTimeMultiplied() / TICKS_PER_SECOND;
 	/**
 	 * This time is used to calculate the update ticks.
 	 */
@@ -77,8 +78,6 @@ public abstract class GameSession {
 	private volatile int currentTick = TICKS_PER_ROUND;
 
 	private volatile boolean initialized = false;
-
-	private GameClock clock;
 
 	protected City city;
 	protected HashMap<Short, LobbyPlayer> players;
@@ -110,7 +109,6 @@ public abstract class GameSession {
 		this.players = players;
 		this.localNetworkId = localNetworkId;
 		this.city = new City();
-		this.clock = new GameClock();
 	}
 
 	/**
@@ -182,12 +180,10 @@ public abstract class GameSession {
 
 	/**
 	 * This is used to process the game. It is called ten times per second if
-	 * the game is running on normal speed.
+	 * the game is running on {@linkplain GameSpeed#NORMAL}normal speed.
 	 */
 	public synchronized void fixedUpdate() {
 		if (isRightTick(TICKS_PER_SECOND)) {
-			clock.update();
-
 			// PROCESSING SYSTEMS
 			// Character
 			for (ProcessingSystem<Character> sys : characterSystems) {
@@ -279,7 +275,6 @@ public abstract class GameSession {
 		lastTime = System.currentTimeMillis();
 		updateTime = 0;
 		currentTick = 0;
-		clock.resetClock();
 
 		// Reset the processing systems
 		for (ProcessingSystem<Character> sys : characterSystems) {
@@ -325,10 +320,6 @@ public abstract class GameSession {
 
 	public City getCity() {
 		return city;
-	}
-
-	public GameClock getClock() {
-		return clock;
 	}
 
 }

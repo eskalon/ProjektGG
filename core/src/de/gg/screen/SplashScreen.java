@@ -12,19 +12,26 @@ import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 public class SplashScreen extends BaseScreen {
 
 	protected long startTime = -1;
-	protected long duration = 1250;
+	protected long duration = 1330;
 	private Texture titleImage;
 	private int xPos;
 	private int yPos;
 
 	@Asset(Texture.class)
-	private final String TITLE_IMAGE_PATH = "ui/images/title.png";
+	private final String TITLE_IMAGE_PATH = "ui/images/eskalon.png";
+	// private final String TITLE_ANIMATION_PATH = "ui/images/eskalon.gif";
+
+	// Animation<TextureRegion> animation;
 
 	@Override
 	protected void onInit() {
 		titleImage = assetManager.get(TITLE_IMAGE_PATH);
+
+		// animation = GifDecoder.loadGIFAnimation(Animation.PlayMode.NORMAL,
+		// Gdx.files.internal(TITLE_ANIMATION_PATH).read());
+
 		xPos = (game.getViewportWidth() - titleImage.getWidth()) / 2;
-		yPos = (game.getViewportHeight() - titleImage.getHeight()) / 2 + 40;
+		yPos = (game.getViewportHeight() - titleImage.getHeight()) / 2 + 45;
 	}
 
 	@Override

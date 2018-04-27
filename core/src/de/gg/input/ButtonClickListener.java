@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 
+import de.gg.setting.GameSettings;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 /**
@@ -16,20 +17,26 @@ public abstract class ButtonClickListener extends InputListener {
 	private static final String CLICK_SOUND = "audio/button-tick.mp3";
 
 	private Sound clickSound;
+	private GameSettings settings;
 
 	/**
 	 * @param assetManager
 	 *            The game's asset manager. Is used to retrieve the click sound.
+	 * @param settings
+	 *            The game's settings.
 	 */
-	public ButtonClickListener(AssetManager assetManager) {
+	public ButtonClickListener(AssetManager assetManager,
+			GameSettings settings) {
 		clickSound = assetManager.get(CLICK_SOUND);
+		this.settings = settings;
 	}
 
 	@Override
 	public boolean touchDown(InputEvent event, float x, float y, int pointer,
 			int button) {
 		if (arePreconditionsMet()) {
-			clickSound.play(1F);
+			clickSound.play(
+					settings.getEffectVolume() * settings.getMasterVolume());
 			onClick();
 
 			return true;

@@ -3,6 +3,7 @@ package de.gg.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g3d.Material;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.google.common.eventbus.Subscribe;
 
+import de.gg.event.FullHourEvent;
 import de.gg.event.HouseEnterEvent;
 import de.gg.event.HouseSelectionEvent;
 import de.gg.input.GameSpeedInputProcessor;
@@ -37,6 +39,8 @@ public class GameMapScreen extends BaseGameScreen {
 
 	@Asset(Text.class)
 	private static final String FRAGMENT_SHADER_PATH = "shaders/single_color.fragment.glsl";
+	@Asset(Sound.class)
+	private static final String CLOCK_TICK_SOUND = "audio/clock-tick.wav";
 
 	private SceneRenderer sceneRenderer;
 
@@ -47,6 +51,7 @@ public class GameMapScreen extends BaseGameScreen {
 	private Renderable renderable;
 
 	private BitmapFont font;
+	private Sound clockTickSound;
 
 	/**
 	 * The pause dialog.
@@ -63,6 +68,8 @@ public class GameMapScreen extends BaseGameScreen {
 	protected void onInit() {
 		super.onInit();
 		font = skin.getFont("main-19");
+
+		clockTickSound = assetManager.get(CLOCK_TICK_SOUND);
 
 		Text t = game.getAssetManager().get(FRAGMENT_SHADER_PATH);
 		sceneRenderer = new SceneRenderer(game.getGameCamera().getCamera(),
@@ -104,7 +111,7 @@ public class GameMapScreen extends BaseGameScreen {
 
 	@Override
 	protected void initUI() {
-		// TODO
+		// TODO UI-Komponenten hinzufügen
 
 		pauseDialog = new AnimationlessDialog("", skin) {
 			protected void result(Object object) {
@@ -175,6 +182,12 @@ public class GameMapScreen extends BaseGameScreen {
 		((GameInHouseScreen) game.getScreen("house"))
 				.setSelectedHouseId(ev.getId());
 		game.pushScreen("house");
+	}
+
+	@Subscribe
+	public void onFollHour(FullHourEvent ev) {
+		clockTickSound.play(game.getSettings().getEffectVolume()
+				* game.getSettings().getMasterVolume());
 	}
 
 	@Override

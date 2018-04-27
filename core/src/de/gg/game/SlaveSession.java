@@ -27,6 +27,8 @@ public class SlaveSession extends GameSession
 	private ProjektGG game;
 	private List<NotificationData> notifications = new ArrayList<>();
 
+	private GameClock clock;
+
 	/**
 	 * Creates a new multiplayer session.
 	 * 
@@ -38,11 +40,14 @@ public class SlaveSession extends GameSession
 	 *            a hashmap containing the players.
 	 * @param networkID
 	 *            the networkID of the local player.
+	 * @param eventBus
+	 *            the game's event bus.
 	 */
 	public SlaveSession(ProjektGG game, GameSessionSetup sessionSetup,
 			HashMap<Short, LobbyPlayer> players, short networkID) {
 		super(sessionSetup, players, networkID);
 		this.game = game;
+		this.clock = new GameClock(game.getEventBus());
 	}
 
 	/**
@@ -63,10 +68,21 @@ public class SlaveSession extends GameSession
 	public synchronized void fixedUpdate() {
 		super.fixedUpdate();
 
+		if (isRightTick(TICKS_PER_SECOND)) {
+			clock.update();
+		}
+
 		if (isRightTick(15)) {
 			Log.debug("CLOCK", "%02d:%02d", getClock().getHour(),
 					getClock().getMinute());
 		}
+	}
+
+	@Override
+	protected synchronized void startNextRound() {
+		super.startNextRound();
+
+		clock.resetClock();
 	}
 
 	public List<NotificationData> getNotifications() {
@@ -116,8 +132,12 @@ public class SlaveSession extends GameSession
 	@Override
 	public void setGameSpeed(int index) {
 		setGameSpeed(GameSpeed.values()[index]);
-		
+
 		game.getEventBus().post(new ChangedGameSpeedEvent(gameSpeed));
+	}
+
+	public GameClock getClock() {
+		return clock;
 	}
 
 }

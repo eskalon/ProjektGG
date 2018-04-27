@@ -1,7 +1,6 @@
 package de.gg.screen;
 
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -21,8 +20,6 @@ public class SettingsScreen extends BaseUIScreen {
 
 	@Asset(Texture.class)
 	private final String BACKGROUND_IMAGE_PATH = "ui/backgrounds/town3.jpg";
-	@Asset(Sound.class)
-	private final String BUTTON_SOUND = "audio/button-tick.mp3";
 
 	private BaseScreen caller;
 
@@ -86,7 +83,8 @@ public class SettingsScreen extends BaseUIScreen {
 		Label forwardLabel = new Label("Forward: ", skin);
 		KeySelectionInputField forwardButton = new KeySelectionInputField(
 				Keys.toString(game.getSettings().getForwardKey()), skin, stage,
-				assetManager, new KeySelectionEventListener() {
+				assetManager, game.getSettings(),
+				new KeySelectionEventListener() {
 					@Override
 					public void onKeySelection(int key) {
 						game.getSettings().setForwardKey(key);
@@ -95,7 +93,8 @@ public class SettingsScreen extends BaseUIScreen {
 		Label leftLabel = new Label("Left: ", skin);
 		KeySelectionInputField leftButton = new KeySelectionInputField(
 				Keys.toString(game.getSettings().getLeftKey()), skin, stage,
-				assetManager, new KeySelectionEventListener() {
+				assetManager, game.getSettings(),
+				new KeySelectionEventListener() {
 					@Override
 					public void onKeySelection(int key) {
 						game.getSettings().setLeftKey(key);
@@ -104,7 +103,8 @@ public class SettingsScreen extends BaseUIScreen {
 		Label backwardLabel = new Label("Backward: ", skin);
 		KeySelectionInputField backwardButton = new KeySelectionInputField(
 				Keys.toString(game.getSettings().getBackwardKey()), skin, stage,
-				assetManager, new KeySelectionEventListener() {
+				assetManager, game.getSettings(),
+				new KeySelectionEventListener() {
 					@Override
 					public void onKeySelection(int key) {
 						game.getSettings().setBackwardKey(key);
@@ -113,7 +113,8 @@ public class SettingsScreen extends BaseUIScreen {
 		Label rightLabel = new Label("Right: ", skin);
 		KeySelectionInputField rightButton = new KeySelectionInputField(
 				Keys.toString(game.getSettings().getRightKey()), skin, stage,
-				assetManager, new KeySelectionEventListener() {
+				assetManager, game.getSettings(),
+				new KeySelectionEventListener() {
 					@Override
 					public void onKeySelection(int key) {
 						game.getSettings().setRightKey(key);
@@ -122,15 +123,16 @@ public class SettingsScreen extends BaseUIScreen {
 
 		ImageTextButton backButton = new ImageTextButton("Fertig", skin,
 				"small");
-		backButton.addListener(new ButtonClickListener(assetManager) {
-			@Override
-			protected void onClick() {
-				if (caller instanceof GameMapScreen)
-					game.pushScreen("map");
-				else
-					game.pushScreen("mainMenu");
-			}
-		});
+		backButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						if (caller instanceof GameMapScreen)
+							game.pushScreen("map");
+						else
+							game.pushScreen("mainMenu");
+					}
+				});
 
 		Table settingsTable = new Table();
 		Table settings2ColTable = new Table();

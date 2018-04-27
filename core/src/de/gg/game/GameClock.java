@@ -1,5 +1,9 @@
 package de.gg.game;
 
+import com.google.common.eventbus.EventBus;
+
+import de.gg.event.FullHourEvent;
+
 /**
  * This class takes care of translating the update ticks to the in-game time.
  * Every ten ticks {@link #update()} has to get called.
@@ -15,12 +19,18 @@ public class GameClock {
 	 */
 	private static final int STARTING_HOUR = 6;
 	/**
-	 * The in-game minutes passing per update.
+	 * The in-game minutes passing per clock update.
 	 */
 	private static final float MINUTES_PER_UPDATE = HOURS_PER_DAY * 60
-			/ (GameSession.ROUND_DURATION / 1000);
+			/ GameSession.ROUND_DURATION_IN_SECONDS;
 
-	private int minute, hour;
+	private float minute, hour;
+
+	private EventBus eventBus;
+
+	public GameClock(EventBus eventBus) {
+		this.eventBus = eventBus;
+	}
 
 	/**
 	 * Should get called every ten ticks (= 1 second). Updates the clock.
@@ -31,6 +41,8 @@ public class GameClock {
 		if (minute >= 60) {
 			minute -= 60;
 			hour++;
+
+			eventBus.post(new FullHourEvent());
 		}
 	}
 
@@ -43,11 +55,11 @@ public class GameClock {
 	}
 
 	public int getHour() {
-		return hour;
+		return (int) hour;
 	}
 
 	public int getMinute() {
-		return minute;
+		return (int) minute;
 	}
 
 }

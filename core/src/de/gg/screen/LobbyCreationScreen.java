@@ -52,57 +52,58 @@ public class LobbyCreationScreen extends BaseUIScreen {
 
 		ImageTextButton backButton = new ImageTextButton("Zurück", skin,
 				"small");
-		backButton.addListener(new ButtonClickListener(assetManager) {
-			@Override
-			protected void onClick() {
-				game.pushScreen("serverBrowser");
-			}
-		});
+		backButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						game.pushScreen("serverBrowser");
+					}
+				});
 
 		ImageTextButton createButton = new ImageTextButton("Erstellen", skin,
 				"small");
-		createButton.addListener(new ButtonClickListener(assetManager) {
-			@Override
-			protected void onClick() {
-				if (!nameField.getText().isEmpty()
-						&& !portField.getText().isEmpty()) {
-					GameDifficulty difficulty = GameDifficulty.NORMAL;
+		createButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						if (!nameField.getText().isEmpty()
+								&& !portField.getText().isEmpty()) {
+							GameDifficulty difficulty = GameDifficulty.NORMAL;
 
-					if (speedGroup.getChecked()
-							.equals(easyDifficultyCheckbox)) {
-						difficulty = GameDifficulty.EASY;
-					} else if (speedGroup.getChecked()
-							.equals(normalDifficultyCheckbox)) {
-						difficulty = GameDifficulty.NORMAL;
-					} else if (speedGroup.getChecked()
-							.equals(hardDifficultyCheckbox)) {
-						difficulty = GameDifficulty.HARD;
-					}
+							if (speedGroup.getChecked()
+									.equals(easyDifficultyCheckbox)) {
+								difficulty = GameDifficulty.EASY;
+							} else if (speedGroup.getChecked()
+									.equals(normalDifficultyCheckbox)) {
+								difficulty = GameDifficulty.NORMAL;
+							} else if (speedGroup.getChecked()
+									.equals(hardDifficultyCheckbox)) {
+								difficulty = GameDifficulty.HARD;
+							}
 
-					// Sever & Client starten
-					game.getNetworkHandler()
-							.setUpConnectionAsHost(
+							// Sever & Client starten
+							game.getNetworkHandler().setUpConnectionAsHost(
 									new ServerSetup(nameField.getText(), 8,
 											Integer.valueOf(
 													portField.getText()),
 											true, game.getVersion(), true),
 									new GameSessionSetup(difficulty, 0,
 											System.currentTimeMillis()));
-					connectingDialog = new AnimationlessDialog("Starten...",
-							skin);
-					connectingDialog.text("Server startet...");
-					connectingDialog.show(stage);
-				} else {
-					AnimationlessDialog dialog = new AnimationlessDialog(
-							"Felder unausgefüllt", skin);
-					dialog.text(
-							"Zum Starten müssen alle Felder ausgefüllt sein");
-					dialog.button("Ok", true);
-					dialog.key(Keys.ENTER, true);
-					dialog.show(stage);
-				}
-			}
-		});
+							connectingDialog = new AnimationlessDialog(
+									"Starten...", skin);
+							connectingDialog.text("Server startet...");
+							connectingDialog.show(stage);
+						} else {
+							AnimationlessDialog dialog = new AnimationlessDialog(
+									"Felder unausgefüllt", skin);
+							dialog.text(
+									"Zum Starten müssen alle Felder ausgefüllt sein");
+							dialog.button("Ok", true);
+							dialog.key(Keys.ENTER, true);
+							dialog.show(stage);
+						}
+					}
+				});
 
 		Table settingsTable = new Table();
 		Table settings2ColTable = new Table();

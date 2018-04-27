@@ -37,40 +37,44 @@ public class MainMenuScreen extends BaseUIScreen {
 
 		ImageTextButton multiplayerButton = new ImageTextButton("Multiplayer",
 				skin);
-		multiplayerButton.addListener(new ButtonClickListener(assetManager) {
-			@Override
-			protected void onClick() {
-				game.pushScreen("serverBrowser");
-			}
-		});
+		multiplayerButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						game.pushScreen("serverBrowser");
+					}
+				});
 
 		ImageTextButton settingsButton = new ImageTextButton("Einstellungen",
 				skin);
-		settingsButton.addListener(new ButtonClickListener(assetManager) {
-			@Override
-			protected void onClick() {
-				((SettingsScreen) game.getScreen("settings"))
-						.setCaller(MainMenuScreen.this);
-				game.pushScreen("settings");
-			}
-		});
+		settingsButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						((SettingsScreen) game.getScreen("settings"))
+								.setCaller(MainMenuScreen.this);
+						game.pushScreen("settings");
+					}
+				});
 
 		ImageTextButton creditsButton = new ImageTextButton("Credits", skin);
-		creditsButton.addListener(new ButtonClickListener(assetManager) {
-			@Override
-			protected void onClick() {
-				if (!game.isInDevEnv())
-					game.pushScreen("credits");
-			}
-		});
+		creditsButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						if (!game.isInDevEnv())
+							game.pushScreen("credits");
+					}
+				});
 
 		ImageTextButton exitButton = new ImageTextButton("Beenden", skin);
-		exitButton.addListener(new ButtonClickListener(assetManager) {
-			@Override
-			protected void onClick() {
-				Gdx.app.exit();
-			}
-		});
+		exitButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						Gdx.app.exit();
+					}
+				});
 
 		Image logoImage = new Image(
 				(Texture) assetManager.get(LOGO_IMAGE_PATH));

@@ -46,7 +46,9 @@ public class DesktopLauncher {
 		config.height = 720;
 		config.width = 1280;
 		config.resizable = false;
-		config.addIcon("ui/images/icon.png", Files.FileType.Absolute);
+		config.addIcon("ui/images/icon16.png", Files.FileType.Absolute);
+		config.addIcon("ui/images/icon32.png", Files.FileType.Absolute);
+		config.addIcon("ui/images/icon48.png", Files.FileType.Absolute);
 
 		try {
 			// Start the game

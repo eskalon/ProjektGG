@@ -47,58 +47,67 @@ public class ServerBrowserScreen extends BaseUIScreen {
 
 		ImageTextButton backButton = new ImageTextButton("Zurück", skin,
 				"small");
-		backButton.addListener(new ButtonClickListener(assetManager) {
-			@Override
-			protected void onClick() {
-				game.pushScreen("mainMenu");
-			}
-		});
+		backButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						game.pushScreen("mainMenu");
+					}
+				});
 
 		ImageTextButton createLobbyButton = new ImageTextButton(
 				"Spiel erstellen", skin, "small");
-		createLobbyButton.addListener(new ButtonClickListener(assetManager) {
-			@Override
-			protected void onClick() {
-				game.pushScreen("lobbyCreation");
-			}
-		});
+		createLobbyButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						game.pushScreen("lobbyCreation");
+					}
+				});
 
 		ImageTextButton directConnectButton = new ImageTextButton(
 				"Direkt verbinden", skin, "small");
-		directConnectButton.addListener(new ButtonClickListener(assetManager) {
-			@Override
-			protected void onClick() {
-				OffsetableTextField portInputField = new OffsetableTextField(
-						String.valueOf(NetworkHandler.DEFAULT_PORT), skin, 5);
-				portInputField.setTextFieldFilter(
-						new TextField.TextFieldFilter.DigitsOnlyFilter());
-				OffsetableTextField ipInputField = new OffsetableTextField(
-						"127.0.0.1", skin, 5);
+		directConnectButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						OffsetableTextField portInputField = new OffsetableTextField(
+								String.valueOf(NetworkHandler.DEFAULT_PORT),
+								skin, 5);
+						portInputField.setTextFieldFilter(
+								new TextField.TextFieldFilter.DigitsOnlyFilter());
+						OffsetableTextField ipInputField = new OffsetableTextField(
+								"127.0.0.1", skin, 5);
 
-				AnimationlessDialog dialog = new AnimationlessDialog(
-						"Direkt verbinden", skin) {
-					public void result(Object obj) {
-						if ((Boolean) obj) {
-							game.getNetworkHandler().setUpConnectionAsClient(
-									ipInputField.getText(),
-									Integer.valueOf(portInputField.getText()));
+						AnimationlessDialog dialog = new AnimationlessDialog(
+								"Direkt verbinden", skin) {
+							public void result(Object obj) {
+								if ((Boolean) obj) {
+									game.getNetworkHandler()
+											.setUpConnectionAsClient(
+													ipInputField.getText(),
+													Integer.valueOf(
+															portInputField
+																	.getText()));
 
-							connectingDialog = new AnimationlessDialog(
-									"Verbinden...", skin);
-							connectingDialog.text("Spiel beitreten...");
-							connectingDialog.show(stage);
-						}
+									connectingDialog = new AnimationlessDialog(
+											"Verbinden...", skin);
+									connectingDialog.text("Spiel beitreten...");
+									connectingDialog.show(stage);
+								}
+							}
+						};
+						dialog.text("IP: ").button("Zurück", false)
+								.button("Verbinden", true).key(Keys.ENTER, true)
+								.key(Keys.ESCAPE, false);
+						dialog.getContentTable().add(ipInputField).width(170)
+								.row();
+						dialog.getContentTable().add(new Label("Port:", skin));
+						dialog.getContentTable().add(portInputField).width(90)
+								.left();
+						dialog.show(stage);
 					}
-				};
-				dialog.text("IP: ").button("Zurück", false)
-						.button("Verbinden", true).key(Keys.ENTER, true)
-						.key(Keys.ESCAPE, false);
-				dialog.getContentTable().add(ipInputField).width(170).row();
-				dialog.getContentTable().add(new Label("Port:", skin));
-				dialog.getContentTable().add(portInputField).width(90).left();
-				dialog.show(stage);
-			}
-		});
+				});
 
 		Table buttonTable = new Table();
 		buttonTable.add(backButton);
@@ -152,17 +161,19 @@ public class ServerBrowserScreen extends BaseUIScreen {
 			int port) {
 		ImageTextButton joinButton = new ImageTextButton("Beitreten", skin,
 				"small");
-		joinButton.addListener(new ButtonClickListener(assetManager) {
-			@Override
-			protected void onClick() {
-				game.getNetworkHandler().setUpConnectionAsClient(ip, port);
+		joinButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						game.getNetworkHandler().setUpConnectionAsClient(ip,
+								port);
 
-				connectingDialog = new AnimationlessDialog("Verbinden...",
-						skin);
-				connectingDialog.text("Spiel beitreten...");
-				connectingDialog.show(stage);
-			}
-		});
+						connectingDialog = new AnimationlessDialog(
+								"Verbinden...", skin);
+						connectingDialog.text("Spiel beitreten...");
+						connectingDialog.show(stage);
+					}
+				});
 
 		serverTable.left().top()
 				.add(new Image((Texture) assetManager.get(TICK_IMAGE_PATH)))

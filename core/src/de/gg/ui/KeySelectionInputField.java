@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.gg.input.ButtonClickListener;
+import de.gg.setting.GameSettings;
 
 /**
  * An input field with which a keyboard key can get queried.
@@ -25,14 +26,17 @@ public class KeySelectionInputField extends ImageTextButton {
 	 *            The stage this input field gets added to.
 	 * @param assetManager
 	 *            The game's asset manager.
+	 * @param settings
+	 *            The game's settings.
 	 * @param listener
 	 *            The listener for the key selection event.
 	 */
 	public KeySelectionInputField(String text, Skin skin, Stage stage,
-			AssetManager assetManager, KeySelectionEventListener listener) {
+			AssetManager assetManager, GameSettings settings,
+			KeySelectionEventListener listener) {
 		super(text, skin, "small");
 
-		addListener(new ButtonClickListener(assetManager) {
+		addListener(new ButtonClickListener(assetManager, settings) {
 			@Override
 			protected void onClick() {
 				AnimationlessDialog dialog = new AnimationlessDialog(
