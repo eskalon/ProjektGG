@@ -1,13 +1,14 @@
-package de.gg.game;
+package de.gg.network.rmi;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import de.gg.game.AuthoritativeSession;
 import de.gg.game.data.RoundEndData;
 
 /**
- * A result listener stub for the server to easily distribute an event to all
- * clients.
+ * A result listener stub for the server to conveniently distribute an event to
+ * all connected clients.
  * <p>
  * Takes care of calling the appropriate listener methods of every
  * {@linkplain AuthoritativeSession#getResultListeners() registered result

@@ -12,7 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.google.common.eventbus.Subscribe;
 
-import de.gg.event.RoundEndEvent;
+import de.gg.event.NextRoundEvent;
+import de.gg.event.RoundEndDataReceivedEvent;
 import de.gg.game.data.RoundEndData;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
@@ -65,7 +66,7 @@ public class GameRoundendScreen extends BaseGameScreen {
 					int pointer, int button) {
 				flipSound.play(1F);
 				nextButton.setText("Warten...");
-				game.getNetworkHandler().readyUp();
+				game.getClient().getActionHandler().readyUp();
 
 				return true;
 			}
@@ -113,15 +114,23 @@ public class GameRoundendScreen extends BaseGameScreen {
 
 	@Override
 	public void renderGame(float delta) {
-		game.getNetworkHandler().updatePing(delta);
-		game.getNetworkHandler().updateServer();
+		game.getClient().updatePing(delta);
+
+		if (game.isHost())
+			game.getServer().update();
 	}
 
 	@Subscribe
-	public void onRoundEndDataArrived(RoundEndEvent event) {
+	public void onRoundEndDataArrived(RoundEndDataReceivedEvent event) {
 		this.setData(event.getData());
 
 		updateUI();
+	}
+
+	@Subscribe
+	public void onNextRound(NextRoundEvent event) {
+		((GameRoundendScreen) game.getScreen("roundEnd")).setData(null);
+		game.pushScreen("map");
 	}
 
 	/**

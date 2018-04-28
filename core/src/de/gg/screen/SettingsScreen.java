@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.google.common.eventbus.Subscribe;
 
+import de.gg.event.RoundEndDataReceivedEvent;
 import de.gg.event.RoundEndEvent;
 import de.gg.input.ButtonClickListener;
 import de.gg.ui.KeySelectionInputField;
@@ -179,18 +180,22 @@ public class SettingsScreen extends BaseUIScreen {
 		// Wenn der SettingsScreen während des Spiels geöffnet ist, dieses
 		// weiter updaten
 		if (caller instanceof GameMapScreen) {
-			if (game.getCurrentSession().update()) {
-				game.pushScreen("roundEnd");
-			}
+			game.getClient().update();
 
-			game.getNetworkHandler().updatePing(delta);
-			game.getNetworkHandler().updateServer();
+			game.getClient().updatePing(delta);
+			if (game.isHost())
+				game.getServer().update();
 		}
 		super.render(delta);
 	}
 
 	@Subscribe
-	public void onRoundEndDataArrived(RoundEndEvent event) {
+	public void onRoundEnd(RoundEndEvent event) {
+		game.pushScreen("roundEnd");
+	}
+
+	@Subscribe
+	public void onRoundEndDataArrived(RoundEndDataReceivedEvent event) {
 		((GameRoundendScreen) game.getScreen("roundEnd"))
 				.setData(event.getData());
 	}

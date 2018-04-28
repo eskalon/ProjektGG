@@ -1,20 +1,9 @@
 package de.gg.event;
 
-import de.gg.game.data.RoundEndData;
-
 /**
- * Posted after a the client received the round end data.
+ * Posted after the round on the client side is over and the screen should get
+ * changed.
  */
 public class RoundEndEvent {
-
-	private RoundEndData data;
-
-	public RoundEndEvent(RoundEndData data) {
-		this.data = data;
-	}
-
-	public RoundEndData getData() {
-		return data;
-	}
 
 }

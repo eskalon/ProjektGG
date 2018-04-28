@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import de.gg.core.ProjektGG;
+import com.google.common.eventbus.EventBus;
+
 import de.gg.event.ChangedGameSpeedEvent;
-import de.gg.event.RoundEndEvent;
+import de.gg.event.NextRoundEvent;
+import de.gg.event.RoundEndDataReceivedEvent;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.data.GameSpeed;
 import de.gg.game.data.NotificationData;
@@ -14,7 +16,7 @@ import de.gg.game.data.RoundEndData;
 import de.gg.game.system.ProcessingSystem;
 import de.gg.game.system.client.FirstEventWaveClientSystem;
 import de.gg.network.LobbyPlayer;
-import de.gg.screen.GameRoundendScreen;
+import de.gg.network.rmi.AuthoritativeResultListener;
 import de.gg.util.Log;
 
 /**
@@ -24,7 +26,7 @@ import de.gg.util.Log;
 public class SlaveSession extends GameSession
 		implements AuthoritativeResultListener {
 
-	private ProjektGG game;
+	private EventBus eventBus;
 	private List<NotificationData> notifications = new ArrayList<>();
 
 	private GameClock clock;
@@ -32,22 +34,20 @@ public class SlaveSession extends GameSession
 	/**
 	 * Creates a new multiplayer session.
 	 * 
-	 * @param game
-	 *            an instance of the game.
+	 * @param eventBus
+	 *            the game's event bus.
 	 * @param sessionSetup
 	 *            the settings of the game session.
 	 * @param players
 	 *            a hashmap containing the players.
 	 * @param networkID
 	 *            the networkID of the local player.
-	 * @param eventBus
-	 *            the game's event bus.
 	 */
-	public SlaveSession(ProjektGG game, GameSessionSetup sessionSetup,
+	public SlaveSession(EventBus eventBus, GameSessionSetup sessionSetup,
 			HashMap<Short, LobbyPlayer> players, short networkID) {
 		super(sessionSetup, players, networkID);
-		this.game = game;
-		this.clock = new GameClock(game.getEventBus());
+		this.clock = new GameClock(eventBus);
+		this.eventBus = eventBus;
 	}
 
 	/**
@@ -64,6 +64,9 @@ public class SlaveSession extends GameSession
 		this.playerSystems.add(s);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public synchronized void fixedUpdate() {
 		super.fixedUpdate();
@@ -78,6 +81,9 @@ public class SlaveSession extends GameSession
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected synchronized void startNextRound() {
 		super.startNextRound();
@@ -94,14 +100,13 @@ public class SlaveSession extends GameSession
 		Log.debug("Client", "Alle Spieler sind bereit! Nächste Runde startet");
 
 		this.startNextRound();
-		((GameRoundendScreen) game.getScreen("roundEnd")).setData(null);
-		game.pushScreen("map");
+		eventBus.post(new NextRoundEvent());
 	}
 
 	@Override
 	public void onRoundEnd(RoundEndData data) { // Inherited from
 												// AuthoritativeResultListener
-		game.getEventBus().post(new RoundEndEvent(data));
+		eventBus.post(new RoundEndDataReceivedEvent(data));
 
 		// Process the last round
 		super.processRoundEnd(data); // Inherited from GameSession
@@ -133,7 +138,7 @@ public class SlaveSession extends GameSession
 	public void setGameSpeed(int index) {
 		setGameSpeed(GameSpeed.values()[index]);
 
-		game.getEventBus().post(new ChangedGameSpeedEvent(gameSpeed));
+		eventBus.post(new ChangedGameSpeedEvent(gameSpeed));
 	}
 
 	public GameClock getClock() {

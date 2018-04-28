@@ -14,10 +14,10 @@ import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.kryonet.ServerDiscoveryHandler;
 import com.esotericsoftware.kryonet.rmi.ObjectSpace;
 
-import de.gg.game.AuthoritativeResultListener;
+import de.gg.core.ProjektGG;
+import de.gg.event.ConnectionEstablishedEvent;
 import de.gg.game.AuthoritativeSession;
 import de.gg.game.GameSession;
-import de.gg.game.SlaveActionListener;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.network.message.ChatMessageSentMessage;
 import de.gg.network.message.DiscoveryResponsePacket;
@@ -26,12 +26,16 @@ import de.gg.network.message.PlayerChangedMessage;
 import de.gg.network.message.PlayerJoinedMessage;
 import de.gg.network.message.PlayerLeftMessage;
 import de.gg.network.message.ServerFullMessage;
+import de.gg.network.rmi.AuthoritativeResultListener;
+import de.gg.network.rmi.SlaveActionListener;
 import de.gg.util.CollectionUtils;
 import de.gg.util.Log;
 import de.gg.util.PlayerUtils;
 
 public class GameServer {
 
+	public static final int DEFAULT_PORT = 55678;
+	public static final int UDP_DISCOVER_PORT = 54678;
 	/**
 	 * The network id of the local player. Is always <code>0</code>.
 	 */
@@ -48,6 +52,17 @@ public class GameServer {
 	private HashMap<Short, LobbyPlayer> players;
 	private HashMap<Short, Connection> connections;
 
+	/**
+	 * Sets up a server and a client asynchronously. After it is finished a
+	 * {@link ConnectionEstablishedEvent} is posted on the
+	 * {@linkplain ProjektGG#getEventBus() event bus}.
+	 * 
+	 * @param serverSetup
+	 *            The server's settings, especially containing the port.
+	 * @param sessionSetup
+	 *            The game session's setup.
+	 * @see ClientNetworkHandler#setUpConnectionAsClient(String, int)
+	 */
 	public GameServer(ServerSetup serverSetup, GameSessionSetup sessionSetup,
 			IHostCallback callback) {
 		this.players = new HashMap<>();
@@ -102,7 +117,6 @@ public class GameServer {
 								.register(DiscoveryResponsePacket.class);
 						broadcastServer.setDiscoveryHandler(
 								new ServerDiscoveryHandler() {
-
 									@Override
 									public boolean onDiscoverHost(
 											DatagramChannel datagramChannel,
@@ -129,8 +143,7 @@ public class GameServer {
 								});
 
 						try {
-							broadcastServer.bind(0,
-									NetworkHandler.UDP_DISCOVER_PORT);
+							broadcastServer.bind(0, UDP_DISCOVER_PORT);
 							Log.info("Server", "Broadcast-Server gestartet");
 						} catch (IOException e) {
 							Log.error("Server",
@@ -160,7 +173,7 @@ public class GameServer {
 	 * 
 	 * @see GameSession#setupGame()
 	 */
-	public void setupGame() {
+	public void setupGameSession() {
 		session.setupGame();
 		Log.info("Server", "Spiel gestartet");
 	}
@@ -222,33 +235,7 @@ public class GameServer {
 		players.put(msg.getId(), msg.getPlayer());
 
 		if (PlayerUtils.areAllPlayersReady(players.values())) {
-			session = new AuthoritativeSession(sessionSetup, serverSetup,
-					players);
-
-			// Register the RMI handler
-			HashMap<Short, AuthoritativeResultListener> resultListeners = new HashMap<>();
-			ObjectSpace.registerClasses(server.getKryo());
-			ObjectSpace objectSpace = new ObjectSpace();
-			objectSpace.register(254, (SlaveActionListener) session);
-
-			for (Entry<Short, Connection> e : connections.entrySet()) {
-				objectSpace.addConnection(e.getValue());
-
-				AuthoritativeResultListener resultListener = ObjectSpace
-						.getRemoteObject(e.getValue(), e.getKey(),
-								AuthoritativeResultListener.class);
-				resultListeners.put(e.getKey(), resultListener);
-
-				if (resultListener == null)
-					Log.error("Server",
-							"Der resultListener des Spielers %d ist null",
-							e.getKey());
-
-			}
-
-			session.setResultListeners(resultListeners);
-			Log.info("Server",
-					"RMI-Netzwerkverbindung zu den Clienten eingerichtet");
+			establishRMIConnections();
 
 			broadcastServer.close();
 			broadcastServer = null;
@@ -257,7 +244,36 @@ public class GameServer {
 		}
 	}
 
-	interface IHostCallback {
+	private void establishRMIConnections() {
+		session = new AuthoritativeSession(sessionSetup, serverSetup, players);
+
+		// Register the RMI handler
+		HashMap<Short, AuthoritativeResultListener> resultListeners = new HashMap<>();
+		ObjectSpace.registerClasses(server.getKryo());
+		ObjectSpace objectSpace = new ObjectSpace();
+		objectSpace.register(254, (SlaveActionListener) session);
+
+		for (Entry<Short, Connection> e : connections.entrySet()) {
+			objectSpace.addConnection(e.getValue());
+
+			AuthoritativeResultListener resultListener = ObjectSpace
+					.getRemoteObject(e.getValue(), e.getKey(),
+							AuthoritativeResultListener.class);
+			resultListeners.put(e.getKey(), resultListener);
+
+			if (resultListener == null)
+				Log.error("Server",
+						"Der resultListener des Spielers %d ist null",
+						e.getKey());
+
+		}
+
+		session.setResultListeners(resultListeners);
+		Log.info("Server",
+				"RMI-Netzwerkverbindung zu den Clienten eingerichtet");
+	}
+
+	public interface IHostCallback {
 		public void onHostStarted(IOException e);
 	}
 

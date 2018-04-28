@@ -5,8 +5,6 @@ import java.util.HashMap;
 
 import com.esotericsoftware.kryo.Kryo;
 
-import de.gg.game.AuthoritativeResultListener;
-import de.gg.game.SlaveActionListener;
 import de.gg.game.data.GameDifficulty;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.data.GameSpeed;
@@ -19,6 +17,8 @@ import de.gg.network.message.PlayerJoinedMessage;
 import de.gg.network.message.PlayerLeftMessage;
 import de.gg.network.message.ServerFullMessage;
 import de.gg.network.message.ServerRejectionMessage;
+import de.gg.network.rmi.AuthoritativeResultListener;
+import de.gg.network.rmi.SlaveActionListener;
 
 /**
  * This class takes care of registering all classes needed by the multiplayer

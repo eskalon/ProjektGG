@@ -1,12 +1,12 @@
-package de.gg.game;
+package de.gg.network.rmi;
 
 import de.gg.game.data.RoundEndData;
 
 /**
  * Classes that implement this interface take care of the
- * {@linkplain SlaveActionHandler player actions} that actually get executed.
+ * {@linkplain SlaveActionListener player actions} that actually get executed.
  * The client informs the server of their action via the
- * {@linkplain SlaveActionHandlers} and after the server approves an action this
+ * {@linkplain SlaveActionListener} and after the server approves an action this
  * interface takes care of executing it.
  */
 public interface AuthoritativeResultListener {

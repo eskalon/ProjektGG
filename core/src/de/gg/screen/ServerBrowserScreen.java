@@ -16,8 +16,10 @@ import com.google.common.eventbus.Subscribe;
 import de.gg.event.ConnectionEstablishedEvent;
 import de.gg.event.ConnectionFailedEvent;
 import de.gg.input.ButtonClickListener;
-import de.gg.network.NetworkHandler;
-import de.gg.network.NetworkHandler.HostDiscoveryListener;
+import de.gg.network.GameClient;
+import de.gg.network.GameServer;
+import de.gg.network.ServerDiscoveryHandler;
+import de.gg.network.ServerDiscoveryHandler.HostDiscoveryListener;
 import de.gg.network.message.DiscoveryResponsePacket;
 import de.gg.ui.AnimationlessDialog;
 import de.gg.ui.OffsetableTextField;
@@ -72,8 +74,8 @@ public class ServerBrowserScreen extends BaseUIScreen {
 					@Override
 					protected void onClick() {
 						OffsetableTextField portInputField = new OffsetableTextField(
-								String.valueOf(NetworkHandler.DEFAULT_PORT),
-								skin, 5);
+								String.valueOf(GameServer.DEFAULT_PORT), skin,
+								5);
 						portInputField.setTextFieldFilter(
 								new TextField.TextFieldFilter.DigitsOnlyFilter());
 						OffsetableTextField ipInputField = new OffsetableTextField(
@@ -83,12 +85,13 @@ public class ServerBrowserScreen extends BaseUIScreen {
 								"Direkt verbinden", skin) {
 							public void result(Object obj) {
 								if ((Boolean) obj) {
-									game.getNetworkHandler()
-											.setUpConnectionAsClient(
-													ipInputField.getText(),
-													Integer.valueOf(
-															portInputField
-																	.getText()));
+									// Connect to client
+									game.setClient(new GameClient(
+											game.getEventBus(),
+											game.getVersion(),
+											ipInputField.getText(),
+											Integer.valueOf(
+													portInputField.getText())));
 
 									connectingDialog = new AnimationlessDialog(
 											"Verbinden...", skin);
@@ -135,8 +138,10 @@ public class ServerBrowserScreen extends BaseUIScreen {
 		discoveryThread = new Runnable() {
 			@Override
 			public void run() {
-				game.getNetworkHandler()
-						.discoverHosts(new HostDiscoveryListener() {
+				ServerDiscoveryHandler serverDiscoveryHandler = new ServerDiscoveryHandler();
+				serverDiscoveryHandler.discoverHosts(
+						GameServer.UDP_DISCOVER_PORT,
+						new HostDiscoveryListener() {
 							@Override
 							public void onHostDiscovered(String address,
 									DiscoveryResponsePacket datagramPacket) {
@@ -165,8 +170,8 @@ public class ServerBrowserScreen extends BaseUIScreen {
 				new ButtonClickListener(assetManager, game.getSettings()) {
 					@Override
 					protected void onClick() {
-						game.getNetworkHandler().setUpConnectionAsClient(ip,
-								port);
+						game.setClient(new GameClient(game.getEventBus(),
+								game.getVersion(), ip, port));
 
 						connectingDialog = new AnimationlessDialog(
 								"Verbinden...", skin);
@@ -189,13 +194,12 @@ public class ServerBrowserScreen extends BaseUIScreen {
 
 		((LobbyScreen) game.getScreen("lobby")).setupLobby(event);
 		game.pushScreen("lobby");
-
 	}
 
 	@Subscribe
 	public void onConnectionFailed(ConnectionFailedEvent event) {
 		connectingDialog.setVisible(false);
-		game.setCurrentSession(null);
+		game.setClient(null);
 
 		AnimationlessDialog dialog = new AnimationlessDialog("Fehler", skin);
 		if (event.getException() != null)

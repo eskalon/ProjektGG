@@ -6,6 +6,7 @@ import com.google.common.eventbus.Subscribe;
 
 import de.gg.event.NewChatMessagEvent;
 import de.gg.event.PlayerDisconnectedEvent;
+import de.gg.event.RoundEndDataReceivedEvent;
 import de.gg.event.RoundEndEvent;
 
 public abstract class BaseGameScreen extends BaseUIScreen {
@@ -35,21 +36,27 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 	}
 
 	@Subscribe
-	public void onRoundEndDataArrived(RoundEndEvent event) {
+	public void onRoundEndDataArrived(RoundEndDataReceivedEvent event) {
 		((GameRoundendScreen) game.getScreen("roundEnd"))
 				.setData(event.getData());
 	}
 
+	@Subscribe
+	public void onRoundEnd(RoundEndEvent event) {
+		game.pushScreen("roundEnd");
+	}
+
 	@Override
 	public void render(float delta) {
-		if (updateGame && game.getCurrentSession() != null) {
-			// Die Session kann null sein, wenn der Client gerade disconnected
-			if (game.getCurrentSession().update()) {
-				game.pushScreen("roundEnd");
-			}
+		if (updateGame && game.getClient() != null) { // Der Client kann null
+														// sein, wenn der
+														// Spieler gerade
+														// disconnected
+			game.getClient().update();
+			game.getClient().updatePing(delta);
 
-			game.getNetworkHandler().updatePing(delta);
-			game.getNetworkHandler().updateServer();
+			if (game.isHost())
+				game.getServer().update();
 		}
 
 		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g,

@@ -1,5 +1,7 @@
 package de.gg.screen;
 
+import java.io.IOException;
+
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
@@ -15,7 +17,9 @@ import de.gg.event.ConnectionFailedEvent;
 import de.gg.game.data.GameDifficulty;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.input.ButtonClickListener;
-import de.gg.network.NetworkHandler;
+import de.gg.network.GameClient;
+import de.gg.network.GameServer;
+import de.gg.network.GameServer.IHostCallback;
 import de.gg.network.ServerSetup;
 import de.gg.ui.AnimationlessDialog;
 import de.gg.ui.OffsetableTextField;
@@ -36,7 +40,7 @@ public class LobbyCreationScreen extends BaseUIScreen {
 
 		OffsetableTextField nameField = new OffsetableTextField("", skin, 6);
 		OffsetableTextField portField = new OffsetableTextField(
-				String.valueOf(NetworkHandler.DEFAULT_PORT), skin, 6);
+				String.valueOf(GameServer.DEFAULT_PORT), skin, 6);
 		portField.setTextFieldFilter(
 				new TextField.TextFieldFilter.DigitsOnlyFilter());
 
@@ -81,14 +85,34 @@ public class LobbyCreationScreen extends BaseUIScreen {
 								difficulty = GameDifficulty.HARD;
 							}
 
-							// Sever & Client starten
-							game.getNetworkHandler().setUpConnectionAsHost(
-									new ServerSetup(nameField.getText(), 8,
-											Integer.valueOf(
-													portField.getText()),
-											true, game.getVersion(), true),
-									new GameSessionSetup(difficulty, 0,
-											System.currentTimeMillis()));
+							// Start Sever & Client
+							ServerSetup serverSetup = new ServerSetup(
+									nameField.getText(), 8,
+									Integer.valueOf(portField.getText()), true,
+									game.getVersion(), true);
+							GameSessionSetup sessionSetup = new GameSessionSetup(
+									difficulty, 0, System.currentTimeMillis());
+							game.setServer(new GameServer(serverSetup,
+									sessionSetup, new IHostCallback() {
+										@Override
+										public void onHostStarted(
+												IOException e) {
+											if (e == null) {
+												// Connect to client
+												game.setClient(new GameClient(
+														game.getEventBus(),
+														game.getVersion(),
+														"localhost",
+														serverSetup.getPort()));
+
+											} else {
+												game.getEventBus().post(
+														new ConnectionFailedEvent(
+																e));
+											}
+										}
+									}));
+
 							connectingDialog = new AnimationlessDialog(
 									"Starten...", skin);
 							connectingDialog.text("Server startet...");
@@ -147,7 +171,13 @@ public class LobbyCreationScreen extends BaseUIScreen {
 	public void onHostStartingFailed(ConnectionFailedEvent event) {
 		connectingDialog.setVisible(false);
 
-		game.setCurrentSession(null);
+		if (game.getServer() != null) {
+			game.getServer().stop();
+			game.setServer(null);
+		}
+
+		game.setClient(null);
+
 		AnimationlessDialog dialog = new AnimationlessDialog("Fehler", skin);
 		if (event.getException() != null)
 			dialog.text(event.getException().getMessage());

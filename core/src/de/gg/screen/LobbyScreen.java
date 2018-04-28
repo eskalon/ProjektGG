@@ -21,11 +21,9 @@ import de.gg.event.NewChatMessagEvent;
 import de.gg.event.PlayerChangedEvent;
 import de.gg.event.PlayerConnectedEvent;
 import de.gg.event.PlayerDisconnectedEvent;
-import de.gg.game.SlaveSession;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.type.GameMaps;
 import de.gg.network.LobbyPlayer;
-import de.gg.network.NetworkHandler;
 import de.gg.ui.OffsetableTextField;
 import de.gg.util.Log;
 import de.gg.util.PlayerUtils;
@@ -83,17 +81,17 @@ public class LobbyScreen extends BaseUIScreen {
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				clickSound.play(1F);
-				game.getNetworkHandler().disconnect();
+				game.getClient().disconnect();
+				if (game.isHost())
+					game.getServer().stop();
 
 				game.pushScreen("mainMenu");
 				return true;
 			}
 		});
 
-		NetworkHandler netHandler = game.getNetworkHandler();
-
 		readyUpLobbyButton = new ImageTextButton("Bereit", skin, "small");
-		if (netHandler.isHost()) {
+		if (game.isHost()) {
 			readyUpLobbyButton.setDisabled(true);
 			readyUpLobbyButton.setTouchable(Touchable.disabled);
 			readyUpLobbyButton.setText("Spiel starten");
@@ -103,7 +101,7 @@ public class LobbyScreen extends BaseUIScreen {
 					int pointer, int button) {
 				clickSound.play(1F);
 				getLocalPlayer().toggleReady();
-				netHandler.onLocalPlayerChange(getLocalPlayer());
+				game.getClient().onLocalPlayerChange(getLocalPlayer());
 
 				updateLobbyUI();
 
@@ -137,7 +135,7 @@ public class LobbyScreen extends BaseUIScreen {
 				if (!textField.getText().isEmpty() && (key == (char) 13)) { // Enter
 					clickSound.play(1F);
 
-					netHandler.sendChatMessage(chatInputField.getText());
+					game.getClient().sendChatMessage(chatInputField.getText());
 					onNewChatMessage(new NewChatMessagEvent(localNetworkId,
 							chatInputField.getText()));
 					chatInputField.setText("");
@@ -150,7 +148,7 @@ public class LobbyScreen extends BaseUIScreen {
 				if (!chatInputField.getText().isEmpty()) {
 					clickSound.play(1F);
 
-					netHandler.sendChatMessage(chatInputField.getText());
+					game.getClient().sendChatMessage(chatInputField.getText());
 					onNewChatMessage(new NewChatMessagEvent(localNetworkId,
 							chatInputField.getText()));
 					chatInputField.setText("");
@@ -227,7 +225,7 @@ public class LobbyScreen extends BaseUIScreen {
 				(playersArray.length >= 6 ? (LobbyPlayer) playersArray[5]
 						: null));
 
-		if (game.getNetworkHandler().isHost()) {
+		if (game.isHost()) {
 			if (PlayerUtils.areAllPlayersReadyExcept(players.values(),
 					getLocalPlayer())) {
 				readyUpLobbyButton.setDisabled(false);
@@ -292,10 +290,9 @@ public class LobbyScreen extends BaseUIScreen {
 		if (PlayerUtils.areAllPlayersReady(players.values())) {
 			addChatMessageToUI(null, "Spiel startet...");
 			game.getInputMultiplexer().removeInputProcessors();
-			game.setCurrentSession(new SlaveSession(game, sessionSetup, players,
-					localNetworkId));
-			game.getNetworkHandler()
-					.establishRMIConnection(game.getCurrentSession());
+
+			game.getClient().establishRMIConnection(players, sessionSetup);
+
 			Log.info("Client", "Spiel wird geladen...");
 			game.pushScreen("gameLoading");
 		}

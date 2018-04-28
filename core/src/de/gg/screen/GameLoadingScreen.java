@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 import com.google.common.eventbus.Subscribe;
 
-import de.gg.event.RoundEndEvent;
+import de.gg.event.RoundEndDataReceivedEvent;
 import de.gg.game.entity.BuildingSlot;
 import de.gg.game.type.BuildingTypes;
 import de.gg.game.type.ItemTypes;
@@ -66,13 +66,12 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 		// ist, umsetzen, sodass sich für den Nutzer sichtbar ein Balken bewegt
 
 		// Set up the game (server and client side)
-		if (game.getNetworkHandler().isHost())
-			game.getNetworkHandler().setupGameOnServer();
-		game.getCurrentSession().setupGame();
+		if (game.isHost())
+			game.getServer().setupGameSession();
+		game.getClient().setupGameSession();
 
 		// Create the ModelInstances
-		for (BuildingSlot s : game.getCurrentSession().getCity()
-				.getBuildingSlots()) {
+		for (BuildingSlot s : game.getClient().getCity().getBuildingSlots()) {
 			if (s.isBuiltOn()) {
 				s.getBuilding().setRenderData(new RenderData(
 						assetManager.get(HOUSE1_MODEL_PATH, Model.class)));
@@ -87,7 +86,7 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 
 			}
 		}
-		game.getCurrentSession().getCity().setSkybox(new ModelInstance(
+		game.getClient().getCity().setSkybox(new ModelInstance(
 				assetManager.get(SKYBOX_MODEL_PATH, Model.class)));
 
 		// Change the screen
@@ -110,7 +109,7 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 	}
 
 	@Subscribe
-	public void onRoundEndDataArrived(RoundEndEvent event) {
+	public void onRoundEndDataArrived(RoundEndDataReceivedEvent event) {
 		((GameRoundendScreen) game.getScreen("roundEnd"))
 				.setData(event.getData());
 	}

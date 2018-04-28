@@ -1,11 +1,9 @@
 package de.gg.network;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
+import java.util.HashMap;
 
-import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryonet.Client;
-import com.esotericsoftware.kryonet.ClientDiscoveryHandler;
 import com.esotericsoftware.kryonet.FrameworkMessage.Ping;
 import com.esotericsoftware.kryonet.Listener.TypeListener;
 import com.esotericsoftware.kryonet.rmi.ObjectSpace;
@@ -19,29 +17,31 @@ import de.gg.event.NewChatMessagEvent;
 import de.gg.event.PlayerChangedEvent;
 import de.gg.event.PlayerConnectedEvent;
 import de.gg.event.PlayerDisconnectedEvent;
-import de.gg.game.AuthoritativeResultListener;
+import de.gg.event.RoundEndEvent;
 import de.gg.game.AuthoritativeSession;
-import de.gg.game.SlaveActionListener;
+import de.gg.game.SlaveSession;
 import de.gg.game.data.GameSessionSetup;
-import de.gg.network.GameServer.IHostCallback;
+import de.gg.game.entity.City;
 import de.gg.network.message.ChatMessageSentMessage;
-import de.gg.network.message.DiscoveryResponsePacket;
 import de.gg.network.message.GameSetupMessage;
 import de.gg.network.message.PlayerChangedMessage;
 import de.gg.network.message.PlayerJoinedMessage;
 import de.gg.network.message.PlayerLeftMessage;
 import de.gg.network.message.ServerFullMessage;
 import de.gg.network.message.ServerRejectionMessage;
+import de.gg.network.rmi.AuthoritativeResultListener;
+import de.gg.network.rmi.ClientActionHandler;
+import de.gg.network.rmi.SlaveActionListener;
 import de.gg.util.Log;
 
 /**
- * This class takes care of handling the networking part of the game. It holds
- * an instance of the used kryonet {@linkplain #client client} and the
- * {@linkplain #server game server} (if the client is also the
- * {@linkplain #isHost() host}). It is further responsible for relaying all user
- * actions to the server.
+ * This class takes care of handling the networking part for the client. It
+ * holds an instance of the used kryonet {@linkplain #client client}, the
+ * {@linkplain #session client's game simulation} and the
+ * {@linkplain #actionHandler action handler} used for relaying all user actions
+ * to the server.
  * <p>
- * Following are the methods relevant to using the handler:
+ * Following are the methods relevant to using the client:
  * <ul>
  * <li>{@link #setUpConnectionAsClient(String, int)}/{@link #setUpConnectionAsHost(int, String, GameSessionSetup)}:
  * Initializes the network handler</li>
@@ -54,18 +54,15 @@ import de.gg.util.Log;
  * {@linkplain AuthoritativeSession game session} on the server</li>
  * </ul>
  */
-public class NetworkHandler {
+public class GameClient {
 
-	public static final int DEFAULT_PORT = 55678;
-	public static final int UDP_DISCOVER_PORT = 54678;
 	private EventBus eventBus;
 	private Client client;
-	private GameServer server;
 	/**
 	 * The network ID of the local player.
 	 */
 	private short localClientId;
-	private SlaveActionListener actionListener;
+	private ClientActionHandler actionHandler;
 
 	private float timeSinceLastPingUpdate = 0;
 	/**
@@ -81,17 +78,11 @@ public class NetworkHandler {
 	 */
 	private String gameVersion;
 
-	public NetworkHandler(EventBus eventBus, String gameVersion) {
-		Preconditions.checkNotNull(eventBus, "eventBus cannot be null.");
-		Preconditions.checkNotNull(eventBus, "gameVersion cannot be null.");
-
-		this.eventBus = eventBus;
-		this.gameVersion = gameVersion;
-	}
+	private SlaveSession session;
 
 	/**
-	 * Connects the client to the server. After it is finished a
-	 * {@link ConnectionEstablishedEvent} is posted on the
+	 * Creates a game client and connects the client to the server. After it is
+	 * finished a {@link ConnectionEstablishedEvent} is posted on the
 	 * {@linkplain ProjektGG#getEventBus() event bus}.
 	 * 
 	 * @param ip
@@ -99,7 +90,14 @@ public class NetworkHandler {
 	 * @param port
 	 *            The server's port.
 	 */
-	public void setUpConnectionAsClient(String ip, int port) {
+	public GameClient(EventBus eventBus, String gameVersion, String ip,
+			int port) {
+		Preconditions.checkNotNull(eventBus, "eventBus cannot be null.");
+		Preconditions.checkNotNull(eventBus, "gameVersion cannot be null.");
+
+		this.eventBus = eventBus;
+		this.gameVersion = gameVersion;
+
 		client = new Client();
 		client.start();
 
@@ -183,29 +181,26 @@ public class NetworkHandler {
 		connectingThread.start();
 	}
 
+	public void disconnect() {
+		client.close();
+	}
+
 	/**
-	 * Sets up a server and a client asynchronously. After it is finished a
-	 * {@link ConnectionEstablishedEvent} is posted on the
-	 * {@linkplain ProjektGG#getEventBus() event bus}.
-	 * 
-	 * @param serverSetup
-	 *            The server's settings, especially containing the port.
-	 * @param sessionSetup
-	 *            The game session's setup.
-	 * @see ClientNetworkHandler#setUpConnectionAsClient(String, int)
+	 * @return the action handler used to relay the client's action to the
+	 *         server.
 	 */
-	public void setUpConnectionAsHost(ServerSetup serverSetup,
-			GameSessionSetup sessionSetup) {
-		server = new GameServer(serverSetup, sessionSetup, new IHostCallback() {
-			@Override
-			public void onHostStarted(IOException e) {
-				if (e == null) {
-					setUpConnectionAsClient("localhost", serverSetup.getPort());
-				} else {
-					eventBus.post(new ConnectionFailedEvent(e));
-				}
-			}
-		});
+	public ClientActionHandler getActionHandler() {
+		return actionHandler;
+	}
+
+	/**
+	 * Sends an object to the server.
+	 * 
+	 * @param obj
+	 *            The object.
+	 */
+	public void sendObject(Object obj) {
+		client.sendTCP(obj);
 	}
 
 	/**
@@ -225,73 +220,18 @@ public class NetworkHandler {
 	}
 
 	/**
-	 * Returns the last measured ping. Only gets updated if
-	 * {@link #updatePing(float)} is called regularly.
-	 * 
-	 * @return The last measured ping.
+	 * Updates the client and its session.
 	 */
-	public int getPing() {
-		return ping;
-	}
-
-	public void updateServer() {
-		if (isHost())
-			server.update();
+	public void update() {
+		if (session.update())
+			eventBus.post(new RoundEndEvent());
 	}
 
 	/**
-	 * Sets up the game session on the server.
-	 * 
-	 * @see GameServer#setupGame()
+	 * Updates the player on the server.
 	 */
-	public void setupGameOnServer() {
-		server.setupGame();
-	}
-
-	/**
-	 * @return Whether this player is also hosting the server.
-	 */
-	public boolean isHost() {
-		return server != null;
-	}
-
-	/**
-	 * Establishes the RMI connection to the server.
-	 */
-	public void establishRMIConnection(
-			AuthoritativeResultListener resultListener) {
-		ObjectSpace.registerClasses(client.getKryo());
-		ObjectSpace objectSpace = new ObjectSpace();
-		objectSpace.register(localClientId, resultListener);
-		objectSpace.addConnection(client);
-
-		SlaveActionListener actionListener = ObjectSpace.getRemoteObject(client,
-				254, SlaveActionListener.class);
-
-		if (actionListener == null)
-			Log.error("Client", "Der actionListener des Spielers %d ist null",
-					localClientId);
-
-		this.actionListener = actionListener;
-	}
-
-	/**
-	 * Disconnects the client.
-	 */
-	public void disconnect() {
-		client.close();
-		if (isHost())
-			server.stop();
-	}
-
-	/**
-	 * Sends an object to the server.
-	 * 
-	 * @param obj
-	 *            The object.
-	 */
-	public void sendObject(Object obj) {
-		client.sendTCP(obj);
+	public void onLocalPlayerChange(LobbyPlayer player) {
+		sendObject(new PlayerChangedMessage(localClientId, player));
 	}
 
 	/**
@@ -303,56 +243,49 @@ public class NetworkHandler {
 		sendObject(new ChatMessageSentMessage(localClientId, message));
 	}
 
-	public void increaseGameSpeed() {
-		actionListener.increaseGameSpeed(localClientId);
-	}
-
-	public void decreaseGameSpeed() {
-		actionListener.decreaseGameSpeed(localClientId);
+	/**
+	 * Returns the last measured ping. Only gets updated if
+	 * {@link #updatePing(float)} is called regularly.
+	 * 
+	 * @return The last measured ping.
+	 */
+	public int getPing() {
+		return ping;
 	}
 
 	/**
-	 * Updates the player on the server.
+	 * Establishes the RMI connection to the server.
 	 */
-	public void onLocalPlayerChange(LobbyPlayer player) {
-		sendObject(new PlayerChangedMessage(localClientId, player));
+	public void establishRMIConnection(HashMap<Short, LobbyPlayer> players,
+			GameSessionSetup sessionSetup) {
+		session = new SlaveSession(eventBus, sessionSetup, players,
+				localClientId);
+
+		ObjectSpace.registerClasses(client.getKryo());
+		ObjectSpace objectSpace = new ObjectSpace();
+		objectSpace.register(localClientId, session);
+		objectSpace.addConnection(client);
+
+		SlaveActionListener actionListener = ObjectSpace.getRemoteObject(client,
+				254, SlaveActionListener.class);
+
+		if (actionListener == null)
+			Log.error("Client", "Der actionListener des Spielers %d ist null",
+					localClientId);
+
+		this.actionHandler = new ClientActionHandler(localClientId,
+				actionListener);
 	}
 
-	public boolean readyUp() {
-		return actionListener.readyUp(localClientId);
+	/**
+	 * Sets up the session. The game assets have to get loaded first.
+	 */
+	public void setupGameSession() {
+		session.setupGame();
 	}
 
-	public void discoverHosts(HostDiscoveryListener listener) {
-		Client c = new Client();
-		c.getKryo().register(DiscoveryResponsePacket.class);
-		c.setDiscoveryHandler(new ClientDiscoveryHandler() {
-
-			@Override
-			public DatagramPacket onRequestNewDatagramPacket() {
-				byte[] buffer = new byte[1024];
-				return new DatagramPacket(buffer, buffer.length);
-			}
-
-			@Override
-			public void onDiscoveredHost(DatagramPacket datagramPacket) {
-				DiscoveryResponsePacket packet = (DiscoveryResponsePacket) c
-						.getKryo().readClassAndObject(
-								new Input(datagramPacket.getData()));
-				listener.onHostDiscovered(
-						datagramPacket.getAddress().getHostAddress(), packet);
-			}
-
-			@Override
-			public void onFinally() {
-			}
-		});
-		c.discoverHosts(UDP_DISCOVER_PORT, 4500);
-		c.close();
-	}
-
-	public interface HostDiscoveryListener {
-		public void onHostDiscovered(String address,
-				DiscoveryResponsePacket datagramPacket);
+	public City getCity() {
+		return session.getCity();
 	}
 
 }

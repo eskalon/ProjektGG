@@ -22,9 +22,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.gg.camera.CameraWrapper;
 import de.gg.exception.ScreenNotFoundException;
-import de.gg.game.SlaveSession;
 import de.gg.input.GameInputMultiplexer;
-import de.gg.network.NetworkHandler;
+import de.gg.network.GameClient;
+import de.gg.network.GameServer;
 import de.gg.screen.BaseScreen;
 import de.gg.screen.BaseUIScreen;
 import de.gg.screen.CreditsScreen;
@@ -85,14 +85,13 @@ public class ProjektGG extends Game {
 
 	private Skin uiSkin;
 
-	private SlaveSession currentSession;
-
 	/**
 	 * Event bus. All events are queued first and then taken care of in the
 	 * rendering thread.
 	 */
 	private EventQueueBus eventBus;
-	private NetworkHandler networkHandler;
+	private GameServer server;
+	private GameClient client;
 
 	public ProjektGG(boolean debug, boolean showSplashscreen,
 			boolean fpsCounter) {
@@ -149,9 +148,6 @@ public class ProjektGG extends Game {
 
 		// Create the event bus
 		this.eventBus = new EventQueueBus();
-
-		// Create the network handler
-		this.networkHandler = new NetworkHandler(eventBus, version);
 
 		// Set input processor
 		Gdx.input.setInputProcessor(inputProcessor);
@@ -344,26 +340,30 @@ public class ProjektGG extends Game {
 	}
 
 	/**
-	 * @return the current game session. Null if no session is played at the
-	 *         moment.
+	 * @return the game client. <code>Null</code> if the player is currently not
+	 *         connected to a game.
 	 */
-	public SlaveSession getCurrentSession() {
-		return currentSession;
+	public GameClient getClient() {
+		return client;
 	}
 
-	public void setCurrentSession(SlaveSession session) {
-		this.currentSession = session;
+	public void setClient(GameClient client) {
+		this.client = client;
 	}
 
 	/**
-	 * @return the network handler for this client. Can be null.
+	 * @return the currently hosted server. Can be <code>null</code>.
 	 */
-	public NetworkHandler getNetworkHandler() {
-		return networkHandler;
+	public GameServer getServer() {
+		return server;
 	}
 
-	public void setNetworkHandler(NetworkHandler networkHandler) {
-		this.networkHandler = networkHandler;
+	public void setServer(GameServer server) {
+		this.server = server;
+	}
+
+	public boolean isHost() {
+		return server != null;
 	}
 
 	/**

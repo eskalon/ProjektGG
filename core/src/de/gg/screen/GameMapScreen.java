@@ -73,7 +73,7 @@ public class GameMapScreen extends BaseGameScreen {
 
 		Text t = game.getAssetManager().get(FRAGMENT_SHADER_PATH);
 		sceneRenderer = new SceneRenderer(game.getGameCamera().getCamera(),
-				game.getCurrentSession().getCity(), t.getString());
+				game.getClient().getCity(), t.getString());
 
 		// SPHERE (temp)
 		ModelBuilder modelBuilder = new ModelBuilder();
@@ -96,8 +96,7 @@ public class GameMapScreen extends BaseGameScreen {
 		this.gameInputProcessors = new InputMultiplexer();
 		this.selectionInputController = new MapSelectionInputController(
 				game.getSettings(), game.getEventBus(),
-				game.getGameCamera().getCamera(),
-				game.getCurrentSession().getCity());
+				game.getGameCamera().getCamera(), game.getClient().getCity());
 		this.gameInputProcessors.addProcessor(selectionInputController);
 
 		this.movementInputController = new MapMovementInputController(
@@ -105,7 +104,7 @@ public class GameMapScreen extends BaseGameScreen {
 		this.gameInputProcessors.addProcessor(movementInputController);
 
 		GameSpeedInputProcessor gameSpeedInputProcessor = new GameSpeedInputProcessor(
-				game.getNetworkHandler());
+				game.getClient().getActionHandler());
 		this.gameInputProcessors.addProcessor(gameSpeedInputProcessor);
 	}
 
@@ -121,8 +120,14 @@ public class GameMapScreen extends BaseGameScreen {
 							.setCaller(GameMapScreen.this);
 					game.pushScreen("settings");
 				} else {
-					game.getNetworkHandler().disconnect();
-					game.setCurrentSession(null);
+					game.getClient().disconnect();
+					game.setClient(null);
+
+					if (game.isHost()) {
+						game.getServer().stop();
+						game.setServer(null);
+					}
+
 					game.pushScreen("mainMenu");
 				}
 			};
