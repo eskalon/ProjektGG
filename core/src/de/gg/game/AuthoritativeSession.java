@@ -131,23 +131,17 @@ public class AuthoritativeSession extends GameSession
 
 	@Override
 	public boolean readyUp(short networkId) {
-		System.out.println("Test");
-		try {
-			if (players.get(networkId).isReady()) {
-				return false;
-			}
-
-			players.get(networkId).setReady(true);
-
-			Log.info("Server", "Spieler %d ist für nächste Runde bereit",
-					networkId);
-
-			if (PlayerUtils.areAllPlayersReady(players.values()))
-				startNextRoundForEveryone();
-
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (players.get(networkId).isReady()) {
+			return false;
 		}
+
+		players.get(networkId).setReady(true);
+
+		Log.info("Server", "Spieler %d ist für nächste Runde bereit",
+				networkId);
+
+		if (PlayerUtils.areAllPlayersReady(players.values()))
+			startNextRoundForEveryone();
 
 		return true;
 	}

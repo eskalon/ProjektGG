@@ -235,11 +235,20 @@ public class GameServer {
 		players.put(msg.getId(), msg.getPlayer());
 
 		if (PlayerUtils.areAllPlayersReady(players.values())) {
+			// Establish RMI connection
 			establishRMIConnections();
+			Log.info("Server",
+					"RMI-Netzwerkverbindung zu den Clienten eingerichtet");
 
-			broadcastServer.close();
-			broadcastServer = null;
-			Log.info("Server", "Broadcast-Server geschlossen");
+			// Close Broadcast-Server
+			(new Thread(new Runnable() {
+				@Override
+				public void run() {
+					broadcastServer.close();
+					broadcastServer = null;
+					Log.info("Server", "Broadcast-Server geschlossen");
+				}
+			})).start();
 
 		}
 	}
@@ -269,8 +278,6 @@ public class GameServer {
 		}
 
 		session.setResultListeners(resultListeners);
-		Log.info("Server",
-				"RMI-Netzwerkverbindung zu den Clienten eingerichtet");
 	}
 
 	public interface IHostCallback {

@@ -23,6 +23,7 @@ import de.gg.network.GameServer.IHostCallback;
 import de.gg.network.ServerSetup;
 import de.gg.ui.AnimationlessDialog;
 import de.gg.ui.OffsetableTextField;
+import de.gg.util.Log;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class LobbyCreationScreen extends BaseUIScreen {
@@ -117,6 +118,7 @@ public class LobbyCreationScreen extends BaseUIScreen {
 									"Starten...", skin);
 							connectingDialog.text("Server startet...");
 							connectingDialog.show(stage);
+							Log.info("Server", "Server startet");
 						} else {
 							AnimationlessDialog dialog = new AnimationlessDialog(
 									"Felder unausgefüllt", skin);

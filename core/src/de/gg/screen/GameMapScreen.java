@@ -25,6 +25,8 @@ import de.gg.event.NewNotificationEvent;
 import de.gg.input.GameSpeedInputProcessor;
 import de.gg.input.MapMovementInputController;
 import de.gg.input.MapSelectionInputController;
+import de.gg.network.GameClient;
+import de.gg.network.GameServer;
 import de.gg.render.SceneRenderer;
 import de.gg.render.TestShader;
 import de.gg.ui.AnimationlessDialog;
@@ -121,13 +123,28 @@ public class GameMapScreen extends BaseGameScreen {
 							.setCaller(GameMapScreen.this);
 					game.pushScreen("settings");
 				} else {
-					game.getClient().disconnect();
+					// Zuerst null setzen, damit das Spiel aufhört zu updaten
+					final GameClient client = game.getClient();
 					game.setClient(null);
+					final GameServer server = game.getServer();
+					game.setServer(null);
 
-					if (game.isHost()) {
-						game.getServer().stop();
-						game.setServer(null);
-					}
+					// Dann in einem Thread das mitunter langwierige
+					// Disconnecten durchführen
+					(new Thread(new Runnable() {
+						@Override
+						public void run() {
+							client.disconnect();
+
+							Log.info("Client", "Client beendet");
+
+							if (server != null) {
+								server.stop();
+							}
+
+							Log.info("Server", "Server beendet");
+						}
+					})).start();
 
 					game.pushScreen("mainMenu");
 				}

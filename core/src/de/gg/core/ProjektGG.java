@@ -113,6 +113,8 @@ public class ProjektGG extends Game {
 		else
 			Log.disableDebugLogging();
 
+		Log.info("Version", version);
+
 		// Initialize sprite batch
 		this.batch = new SpriteBatch();
 
@@ -211,7 +213,7 @@ public class ProjektGG extends Game {
 		Gdx.app.postRunnable(new Runnable() {
 			@Override
 			public void run() {
-				Log.debug("Client", "Pushed screen: %s", name);
+				Log.debug("Screen", "Pushed screen: %s", name);
 
 				BaseScreen pushedScreen = screens.get(name);
 
