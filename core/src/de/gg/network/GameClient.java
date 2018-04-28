@@ -1,7 +1,9 @@
 package de.gg.network;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.FrameworkMessage.Ping;
@@ -14,6 +16,7 @@ import de.gg.core.ProjektGG;
 import de.gg.event.ConnectionEstablishedEvent;
 import de.gg.event.ConnectionFailedEvent;
 import de.gg.event.NewChatMessagEvent;
+import de.gg.event.NewNotificationEvent;
 import de.gg.event.PlayerChangedEvent;
 import de.gg.event.PlayerConnectedEvent;
 import de.gg.event.PlayerDisconnectedEvent;
@@ -21,6 +24,8 @@ import de.gg.event.RoundEndEvent;
 import de.gg.game.AuthoritativeSession;
 import de.gg.game.SlaveSession;
 import de.gg.game.data.GameSessionSetup;
+import de.gg.game.data.NotificationData;
+import de.gg.game.data.NotificationData.NotificationIcon;
 import de.gg.game.entity.City;
 import de.gg.network.message.ChatMessageSentMessage;
 import de.gg.network.message.GameSetupMessage;
@@ -77,6 +82,8 @@ public class GameClient {
 	 * The version of the game.
 	 */
 	private String gameVersion;
+
+	private List<NotificationData> notifications = new ArrayList<>();
 
 	private SlaveSession session;
 
@@ -238,9 +245,30 @@ public class GameClient {
 	 * Sends a chat message to the server.
 	 * 
 	 * @param message
+	 *            The actual chat message.
 	 */
 	public void sendChatMessage(String message) {
 		sendObject(new ChatMessageSentMessage(localClientId, message));
+	}
+
+	/**
+	 * Creates a new notification.
+	 * 
+	 * @param title
+	 * @param text
+	 * @param icon
+	 */
+	public void createNotification(String title, String text,
+			NotificationIcon icon) {
+		NotificationData not = new NotificationData(title, text, icon);
+
+		notifications.add(not);
+
+		eventBus.post(new NewNotificationEvent(not));
+	}
+
+	public List<NotificationData> getNotifications() {
+		return notifications;
 	}
 
 	/**

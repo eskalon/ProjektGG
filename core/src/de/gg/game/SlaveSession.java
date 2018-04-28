@@ -1,8 +1,6 @@
 package de.gg.game;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import com.google.common.eventbus.EventBus;
 
@@ -11,7 +9,6 @@ import de.gg.event.NextRoundEvent;
 import de.gg.event.RoundEndDataReceivedEvent;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.data.GameSpeed;
-import de.gg.game.data.NotificationData;
 import de.gg.game.data.RoundEndData;
 import de.gg.game.system.ProcessingSystem;
 import de.gg.game.system.client.FirstEventWaveClientSystem;
@@ -27,7 +24,6 @@ public class SlaveSession extends GameSession
 		implements AuthoritativeResultListener {
 
 	private EventBus eventBus;
-	private List<NotificationData> notifications = new ArrayList<>();
 
 	private GameClock clock;
 
@@ -89,10 +85,6 @@ public class SlaveSession extends GameSession
 		super.startNextRound();
 
 		clock.resetClock();
-	}
-
-	public List<NotificationData> getNotifications() {
-		return notifications;
 	}
 
 	@Override

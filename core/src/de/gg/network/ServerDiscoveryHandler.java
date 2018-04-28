@@ -8,8 +8,17 @@ import com.esotericsoftware.kryonet.ClientDiscoveryHandler;
 
 import de.gg.network.message.DiscoveryResponsePacket;
 
+/**
+ * This class takes care of discovering available game servers.
+ */
 public class ServerDiscoveryHandler {
 
+	/**
+	 * @param port
+	 *            The port to listen on.
+	 * @param listener
+	 *            The listener that is informed when a server is found.
+	 */
 	public void discoverHosts(int port, HostDiscoveryListener listener) {
 		Client c = new Client();
 		c.getKryo().register(DiscoveryResponsePacket.class);
@@ -39,6 +48,13 @@ public class ServerDiscoveryHandler {
 	}
 
 	public interface HostDiscoveryListener {
+		/**
+		 * Is called when the {@linkplain ServerDiscoveryHandler} finds a host.
+		 * 
+		 * @param address
+		 * @param datagramPacket
+		 * @see DiscoveryResponsePacket
+		 */
 		public void onHostDiscovered(String address,
 				DiscoveryResponsePacket datagramPacket);
 	}

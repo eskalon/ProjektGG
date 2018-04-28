@@ -96,6 +96,9 @@ public class AuthoritativeSession extends GameSession
 		// TODO save the game
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void fixedUpdate() {
 		super.fixedUpdate();
