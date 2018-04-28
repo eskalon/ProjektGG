@@ -42,11 +42,16 @@ public class PositionTypes {
 	 */
 	public class PositionType {
 
+		private String name;
 		private int level;
 		private int statusRequirementIndex;
 		private int salary;
 
 		PositionType() {
+		}
+
+		public String getName() {
+			return name;
 		}
 
 		public int getLevel() {

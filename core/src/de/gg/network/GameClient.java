@@ -11,6 +11,7 @@ import com.esotericsoftware.kryonet.Listener.TypeListener;
 import com.esotericsoftware.kryonet.rmi.ObjectSpace;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import de.gg.core.ProjektGG;
 import de.gg.event.ConnectionEstablishedEvent;
@@ -25,7 +26,6 @@ import de.gg.game.AuthoritativeSession;
 import de.gg.game.SlaveSession;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.data.NotificationData;
-import de.gg.game.data.NotificationData.NotificationIcon;
 import de.gg.game.entity.City;
 import de.gg.network.message.ChatMessageSentMessage;
 import de.gg.network.message.GameSetupMessage;
@@ -103,6 +103,7 @@ public class GameClient {
 		Preconditions.checkNotNull(eventBus, "gameVersion cannot be null.");
 
 		this.eventBus = eventBus;
+		this.eventBus.register(this);
 		this.gameVersion = gameVersion;
 
 		client = new Client();
@@ -189,6 +190,7 @@ public class GameClient {
 	}
 
 	public void disconnect() {
+		eventBus.unregister(this);
 		client.close();
 	}
 
@@ -258,13 +260,9 @@ public class GameClient {
 	 * @param text
 	 * @param icon
 	 */
-	public void createNotification(String title, String text,
-			NotificationIcon icon) {
-		NotificationData not = new NotificationData(title, text, icon);
-
-		notifications.add(not);
-
-		eventBus.post(new NewNotificationEvent(not));
+	@Subscribe
+	public void onNotificationCreation(NewNotificationEvent ev) {
+		notifications.add(ev.getData());
 	}
 
 	public List<NotificationData> getNotifications() {
@@ -284,7 +282,8 @@ public class GameClient {
 	/**
 	 * Establishes the RMI connection to the server.
 	 */
-	public void establishRMIConnection(HashMap<Short, LobbyPlayer> players,
+	public synchronized void establishRMIConnection(
+			HashMap<Short, LobbyPlayer> players,
 			GameSessionSetup sessionSetup) {
 		session = new SlaveSession(eventBus, sessionSetup, players,
 				localClientId);
@@ -303,6 +302,8 @@ public class GameClient {
 
 		this.actionHandler = new ClientActionHandler(localClientId,
 				actionListener);
+
+		Log.info("Client", "RMI-Netzwerkverbindung zum Server eingerichtet");
 	}
 
 	/**

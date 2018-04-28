@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
+import com.esotericsoftware.minlog.Log;
 import com.google.common.eventbus.Subscribe;
 
 import de.gg.event.NextRoundEvent;
@@ -66,6 +67,9 @@ public class GameRoundendScreen extends BaseGameScreen {
 					int pointer, int button) {
 				flipSound.play(1F);
 				nextButton.setText("Warten...");
+
+				Log.debug("Client", "Client ist bereit");
+
 				game.getClient().getActionHandler().readyUp();
 
 				return true;

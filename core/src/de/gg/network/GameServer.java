@@ -244,7 +244,7 @@ public class GameServer {
 		}
 	}
 
-	private void establishRMIConnections() {
+	private synchronized void establishRMIConnections() {
 		session = new AuthoritativeSession(sessionSetup, serverSetup, players);
 
 		// Register the RMI handler

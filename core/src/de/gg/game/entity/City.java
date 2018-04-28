@@ -11,12 +11,12 @@ import de.gg.game.data.GameSessionSetup;
 import de.gg.game.factory.CharacterFactory;
 import de.gg.game.type.BuildingTypes;
 import de.gg.game.type.GameMaps;
-import de.gg.game.type.PositionTypes;
-import de.gg.game.type.SocialStatusS;
 import de.gg.game.type.GameMaps.GameMap;
 import de.gg.game.type.ItemTypes.ItemType;
 import de.gg.game.type.LawTypes.LawType;
+import de.gg.game.type.PositionTypes;
 import de.gg.game.type.PositionTypes.PositionType;
+import de.gg.game.type.SocialStatusS;
 import de.gg.network.LobbyPlayer;
 import de.gg.render.RenderData;
 import de.gg.util.RandomUtils;
@@ -31,7 +31,7 @@ public class City {
 	private HashMap<Short, Player> players = new HashMap<>();
 	private List<Short> prisonPopulation = new ArrayList<>();
 
-	private HashMap<PositionType, Short> positions = new HashMap<>();
+	private HashMap<PositionType, Position> positions = new HashMap<>();
 	/**
 	 * A hashmap with all laws. The value object is either a boolean or an
 	 * integer.
@@ -70,7 +70,7 @@ public class City {
 								: SocialStatusS.CAVALIER));
 		characters.get((short) 1).setHighestPositionLevel(6);
 		characters.get((short) 1).setPosition(PositionTypes.MAYOR);
-		positions.put(PositionTypes.MAYOR, (short) 1);
+		positions.put(PositionTypes.MAYOR, new Position((short) 1));
 
 		// [Test] Characters
 		for (short i = 2; i <= 100; i++) {
@@ -124,7 +124,7 @@ public class City {
 		return prisonPopulation;
 	}
 
-	public HashMap<PositionType, Short> getPositions() {
+	public HashMap<PositionType, Position> getPositions() {
 		return positions;
 	}
 

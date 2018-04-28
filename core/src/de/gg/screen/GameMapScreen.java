@@ -21,6 +21,7 @@ import com.google.common.eventbus.Subscribe;
 import de.gg.event.FullHourEvent;
 import de.gg.event.HouseEnterEvent;
 import de.gg.event.HouseSelectionEvent;
+import de.gg.event.NewNotificationEvent;
 import de.gg.input.GameSpeedInputProcessor;
 import de.gg.input.MapMovementInputController;
 import de.gg.input.MapSelectionInputController;
@@ -193,6 +194,11 @@ public class GameMapScreen extends BaseGameScreen {
 	public void onFollHour(FullHourEvent ev) {
 		clockTickSound.play(game.getSettings().getEffectVolume()
 				* game.getSettings().getMasterVolume());
+	}
+
+	@Subscribe
+	public void onNewNotification(NewNotificationEvent ev) {
+		// TODO update notification ui; @see GameClient#getNotifications()
 	}
 
 	@Override

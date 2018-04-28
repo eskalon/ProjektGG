@@ -31,20 +31,31 @@ public class DesktopLauncher {
 		options.option("debug").describedAs("enables debugmode").isUnary();
 		options.option("fps").describedAs("enables a fps counter").isUnary();
 		options.option("novid").describedAs("no splashscreen").isUnary();
+		options.option("width").describedAs("the width of the game's window");
+		options.option("height").describedAs("the heigth of the game's window");
 		try {
 			options.parse(args);
 		} catch (MicroOptions.OptionException e) {
 			System.err.println("Usage:");
-			System.err.println(options.usageString());
-			System.exit(-1);
+			exitWithError(options.usageString());
 		}
 
-		// options.getArg("file", "/tmp/out");
+		int width = 0, height = 0;
+		try {
+			width = Integer.valueOf(options.getArg("width", "1280")); // 1600
+			height = Integer.valueOf(options.getArg("height", "720")); // 900
+		} catch (NumberFormatException e) {
+			exitWithError("the width and height parameter have to be integers");
+		}
+
+		if (width < 0 || height < 0)
+			exitWithError(
+					"the width and height parameter have to be positive integers");
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = ProjektGG.name;
-		config.height = 720;
-		config.width = 1280;
+		config.height = height;
+		config.width = width;
 		config.resizable = false;
 		config.addIcon("ui/images/icon16.png", Files.FileType.Absolute);
 		config.addIcon("ui/images/icon32.png", Files.FileType.Absolute);
@@ -60,6 +71,11 @@ public class DesktopLauncher {
 
 			CrashLogUtils.writeCrashLogToFile(e, true);
 		}
+	}
+
+	private static void exitWithError(String errorMsg) {
+		System.err.println(errorMsg);
+		System.exit(-1);
 	}
 
 }

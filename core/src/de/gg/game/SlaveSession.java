@@ -55,7 +55,7 @@ public class SlaveSession extends GameSession
 
 		// Setup the client systems
 		ProcessingSystem s;
-		s = new FirstEventWaveClientSystem();
+		s = new FirstEventWaveClientSystem(eventBus);
 		s.init(city, getGameSeed());
 		this.playerSystems.add(s);
 	}
