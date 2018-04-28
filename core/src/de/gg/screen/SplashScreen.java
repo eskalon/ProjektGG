@@ -31,7 +31,7 @@ public class SplashScreen extends BaseScreen {
 		// Gdx.files.internal(TITLE_ANIMATION_PATH).read());
 
 		xPos = (game.getViewportWidth() - titleImage.getWidth()) / 2;
-		yPos = (game.getViewportHeight() - titleImage.getHeight()) / 2 + 45;
+		yPos = (game.getViewportHeight() - titleImage.getHeight()) / 2 + 30;
 	}
 
 	@Override

@@ -21,6 +21,8 @@ public class DesktopLauncher {
 	 * <li>--debug: sets the game to debug mode.
 	 * <li>--novid: skips the splash screen.
 	 * <li>--fps: shows a fps counter in-game.
+	 * <li>--width [width]: sets the window width
+	 * <li>--height [height]: sets the window height
 	 * </ul>
 	 *
 	 * @param args
