@@ -1,5 +1,8 @@
 package de.gg.game.data;
 
+/**
+ * This class represents a notification.
+ */
 public class NotificationData {
 
 	private String title, text;
@@ -24,6 +27,9 @@ public class NotificationData {
 		return icon;
 	}
 
+	/**
+	 * The icons for the notifications.
+	 */
 	public enum NotificationIcon {
 
 	}

@@ -51,6 +51,10 @@ public class MapMovementInputController implements DefaultInputProcessor {
 			final GameSettings settings) {
 		this.camera = camera;
 
+		setKeys(settings);
+	}
+
+	public void setKeys(GameSettings settings) {
 		this.forwardKey = settings.getForwardKey();
 		this.backwardKey = settings.getBackwardKey();
 		this.rightKey = settings.getRightKey();

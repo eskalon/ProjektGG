@@ -113,7 +113,7 @@ public class GameMapScreen extends BaseGameScreen {
 
 	@Override
 	protected void initUI() {
-		// TODO UI-Komponenten hinzufügen
+		//TODO UI-Komponenten hinzufügen
 
 		pauseDialog = new AnimationlessDialog("", skin) {
 			protected void result(Object object) {

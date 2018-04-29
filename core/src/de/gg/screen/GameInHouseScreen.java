@@ -17,6 +17,7 @@ public class GameInHouseScreen extends BaseGameScreen {
 
 	@Override
 	protected void initUI() {
+		// TODO UI-Komponenten für Rathaus-Test hinzufügen
 	}
 
 	@Override

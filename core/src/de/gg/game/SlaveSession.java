@@ -55,7 +55,7 @@ public class SlaveSession extends GameSession
 
 		// Setup the client systems
 		ProcessingSystem s;
-		s = new FirstEventWaveClientSystem(eventBus);
+		s = new FirstEventWaveClientSystem(eventBus, localNetworkId);
 		s.init(city, getGameSeed());
 		this.playerSystems.add(s);
 	}
@@ -133,6 +133,9 @@ public class SlaveSession extends GameSession
 		eventBus.post(new ChangedGameSpeedEvent(gameSpeed));
 	}
 
+	/**
+	 * @return the clock used to determine the current in-game time.
+	 */
 	public GameClock getClock() {
 		return clock;
 	}

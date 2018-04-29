@@ -27,7 +27,7 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 
 	@Subscribe
 	public void onNewChatMessage(NewChatMessagEvent event) {
-		// TODO
+		// TODO chat messages rendern
 	}
 
 	@Subscribe
@@ -48,10 +48,9 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 
 	@Override
 	public void render(float delta) {
-		if (updateGame && game.getClient() != null) { // Der Client kann null
-														// sein, wenn der
-														// Spieler gerade
-														// disconnected
+		if (updateGame && game.getClient() != null) { // Der Client ist null,
+														// wenn der Spieler
+														// gerade disconnected
 			game.getClient().update();
 			game.getClient().updatePing(delta);
 

@@ -4,8 +4,6 @@ import java.util.HashMap;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -23,6 +21,9 @@ import de.gg.event.PlayerConnectedEvent;
 import de.gg.event.PlayerDisconnectedEvent;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.type.GameMaps;
+import de.gg.input.ButtonClickListener;
+import de.gg.network.GameClient;
+import de.gg.network.GameServer;
 import de.gg.network.LobbyPlayer;
 import de.gg.ui.OffsetableTextField;
 import de.gg.util.Log;
@@ -46,7 +47,7 @@ public class LobbyScreen extends BaseUIScreen {
 	@Asset(Texture.class)
 	private final String ICON2_IMAGE_PATH = "ui/icons/players/icon_2.png";
 	@Asset(Sound.class)
-	private final String BUTTON_SOUND = "audio/button-tick.mp3";
+	private static final String CLICK_SOUND = "audio/button-tick.mp3";
 
 	private Label messagesArea, settingsArea;
 	private Table[] playerSlots;
@@ -60,35 +61,48 @@ public class LobbyScreen extends BaseUIScreen {
 	@Override
 	protected void initUI() {
 		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
-		Sound clickSound = assetManager.get(BUTTON_SOUND);
+		Sound clickSound = assetManager.get(CLICK_SOUND);
 
 		ImageTextButton playerSetingsButton = new ImageTextButton("Anpassen",
 				skin, "small");
-		playerSetingsButton.addListener(new InputListener() {
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				clickSound.play(1F);
-
-				// TODO
-
-				return true;
-			}
-		});
+		playerSetingsButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						// TODO Dialog/Window zum Ändern der
+						// Spielerkonfiguration öffnen
+					}
+				});
 
 		ImageTextButton leaveButton = new ImageTextButton("Verlassen", skin,
 				"small");
-		leaveButton.addListener(new InputListener() {
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				clickSound.play(1F);
-				game.getClient().disconnect();
-				if (game.isHost())
-					game.getServer().stop();
+		leaveButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						final GameClient client = game.getClient();
+						game.setClient(null);
+						final GameServer server = game.getServer();
+						game.setServer(null);
 
-				game.pushScreen("mainMenu");
-				return true;
-			}
-		});
+						(new Thread(new Runnable() {
+							@Override
+							public void run() {
+								client.disconnect();
+
+								Log.info("Client", "Client beendet");
+
+								if (server != null) {
+									server.stop();
+								}
+
+								Log.info("Server", "Server beendet");
+							}
+						})).start();
+
+						game.pushScreen("mainMenu");
+					}
+				});
 
 		readyUpLobbyButton = new ImageTextButton("Bereit", skin, "small");
 		if (game.isHost()) {
@@ -96,18 +110,16 @@ public class LobbyScreen extends BaseUIScreen {
 			readyUpLobbyButton.setTouchable(Touchable.disabled);
 			readyUpLobbyButton.setText("Spiel starten");
 		}
-		readyUpLobbyButton.addListener(new InputListener() {
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				clickSound.play(1F);
-				getLocalPlayer().toggleReady();
-				game.getClient().onLocalPlayerChange(getLocalPlayer());
+		readyUpLobbyButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						getLocalPlayer().toggleReady();
+						game.getClient().onLocalPlayerChange(getLocalPlayer());
 
-				updateLobbyUI();
-
-				return true;
-			}
-		});
+						updateLobbyUI();
+					}
+				});
 
 		settingsArea = new Label("", skin);
 		settingsArea.setAlignment(Align.topLeft);
@@ -142,21 +154,22 @@ public class LobbyScreen extends BaseUIScreen {
 				}
 			}
 		});
-		sendButton.addListener(new InputListener() {
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				if (!chatInputField.getText().isEmpty()) {
-					clickSound.play(1F);
+		sendButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						game.getClient()
+								.sendChatMessage(chatInputField.getText());
+						onNewChatMessage(new NewChatMessagEvent(localNetworkId,
+								chatInputField.getText()));
+						chatInputField.setText("");
+					}
 
-					game.getClient().sendChatMessage(chatInputField.getText());
-					onNewChatMessage(new NewChatMessagEvent(localNetworkId,
-							chatInputField.getText()));
-					chatInputField.setText("");
-				}
-
-				return true;
-			}
-		});
+					@Override
+					protected boolean arePreconditionsMet() {
+						return !chatInputField.getText().isEmpty();
+					}
+				});
 
 		messagesArea = new Label("", skin, "with-background");
 		messagesArea.setAlignment(Align.topLeft);

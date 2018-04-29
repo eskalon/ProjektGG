@@ -53,7 +53,7 @@ public class GameServer {
 	private HashMap<Short, Connection> connections;
 
 	/**
-	 * Sets up a server and a client asynchronously. After it is finished a
+	 * Sets up a server asynchronously. After it is finished a
 	 * {@link ConnectionEstablishedEvent} is posted on the
 	 * {@linkplain ProjektGG#getEventBus() event bus}.
 	 * 
@@ -222,7 +222,8 @@ public class GameServer {
 
 			server.sendToAllExceptTCP(con.getID(), new PlayerLeftMessage(id));
 
-			session.getResultListeners().remove(id);
+			if (session.getResultListeners() != null)
+				session.getResultListeners().remove(id);
 			connections.remove(id);
 			players.remove(id);
 		}
