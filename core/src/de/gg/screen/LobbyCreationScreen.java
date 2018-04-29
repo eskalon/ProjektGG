@@ -1,7 +1,5 @@
 package de.gg.screen;
 
-import java.io.IOException;
-
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
@@ -96,8 +94,7 @@ public class LobbyCreationScreen extends BaseUIScreen {
 							game.setServer(new GameServer(serverSetup,
 									sessionSetup, new IHostCallback() {
 										@Override
-										public void onHostStarted(
-												IOException e) {
+										public void onHostStarted(Exception e) {
 											if (e == null) {
 												// Connect to client
 												game.setClient(new GameClient(

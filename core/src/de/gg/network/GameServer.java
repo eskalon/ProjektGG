@@ -152,7 +152,7 @@ public class GameServer {
 						}
 					}
 					callback.onHostStarted(null);
-				} catch (IOException e) {
+				} catch (IOException | IllegalArgumentException e) {
 					callback.onHostStarted(e);
 					Log.error("Server",
 							"Der Server konnte nicht gestartet werden: %s", e);
@@ -222,7 +222,7 @@ public class GameServer {
 
 			server.sendToAllExceptTCP(con.getID(), new PlayerLeftMessage(id));
 
-			if (session.getResultListeners() != null)
+			if (session != null)
 				session.getResultListeners().remove(id);
 			connections.remove(id);
 			players.remove(id);
@@ -282,7 +282,7 @@ public class GameServer {
 	}
 
 	public interface IHostCallback {
-		public void onHostStarted(IOException e);
+		public void onHostStarted(Exception e);
 	}
 
 }

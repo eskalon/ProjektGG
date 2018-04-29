@@ -16,6 +16,10 @@ import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.google.common.eventbus.Subscribe;
 
 import de.gg.event.FullHourEvent;
@@ -113,8 +117,83 @@ public class GameMapScreen extends BaseGameScreen {
 
 	@Override
 	protected void initUI() {
-		//TODO UI-Komponenten hinzufügen
+		// PLAYER ICON
+		ImageButton iconButton = new ImageButton(skin, "icon_1");
+		Table iconTable = new Table();
+		iconTable.setBackground(skin.getDrawable("icon_background"));
+		iconTable.add(iconButton).padLeft(8).padRight(10).padBottom(1);
 
+		// INFO STUFF
+		Table infoTable = new Table();
+
+		// Gold
+		Table goldTable = new Table();
+		goldTable.setBackground(skin.getDrawable("info_background"));
+		goldTable.add(new Image(skin.getDrawable("gold_coin"))).left().top()
+				.padLeft(4).padBottom(2).padRight(4);
+		goldTable.add(new Label("19 Gulden", skin, "dark")).padBottom(5)
+				.expandX().left().top();
+
+		// Name
+		Table nameTable = new Table();
+		nameTable.setBackground(skin.getDrawable("info_background"));
+		nameTable.add(
+				new Label("Freiherr  Franz  von  Woyzeck", skin, "big-dark"))
+				.padBottom(2).expandX().left();
+
+		// Notifications
+		Table notificationTable = new Table();
+
+		infoTable.add(goldTable).row();
+		infoTable.add(nameTable).left().row();
+		infoTable.add(notificationTable).left().padLeft(2).padTop(2).row();
+
+		// DATE STUFF
+		Table dateTimeTable = new Table();
+
+		// Date
+		Table dateTable = new Table();
+		dateTable.setBackground(skin.getDrawable("date_background"));
+		dateTable.add(new Label("Frühjahr - 1305 a.d.", skin, "dark"))
+				.padLeft(9).padBottom(5).expandX().left();
+
+		// Clock
+		Table clockTable = new Table();
+		clockTable.setBackground(skin.getDrawable("clock_background"));
+
+		dateTimeTable.add(dateTable).row();
+		dateTimeTable.add(clockTable).right();
+
+		// MISC
+		Table miscTable = new Table();
+		Table misc2Table = new Table();
+		// Inventory
+		ImageButton inventoryButton = new ImageButton(skin, "inventory");
+
+		// Book
+		ImageButton bookButton = new ImageButton(skin, "leaning_book");
+
+		// Minimap
+		Table minimapTable = new Table();
+		minimapTable.setBackground(skin.getDrawable("minimap_test"));
+
+		misc2Table.add(inventoryButton).padRight(2);
+		misc2Table.add(bookButton).padTop(2).row();
+
+		miscTable.add(misc2Table).right().row();
+		miscTable.add(minimapTable);
+
+		mainTable.setSkin(skin);
+		mainTable.setFillParent(true);
+
+		mainTable.add(iconTable).top().left();
+		mainTable.add(infoTable).top().left();
+		mainTable.add(dateTimeTable).right().expandX().row();
+		mainTable.add("").fill();
+		mainTable.add("").expand().fill();
+		mainTable.add(miscTable).expandY().bottom().right();
+
+		// PAUSE DIALOG
 		pauseDialog = new AnimationlessDialog("", skin) {
 			protected void result(Object object) {
 				pauseShown = false;
