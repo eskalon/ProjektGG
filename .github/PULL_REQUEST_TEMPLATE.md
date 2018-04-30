@@ -7,7 +7,7 @@
 
 **[Eine einleitende, kurze Beschreibung dessen, was durch die Pull Request bezweckt wird]**
 
-### Deatils
+### Details
 [Eine Aufzählung der konkret durchgeführten Veränderungen:]
 - [Veränderung 1]
 - [Veränderung 2]
