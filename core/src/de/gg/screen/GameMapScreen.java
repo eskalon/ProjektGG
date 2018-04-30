@@ -1,11 +1,9 @@
 package de.gg.screen;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.Renderable;
@@ -57,7 +55,6 @@ public class GameMapScreen extends BaseGameScreen {
 
 	private Renderable renderable;
 
-	private BitmapFont font;
 	private Sound clockTickSound;
 
 	/**
@@ -74,7 +71,6 @@ public class GameMapScreen extends BaseGameScreen {
 	@Override
 	protected void onInit() {
 		super.onInit();
-		font = skin.getFont("main-19");
 
 		clockTickSound = assetManager.get(CLOCK_TICK_SOUND);
 
@@ -249,15 +245,6 @@ public class GameMapScreen extends BaseGameScreen {
 		shader.render(renderable);
 		shader.end();
 		renderContext.end();
-
-		// FPS counter
-		if (game.showFPSCounter()) {
-			game.getSpriteBatch().begin();
-			font.draw(game.getSpriteBatch(),
-					String.valueOf(Gdx.graphics.getFramesPerSecond()), 6,
-					game.getViewportHeight() - 4);
-			game.getSpriteBatch().end();
-		}
 	}
 
 	@Subscribe
