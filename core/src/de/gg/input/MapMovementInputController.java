@@ -2,10 +2,9 @@ package de.gg.input;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
-import com.badlogic.gdx.math.Vector3;
 
+import de.gg.camera.CameraWrapper;
 import de.gg.setting.GameSettings;
 
 /**
@@ -13,7 +12,7 @@ import de.gg.setting.GameSettings;
  */
 public class MapMovementInputController implements DefaultInputProcessor {
 
-	public Camera camera;
+	public CameraWrapper camera;
 
 	// Key binds
 	public int rotateButton = Buttons.RIGHT;
@@ -30,24 +29,12 @@ public class MapMovementInputController implements DefaultInputProcessor {
 	protected int button = -1;
 
 	private float startX, startY;
-	private final Vector3 Y_AXIS = new Vector3(0, 1, 0);
 
-	private final Vector3 tmp = new Vector3();
-	private final Vector3 tmp2 = new Vector3();
-
-	public float rotateAngle = 360f;
+	public float rotationSpeed = 360f;
 	public float translateUnits = 10f;
 	public float scrollFactor = -0.1f;
 
-	// TODO target überarbeiten!!
-	/** The target to rotate around. */
-	public Vector3 target = new Vector3();
-	/** Whether to update the target on forward */
-	public boolean forwardTarget = true;
-	/** Whether to update the target on scroll */
-	public boolean scrollTarget = false;
-
-	public MapMovementInputController(final Camera camera,
+	public MapMovementInputController(final CameraWrapper camera,
 			final GameSettings settings) {
 		this.camera = camera;
 
@@ -64,31 +51,18 @@ public class MapMovementInputController implements DefaultInputProcessor {
 	public void update() {
 		if (rightPressed || leftPressed || forwardPressed || backwardPressed) {
 			final float delta = Gdx.graphics.getDeltaTime();
-			tmp.set(camera.direction).y = 0;
 
 			if (rightPressed) {
-				camera.translate(
-						tmp.rotate(Y_AXIS, 270).scl(delta * translateUnits));
-				if (forwardTarget)
-					target.add(tmp);
+				camera.translateOnXYPlane(270, delta * translateUnits);
 			}
 			if (leftPressed) {
-				camera.translate(
-						tmp.rotate(Y_AXIS, 90).scl(delta * translateUnits));
-				if (forwardTarget)
-					target.add(tmp);
+				camera.translateOnXYPlane(90, delta * translateUnits);
 			}
 			if (forwardPressed) {
-				camera.translate(
-						tmp.rotate(Y_AXIS, 0).scl(delta * translateUnits));
-				if (forwardTarget)
-					target.add(tmp);
+				camera.translateOnXYPlane(0, delta * translateUnits);
 			}
 			if (backwardPressed) {
-				camera.translate(
-						tmp.rotate(Y_AXIS, 180).scl(delta * translateUnits));
-				if (forwardTarget)
-					target.add(tmp);
+				camera.translateOnXYPlane(180, delta * translateUnits);
 			}
 
 			camera.update();
@@ -123,9 +97,8 @@ public class MapMovementInputController implements DefaultInputProcessor {
 
 	protected boolean process(float deltaX, float deltaY, int button) {
 		if (button == rotateButton) {
-			tmp2.set(camera.direction).crs(camera.up).y = 0f;
-			camera.rotateAround(target, tmp2.nor(), deltaY * rotateAngle);
-			camera.rotateAround(target, Vector3.Y, deltaX * -rotateAngle);
+			camera.rotateAroundTarget(deltaX * -rotationSpeed,
+					deltaY * rotationSpeed);
 		}
 
 		camera.update();
@@ -143,15 +116,9 @@ public class MapMovementInputController implements DefaultInputProcessor {
 
 	@Override
 	public boolean scrolled(int amount) {
-		return zoom(amount * scrollFactor * translateUnits);
-	}
-
-	public boolean zoom(float amount) {
-		camera.translate(tmp2.set(camera.direction).scl(amount));
-		if (scrollTarget)
-			target.add(tmp2);
-
+		camera.zoom(amount * scrollFactor * translateUnits);
 		camera.update();
+
 		return true;
 	}
 
