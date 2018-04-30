@@ -140,7 +140,7 @@
 	com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 		default: {
 			titleFont: main-19,
-			background: window,
+			background: parchment1,
 			titleFontColor: white 
 		}
 	},
