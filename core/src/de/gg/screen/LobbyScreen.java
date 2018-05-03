@@ -66,50 +66,77 @@ public class LobbyScreen extends BaseUIScreen {
 	private Religion selectedReligion;
 	private PlayerIcon selectedIcon;
 
-	AnimationlessDialog playerConfigurationDialog;
-	AnimationlessDialog iconDialog;
+	private AnimationlessDialog playerConfigurationDialog;
+	private AnimationlessDialog iconDialog;
 
-	TextField surnameTextField;
-	TextField nameTextField;
+	private TextField surnameTextField;
+	private TextField nameTextField;
 
-	Label surnameLabel;
-	Label nameLabel;
+	private Label surnameLabel;
+	private Label nameLabel;
 
-	ImageTextButton sexButton;
-	Label sexLabel;
+	private ImageTextButton sexButton;
+	private Label sexLabel;
 
-	ImageTextButton religionButton;
-	Label religionLabel;
+	private ImageTextButton religionButton;
+	private Label religionLabel;
 
-	ImageTextButton iconButton;
-	Label iconLabel;
+	private ImageTextButton iconButton;
+	private Label iconLabel;
 
-	ImageTextButton applyButton;
-	ImageTextButton discardButton;
+	private ImageTextButton applyButton;
+	private ImageTextButton discardButton;
 
 	@Override
 	protected void initUI() {
 		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
 		Sound clickSound = assetManager.get(BUTTON_SOUND);
 
-		ImageTextButton playerSetingsButton = new ImageTextButton("Anpassen",
+		ImageTextButton playerSettingsButton = new ImageTextButton("Anpassen",
 				skin, "small");
-		playerSetingsButton.addListener(new InputListener() {
+		playerSettingsButton.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				clickSound.play(1F);
 
-				createUIElements();
-				getLocalPlayerData();
+				setLocalPlayerDataVariables();
+				playerConfigurationDialog.show(stage);
 
-				// Creating all icon-buttons with correct listener
-				Table iconTable = new Table();
-				for (int i = 0; i < PlayerIcon.values().length; i++) {
-					ImageButton iconIButton = new ImageButton(skin.getDrawable(
-							PlayerIcon.values()[i].getIconFileName()));
-					final int index = i;
-					iconIButton.addListener(new ButtonClickListener(
-							assetManager, game.getSettings()) {
+				return true;
+			}
+		});
+
+		// Create UI elements for player configuration dialog
+		playerConfigurationDialog = new AnimationlessDialog(
+				"Spielerkonfiguration", skin);
+		iconDialog = new AnimationlessDialog("Wappen", skin);
+
+		surnameTextField = new TextField("StandardSurname", skin);
+		nameTextField = new TextField("StandardName", skin);
+
+		surnameLabel = new Label("Name: ", skin);
+		nameLabel = new Label("Vorname: ", skin);
+
+		sexButton = new ImageTextButton("StandardSex", skin, "small");
+		sexLabel = new Label("Geschlecht: ", skin);
+
+		religionButton = new ImageTextButton("StandardReligion", skin, "small");
+		religionLabel = new Label("Religion: ", skin);
+
+		iconButton = new ImageTextButton("Anpassen", skin, "small");
+		iconLabel = new Label("Wappen: ", skin);
+
+		applyButton = new ImageTextButton("Übernehmen", skin);
+		discardButton = new ImageTextButton("Abbrechen", skin);
+
+		// Creating all icon-buttons with correct listener
+		Table iconTable = new Table();
+		for (int i = 0; i < PlayerIcon.values().length; i++) {
+			ImageButton iconIButton = new ImageButton(
+					skin.getDrawable(PlayerIcon.values()[i].getIconFileName()));
+			final int index = i;
+			iconIButton.addListener(
+					new ButtonClickListener(assetManager, game.getSettings()) {
 
 						@Override
 						protected void onClick() {
@@ -119,16 +146,16 @@ public class LobbyScreen extends BaseUIScreen {
 
 						}
 					});
-					iconTable.add(iconIButton).pad(25);
-				}
+			iconTable.add(iconIButton).pad(25);
+		}
 
-				// Listener for configuration buttons
-				sexButton.addListener(new ButtonClickListener(assetManager,
-						game.getSettings()) {
+		// Listener for configuration buttons
+		sexButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
 
 					@Override
 					protected void onClick() {
-						if (sexButton.getText().equals("Männlich")) {
+						if (selectedSex) {
 							selectedSex = false;
 							sexButton.setText("Weiblich");
 						} else {
@@ -140,12 +167,12 @@ public class LobbyScreen extends BaseUIScreen {
 
 				});
 
-				religionButton.addListener(new ButtonClickListener(assetManager,
-						game.getSettings()) {
+		religionButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
 
 					@Override
 					protected void onClick() {
-						if (religionButton.getText().equals("Orthodox")) {
+						if (selectedReligion.equals(Religion.values()[1])) {
 							selectedReligion = Religion.values()[0];
 							religionButton.setText("Katholisch");
 
@@ -158,8 +185,8 @@ public class LobbyScreen extends BaseUIScreen {
 
 				});
 
-				iconButton.addListener(new ButtonClickListener(assetManager,
-						game.getSettings()) {
+		iconButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
 
 					@Override
 					protected void onClick() {
@@ -168,9 +195,9 @@ public class LobbyScreen extends BaseUIScreen {
 
 				});
 
-				// apply and discard button
-				applyButton.addListener(new ButtonClickListener(assetManager,
-						game.getSettings()) {
+		// apply and discard button
+		applyButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
 
 					@Override
 					protected void onClick() {
@@ -191,8 +218,8 @@ public class LobbyScreen extends BaseUIScreen {
 
 				});
 
-				discardButton.addListener(new ButtonClickListener(assetManager,
-						game.getSettings()) {
+		discardButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
 
 					@Override
 					protected void onClick() {
@@ -202,40 +229,34 @@ public class LobbyScreen extends BaseUIScreen {
 
 				});
 
-				// Adding all UI elements
-				Table playerConfigurationTable = new Table();
-				playerConfigurationTable.add(nameLabel);
-				playerConfigurationTable.add(nameTextField).row();
-				playerConfigurationTable.add(surnameLabel);
-				playerConfigurationTable.add(surnameTextField).row();
-				playerConfigurationTable.add(sexLabel);
-				playerConfigurationTable.add(sexButton).row();
-				playerConfigurationTable.add(religionLabel);
-				playerConfigurationTable.add(religionButton).row();
-				playerConfigurationTable.add(iconLabel);
-				playerConfigurationTable.add(iconButton).row();
-				playerConfigurationTable.add(applyButton);
-				playerConfigurationTable.add(discardButton);
+		// Adding all UI elements
+		Table playerConfigurationTable = new Table();
+		playerConfigurationTable.add(nameLabel).padBottom(15);
+		playerConfigurationTable.add(nameTextField).padBottom(15).row();
+		playerConfigurationTable.add(surnameLabel).padBottom(50);
+		playerConfigurationTable.add(surnameTextField).padBottom(50).row();
+		playerConfigurationTable.add(sexLabel).padBottom(15);
+		playerConfigurationTable.add(sexButton).padBottom(15).row();
+		playerConfigurationTable.add(religionLabel).padBottom(15);
+		playerConfigurationTable.add(religionButton).padBottom(15).row();
+		playerConfigurationTable.add(iconLabel).padBottom(50);
+		playerConfigurationTable.add(iconButton).padBottom(50).row();
+		playerConfigurationTable.add(applyButton);
+		playerConfigurationTable.add(discardButton);
 
-				// Setting up player configuration dialog
-				playerConfigurationDialog.add(playerConfigurationTable)
-						.pad(100);
-				playerConfigurationDialog.setWidth(680);
-				playerConfigurationDialog.setHeight(480);
-				playerConfigurationDialog.setX(300);
-				playerConfigurationDialog.setY(125);
-				playerConfigurationDialog.show(stage);
+		// Setting up player configuration dialog
+		playerConfigurationDialog.add(playerConfigurationTable).pad(100);
+		playerConfigurationDialog.setWidth(680);
+		playerConfigurationDialog.setHeight(480);
+		playerConfigurationDialog.setX(300);
+		playerConfigurationDialog.setY(125);
 
-				// Setting up the dialog for chosing a player icon
-				iconDialog.add(iconTable).pad(20);
-				iconDialog.setWidth(350);
-				iconDialog.setHeight(250);
-				iconDialog.setX(350);
-				iconDialog.setY(175);
-
-				return true;
-			}
-		});
+		// Setting up the dialog for chosing a player icon
+		iconDialog.add(iconTable).pad(20);
+		iconDialog.setWidth(350);
+		iconDialog.setHeight(250);
+		iconDialog.setX(350);
+		iconDialog.setY(175);
 
 		ImageTextButton leaveButton = new ImageTextButton("Verlassen", skin,
 				"small");
@@ -282,7 +303,7 @@ public class LobbyScreen extends BaseUIScreen {
 		Table buttonTable = new Table();
 		Table chatTable = new Table();
 
-		buttonTable.add(playerSetingsButton).bottom().padBottom(18).row();
+		buttonTable.add(playerSettingsButton).bottom().padBottom(18).row();
 		buttonTable.add(readyUpLobbyButton).padBottom(18).row();
 		buttonTable.add(leaveButton).padBottom(50);
 
@@ -502,7 +523,7 @@ public class LobbyScreen extends BaseUIScreen {
 	 * Sets up the text for all buttons and textfields in the player
 	 * configuration dialog.
 	 */
-	private void getLocalPlayerData() {
+	private void setLocalPlayerDataVariables() {
 		selectedSex = getLocalPlayer().isMale();
 		selectedReligion = getLocalPlayer().getReligion();
 		selectedIcon = getLocalPlayer().getIcon();
@@ -515,33 +536,6 @@ public class LobbyScreen extends BaseUIScreen {
 		surnameTextField.setText(getLocalPlayer().getSurname());
 		nameTextField.setText(getLocalPlayer().getName());
 		religionButton.setText(religionString);
-	}
-
-	/**
-	 * Creates UI elements for the player configuration dialog.
-	 */
-	private void createUIElements() {
-		playerConfigurationDialog = new AnimationlessDialog(
-				"Spielerkonfiguration", skin);
-		iconDialog = new AnimationlessDialog("Wappen", skin);
-
-		surnameTextField = new TextField("StandardSurname", skin);
-		nameTextField = new TextField("StandardName", skin);
-
-		surnameLabel = new Label("Name: ", skin);
-		nameLabel = new Label("Vorname: ", skin);
-
-		sexButton = new ImageTextButton("StandardSex", skin, "small");
-		sexLabel = new Label("Geschlecht: ", skin);
-
-		religionButton = new ImageTextButton("StandardReligion", skin, "small");
-		religionLabel = new Label("Religion: ", skin);
-
-		iconButton = new ImageTextButton("Anpassen", skin, "small");
-		iconLabel = new Label("Wappen: ", skin);
-
-		applyButton = new ImageTextButton("Übernehmen", skin);
-		discardButton = new ImageTextButton("Abbrechen", skin);
 	}
 
 }
