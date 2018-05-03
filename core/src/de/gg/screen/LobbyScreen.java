@@ -7,17 +7,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Align;
 import com.google.common.eventbus.Subscribe;
 
@@ -28,10 +24,11 @@ import de.gg.event.PlayerConnectedEvent;
 import de.gg.event.PlayerDisconnectedEvent;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.type.GameMaps;
+import de.gg.game.type.PlayerIcon;
 import de.gg.game.type.Religion;
 import de.gg.input.ButtonClickListener;
-import de.gg.network.GameClient;
 import de.gg.network.LobbyPlayer;
+import de.gg.ui.AnimationlessDialog;
 import de.gg.ui.OffsetableTextField;
 import de.gg.util.Log;
 import de.gg.util.PlayerUtils;
@@ -65,6 +62,31 @@ public class LobbyScreen extends BaseUIScreen {
 	private HashMap<Short, LobbyPlayer> players;
 	private short localNetworkId;
 
+	private boolean selectedSex;
+	private Religion selectedReligion;
+	private PlayerIcon selectedIcon;
+
+	AnimationlessDialog playerConfigurationDialog;
+	AnimationlessDialog iconDialog;
+
+	TextField surnameTextField;
+	TextField nameTextField;
+
+	Label surnameLabel;
+	Label nameLabel;
+
+	ImageTextButton sexButton;
+	Label sexLabel;
+
+	ImageTextButton religionButton;
+	Label religionLabel;
+
+	ImageTextButton iconButton;
+	Label iconLabel;
+
+	ImageTextButton applyButton;
+	ImageTextButton discardButton;
+
 	@Override
 	protected void initUI() {
 		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
@@ -77,170 +99,139 @@ public class LobbyScreen extends BaseUIScreen {
 					int pointer, int button) {
 				clickSound.play(1F);
 
-				// TODO
-				
-				Dialog playerConfigurationDialog = new Dialog("Spielerkonfiguration", skin);
-				Dialog iconDialog = new Dialog("Wappen", skin);
-				
-				TextField surnameTextField = new TextField(getLocalPlayer().getSurname(), skin);
-				TextField nameTextField = new TextField(getLocalPlayer().getName(), skin);
-				
-				String sex = getLocalPlayer().isMale() ? "Männlich" : "Weiblich";
-				ImageTextButton sexButton = new ImageTextButton("Geschlecht: " + sex , skin);
-				
-				ImageTextButton religionButton = new ImageTextButton("Religion: Katholisch", skin);
-				
-				ImageTextButton iconButton = new ImageTextButton("Wappen: ", skin);
+				createUIElements();
+				getLocalPlayerData();
+
+				// Creating all icon-buttons with correct listener
 				Table iconTable = new Table();
-				for(int i = 0; i < de.gg.game.type.PlayerIcon.values().length;i++) {
-				ImageButton iconIButton = new ImageButton(skin.getDrawable(de.gg.game.type.PlayerIcon.values()[i].getIconFileName()));
-				final int index = i;
-				iconIButton.addListener(
-						new ButtonClickListener(assetManager, game.getSettings()) {
-							
-							@Override
-							protected void onClick() {
-								getLocalPlayer().setIcon(de.gg.game.type.PlayerIcon.values()[index]);
-								
-								updatePlayerSlot(playerSlots[localNetworkId], getLocalPlayer());
-								game.getClient().onLocalPlayerChange(getLocalPlayer());
-								updateLobbyUI();
-								
-								iconDialog.hide();
-								
-								
-							}
-						});
-				iconTable.add(iconIButton).padLeft(50);
+				for (int i = 0; i < PlayerIcon.values().length; i++) {
+					ImageButton iconIButton = new ImageButton(skin.getDrawable(
+							PlayerIcon.values()[i].getIconFileName()));
+					final int index = i;
+					iconIButton.addListener(new ButtonClickListener(
+							assetManager, game.getSettings()) {
+
+						@Override
+						protected void onClick() {
+							selectedIcon = PlayerIcon.values()[index];
+
+							iconDialog.hide();
+
+						}
+					});
+					iconTable.add(iconIButton).pad(25);
 				}
-				
-				ImageTextButton applyButton = new ImageTextButton("Übernehmen", skin);
-				ImageTextButton discardButton = new ImageTextButton("Abbrechen", skin);
-				
-				
-				
-				sexButton.addListener(
-						new ButtonClickListener(assetManager, game.getSettings()) {
 
-							@Override
-							protected void onClick() {
-								if(getLocalPlayer().isMale()) {
-									getLocalPlayer().setMale(false);
-									
-									updatePlayerSlot(playerSlots[localNetworkId], getLocalPlayer());
-									game.getClient().onLocalPlayerChange(getLocalPlayer());
-									updateLobbyUI();
-									
-									sexButton.setText("Geschlecht: Weiblich");
-								} else {
-									getLocalPlayer().setMale(true);
-									
-									updatePlayerSlot(playerSlots[localNetworkId], getLocalPlayer());
-									game.getClient().onLocalPlayerChange(getLocalPlayer());
-									updateLobbyUI();
-									
-									sexButton.setText("Geschlecht: Männlich");
-								}
-								
-							}
-							
-						}
-						);
-				
-				religionButton.addListener(
-						new ButtonClickListener(assetManager, game.getSettings()) {
+				// Listener for configuration buttons
+				sexButton.addListener(new ButtonClickListener(assetManager,
+						game.getSettings()) {
 
-							@Override
-							protected void onClick() {
-								if (getLocalPlayer().getReligion().equals(de.gg.game.type.Religion.values()[1])) {
-									religionButton.setText("Religion: Katholisch");
-									getLocalPlayer().setReligion(de.gg.game.type.Religion.values()[0]);
-									
-									updatePlayerSlot(playerSlots[localNetworkId], getLocalPlayer());
-									game.getClient().onLocalPlayerChange(getLocalPlayer());
-									updateLobbyUI();
-									
-								} else {
-									religionButton.setText("Religion: Orthodox");
-									getLocalPlayer().setReligion(de.gg.game.type.Religion.values()[1]);
-									
-									updatePlayerSlot(playerSlots[localNetworkId], getLocalPlayer());
-									game.getClient().onLocalPlayerChange(getLocalPlayer());
-									updateLobbyUI();
-									
-								}
-								
-							}
-							
+					@Override
+					protected void onClick() {
+						if (sexButton.getText().equals("Männlich")) {
+							selectedSex = false;
+							sexButton.setText("Weiblich");
+						} else {
+							selectedSex = true;
+							sexButton.setText("Männlich");
 						}
-						);
-				
-				iconButton.addListener(
-						new ButtonClickListener(assetManager, game.getSettings()) {
 
-							@Override
-							protected void onClick() {
-								stage.addActor(iconDialog);	
-							}
-							
+					}
+
+				});
+
+				religionButton.addListener(new ButtonClickListener(assetManager,
+						game.getSettings()) {
+
+					@Override
+					protected void onClick() {
+						if (religionButton.getText().equals("Orthodox")) {
+							selectedReligion = Religion.values()[0];
+							religionButton.setText("Katholisch");
+
+						} else {
+							religionButton.setText("Orthodox");
+							selectedReligion = Religion.values()[1];
 						}
-						);
-				
-				
-				
-				applyButton.addListener(
-						new ButtonClickListener(assetManager, game.getSettings()) {
-							
-							@Override
-							protected void onClick() {
-								getLocalPlayer().setName(nameTextField.getText());
-								getLocalPlayer().setSurname(surnameTextField.getText());
-								updatePlayerSlot(playerSlots[localNetworkId], getLocalPlayer());
-								game.getClient().onLocalPlayerChange(getLocalPlayer());
-								updateLobbyUI();
-								playerConfigurationDialog.hide();
-							}
-							
-						});
-				
-				discardButton.addListener(new ButtonClickListener(assetManager, game.getSettings()) {
+
+					}
+
+				});
+
+				iconButton.addListener(new ButtonClickListener(assetManager,
+						game.getSettings()) {
+
+					@Override
+					protected void onClick() {
+						iconDialog.show(stage);
+					}
+
+				});
+
+				// apply and discard button
+				applyButton.addListener(new ButtonClickListener(assetManager,
+						game.getSettings()) {
+
+					@Override
+					protected void onClick() {
+						getLocalPlayer().setName(nameTextField.getText());
+						getLocalPlayer().setSurname(surnameTextField.getText());
+						getLocalPlayer().setMale(selectedSex);
+						getLocalPlayer().setReligion(selectedReligion);
+						getLocalPlayer().setIcon(selectedIcon);
+
+						// Update Player
+						updatePlayerSlot(playerSlots[localNetworkId],
+								getLocalPlayer());
+						game.getClient().onLocalPlayerChange(getLocalPlayer());
+						updateLobbyUI();
+
+						playerConfigurationDialog.hide();
+					}
+
+				});
+
+				discardButton.addListener(new ButtonClickListener(assetManager,
+						game.getSettings()) {
 
 					@Override
 					protected void onClick() {
 						playerConfigurationDialog.hide();
-						
+
 					}
-					
+
 				});
-				
-				
+
+				// Adding all UI elements
 				Table playerConfigurationTable = new Table();
-				nameTextField.setWidth(200);
+				playerConfigurationTable.add(nameLabel);
 				playerConfigurationTable.add(nameTextField).row();
-				surnameTextField.setWidth(200);
+				playerConfigurationTable.add(surnameLabel);
 				playerConfigurationTable.add(surnameTextField).row();
+				playerConfigurationTable.add(sexLabel);
 				playerConfigurationTable.add(sexButton).row();
+				playerConfigurationTable.add(religionLabel);
 				playerConfigurationTable.add(religionButton).row();
+				playerConfigurationTable.add(iconLabel);
 				playerConfigurationTable.add(iconButton).row();
-				playerConfigurationTable.add(applyButton).row();
+				playerConfigurationTable.add(applyButton);
 				playerConfigurationTable.add(discardButton);
-				
-				
+
+				// Setting up player configuration dialog
+				playerConfigurationDialog.add(playerConfigurationTable)
+						.pad(100);
+				playerConfigurationDialog.setWidth(680);
+				playerConfigurationDialog.setHeight(480);
+				playerConfigurationDialog.setX(300);
+				playerConfigurationDialog.setY(125);
+				playerConfigurationDialog.show(stage);
+
+				// Setting up the dialog for chosing a player icon
 				iconDialog.add(iconTable).pad(20);
 				iconDialog.setWidth(350);
 				iconDialog.setHeight(250);
 				iconDialog.setX(350);
 				iconDialog.setY(175);
-				
-				
-				
-				playerConfigurationDialog.add(playerConfigurationTable).pad(100);
-				playerConfigurationDialog.setWidth(680);
-				playerConfigurationDialog.setHeight(480);
-				playerConfigurationDialog.setX(300);
-				playerConfigurationDialog.setY(125);
-				stage.addActor(playerConfigurationDialog);
-				
 
 				return true;
 			}
@@ -505,6 +496,52 @@ public class LobbyScreen extends BaseUIScreen {
 
 	private LobbyPlayer getLocalPlayer() {
 		return players.get(localNetworkId);
+	}
+
+	/**
+	 * Sets up the text for all buttons and textfields in the player
+	 * configuration dialog.
+	 */
+	private void getLocalPlayerData() {
+		selectedSex = getLocalPlayer().isMale();
+		selectedReligion = getLocalPlayer().getReligion();
+		selectedIcon = getLocalPlayer().getIcon();
+
+		String sexString = selectedSex ? "Männlich" : "Weiblich";
+		String religionString = getLocalPlayer().getReligion()
+				.equals(Religion.values()[0]) ? "Katholisch" : "Orthodox";
+
+		sexButton.setText(sexString);
+		surnameTextField.setText(getLocalPlayer().getSurname());
+		nameTextField.setText(getLocalPlayer().getName());
+		religionButton.setText(religionString);
+	}
+
+	/**
+	 * Creates UI elements for the player configuration dialog.
+	 */
+	private void createUIElements() {
+		playerConfigurationDialog = new AnimationlessDialog(
+				"Spielerkonfiguration", skin);
+		iconDialog = new AnimationlessDialog("Wappen", skin);
+
+		surnameTextField = new TextField("StandardSurname", skin);
+		nameTextField = new TextField("StandardName", skin);
+
+		surnameLabel = new Label("Name: ", skin);
+		nameLabel = new Label("Vorname: ", skin);
+
+		sexButton = new ImageTextButton("StandardSex", skin, "small");
+		sexLabel = new Label("Geschlecht: ", skin);
+
+		religionButton = new ImageTextButton("StandardReligion", skin, "small");
+		religionLabel = new Label("Religion: ", skin);
+
+		iconButton = new ImageTextButton("Anpassen", skin, "small");
+		iconLabel = new Label("Wappen: ", skin);
+
+		applyButton = new ImageTextButton("Übernehmen", skin);
+		discardButton = new ImageTextButton("Abbrechen", skin);
 	}
 
 }
