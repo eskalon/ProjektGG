@@ -4,8 +4,6 @@ import java.util.HashMap;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
@@ -44,12 +42,6 @@ public class LobbyScreen extends BaseUIScreen {
 	private final String NOT_READY_IMAGE_PATH = "ui/icons/not_ready.png";
 	@Asset(Texture.class)
 	private final String KICK_IMAGE_PATH = "ui/icons/kick.png";
-	@Asset(Texture.class)
-	private final String NO_ICON_IMAGE_PATH = "ui/icons/players/empty.png";
-	@Asset(Texture.class)
-	private final String ICON1_IMAGE_PATH = "ui/icons/players/icon_1.png";
-	@Asset(Texture.class)
-	private final String ICON2_IMAGE_PATH = "ui/icons/players/icon_2.png";
 	@Asset(Sound.class)
 	private final String BUTTON_SOUND = "audio/button-tick.mp3";
 
@@ -94,17 +86,14 @@ public class LobbyScreen extends BaseUIScreen {
 
 		ImageTextButton playerSettingsButton = new ImageTextButton("Anpassen",
 				skin, "small");
-		playerSettingsButton.addListener(new InputListener() {
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				clickSound.play(1F);
-
-				setLocalPlayerDataVariables();
-				playerConfigurationDialog.show(stage);
-
-				return true;
-			}
-		});
+		playerSettingsButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						setLocalPlayerDataVariables();
+						playerConfigurationDialog.show(stage);
+					}
+				});
 
 		// Create UI elements for player configuration dialog
 		playerConfigurationDialog = new AnimationlessDialog(
@@ -137,13 +126,10 @@ public class LobbyScreen extends BaseUIScreen {
 			final int index = i;
 			iconIButton.addListener(
 					new ButtonClickListener(assetManager, game.getSettings()) {
-
 						@Override
 						protected void onClick() {
 							selectedIcon = PlayerIcon.values()[index];
-
 							iconDialog.hide();
-
 						}
 					});
 			iconTable.add(iconIButton).pad(25);
@@ -152,7 +138,6 @@ public class LobbyScreen extends BaseUIScreen {
 		// Listener for configuration buttons
 		sexButton.addListener(
 				new ButtonClickListener(assetManager, game.getSettings()) {
-
 					@Override
 					protected void onClick() {
 						if (selectedSex) {
@@ -162,43 +147,34 @@ public class LobbyScreen extends BaseUIScreen {
 							selectedSex = true;
 							sexButton.setText("Männlich");
 						}
-
 					}
-
 				});
 
 		religionButton.addListener(
 				new ButtonClickListener(assetManager, game.getSettings()) {
-
 					@Override
 					protected void onClick() {
 						if (selectedReligion.equals(Religion.values()[1])) {
 							selectedReligion = Religion.values()[0];
 							religionButton.setText("Katholisch");
-
 						} else {
 							religionButton.setText("Orthodox");
 							selectedReligion = Religion.values()[1];
 						}
-
 					}
-
 				});
 
 		iconButton.addListener(
 				new ButtonClickListener(assetManager, game.getSettings()) {
-
 					@Override
 					protected void onClick() {
 						iconDialog.show(stage);
 					}
-
 				});
 
 		// apply and discard button
 		applyButton.addListener(
 				new ButtonClickListener(assetManager, game.getSettings()) {
-
 					@Override
 					protected void onClick() {
 						getLocalPlayer().setName(nameTextField.getText());
@@ -215,18 +191,14 @@ public class LobbyScreen extends BaseUIScreen {
 
 						playerConfigurationDialog.hide();
 					}
-
 				});
 
 		discardButton.addListener(
 				new ButtonClickListener(assetManager, game.getSettings()) {
-
 					@Override
 					protected void onClick() {
 						playerConfigurationDialog.hide();
-
 					}
-
 				});
 
 		// Adding all UI elements
@@ -260,18 +232,17 @@ public class LobbyScreen extends BaseUIScreen {
 
 		ImageTextButton leaveButton = new ImageTextButton("Verlassen", skin,
 				"small");
-		leaveButton.addListener(new InputListener() {
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				clickSound.play(1F);
-				game.getClient().disconnect();
-				if (game.isHost())
-					game.getServer().stop();
+		leaveButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						game.getClient().disconnect();
+						if (game.isHost())
+							game.getServer().stop();
 
-				game.pushScreen("mainMenu");
-				return true;
-			}
-		});
+						game.pushScreen("mainMenu");
+					}
+				});
 
 		readyUpLobbyButton = new ImageTextButton("Bereit", skin, "small");
 		if (game.isHost()) {
@@ -279,18 +250,16 @@ public class LobbyScreen extends BaseUIScreen {
 			readyUpLobbyButton.setTouchable(Touchable.disabled);
 			readyUpLobbyButton.setText("Spiel starten");
 		}
-		readyUpLobbyButton.addListener(new InputListener() {
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				clickSound.play(1F);
-				getLocalPlayer().toggleReady();
-				game.getClient().onLocalPlayerChange(getLocalPlayer());
+		readyUpLobbyButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						getLocalPlayer().toggleReady();
+						game.getClient().onLocalPlayerChange(getLocalPlayer());
 
-				updateLobbyUI();
-
-				return true;
-			}
-		});
+						updateLobbyUI();
+					}
+				});
 
 		settingsArea = new Label("", skin);
 		settingsArea.setAlignment(Align.topLeft);
@@ -325,21 +294,22 @@ public class LobbyScreen extends BaseUIScreen {
 				}
 			}
 		});
-		sendButton.addListener(new InputListener() {
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				if (!chatInputField.getText().isEmpty()) {
-					clickSound.play(1F);
+		sendButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						game.getClient()
+								.sendChatMessage(chatInputField.getText());
+						onNewChatMessage(new NewChatMessagEvent(localNetworkId,
+								chatInputField.getText()));
+						chatInputField.setText("");
+					}
 
-					game.getClient().sendChatMessage(chatInputField.getText());
-					onNewChatMessage(new NewChatMessagEvent(localNetworkId,
-							chatInputField.getText()));
-					chatInputField.setText("");
-				}
-
-				return true;
-			}
-		});
+					@Override
+					protected boolean arePreconditionsMet() {
+						return !chatInputField.getText().isEmpty();
+					}
+				});
 
 		messagesArea = new Label("", skin, "with-background");
 		messagesArea.setAlignment(Align.topLeft);
@@ -390,22 +360,28 @@ public class LobbyScreen extends BaseUIScreen {
 		Object[] playersArray = players.values().toArray();
 
 		updatePlayerSlot(playerSlots[0],
-				(playersArray.length >= 1 ? (LobbyPlayer) playersArray[0]
+				(playersArray.length >= 1
+						? (LobbyPlayer) playersArray[0]
 						: null));
 		updatePlayerSlot(playerSlots[1],
-				(playersArray.length >= 2 ? (LobbyPlayer) playersArray[1]
+				(playersArray.length >= 2
+						? (LobbyPlayer) playersArray[1]
 						: null));
 		updatePlayerSlot(playerSlots[2],
-				(playersArray.length >= 3 ? (LobbyPlayer) playersArray[2]
+				(playersArray.length >= 3
+						? (LobbyPlayer) playersArray[2]
 						: null));
 		updatePlayerSlot(playerSlots[3],
-				(playersArray.length >= 4 ? (LobbyPlayer) playersArray[3]
+				(playersArray.length >= 4
+						? (LobbyPlayer) playersArray[3]
 						: null));
 		updatePlayerSlot(playerSlots[4],
-				(playersArray.length >= 5 ? (LobbyPlayer) playersArray[4]
+				(playersArray.length >= 5
+						? (LobbyPlayer) playersArray[4]
 						: null));
 		updatePlayerSlot(playerSlots[5],
-				(playersArray.length >= 6 ? (LobbyPlayer) playersArray[5]
+				(playersArray.length >= 6
+						? (LobbyPlayer) playersArray[5]
 						: null));
 
 		if (game.isHost()) {
@@ -456,11 +432,10 @@ public class LobbyScreen extends BaseUIScreen {
 	 *            The actual message.
 	 */
 	private void addChatMessageToUI(LobbyPlayer sender, String message) {
-		messagesArea.setText(messagesArea.getText()
-				+ (sender == null ? "[#EFE22DFF]"
-						: ("[#" + sender.getIcon().getColor() + "]"
-								+ sender.getName() + " " + sender.getSurname()
-								+ ": []"))
+		messagesArea.setText(messagesArea.getText() + (sender == null
+				? "[#EFE22DFF]"
+				: ("[#" + sender.getIcon().getColor() + "]" + sender.getName()
+						+ " " + sender.getSurname() + ": []"))
 				+ message + (sender == null ? "[]" : "") + " \n");
 		messagesPane.layout();
 		messagesPane.scrollTo(0, 0, 0, 0);

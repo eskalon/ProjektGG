@@ -4,6 +4,7 @@ Eine Liste aller Contributor und der genutzten externen Assets:
 - [damios](https://github.com/crykn)
 - [dominator1999](https://github.com/dominator1999)
 - [Meidimax](https://github.com/Meidimax99)
+- [Vlarabor](https://github.com/Vlarabor)
 
 ## External assets and code
 ### Code
