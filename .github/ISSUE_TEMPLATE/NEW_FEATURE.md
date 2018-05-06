@@ -1,6 +1,6 @@
 ﻿**[Eine einleitende, kurze Beschreibung des geplanten Features]**
 
-### Deatils
+### Details
 [Eine deatilierte Auflistung aller Dinge, die in den Scope dieses Tickets fallen; insb. auch ob dadurch an anderen Stellen Veränderungen notwendig werden]
 
 ### Motivation

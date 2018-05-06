@@ -114,8 +114,9 @@ public abstract class GameSession {
 	/**
 	 * Sets the city, the game entities and the processing systems up.
 	 * <p>
-	 * To update the session {@link #update()} has to get called. To resume the
-	 * game after a round ended {@link #startNextRound()} has to get called.
+	 * To update the session after the initialization {@link #update()} has to
+	 * get called. To resume the game after a round ended
+	 * {@link #startNextRound()} has to get called.
 	 */
 	public synchronized void setupGame() {
 		this.city.generate(sessionSetup, players);
@@ -127,12 +128,19 @@ public abstract class GameSession {
 	}
 
 	/**
-	 * Updates the game session. Returns true once, when a round is over. To
-	 * start the next round call {@link #startNextRound()}.
+	 * Updates the game session. The session has to get {@linkplain #setupGame()
+	 * setup} before. Returns true once, when a round is over. To start the next
+	 * round call {@link #startNextRound()}.
 	 * 
 	 * @return whether the ingame day is over (8 minutes).
 	 */
 	public synchronized boolean update() {
+		if (!initialized) {
+			Log.error(localNetworkId == -1 ? "Server" : "Client",
+					"Die Session muss zuerst initialisiert werden, bevor sie geupdated werden kann");
+			return false;
+		}
+
 		// Die Zeit für das erste Update setzen
 		if (lastTime == -1)
 			lastTime = System.currentTimeMillis();
@@ -141,12 +149,6 @@ public abstract class GameSession {
 		long delta = (currentTime - lastTime)
 				* gameSpeed.getDeltaTimeMultiplied();
 		lastTime = currentTime;
-
-		if (!initialized) {
-			Log.error(localNetworkId == -1 ? "Server" : "Client",
-					"Die Session muss zuerst initialisiert werden, bevor sie geupdated werden kann");
-			return false;
-		}
 
 		// Rundenzeit hochzählen
 		currentRoundTime += delta;
@@ -180,7 +182,7 @@ public abstract class GameSession {
 
 	/**
 	 * This is used to process the game. It is called ten times per second if
-	 * the game is running on {@linkplain GameSpeed#NORMAL}normal speed.
+	 * the game is running on {@linkplain GameSpeed#NORMAL normal speed}.
 	 */
 	public synchronized void fixedUpdate() {
 		if (isRightTick(TICKS_PER_SECOND)) {
@@ -232,6 +234,7 @@ public abstract class GameSession {
 	 * Called after a round ended to setup the next round.
 	 * 
 	 * @param data
+	 *            The relevant round end data.
 	 */
 	protected void processRoundEnd(RoundEndData data) {
 		measuringUtil.start();

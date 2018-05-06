@@ -58,6 +58,10 @@ public class ProjektGG extends Game {
 
 	public static final String name = "ProjektGG";
 	private final String version;
+	/**
+	 * Whether the application is running in a development environment. Checks
+	 * if a version is set in the jar manifest.
+	 */
 	private final boolean inDevEnv;
 
 	private SpriteBatch batch;
@@ -317,12 +321,16 @@ public class ProjektGG extends Game {
 	}
 
 	/**
-	 * @return the UI skin that got loaded in the {@link LoadingScreen}.
+	 * @return the skin for the game's UI elements. Got loaded in the
+	 *         {@link LoadingScreen}.
 	 */
 	public Skin getUISkin() {
 		return uiSkin;
 	}
 
+	/**
+	 * @return the sprite batch to render 2D stuff with.
+	 */
 	public SpriteBatch getSpriteBatch() {
 		return batch;
 	}
@@ -369,8 +377,8 @@ public class ProjektGG extends Game {
 	}
 
 	/**
-	 * Returns the input multiplexer of the game. Should be used instead of
-	 * {@link Input#setInputProcessor(InputProcessor)}.
+	 * Returns the input multiplexer of the game. Should be used to add input
+	 * listeners instead of {@link Input#setInputProcessor(InputProcessor)}.
 	 * 
 	 * @return the game's input multiplexer.
 	 */

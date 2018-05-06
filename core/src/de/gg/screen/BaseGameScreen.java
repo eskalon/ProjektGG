@@ -2,6 +2,7 @@ package de.gg.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.google.common.eventbus.Subscribe;
 
 import de.gg.event.NewChatMessagEvent;
@@ -12,6 +13,7 @@ import de.gg.event.RoundEndEvent;
 public abstract class BaseGameScreen extends BaseUIScreen {
 
 	private final boolean updateGame;
+	private BitmapFont font;
 
 	// TODO dieser Screen bekommt eine Player-Hashmap, um sich um alle
 	// Join/Leave und Chat-Events kümmern zu können (d.h. er kann für die
@@ -25,9 +27,16 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 		this(true);
 	}
 
+	@Override
+	protected void onInit() {
+		super.onInit();
+
+		font = skin.getFont("main-19");
+	}
+
 	@Subscribe
 	public void onNewChatMessage(NewChatMessagEvent event) {
-		// TODO
+		// TODO chat messages rendern
 	}
 
 	@Subscribe
@@ -48,10 +57,9 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 
 	@Override
 	public void render(float delta) {
-		if (updateGame && game.getClient() != null) { // Der Client kann null
-														// sein, wenn der
-														// Spieler gerade
-														// disconnected
+		if (updateGame && game.getClient() != null) { // Der Client ist null,
+														// wenn der Spieler
+														// gerade disconnected
 			game.getClient().update();
 			game.getClient().updatePing(delta);
 
@@ -63,6 +71,7 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 				backgroundColor.b, backgroundColor.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		// Background Texture
 		if (backgroundTexture != null) {
 			game.getSpriteBatch().begin();
 			game.getSpriteBatch()
@@ -72,11 +81,22 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 			game.getSpriteBatch().end();
 		}
 
+		// The actual game
 		renderGame(delta);
 
+		// UI
 		stage.getBatch().setProjectionMatrix(game.getUICamera().combined);
 		stage.act(delta);
 		stage.draw();
+
+		// FPS counter
+		if (game.showFPSCounter()) {
+			game.getSpriteBatch().begin();
+			font.draw(game.getSpriteBatch(),
+					String.valueOf(Gdx.graphics.getFramesPerSecond()), 4,
+					game.getViewportHeight());
+			game.getSpriteBatch().end();
+		}
 	}
 
 	public abstract void renderGame(float delta);

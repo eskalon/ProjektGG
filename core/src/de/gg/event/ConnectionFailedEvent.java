@@ -1,7 +1,5 @@
 package de.gg.event;
 
-import java.io.IOException;
-
 import de.gg.network.message.ServerRejectionMessage;
 
 /**
@@ -13,14 +11,14 @@ public class ConnectionFailedEvent {
 	 * The exception that was thrown while starting the client.
 	 * <code>Null</code> if {@link #serverRejectMessage} is set.
 	 */
-	private IOException exception = null;
+	private Exception exception = null;
 	/**
 	 * The rejection message sent by the server. <code>Null</code> if
 	 * {@link #exception} is set.
 	 */
 	private ServerRejectionMessage serverRejectionMessage;
 
-	public ConnectionFailedEvent(IOException exception) {
+	public ConnectionFailedEvent(Exception exception) {
 		this.exception = exception;
 	}
 
@@ -33,7 +31,7 @@ public class ConnectionFailedEvent {
 		return serverRejectionMessage;
 	}
 
-	public IOException getException() {
+	public Exception getException() {
 		return exception;
 	}
 

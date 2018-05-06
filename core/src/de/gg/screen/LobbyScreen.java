@@ -24,7 +24,8 @@ import de.gg.game.data.GameSessionSetup;
 import de.gg.game.type.GameMaps;
 import de.gg.game.type.PlayerIcon;
 import de.gg.game.type.Religion;
-import de.gg.input.ButtonClickListener;
+import de.gg.network.GameClient;
+import de.gg.network.GameServer;
 import de.gg.network.LobbyPlayer;
 import de.gg.ui.AnimationlessDialog;
 import de.gg.ui.OffsetableTextField;
@@ -43,7 +44,7 @@ public class LobbyScreen extends BaseUIScreen {
 	@Asset(Texture.class)
 	private final String KICK_IMAGE_PATH = "ui/icons/kick.png";
 	@Asset(Sound.class)
-	private final String BUTTON_SOUND = "audio/button-tick.mp3";
+	private static final String CLICK_SOUND = "audio/button-tick.mp3";
 
 	private Label messagesArea, settingsArea;
 	private Table[] playerSlots;
@@ -82,7 +83,7 @@ public class LobbyScreen extends BaseUIScreen {
 	@Override
 	protected void initUI() {
 		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
-		Sound clickSound = assetManager.get(BUTTON_SOUND);
+		Sound clickSound = assetManager.get(CLICK_SOUND);
 
 		ImageTextButton playerSettingsButton = new ImageTextButton("Anpassen",
 				skin, "small");
@@ -236,9 +237,25 @@ public class LobbyScreen extends BaseUIScreen {
 				new ButtonClickListener(assetManager, game.getSettings()) {
 					@Override
 					protected void onClick() {
-						game.getClient().disconnect();
-						if (game.isHost())
-							game.getServer().stop();
+						final GameClient client = game.getClient();
+						game.setClient(null);
+						final GameServer server = game.getServer();
+						game.setServer(null);
+
+						(new Thread(new Runnable() {
+							@Override
+							public void run() {
+								client.disconnect();
+
+								Log.info("Client", "Client beendet");
+
+								if (server != null) {
+									server.stop();
+								}
+
+								Log.info("Server", "Server beendet");
+							}
+						})).start();
 
 						game.pushScreen("mainMenu");
 					}

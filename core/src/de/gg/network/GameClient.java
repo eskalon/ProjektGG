@@ -22,7 +22,7 @@ import de.gg.event.PlayerChangedEvent;
 import de.gg.event.PlayerConnectedEvent;
 import de.gg.event.PlayerDisconnectedEvent;
 import de.gg.event.RoundEndEvent;
-import de.gg.game.AuthoritativeSession;
+import de.gg.game.GameSession;
 import de.gg.game.SlaveSession;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.data.NotificationData;
@@ -34,7 +34,6 @@ import de.gg.network.message.PlayerJoinedMessage;
 import de.gg.network.message.PlayerLeftMessage;
 import de.gg.network.message.ServerFullMessage;
 import de.gg.network.message.ServerRejectionMessage;
-import de.gg.network.rmi.AuthoritativeResultListener;
 import de.gg.network.rmi.ClientActionHandler;
 import de.gg.network.rmi.SlaveActionListener;
 import de.gg.util.Log;
@@ -46,17 +45,20 @@ import de.gg.util.Log;
  * {@linkplain #actionHandler action handler} used for relaying all user actions
  * to the server.
  * <p>
- * Following are the methods relevant to using the client:
+ * Following are the relevant states the client can be in:
  * <ul>
- * <li>{@link #setUpConnectionAsClient(String, int)}/{@link #setUpConnectionAsHost(int, String, GameSessionSetup)}:
- * Initializes the network handler</li>
- * <li>{@link #establishRMIConnection(AuthoritativeResultListener)}: Establishes
- * the client's rmi connection; has to get called after the network handler was
- * {@linkplain #setUpConnectionAsClient(String, int) initialized}</li>
- * <li>{@link #setupGameOnServer()}: Initializes the
- * {@linkplain AuthoritativeSession game session} on the server</li>
- * <li>{@link #updateServer()()}: Has to get called continually to update the
- * {@linkplain AuthoritativeSession game session} on the server</li>
+ * <li>{@link #GameClient(EventBus, String, String, int)}: Connects the client
+ * to the server. After it is finished a {@link ConnectionEstablishedEvent} is
+ * posted.</li>
+ * <li>{@link #establishRMIConnection(HashMap, GameSessionSetup)}: Establishes
+ * the client's RMI connection. Has to get called after the client is
+ * connected.</li>
+ * <li>{@link #setupGameSession()}: Sets up the client's game session. Has to
+ * get called after the client is connected and before the session is
+ * {@linkplain GameSession#update() updated}.</li>
+ * <li>{@link #update()}: Has to get called continually to update the client's
+ * {@linkplain SlaveSession game session}.</li>
+ * <li>{@link #disconnect()}: Disconnects the client synchronously.</li>
  * </ul>
  */
 public class GameClient {
@@ -133,7 +135,7 @@ public class GameClient {
 						}));
 				con.close();
 				Log.info("Client",
-						"Fehler beim verbinden: Falsche Server-Version (%s)",
+						"Fehler beim Verbinden: Falsche Server-Version (%s)",
 						msg.getServerVersion());
 			}
 		});
@@ -141,7 +143,7 @@ public class GameClient {
 		listener.addTypeHandler(ServerFullMessage.class, (con, msg) -> {
 			eventBus.post(new ConnectionFailedEvent(msg));
 			con.close();
-			Log.info("Client", "Fehler beim verbinden: %s", msg.getMessage());
+			Log.info("Client", "Fehler beim Verbinden: %s", msg.getMessage());
 		});
 
 		// PLAYER CHANGES

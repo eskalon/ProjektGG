@@ -11,6 +11,18 @@
 			g: 0.7
 			b: 0.7
 			a: 1
+		},
+		dark_grey: {
+			r: 0.12
+			g: 0.12
+			b: 0.12
+			a: 1
+		},
+		ink_blue: {
+			r: 0.12
+			g: 0.10
+			b: 0.31
+			a: 1
 		}
 	},
 
@@ -45,14 +57,40 @@
 		}
 	},
 	
+	com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
+		icon_1: {
+			up: icon_1
+			down: icon_1
+			over: icon_1
+		},
+		leaning_book: {
+			up: leaning_book
+			down: leaning_book
+			over: leaning_book
+		},
+		inventory: {
+			up: inventory
+			down: inventory
+			over: inventory
+		}
+	},
+	
 	com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		default: {
 			font: main-19
 			fontColor: white
 		},
+		dark: {
+			font: main-19
+			fontColor: dark_grey
+		},
 		big: {
 			font: main-22
 			fontColor: white
+		},
+		big-dark: {
+			font: main-22
+			fontColor: dark_grey
 		},
 		with-background: {
 			font: main-19
@@ -137,11 +175,17 @@
 			vScrollKnob: scroll-knob-v
 		}
 	},
+	
 	com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 		default: {
 			titleFont: main-19,
-			background: parchment1,
+			background: dialog,
+			titleFontColor: white 
+		},
+		window: {
+			titleFont: main-19,
+			background: window,
 			titleFontColor: white 
 		}
-	},
+	}
 }

@@ -64,6 +64,11 @@ Eine Liste aller Contributor und der genutzten externen Assets:
   A render of the 3D model by: [Aare](https://opengameart.org/content/old-book)\
   License: [CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/legalcode)
   
+- **Inventory Pouch**\
+  Path: ui/skin/skin.png\
+  A modified render of the 3D model by: [yd](https://opengameart.org/content/bag-of-coins)\
+  License: [CC0](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
+  
 ### Audio
 - **Clock Tick**\
   Path: audio/clock_tick.mp3\
