@@ -1,9 +1,10 @@
 package de.gg.network;
 
 import de.gg.game.type.PlayerIcon;
+import de.gg.game.type.Religion;
 
 /**
- * This class describes a client in the lobby. It is alos used by the server to
+ * This class describes a client in the lobby. It is also used by the server to
  * save the ready state of its clients.
  */
 public class LobbyPlayer {
@@ -27,6 +28,7 @@ public class LobbyPlayer {
 	private PlayerIcon icon;
 	private boolean male;
 	private boolean ready;
+	private Religion religion = Religion.values()[0];
 
 	public String getSurname() {
 		return surname;
@@ -77,6 +79,14 @@ public class LobbyPlayer {
 	 */
 	public void toggleReady() {
 		setReady(!isReady());
+	}
+
+	public Religion getReligion() {
+		return religion;
+	}
+
+	public void setReligion(Religion religion) {
+		this.religion = religion;
 	}
 
 }
