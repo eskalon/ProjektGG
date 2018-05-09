@@ -133,8 +133,11 @@ public class GameRoundendScreen extends BaseGameScreen {
 
 	@Subscribe
 	public void onNextRound(NextRoundEvent event) {
-		((GameRoundendScreen) game.getScreen("roundEnd")).setData(null);
-		game.pushScreen("map");
+		setData(null);
+		if (!game.getClient().getCity().getMattersToHoldVoteOn().isEmpty())
+			game.pushScreen("vote");
+		else
+			game.pushScreen("map");
 	}
 
 	/**

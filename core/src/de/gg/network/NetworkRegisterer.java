@@ -9,7 +9,9 @@ import de.gg.game.data.GameDifficulty;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.data.GameSpeed;
 import de.gg.game.data.RoundEndData;
+import de.gg.game.data.vote.VoteResults;
 import de.gg.game.type.PlayerIcon;
+import de.gg.game.type.PositionTypes.PositionType;
 import de.gg.network.message.ChatMessageSentMessage;
 import de.gg.network.message.GameSetupMessage;
 import de.gg.network.message.PlayerChangedMessage;
@@ -69,6 +71,8 @@ public class NetworkRegisterer {
 
 		// RMI
 		kryo.register(GameSpeed.class);
+		kryo.register(PositionType.class);
+		kryo.register(VoteResults.class);
 	}
 
 }

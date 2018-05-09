@@ -1,6 +1,8 @@
 package de.gg.network.rmi;
 
 import de.gg.game.data.RoundEndData;
+import de.gg.game.data.vote.VoteResults;
+import de.gg.game.type.PositionTypes.PositionType;
 
 /**
  * Classes that implement this interface take care of the
@@ -32,5 +34,19 @@ public interface AuthoritativeResultListener {
 	public void onPlayerIllnessChange(short playerId, boolean isIll);
 
 	public void setGameSpeed(int index);
+
+	/**
+	 * Called when a certain vote is finished i.e. every member cast his vote.
+	 */
+	/**
+	 * @param results
+	 *            The results of the vote.
+	 */
+	public void onVoteFinished(VoteResults results);
+
+	public void onAppliedForPosition(short clientId, PositionType type);
+
+	public void onImpeachmentVoteArranged(short targetCharacterId,
+			short callerCharacterId);
 
 }

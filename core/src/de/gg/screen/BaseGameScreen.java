@@ -57,16 +57,6 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 
 	@Override
 	public void render(float delta) {
-		if (updateGame && game.getClient() != null) { // Der Client ist null,
-														// wenn der Spieler
-														// gerade disconnected
-			game.getClient().update();
-			game.getClient().updatePing(delta);
-
-			if (game.isHost())
-				game.getServer().update();
-		}
-
 		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g,
 				backgroundColor.b, backgroundColor.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -96,6 +86,17 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 					String.valueOf(Gdx.graphics.getFramesPerSecond()), 4,
 					game.getViewportHeight());
 			game.getSpriteBatch().end();
+		}
+
+		// Anschließend die Spiel-Logik updaten
+		if (updateGame && game.getClient() != null) { // Der Client ist null,
+			// wenn der Spieler
+			// gerade disconnected
+			game.getClient().update();
+			game.getClient().updatePing(delta);
+
+			if (game.isHost())
+				game.getServer().update();
 		}
 	}
 

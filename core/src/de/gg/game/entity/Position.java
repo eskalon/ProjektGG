@@ -13,10 +13,6 @@ public class Position {
 	 */
 	private short currentHolder;
 	private List<Short> applicants = new ArrayList<>();
-	/**
-	 * Whether there is a vote to remove the current holder after this round.
-	 */
-	private boolean removeVote = false;
 
 	public Position(short currentHolder) {
 		this.currentHolder = currentHolder;
@@ -41,12 +37,8 @@ public class Position {
 		return applicants;
 	}
 
-	public boolean isRemoveVote() {
-		return removeVote;
-	}
-
-	public void setRemoveVote(boolean removeVote) {
-		this.removeVote = removeVote;
+	public boolean hasApplicants() {
+		return !applicants.isEmpty();
 	}
 
 }

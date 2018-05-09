@@ -9,7 +9,7 @@ import de.gg.game.type.PlayerTasks.PlayerTask;
 public class Player {
 
 	private int availableAp;
-	private Character currentlyPlayedCharacter;
+	private short currentlyPlayedCharacterId;
 	private List<Profession> learnedProfessions = new ArrayList<>();
 	private PlayerIcon icon;
 
@@ -28,7 +28,7 @@ public class Player {
 	 */
 	private boolean ill = false;
 
-	private PlayerSkillSet skills;
+	private PlayerSkillSet skills = new PlayerSkillSet();
 
 	private PlayerTask currentTask = null;
 	private int remainingTaskWorkDuration = 0;
@@ -49,13 +49,17 @@ public class Player {
 		return learnedProfessions;
 	}
 
-	public Character getCurrentlyPlayedCharacter() {
-		return currentlyPlayedCharacter;
+	public Character getCurrentlyPlayedCharacter(City city) {
+		return city.getCharacters().get(currentlyPlayedCharacterId);
 	}
 
-	public void setCurrentlyPlayedCharacter(
-			Character currentlyPlayedCharacter) {
-		this.currentlyPlayedCharacter = currentlyPlayedCharacter;
+	public short getCurrentlyPlayedCharacterId() {
+		return currentlyPlayedCharacterId;
+	}
+
+	public void setCurrentlyPlayedCharacterId(
+			short currentlyPlayedCharacterId) {
+		this.currentlyPlayedCharacterId = currentlyPlayedCharacterId;
 	}
 
 	public PlayerIcon getIcon() {
@@ -129,7 +133,8 @@ public class Player {
 			}
 		}
 
-		return currentlyPlayedCharacter.getGold() + buildingValue;
+		return city.getCharacters().get(currentlyPlayedCharacterId).getGold()
+				+ buildingValue;
 	}
 
 }

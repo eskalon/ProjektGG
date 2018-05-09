@@ -5,13 +5,20 @@ import java.util.HashMap;
 import com.google.common.eventbus.EventBus;
 
 import de.gg.event.ChangedGameSpeedEvent;
+import de.gg.event.NewVoteEvent;
 import de.gg.event.NextRoundEvent;
 import de.gg.event.RoundEndDataReceivedEvent;
+import de.gg.event.VoteFinishedEvent;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.data.GameSpeed;
 import de.gg.game.data.RoundEndData;
+import de.gg.game.data.vote.ImpeachmentVote;
+import de.gg.game.data.vote.VoteResults;
+import de.gg.game.data.vote.VoteableMatter;
+import de.gg.game.entity.Position;
 import de.gg.game.system.ProcessingSystem;
 import de.gg.game.system.client.FirstEventWaveClientSystem;
+import de.gg.game.type.PositionTypes.PositionType;
 import de.gg.network.LobbyPlayer;
 import de.gg.network.rmi.AuthoritativeResultListener;
 import de.gg.util.Log;
@@ -105,6 +112,18 @@ public class SlaveSession extends GameSession
 	}
 
 	@Override
+	protected void onNewVote(VoteableMatter matterToVoteOn) {
+		eventBus.post(new NewVoteEvent(matterToVoteOn));
+	}
+
+	@Override
+	public void onVoteFinished(VoteResults results) {
+		eventBus.post(new VoteFinishedEvent(results, matterToVoteOn));
+
+		finishCurrentVote(results);
+	}
+
+	@Override
 	public void onCharacterDeath(short characterId) {
 		// TODO Todeseffekte (siehe
 		// FirstCharacterEventWaveServerSystem#process())
@@ -138,6 +157,20 @@ public class SlaveSession extends GameSession
 	 */
 	public GameClock getClock() {
 		return clock;
+	}
+
+	@Override
+	public void onAppliedForPosition(short characterId, PositionType type) {
+		city.getPositions().get(type).getApplicants().add(characterId);
+	}
+
+	@Override
+	public void onImpeachmentVoteArranged(short targetCharacterId,
+			short callerCharacterId) {
+		city.getMattersToHoldVoteOn()
+				.add(new ImpeachmentVote(city, city.getCharacters()
+						.get(targetCharacterId).getPosition(),
+						callerCharacterId));
 	}
 
 }

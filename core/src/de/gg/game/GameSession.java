@@ -4,21 +4,31 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import com.badlogic.gdx.Gdx;
+
 import de.gg.game.data.GameDifficulty;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.data.GameSpeed;
 import de.gg.game.data.RoundEndData;
+import de.gg.game.data.vote.ElectionVote;
+import de.gg.game.data.vote.ImpeachmentVote;
+import de.gg.game.data.vote.VoteResults;
+import de.gg.game.data.vote.VoteableMatter;
 import de.gg.game.entity.Character;
 import de.gg.game.entity.City;
 import de.gg.game.entity.Player;
+import de.gg.game.entity.Position;
 import de.gg.game.system.ProcessingSystem;
 import de.gg.game.system.smp.RoundEndSystem;
+import de.gg.game.type.PositionTypes.PositionType;
 import de.gg.network.LobbyPlayer;
+import de.gg.screen.GameVoteScreen;
 import de.gg.util.Log;
 import de.gg.util.MeasuringUtil;
 
 /**
- * This class holds the game data and takes care of processing the rounds.
+ * This class holds the game data and takes care of processing the rounds
+ * including the votes on the beginning of a new round.
  * <p>
  * Following are the different phases a game session can be in:
  * <ul>
@@ -30,6 +40,9 @@ import de.gg.util.MeasuringUtil;
  * set up the next round after a round ended</li>
  * <li>{@link #startNextRound()}: Has to get called (internally) to start the
  * next round</li>
+ * <li>{@link #finishCurrentVote(VoteResults)()}: If there are any votes to hold
+ * after {@link #startNextRound()} has been called, this method has to get
+ * called to inform the session about its results</li>
  * </ul>
  * 
  */
@@ -76,6 +89,24 @@ public abstract class GameSession {
 	 * @see #isRightTick(int)
 	 */
 	private volatile int currentTick = TICKS_PER_ROUND;
+
+	/**
+	 * Is set to <code>true</code> when the game is in the voting mode before
+	 * the next round begins.
+	 * 
+	 * @see GameVoteScreen the screen responsible for rendering the voting
+	 *      process.
+	 */
+	private boolean holdVote = false;
+	/**
+	 * The matter a vote is currently held on.
+	 */
+	protected VoteableMatter matterToVoteOn = null;
+	/**
+	 * This variable is used to time the end of a vote a few seconds after the
+	 * data arrived. This allows the data to be displayed to the player.
+	 */
+	private float voteFinishedTimer = -1;
 
 	private volatile boolean initialized = false;
 
@@ -141,40 +172,89 @@ public abstract class GameSession {
 			return false;
 		}
 
-		// Die Zeit für das erste Update setzen
-		if (lastTime == -1)
-			lastTime = System.currentTimeMillis();
-		// Zeit-Delta ermitteln
-		long currentTime = System.currentTimeMillis();
-		long delta = (currentTime - lastTime)
-				* gameSpeed.getDeltaTimeMultiplied();
-		lastTime = currentTime;
+		if (!holdVote) {
+			// NORMAL UPDATE CYCLE
+			// Die Zeit für das erste Update setzen
+			if (lastTime == -1)
+				lastTime = System.currentTimeMillis();
+			// Zeit-Delta ermitteln
+			long currentTime = System.currentTimeMillis();
+			long delta = (currentTime - lastTime)
+					* gameSpeed.getDeltaTimeMultiplied();
+			lastTime = currentTime;
 
-		// Rundenzeit hochzählen
-		currentRoundTime += delta;
-		updateTime += delta;
+			// Rundenzeit hochzählen
+			currentRoundTime += delta;
+			updateTime += delta;
 
-		// Ticks berechnen
-		while (currentTick < TICKS_PER_ROUND && updateTime >= TICK_DURATION) {
-			// Neuer Update Tick
-			updateTime -= TICK_DURATION;
-			currentTick++;
-			fixedUpdate();
-		}
-
-		// Rundenende berechnen
-		if (currentRoundTime >= ROUND_DURATION) {
-			// Runde zuende
-			if (!waitingForNextRound) {
-				waitingForNextRound = true;
-
-				return true;
-
+			// Ticks berechnen
+			while (currentTick < TICKS_PER_ROUND
+					&& updateTime >= TICK_DURATION) {
+				// Neuer Update Tick
+				updateTime -= TICK_DURATION;
+				currentTick++;
+				fixedUpdate();
 			}
-		}
 
-		return false;
+			// Rundenende berechnen
+			if (currentRoundTime >= ROUND_DURATION) {
+				// Runde zuende
+				if (!waitingForNextRound) {
+					waitingForNextRound = true;
+
+					return true;
+
+				}
+			}
+
+			return false;
+		} else {
+			// VOTES
+			if (matterToVoteOn == null) {
+				matterToVoteOn = city.getMattersToHoldVoteOn().pollFirst();
+
+				onNewVote(matterToVoteOn);
+
+				if (matterToVoteOn == null) {
+					holdVote = false;
+					lastTime = System.currentTimeMillis();
+				}
+			} else {
+				if (voteFinishedTimer != -1) { // 7 Sekunden nach Vote-Ende
+												// warten
+					voteFinishedTimer += Gdx.graphics.getDeltaTime();
+
+					if (voteFinishedTimer >= 7) {
+						voteFinishedTimer = -1;
+						matterToVoteOn = null;
+					}
+				}
+			}
+
+			return false;
+		}
 	}
+
+	/**
+	 * Has to get called to finish the current vote and go on to the next one.
+	 * 
+	 * @param result
+	 *            the result of the vote.
+	 */
+	protected void finishCurrentVote(VoteResults result) {
+		this.voteFinishedTimer = 0;
+
+		processVoteResult(matterToVoteOn, result);
+	}
+
+	/**
+	 * Is called by the session when a new vote is started.
+	 * 
+	 * @param matterToVoteOn
+	 *            The new matter to vote on. Is <code>null</code> when the
+	 *            voting process is over.
+	 */
+	protected abstract void onNewVote(VoteableMatter matterToVoteOn);
 
 	protected void setGameSpeed(GameSpeed gameSpeed) {
 		this.gameSpeed = gameSpeed;
@@ -247,9 +327,46 @@ public abstract class GameSession {
 		for (Entry<Short, Player> e : city.getPlayers().entrySet()) {
 			roundEndSystem.processPlayer(e.getKey(), e.getValue());
 		}
+
+		// Position
+		for (Entry<PositionType, Position> e : city.getPositions().entrySet()) {
+			roundEndSystem.processPosition(e.getKey(), e.getValue());
+		}
+
 		Log.info(localNetworkId == -1 ? "Server" : "Client",
 				"Processed the RoundEnd-System in %d miliseconds",
 				measuringUtil.stop());
+	}
+
+	/**
+	 * Processes the result of the given vote.
+	 * 
+	 * @param matterToVoteOn
+	 *            The matter this vote is on.
+	 * @param result
+	 *            The result of the vote.
+	 */
+	private void processVoteResult(VoteableMatter matterToVoteOn,
+			VoteResults result) {
+
+		// ELECTION
+		if (matterToVoteOn instanceof ElectionVote) {
+			ElectionVote vote = ((ElectionVote) matterToVoteOn);
+			vote.getPos().setCurrentHolder(vote.getPos().getApplicants()
+					.get(result.getOverallResult()));
+			vote.getPos().getApplicants().clear();
+		} else
+		// IMPEACHMENT
+		if (matterToVoteOn instanceof ImpeachmentVote) {
+			ImpeachmentVote vote = ((ImpeachmentVote) matterToVoteOn);
+
+			if (result.getOverallResult() != -1) {
+				// Remove
+				vote.getPos().setCurrentHolder((short) -1);
+			} else {
+				// Stay
+			}
+		}
 	}
 
 	/**
@@ -266,7 +383,9 @@ public abstract class GameSession {
 	}
 
 	/**
-	 * Called after a round ended to start the next round.
+	 * Called after a round ended to start the next round. If there are any
+	 * {@linkplain City#getMattersToHoldVoteOn() matters to hold a vote on}
+	 * those are done first.
 	 */
 	protected synchronized void startNextRound() {
 		Log.debug(localNetworkId == -1 ? "Server" : "Client",
@@ -284,6 +403,11 @@ public abstract class GameSession {
 			if (!sys.isProcessedContinuously())
 				sys.setAsProcessed(false);
 		}
+
+		Log.info("Client", "Es stehen %d Tagesordnunspunkte an",
+				city.getMattersToHoldVoteOn().size());
+
+		holdVote = !city.getMattersToHoldVoteOn().isEmpty();
 
 		waitingForNextRound = false;
 	}

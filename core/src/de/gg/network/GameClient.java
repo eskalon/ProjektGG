@@ -22,11 +22,13 @@ import de.gg.event.PlayerChangedEvent;
 import de.gg.event.PlayerConnectedEvent;
 import de.gg.event.PlayerDisconnectedEvent;
 import de.gg.event.RoundEndEvent;
+import de.gg.game.CharacterBehaviour;
 import de.gg.game.GameSession;
 import de.gg.game.SlaveSession;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.data.NotificationData;
 import de.gg.game.entity.City;
+import de.gg.game.entity.Player;
 import de.gg.network.message.ChatMessageSentMessage;
 import de.gg.network.message.GameSetupMessage;
 import de.gg.network.message.PlayerChangedMessage;
@@ -317,6 +319,23 @@ public class GameClient {
 
 	public City getCity() {
 		return session.getCity();
+	}
+
+	/**
+	 * @param otherCharacterId
+	 * @return the opinion another character has about the player.
+	 */
+	public int getOpinionOfOtherCharacter(short otherCharacterId) {
+		return CharacterBehaviour.getOpinionOfAnotherCharacter(
+				getLocalPlayer().getCurrentlyPlayedCharacterId(),
+				otherCharacterId, session);
+	}
+
+	/**
+	 * @return the local player.
+	 */
+	public Player getLocalPlayer() {
+		return session.getCity().getPlayers().get(localClientId);
 	}
 
 }

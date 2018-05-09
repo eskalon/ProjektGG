@@ -1,6 +1,5 @@
 package de.gg.game.factory;
 
-import de.gg.game.entity.Character;
 import de.gg.game.entity.Player;
 import de.gg.game.entity.Profession;
 import de.gg.game.type.PlayerIcon;
@@ -16,7 +15,7 @@ public class PlayerFactory {
 	/**
 	 * Creates a player.
 	 * 
-	 * @param character
+	 * @param characterId
 	 * @param icon
 	 * @param profession
 	 * @param residenceIndex
@@ -29,14 +28,14 @@ public class PlayerFactory {
 	 * @param stealthSkill
 	 * @return the player entity.
 	 */
-	public static Player createPlayerCharacter(Character character,
+	public static Player createPlayerCharacter(short characterId,
 			PlayerIcon icon, Profession profession, short residenceIndex,
 			short productionBuildingIndex, int agilitySkill, int bargainSkill,
 			int combatSkill, int craftingSkill, int rhetoricalSkill,
 			int stealthSkill) {
 		Player p = new Player();
 		p.setAvailableAp(4);
-		p.setCurrentlyPlayedCharacter(character);
+		p.setCurrentlyPlayedCharacterId(characterId);
 		p.setIcon(icon);
 		p.getLearnedProfessions().add(profession);
 		p.getOwnedBuidings().add(residenceIndex);

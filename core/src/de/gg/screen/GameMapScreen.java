@@ -163,6 +163,7 @@ public class GameMapScreen extends BaseGameScreen {
 		// MISC
 		Table miscTable = new Table();
 		Table misc2Table = new Table();
+
 		// Inventory
 		ImageButton inventoryButton = new ImageButton(skin, "inventory");
 

@@ -5,6 +5,8 @@ import java.util.concurrent.Executors;
 
 import de.gg.game.AuthoritativeSession;
 import de.gg.game.data.RoundEndData;
+import de.gg.game.data.vote.VoteResults;
+import de.gg.game.type.PositionTypes.PositionType;
 
 /**
  * A result listener stub for the server to conveniently distribute an event to
@@ -92,6 +94,41 @@ public class ServerAuthoritativResultListenerStub
 			protected void informListener(
 					AuthoritativeResultListener resultListener) {
 				resultListener.setGameSpeed(index);
+			}
+		});
+	}
+
+	@Override
+	public void onVoteFinished(VoteResults results) {
+		executor.submit(new AuthoritativeResultListenerRunnable() {
+			@Override
+			protected void informListener(
+					AuthoritativeResultListener resultListener) {
+				resultListener.onVoteFinished(results);
+			}
+		});
+	}
+
+	@Override
+	public void onAppliedForPosition(short playerId, PositionType type) {
+		executor.submit(new AuthoritativeResultListenerRunnable() {
+			@Override
+			protected void informListener(
+					AuthoritativeResultListener resultListener) {
+				resultListener.onAppliedForPosition(playerId, type);
+			}
+		});
+	}
+
+	@Override
+	public void onImpeachmentVoteArranged(short targetCharacterId,
+			short callerCharacterId) {
+		executor.submit(new AuthoritativeResultListenerRunnable() {
+			@Override
+			protected void informListener(
+					AuthoritativeResultListener resultListener) {
+				resultListener.onImpeachmentVoteArranged(targetCharacterId,
+						callerCharacterId);
 			}
 		});
 	}

@@ -6,6 +6,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 
+import de.gg.game.entity.BuildingSlot;
+
 /**
  * This class represents a concrete instance of a model.
  */
@@ -18,6 +20,11 @@ public class RenderData extends ModelInstance {
 	private final static BoundingBox bounds = new BoundingBox();
 	private final static Vector3 position = new Vector3();
 
+	/**
+	 * Whether this model is selected by the player.
+	 * 
+	 * @see SceneRenderer#renderOutlines(BuildingSlot[])
+	 */
 	public boolean isSelected = false;
 
 	public RenderData(Model model) {

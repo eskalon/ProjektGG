@@ -2,9 +2,11 @@ package de.gg.game.system.smp;
 
 import java.util.Map.Entry;
 
+import de.gg.game.data.vote.ElectionVote;
 import de.gg.game.entity.Character;
 import de.gg.game.entity.City;
 import de.gg.game.entity.Player;
+import de.gg.game.entity.Position;
 import de.gg.game.type.LawTypes;
 import de.gg.game.type.PositionTypes.PositionType;
 import de.gg.game.type.SocialStatusS;
@@ -76,7 +78,7 @@ public class RoundEndSystem {
 	}
 
 	public void processPlayer(short id, Player p) {
-		Character c = p.getCurrentlyPlayedCharacter();
+		Character c = p.getCurrentlyPlayedCharacter(city);
 
 		// INHERITANCE TAX
 		if (p.getPreviouslyInheritedValue() > 0) {
@@ -135,6 +137,12 @@ public class RoundEndSystem {
 		// AP
 		p.setAvailableAp(
 				p.getAvailableAp() + 4 + p.getSkills().getAgilitySkill());
+	}
+
+	public void processPosition(PositionType type, Position p) {
+		// Add the election to the matters to vote on
+		if (p.hasApplicants())
+			city.getMattersToHoldVoteOn().add(new ElectionVote(city, type));
 	}
 
 }

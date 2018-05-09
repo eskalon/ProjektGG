@@ -37,7 +37,7 @@ public class FirstEventWaveClientSystem extends ProcessingSystem<Player> {
 	@Override
 	public void process(short id, Player p) {
 		if (id == localPlayerId) {
-			Character c = p.getCurrentlyPlayedCharacter();
+			Character c = p.getCurrentlyPlayedCharacter(city);
 
 			// Inform about open positions
 			for (Entry<PositionType, Position> e : city.getPositions()

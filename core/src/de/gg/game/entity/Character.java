@@ -1,14 +1,11 @@
 package de.gg.game.entity;
 
 import java.util.HashMap;
-import java.util.Random;
 
-import de.gg.game.GameSession;
-import de.gg.game.type.Religion;
 import de.gg.game.type.NPCCharacterTraits.CharacterTrait;
 import de.gg.game.type.PositionTypes.PositionType;
+import de.gg.game.type.Religion;
 import de.gg.game.type.SocialStatusS.SocialStatus;
-import de.gg.util.RandomUtils;
 
 public class Character {
 
@@ -49,70 +46,6 @@ public class Character {
 	private CharacterTrait trait;
 
 	/**
-	 * The opinion <code>otherCharacter</code> has of
-	 * <code>thisCharacter</code>.
-	 * <p>
-	 * Has to get compared with the specific skill and trait modifiers as well
-	 * as the own usefulness and threat modifiers to determine whether a npc
-	 * should execute a specific action.
-	 * 
-	 * @param thisCharacterId
-	 *            The id of the character that the opinion is held of.
-	 * @param otherCharacterId
-	 *            The id of the character that has the opinion.
-	 * @param session
-	 *            The game session.
-	 * @return the opinion <code>otherCharacter</code> has of
-	 *         <code>thisCharacter</code>. Is never lower than <code>0</code>
-	 *         and normally around <code>55</code>.
-	 */
-	public static int getOpinionOfAnotherCharacter(short thisCharacterId,
-			short otherCharacterId, GameSession session) {
-		Character thisCharacter = session.getCity().getCharacters()
-				.get(thisCharacterId);
-		Character otherCharacter = session.getCity().getCharacters()
-				.get(otherCharacterId);
-
-		int opinion = 0;
-
-		// Difficulty (-4, 10)
-		opinion += session.getDifficulty().getOpinionModifer();
-
-		// Base Opinion (14, 43)
-		Random r = new Random(thisCharacterId * otherCharacterId);
-		opinion += RandomUtils.getRandomNumber(r, -9, 20) + 23;
-
-		// NPC Opinion Modifier (0, 10)
-		opinion += otherCharacter.getNPCTrait().getBaseOpinionModifier();
-
-		// Reputation (0, 20)
-		opinion += thisCharacter.getReputation();
-
-		// TODO Kinship
-		// +20 für Kinder und Eltern
-
-		// Religion (5, 12)
-		boolean isReligionImportant = otherCharacter.getNPCTrait()
-				.isReligionImportant();
-		if (thisCharacter.getReligion() == otherCharacter.getReligion())
-			opinion += isReligionImportant ? 16 : 11;
-		else
-			opinion += isReligionImportant ? 0 : 5;
-
-		// Temporary Opinion Modifiers
-		if (thisCharacter.getOpinionModifiers().containsKey(otherCharacterId))
-			opinion += Math.round(
-					thisCharacter.getOpinionModifiers().get(otherCharacterId));
-
-		// Temporary Round Modifier (-3, 4)
-		opinion += getPerRoundAndCharacterPopularityModifier(
-				session.getGameSeed(), thisCharacterId, otherCharacterId,
-				session.getRound());
-
-		return opinion < 0 ? 0 : opinion;
-	}
-
-	/**
 	 * @return the character's reputation. Is never lower than <code>0</code>
 	 *         and <i>usually</i> in the range of <code>0</code> and
 	 *         <code>20</code>.
@@ -121,27 +54,6 @@ public class Character {
 		int reputation = ((int) (highestPositionLevel * 1.5))
 				+ (status.getLevel() * 3) + reputationModifiers;
 		return reputation < 0 ? 0 : reputation;
-	}
-
-	/**
-	 * Returns the popularity modifier of a character towards another character
-	 * in this specific round.
-	 * 
-	 * @param gameSeed
-	 *            The seed of this game session.
-	 * @param characterIdA
-	 *            The id of character a.
-	 * @param characterIdB
-	 *            The id of character b.
-	 * @param round
-	 *            The current round.
-	 * @return The popularity modifier of character a towards character b in
-	 *         this specific round.
-	 */
-	public static int getPerRoundAndCharacterPopularityModifier(long gameSeed,
-			short characterIdA, short characterIdB, int round) {
-		Random r = new Random(gameSeed * characterIdA * characterIdB * round);
-		return RandomUtils.getRandomNumber(r, -3, 4);
 	}
 
 	public String getName() {

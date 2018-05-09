@@ -1,5 +1,7 @@
 package de.gg.network.rmi;
 
+import de.gg.game.type.PositionTypes.PositionType;
+
 /**
  * This interface takes care of a player's actions. Those are mainly triggered
  * via the ui and then relayed to the server via this interface. The
@@ -19,5 +21,12 @@ public interface SlaveActionListener {
 	public void increaseGameSpeed(short clientId);
 
 	public void decreaseGameSpeed(short clientId);
+
+	public void onVoteCast(int vote, short clientId);
+
+	public boolean onAppliedForPosition(PositionType t, short clientId);
+
+	public boolean onImpeachmentVoteArranged(short targetCharacterId,
+			short clientId);
 
 }

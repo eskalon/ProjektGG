@@ -6,9 +6,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton.ImageTextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 /**
- * This is a dialog without animations.
- * 
- * @see Dialog
+ * This is a dialog without animations. It should always be used instead of
+ * {@link Dialog}.
+ * <p>
+ * The dialog has convenience methods for adding buttons on the bottom of the
+ * window and keyboard listeners({@link #button(String, Object)},
+ * {@link #key(int, Object)}). The results of these methods can get processed by
+ * overriding {@link #result(Object)}.
  */
 public class AnimationlessDialog extends Dialog {
 
@@ -46,7 +50,7 @@ public class AnimationlessDialog extends Dialog {
 	 * 
 	 * @param object
 	 *            The object that will be passed to {@link #result(Object)} if
-	 *            this button is clicked. May be null.
+	 *            this button is clicked. May be <code>null</code>.
 	 */
 	public Dialog button(String text, Object object) {
 		return button(text, object,

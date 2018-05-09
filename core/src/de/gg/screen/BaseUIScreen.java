@@ -27,7 +27,8 @@ public abstract class BaseUIScreen extends BaseScreen {
 	 */
 	protected Table mainTable;
 	/**
-	 * The default UI skin. Is automatically set.
+	 * The default UI skin. Is automatically set in the
+	 * {@link #onInit()}-method.
 	 */
 	protected Skin skin;
 	/**

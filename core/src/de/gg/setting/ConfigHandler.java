@@ -11,6 +11,10 @@ public class ConfigHandler {
 
 	private Preferences prefs;
 
+	/**
+	 * @param name
+	 *            the name of the settings; has to be useable as a file name.
+	 */
 	public ConfigHandler(String name) {
 		prefs = Gdx.app.getPreferences(name);
 	}

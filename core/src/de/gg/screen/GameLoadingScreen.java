@@ -42,6 +42,7 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 		assetManager.load(game.getScreen("map"));
 		assetManager.load(game.getScreen("house"));
 		assetManager.load(game.getScreen("roundEnd"));
+		assetManager.load(game.getScreen("vote"));
 
 		// Load all models
 		// TODO replace with one big scene
@@ -55,6 +56,7 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 		game.getScreen("map").finishLoading();
 		game.getScreen("house").finishLoading();
 		game.getScreen("roundEnd").finishLoading();
+		game.getScreen("vote").finishLoading();
 		BuildingTypes.finishLoading(assetManager);
 		PositionTypes.finishLoading(assetManager);
 		ProfessionTypes.finishLoading(assetManager);

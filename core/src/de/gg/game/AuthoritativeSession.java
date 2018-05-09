@@ -1,22 +1,34 @@
 package de.gg.game;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Random;
 
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.data.GameSpeed;
 import de.gg.game.data.RoundEndData;
+import de.gg.game.data.vote.ImpeachmentVote;
+import de.gg.game.data.vote.VoteResults;
+import de.gg.game.data.vote.VoteableMatter;
+import de.gg.game.entity.Player;
+import de.gg.game.entity.Position;
 import de.gg.game.system.ProcessingSystem;
 import de.gg.game.system.server.FirstCharacterEventWaveServerSystem;
 import de.gg.game.system.server.FirstPlayerEventWaveServerSystem;
 import de.gg.game.system.server.IllnessDamageSystem;
 import de.gg.game.system.server.NpcActionSystem;
 import de.gg.game.system.server.NpcActionSystem2;
+import de.gg.game.type.PositionTypes.PositionType;
 import de.gg.network.GameServer;
 import de.gg.network.LobbyPlayer;
 import de.gg.network.ServerSetup;
 import de.gg.network.rmi.AuthoritativeResultListener;
 import de.gg.network.rmi.ServerAuthoritativResultListenerStub;
 import de.gg.network.rmi.SlaveActionListener;
+import de.gg.util.CollectionUtils;
 import de.gg.util.Log;
 import de.gg.util.PlayerUtils;
 import de.gg.util.RandomUtils;
@@ -33,6 +45,11 @@ public class AuthoritativeSession extends GameSession
 	private AuthoritativeResultListener resultListenerStub;
 
 	private ServerSetup serverSetup;
+
+	/**
+	 * The (temporary) results of the currently held vote.
+	 */
+	private VoteResults voteResults;
 
 	/**
 	 * Creates a new multiplayer session.
@@ -125,6 +142,93 @@ public class AuthoritativeSession extends GameSession
 		saveStats();
 	}
 
+	@Override
+	protected void onNewVote(VoteableMatter matterToVoteOn) {
+		voteResults = new VoteResults();
+
+		if (matterToVoteOn != null) {
+			// AI vote
+			for (short charId : matterToVoteOn.getVoters()) {
+				boolean isPlayer = false;
+
+				for (Player p : city.getPlayers().values()) {
+					if (p.getCurrentlyPlayedCharacterId() == charId) {
+						isPlayer = true;
+						break;
+					}
+				}
+
+				if (!isPlayer) {
+					voteResults.getIndividualVotes().put(charId,
+							CharacterBehaviour.getVote(charId, matterToVoteOn,
+									this));
+				}
+			}
+
+			// Check if all votes were made
+			if (voteResults.getIndividualVotes().size() == matterToVoteOn
+					.getVoters().size()) {
+				sendVoteResult();
+			}
+		}
+	}
+
+	@Override
+	public void onVoteCast(int chosenOption, short clientId) {
+		voteResults.getIndividualVotes().put(
+				city.getPlayer(clientId).getCurrentlyPlayedCharacterId(),
+				chosenOption);
+
+		// Check if all votes were made
+		if (voteResults.getIndividualVotes().size() == matterToVoteOn
+				.getVoters().size()) {
+			sendVoteResult();
+		}
+	}
+
+	/**
+	 * Sends the vote result to the clients.
+	 */
+	private void sendVoteResult() {
+		try {
+			// Find the most common vote option
+			Map<Integer, Integer> resultMap = new HashMap<Integer, Integer>();
+			for (int i : voteResults.getIndividualVotes().values()) {
+				Integer count = resultMap.get(i);
+				resultMap.put(i, count != null ? count + 1 : 0);
+			}
+
+			resultMap = CollectionUtils.sortByValue(resultMap);
+
+			Entry<Integer, Integer>[] entries = resultMap.entrySet()
+					.toArray(new Entry[0]);
+			// A tie
+			if (entries.length > 1
+					&& entries[0].getValue() == entries[1].getValue()) {
+				List<Integer> resultOptions = new ArrayList<>();
+
+				for (Entry<Integer, Integer> entry : entries) {
+					if (entry.getValue() == entries[0].getValue()) {
+						resultOptions.add(entry.getKey());
+					}
+				}
+
+				voteResults.setOverallResult(
+						CollectionUtils.getRandomElementInList(resultOptions,
+								new Random(getGameSeed())));
+			} else {
+				// One result
+				voteResults.setOverallResult(entries[0].getKey());
+			}
+
+			this.finishCurrentVote(voteResults);
+
+			resultListenerStub.onVoteFinished(voteResults);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void saveStats() {
 		// TODO generate & save stats
 	}
@@ -196,6 +300,43 @@ public class AuthoritativeSession extends GameSession
 					: index];
 			resultListenerStub.setGameSpeed(gameSpeed.ordinal());
 		}
+	}
+
+	@Override
+	public boolean onImpeachmentVoteArranged(short targetCharacterId,
+			short clientId) {
+		PositionType t = city.getCharacters().get(targetCharacterId)
+				.getPosition();
+
+		if (t != null) {
+			// TODO checken, ob nicht bereits ein Anderer einen Vote initiiert
+			// hat
+
+			city.getMattersToHoldVoteOn().add(new ImpeachmentVote(city, t,
+					city.getPlayer(clientId).getCurrentlyPlayedCharacterId()));
+
+			resultListenerStub.onImpeachmentVoteArranged(targetCharacterId,
+					city.getPlayer(clientId).getCurrentlyPlayedCharacterId());
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean onAppliedForPosition(PositionType t, short clientId) {
+		Position pos = city.getPositions().get(t);
+
+		if (pos.getCurrentHolder() == (short) -1
+				&& pos.getApplicants().size() < 4) {
+			pos.getApplicants().add(
+					city.getPlayer(clientId).getCurrentlyPlayedCharacterId());
+
+			resultListenerStub.onAppliedForPosition(clientId, t);
+
+			return true;
+		}
+
+		return false;
 	}
 
 }

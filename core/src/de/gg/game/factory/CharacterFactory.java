@@ -103,7 +103,7 @@ public class CharacterFactory {
 	 * @param profession
 	 *            The player's profession.
 	 * @param difficulty
-	 *            The game's difficutly level.
+	 *            The game's difficulty level.
 	 * @return the character.
 	 */
 	public static Character createPlayerCharacter(Random random,

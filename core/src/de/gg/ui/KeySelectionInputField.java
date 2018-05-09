@@ -60,12 +60,18 @@ public class KeySelectionInputField extends ImageTextButton {
 		});
 	}
 
+	/**
+	 * This listener is used to process selection events in an
+	 * {@link KeySelectionInputField}.
+	 */
 	public interface KeySelectionEventListener {
 		/**
-		 * Called when a key is selected by the {@link KeySelectionInputField}
+		 * Called when a key is selected by the {@link KeySelectionInputField}.
 		 * 
 		 * @param key
-		 *            The selected key's code
+		 *            The selected key's code.
+		 * 
+		 * @see Keys The class holding all the key code constants.
 		 */
 		public void onKeySelection(int key);
 	}

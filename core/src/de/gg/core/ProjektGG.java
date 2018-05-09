@@ -32,6 +32,7 @@ import de.gg.screen.GameInHouseScreen;
 import de.gg.screen.GameLoadingScreen;
 import de.gg.screen.GameMapScreen;
 import de.gg.screen.GameRoundendScreen;
+import de.gg.screen.GameVoteScreen;
 import de.gg.screen.LoadingScreen;
 import de.gg.screen.LobbyCreationScreen;
 import de.gg.screen.LobbyScreen;
@@ -171,6 +172,7 @@ public class ProjektGG extends Game {
 		addScreen("house", new GameInHouseScreen());
 		addScreen("roundEnd", new GameRoundendScreen());
 		addScreen("settings", new SettingsScreen());
+		addScreen("vote", new GameVoteScreen());
 
 		// Push screen
 		if (showSplashscreen)

@@ -12,10 +12,11 @@ public class PlayerSkillSet {
 	private int rhetoricalSkill;
 	private int stealthSkill;
 
-	public PlayerSkillSet(int agilitySkill, int bargainSkill,
-			int craftingSkill, int combatSkill, int rhetoricalSkill,
-			int stealthSkill) {
-		super();
+	public PlayerSkillSet() {
+	}
+
+	public PlayerSkillSet(int agilitySkill, int bargainSkill, int craftingSkill,
+			int combatSkill, int rhetoricalSkill, int stealthSkill) {
 		this.agilitySkill = agilitySkill;
 		this.bargainSkill = bargainSkill;
 		this.craftingSkill = craftingSkill;

@@ -16,7 +16,7 @@ import de.gg.game.entity.BuildingSlot;
 import de.gg.game.entity.City;
 
 /**
- * This class is repsonsible for rendering the city.
+ * This class is responsible for rendering the city.
  */
 public class SceneRenderer implements Disposable {
 

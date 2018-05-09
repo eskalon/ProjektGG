@@ -6,6 +6,12 @@
 			"posY": 25,
 			"rotationToStreet": 70,
 			"type": "CITY_NORMAL"
+		},
+		{
+			"posX": -15,
+			"posY": 10,
+			"rotationToStreet": 190,
+			"type": "CITY_NORMAL"
 		}
 	]
 }
