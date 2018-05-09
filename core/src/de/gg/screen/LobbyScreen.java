@@ -1,6 +1,8 @@
 package de.gg.screen;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -24,6 +26,7 @@ import de.gg.game.data.GameSessionSetup;
 import de.gg.game.type.GameMaps;
 import de.gg.game.type.PlayerIcon;
 import de.gg.game.type.Religion;
+import de.gg.input.ButtonClickListener;
 import de.gg.network.GameClient;
 import de.gg.network.GameServer;
 import de.gg.network.LobbyPlayer;
@@ -98,11 +101,11 @@ public class LobbyScreen extends BaseUIScreen {
 
 		// Create UI elements for player configuration dialog
 		playerConfigurationDialog = new AnimationlessDialog(
-				"Spielerkonfiguration", skin);
-		iconDialog = new AnimationlessDialog("Wappen", skin);
+				"Spielerkonfiguration", skin, "window");
+		iconDialog = new AnimationlessDialog("Wappen", skin, "window");
 
-		surnameTextField = new TextField("StandardSurname", skin);
-		nameTextField = new TextField("StandardName", skin);
+		surnameTextField = new OffsetableTextField("StandardSurname", skin, 8);
+		nameTextField = new OffsetableTextField("StandardName", skin, 8);
 
 		surnameLabel = new Label("Name: ", skin);
 		nameLabel = new Label("Vorname: ", skin);
@@ -113,28 +116,11 @@ public class LobbyScreen extends BaseUIScreen {
 		religionButton = new ImageTextButton("StandardReligion", skin, "small");
 		religionLabel = new Label("Religion: ", skin);
 
-		iconButton = new ImageTextButton("Anpassen", skin, "small");
+		iconButton = new ImageTextButton("Anpassen...", skin, "small");
 		iconLabel = new Label("Wappen: ", skin);
 
-		applyButton = new ImageTextButton("Übernehmen", skin);
-		discardButton = new ImageTextButton("Abbrechen", skin);
-
-		// Creating all icon-buttons with correct listener
-		Table iconTable = new Table();
-		for (int i = 0; i < PlayerIcon.values().length; i++) {
-			ImageButton iconIButton = new ImageButton(
-					skin.getDrawable(PlayerIcon.values()[i].getIconFileName()));
-			final int index = i;
-			iconIButton.addListener(
-					new ButtonClickListener(assetManager, game.getSettings()) {
-						@Override
-						protected void onClick() {
-							selectedIcon = PlayerIcon.values()[index];
-							iconDialog.hide();
-						}
-					});
-			iconTable.add(iconIButton).pad(25);
-		}
+		applyButton = new ImageTextButton("Übernehmen", skin, "small");
+		discardButton = new ImageTextButton("Abbrechen", skin, "small");
 
 		// Listener for configuration buttons
 		sexButton.addListener(
@@ -165,10 +151,39 @@ public class LobbyScreen extends BaseUIScreen {
 					}
 				});
 
+		Table iconTable = new Table();
 		iconButton.addListener(
 				new ButtonClickListener(assetManager, game.getSettings()) {
 					@Override
 					protected void onClick() {
+						iconTable.clear();
+
+						// Only currently unused icons can be selected
+						List<LobbyPlayer> tmpPlayers = new ArrayList<>(
+								players.values());
+						tmpPlayers.remove(getLocalPlayer());
+						tmpPlayers.add(new LobbyPlayer(null, null, selectedIcon,
+								true));
+
+						List<PlayerIcon> availableIcons = PlayerUtils
+								.getAvailableIcons(tmpPlayers);
+
+						for (int i = 0; i < availableIcons.size(); i++) {
+							ImageButton iconIButton = new ImageButton(
+									skin.getDrawable(availableIcons.get(i)
+											.getIconFileName()));
+							final int index = i;
+							iconIButton.addListener(new ButtonClickListener(
+									assetManager, game.getSettings()) {
+								@Override
+								protected void onClick() {
+									selectedIcon = availableIcons.get(index);
+									iconDialog.hide();
+								}
+							});
+							iconTable.add(iconIButton).pad(25);
+						}
+
 						iconDialog.show(stage);
 					}
 				});
@@ -206,30 +221,19 @@ public class LobbyScreen extends BaseUIScreen {
 		Table playerConfigurationTable = new Table();
 		playerConfigurationTable.add(nameLabel).padBottom(15);
 		playerConfigurationTable.add(nameTextField).padBottom(15).row();
-		playerConfigurationTable.add(surnameLabel).padBottom(50);
-		playerConfigurationTable.add(surnameTextField).padBottom(50).row();
+		playerConfigurationTable.add(surnameLabel).padBottom(45);
+		playerConfigurationTable.add(surnameTextField).padBottom(45).row();
 		playerConfigurationTable.add(sexLabel).padBottom(15);
 		playerConfigurationTable.add(sexButton).padBottom(15).row();
 		playerConfigurationTable.add(religionLabel).padBottom(15);
 		playerConfigurationTable.add(religionButton).padBottom(15).row();
-		playerConfigurationTable.add(iconLabel).padBottom(50);
-		playerConfigurationTable.add(iconButton).padBottom(50).row();
+		playerConfigurationTable.add(iconLabel).padBottom(60);
+		playerConfigurationTable.add(iconButton).padBottom(60).row();
 		playerConfigurationTable.add(applyButton);
 		playerConfigurationTable.add(discardButton);
 
-		// Setting up player configuration dialog
 		playerConfigurationDialog.add(playerConfigurationTable).pad(100);
-		playerConfigurationDialog.setWidth(680);
-		playerConfigurationDialog.setHeight(480);
-		playerConfigurationDialog.setX(300);
-		playerConfigurationDialog.setY(125);
-
-		// Setting up the dialog for chosing a player icon
 		iconDialog.add(iconTable).pad(20);
-		iconDialog.setWidth(350);
-		iconDialog.setHeight(250);
-		iconDialog.setX(350);
-		iconDialog.setY(175);
 
 		ImageTextButton leaveButton = new ImageTextButton("Verlassen", skin,
 				"small");
@@ -377,28 +381,22 @@ public class LobbyScreen extends BaseUIScreen {
 		Object[] playersArray = players.values().toArray();
 
 		updatePlayerSlot(playerSlots[0],
-				(playersArray.length >= 1
-						? (LobbyPlayer) playersArray[0]
+				(playersArray.length >= 1 ? (LobbyPlayer) playersArray[0]
 						: null));
 		updatePlayerSlot(playerSlots[1],
-				(playersArray.length >= 2
-						? (LobbyPlayer) playersArray[1]
+				(playersArray.length >= 2 ? (LobbyPlayer) playersArray[1]
 						: null));
 		updatePlayerSlot(playerSlots[2],
-				(playersArray.length >= 3
-						? (LobbyPlayer) playersArray[2]
+				(playersArray.length >= 3 ? (LobbyPlayer) playersArray[2]
 						: null));
 		updatePlayerSlot(playerSlots[3],
-				(playersArray.length >= 4
-						? (LobbyPlayer) playersArray[3]
+				(playersArray.length >= 4 ? (LobbyPlayer) playersArray[3]
 						: null));
 		updatePlayerSlot(playerSlots[4],
-				(playersArray.length >= 5
-						? (LobbyPlayer) playersArray[4]
+				(playersArray.length >= 5 ? (LobbyPlayer) playersArray[4]
 						: null));
 		updatePlayerSlot(playerSlots[5],
-				(playersArray.length >= 6
-						? (LobbyPlayer) playersArray[5]
+				(playersArray.length >= 6 ? (LobbyPlayer) playersArray[5]
 						: null));
 
 		if (game.isHost()) {
@@ -449,10 +447,11 @@ public class LobbyScreen extends BaseUIScreen {
 	 *            The actual message.
 	 */
 	private void addChatMessageToUI(LobbyPlayer sender, String message) {
-		messagesArea.setText(messagesArea.getText() + (sender == null
-				? "[#EFE22DFF]"
-				: ("[#" + sender.getIcon().getColor() + "]" + sender.getName()
-						+ " " + sender.getSurname() + ": []"))
+		messagesArea.setText(messagesArea.getText()
+				+ (sender == null ? "[#EFE22DFF]"
+						: ("[#" + sender.getIcon().getColor() + "]"
+								+ sender.getName() + " " + sender.getSurname()
+								+ ": []"))
 				+ message + (sender == null ? "[]" : "") + " \n");
 		messagesPane.layout();
 		messagesPane.scrollTo(0, 0, 0, 0);

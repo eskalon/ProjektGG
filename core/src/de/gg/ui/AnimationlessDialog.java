@@ -18,10 +18,20 @@ public class AnimationlessDialog extends Dialog {
 
 	protected Skin skin;
 
-	public AnimationlessDialog(String title, Skin skin) {
-		super(title, skin);
-		this.skin = skin;
+	public AnimationlessDialog(String title, Skin skin,
+			String windowStyleName) {
+		this(title, skin, skin.get(windowStyleName, WindowStyle.class));
+	}
 
+	public AnimationlessDialog(String title, Skin skin) {
+		this(title, skin, skin.get(WindowStyle.class));
+	}
+
+	private AnimationlessDialog(String title, Skin skin,
+			WindowStyle windowStyle) {
+		super(title, skin);
+		setStyle(windowStyle);
+		this.skin = skin;
 		getContentTable().defaults().space(15);
 		getButtonTable().defaults().space(15);
 	}
