@@ -48,6 +48,7 @@ public class NetworkRegisterer {
 		// Lobby (Player) Stuff
 		kryo.register(LobbyPlayer.class);
 		kryo.register(PlayerIcon.class);
+		kryo.register(de.gg.game.type.Religion.class);
 
 		// Map Stuff
 		kryo.register(GameDifficulty.class);

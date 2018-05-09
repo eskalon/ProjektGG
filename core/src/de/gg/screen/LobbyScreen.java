@@ -5,6 +5,7 @@ import java.util.HashMap;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -21,10 +22,12 @@ import de.gg.event.PlayerConnectedEvent;
 import de.gg.event.PlayerDisconnectedEvent;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.type.GameMaps;
-import de.gg.input.ButtonClickListener;
+import de.gg.game.type.PlayerIcon;
+import de.gg.game.type.Religion;
 import de.gg.network.GameClient;
 import de.gg.network.GameServer;
 import de.gg.network.LobbyPlayer;
+import de.gg.ui.AnimationlessDialog;
 import de.gg.ui.OffsetableTextField;
 import de.gg.util.Log;
 import de.gg.util.PlayerUtils;
@@ -40,12 +43,6 @@ public class LobbyScreen extends BaseUIScreen {
 	private final String NOT_READY_IMAGE_PATH = "ui/icons/not_ready.png";
 	@Asset(Texture.class)
 	private final String KICK_IMAGE_PATH = "ui/icons/kick.png";
-	@Asset(Texture.class)
-	private final String NO_ICON_IMAGE_PATH = "ui/icons/players/empty.png";
-	@Asset(Texture.class)
-	private final String ICON1_IMAGE_PATH = "ui/icons/players/icon_1.png";
-	@Asset(Texture.class)
-	private final String ICON2_IMAGE_PATH = "ui/icons/players/icon_2.png";
 	@Asset(Sound.class)
 	private static final String CLICK_SOUND = "audio/button-tick.mp3";
 
@@ -58,21 +55,181 @@ public class LobbyScreen extends BaseUIScreen {
 	private HashMap<Short, LobbyPlayer> players;
 	private short localNetworkId;
 
+	private boolean selectedSex;
+	private Religion selectedReligion;
+	private PlayerIcon selectedIcon;
+
+	private AnimationlessDialog playerConfigurationDialog;
+	private AnimationlessDialog iconDialog;
+
+	private TextField surnameTextField;
+	private TextField nameTextField;
+
+	private Label surnameLabel;
+	private Label nameLabel;
+
+	private ImageTextButton sexButton;
+	private Label sexLabel;
+
+	private ImageTextButton religionButton;
+	private Label religionLabel;
+
+	private ImageTextButton iconButton;
+	private Label iconLabel;
+
+	private ImageTextButton applyButton;
+	private ImageTextButton discardButton;
+
 	@Override
 	protected void initUI() {
 		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
 		Sound clickSound = assetManager.get(CLICK_SOUND);
 
-		ImageTextButton playerSetingsButton = new ImageTextButton("Anpassen",
+		ImageTextButton playerSettingsButton = new ImageTextButton("Anpassen",
 				skin, "small");
-		playerSetingsButton.addListener(
+		playerSettingsButton.addListener(
 				new ButtonClickListener(assetManager, game.getSettings()) {
 					@Override
 					protected void onClick() {
-						// TODO Dialog/Window zum Ändern der
-						// Spielerkonfiguration öffnen
+						setLocalPlayerDataVariables();
+						playerConfigurationDialog.show(stage);
 					}
 				});
+
+		// Create UI elements for player configuration dialog
+		playerConfigurationDialog = new AnimationlessDialog(
+				"Spielerkonfiguration", skin);
+		iconDialog = new AnimationlessDialog("Wappen", skin);
+
+		surnameTextField = new TextField("StandardSurname", skin);
+		nameTextField = new TextField("StandardName", skin);
+
+		surnameLabel = new Label("Name: ", skin);
+		nameLabel = new Label("Vorname: ", skin);
+
+		sexButton = new ImageTextButton("StandardSex", skin, "small");
+		sexLabel = new Label("Geschlecht: ", skin);
+
+		religionButton = new ImageTextButton("StandardReligion", skin, "small");
+		religionLabel = new Label("Religion: ", skin);
+
+		iconButton = new ImageTextButton("Anpassen", skin, "small");
+		iconLabel = new Label("Wappen: ", skin);
+
+		applyButton = new ImageTextButton("Übernehmen", skin);
+		discardButton = new ImageTextButton("Abbrechen", skin);
+
+		// Creating all icon-buttons with correct listener
+		Table iconTable = new Table();
+		for (int i = 0; i < PlayerIcon.values().length; i++) {
+			ImageButton iconIButton = new ImageButton(
+					skin.getDrawable(PlayerIcon.values()[i].getIconFileName()));
+			final int index = i;
+			iconIButton.addListener(
+					new ButtonClickListener(assetManager, game.getSettings()) {
+						@Override
+						protected void onClick() {
+							selectedIcon = PlayerIcon.values()[index];
+							iconDialog.hide();
+						}
+					});
+			iconTable.add(iconIButton).pad(25);
+		}
+
+		// Listener for configuration buttons
+		sexButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						if (selectedSex) {
+							selectedSex = false;
+							sexButton.setText("Weiblich");
+						} else {
+							selectedSex = true;
+							sexButton.setText("Männlich");
+						}
+					}
+				});
+
+		religionButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						if (selectedReligion.equals(Religion.values()[1])) {
+							selectedReligion = Religion.values()[0];
+							religionButton.setText("Katholisch");
+						} else {
+							religionButton.setText("Orthodox");
+							selectedReligion = Religion.values()[1];
+						}
+					}
+				});
+
+		iconButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						iconDialog.show(stage);
+					}
+				});
+
+		// apply and discard button
+		applyButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						getLocalPlayer().setName(nameTextField.getText());
+						getLocalPlayer().setSurname(surnameTextField.getText());
+						getLocalPlayer().setMale(selectedSex);
+						getLocalPlayer().setReligion(selectedReligion);
+						getLocalPlayer().setIcon(selectedIcon);
+
+						// Update Player
+						updatePlayerSlot(playerSlots[localNetworkId],
+								getLocalPlayer());
+						game.getClient().onLocalPlayerChange(getLocalPlayer());
+						updateLobbyUI();
+
+						playerConfigurationDialog.hide();
+					}
+				});
+
+		discardButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						playerConfigurationDialog.hide();
+					}
+				});
+
+		// Adding all UI elements
+		Table playerConfigurationTable = new Table();
+		playerConfigurationTable.add(nameLabel).padBottom(15);
+		playerConfigurationTable.add(nameTextField).padBottom(15).row();
+		playerConfigurationTable.add(surnameLabel).padBottom(50);
+		playerConfigurationTable.add(surnameTextField).padBottom(50).row();
+		playerConfigurationTable.add(sexLabel).padBottom(15);
+		playerConfigurationTable.add(sexButton).padBottom(15).row();
+		playerConfigurationTable.add(religionLabel).padBottom(15);
+		playerConfigurationTable.add(religionButton).padBottom(15).row();
+		playerConfigurationTable.add(iconLabel).padBottom(50);
+		playerConfigurationTable.add(iconButton).padBottom(50).row();
+		playerConfigurationTable.add(applyButton);
+		playerConfigurationTable.add(discardButton);
+
+		// Setting up player configuration dialog
+		playerConfigurationDialog.add(playerConfigurationTable).pad(100);
+		playerConfigurationDialog.setWidth(680);
+		playerConfigurationDialog.setHeight(480);
+		playerConfigurationDialog.setX(300);
+		playerConfigurationDialog.setY(125);
+
+		// Setting up the dialog for chosing a player icon
+		iconDialog.add(iconTable).pad(20);
+		iconDialog.setWidth(350);
+		iconDialog.setHeight(250);
+		iconDialog.setX(350);
+		iconDialog.setY(175);
 
 		ImageTextButton leaveButton = new ImageTextButton("Verlassen", skin,
 				"small");
@@ -132,7 +289,7 @@ public class LobbyScreen extends BaseUIScreen {
 		Table buttonTable = new Table();
 		Table chatTable = new Table();
 
-		buttonTable.add(playerSetingsButton).bottom().padBottom(18).row();
+		buttonTable.add(playerSettingsButton).bottom().padBottom(18).row();
 		buttonTable.add(readyUpLobbyButton).padBottom(18).row();
 		buttonTable.add(leaveButton).padBottom(50);
 
@@ -220,22 +377,28 @@ public class LobbyScreen extends BaseUIScreen {
 		Object[] playersArray = players.values().toArray();
 
 		updatePlayerSlot(playerSlots[0],
-				(playersArray.length >= 1 ? (LobbyPlayer) playersArray[0]
+				(playersArray.length >= 1
+						? (LobbyPlayer) playersArray[0]
 						: null));
 		updatePlayerSlot(playerSlots[1],
-				(playersArray.length >= 2 ? (LobbyPlayer) playersArray[1]
+				(playersArray.length >= 2
+						? (LobbyPlayer) playersArray[1]
 						: null));
 		updatePlayerSlot(playerSlots[2],
-				(playersArray.length >= 3 ? (LobbyPlayer) playersArray[2]
+				(playersArray.length >= 3
+						? (LobbyPlayer) playersArray[2]
 						: null));
 		updatePlayerSlot(playerSlots[3],
-				(playersArray.length >= 4 ? (LobbyPlayer) playersArray[3]
+				(playersArray.length >= 4
+						? (LobbyPlayer) playersArray[3]
 						: null));
 		updatePlayerSlot(playerSlots[4],
-				(playersArray.length >= 5 ? (LobbyPlayer) playersArray[4]
+				(playersArray.length >= 5
+						? (LobbyPlayer) playersArray[4]
 						: null));
 		updatePlayerSlot(playerSlots[5],
-				(playersArray.length >= 6 ? (LobbyPlayer) playersArray[5]
+				(playersArray.length >= 6
+						? (LobbyPlayer) playersArray[5]
 						: null));
 
 		if (game.isHost()) {
@@ -286,11 +449,10 @@ public class LobbyScreen extends BaseUIScreen {
 	 *            The actual message.
 	 */
 	private void addChatMessageToUI(LobbyPlayer sender, String message) {
-		messagesArea.setText(messagesArea.getText()
-				+ (sender == null ? "[#EFE22DFF]"
-						: ("[#" + sender.getIcon().getColor() + "]"
-								+ sender.getName() + " " + sender.getSurname()
-								+ ": []"))
+		messagesArea.setText(messagesArea.getText() + (sender == null
+				? "[#EFE22DFF]"
+				: ("[#" + sender.getIcon().getColor() + "]" + sender.getName()
+						+ " " + sender.getSurname() + ": []"))
 				+ message + (sender == null ? "[]" : "") + " \n");
 		messagesPane.layout();
 		messagesPane.scrollTo(0, 0, 0, 0);
@@ -347,6 +509,25 @@ public class LobbyScreen extends BaseUIScreen {
 
 	private LobbyPlayer getLocalPlayer() {
 		return players.get(localNetworkId);
+	}
+
+	/**
+	 * Sets up the text for all buttons and textfields in the player
+	 * configuration dialog.
+	 */
+	private void setLocalPlayerDataVariables() {
+		selectedSex = getLocalPlayer().isMale();
+		selectedReligion = getLocalPlayer().getReligion();
+		selectedIcon = getLocalPlayer().getIcon();
+
+		String sexString = selectedSex ? "Männlich" : "Weiblich";
+		String religionString = getLocalPlayer().getReligion()
+				.equals(Religion.values()[0]) ? "Katholisch" : "Orthodox";
+
+		sexButton.setText(sexString);
+		surnameTextField.setText(getLocalPlayer().getSurname());
+		nameTextField.setText(getLocalPlayer().getName());
+		religionButton.setText(religionString);
 	}
 
 }
