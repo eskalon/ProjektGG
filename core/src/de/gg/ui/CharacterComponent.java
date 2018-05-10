@@ -38,9 +38,9 @@ public class CharacterComponent extends Table {
 	public CharacterComponent(Skin skin, String name, String position,
 			int opinion) {
 		super();
-		this.nameLabel = new Label(name, skin);
+		this.nameLabel = new Label(name.replace(" ", "  "), skin);
 		if (position != null)
-			this.positionLabel = new Label(position, skin);
+			this.positionLabel = new Label(position, skin, "main-white-18");
 
 		if (opinion != -1) {
 			this.shapeRenderer = new ShapeRenderer();

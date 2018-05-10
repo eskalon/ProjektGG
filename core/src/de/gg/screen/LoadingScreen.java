@@ -18,7 +18,14 @@ import de.gg.util.PlayerUtils;
  */
 public class LoadingScreen extends BaseLoadingScreen {
 
-	// Assets for the UI skin
+	public final AssetDescriptor<BitmapFont> MAIN_FONT_18_PATH() {
+		FreeTypeFontLoaderParameter font = new FreeTypeFontLoaderParameter();
+		font.fontFileName = "fonts/AlemdraSC/AlmendraSC-Regular.ttf";
+		font.fontParameters.size = 18;
+		return new AssetDescriptor<BitmapFont>("mainFont18.ttf",
+				BitmapFont.class, font);
+	}
+
 	public final AssetDescriptor<BitmapFont> MAIN_FONT_19_PATH() {
 		FreeTypeFontLoaderParameter font = new FreeTypeFontLoaderParameter();
 		font.fontFileName = "fonts/AlemdraSC/AlmendraSC-Regular.ttf";
@@ -27,11 +34,27 @@ public class LoadingScreen extends BaseLoadingScreen {
 				BitmapFont.class, font);
 	}
 
+	public final AssetDescriptor<BitmapFont> MAIN_FONT_20_PATH() {
+		FreeTypeFontLoaderParameter font = new FreeTypeFontLoaderParameter();
+		font.fontFileName = "fonts/AlemdraSC/AlmendraSC-Regular.ttf";
+		font.fontParameters.size = 20;
+		return new AssetDescriptor<BitmapFont>("mainFont20.ttf",
+				BitmapFont.class, font);
+	}
+
 	public final AssetDescriptor<BitmapFont> MAIN_FONT_22_PATH() {
 		FreeTypeFontLoaderParameter font = new FreeTypeFontLoaderParameter();
 		font.fontFileName = "fonts/AlemdraSC/AlmendraSC-Regular.ttf";
 		font.fontParameters.size = 22;
 		return new AssetDescriptor<BitmapFont>("mainFont22.ttf",
+				BitmapFont.class, font);
+	}
+
+	public final AssetDescriptor<BitmapFont> TEXT_FONT_20_PATH() {
+		FreeTypeFontLoaderParameter font = new FreeTypeFontLoaderParameter();
+		font.fontFileName = "fonts/jim-nightshade/JimNightshade-Regular.ttf";
+		font.fontParameters.size = 20;
+		return new AssetDescriptor<BitmapFont>("textFont20.ttf",
 				BitmapFont.class, font);
 	}
 
@@ -66,9 +89,12 @@ public class LoadingScreen extends BaseLoadingScreen {
 
 		assetManager.load(ButtonClickListener.class);
 
+		assetManager.load(MAIN_FONT_18_PATH());
 		assetManager.load(MAIN_FONT_19_PATH());
+		assetManager.load(MAIN_FONT_20_PATH());
 		assetManager.load(MAIN_FONT_22_PATH());
 		assetManager.load(TITLE_FONT_24_PATH());
+		assetManager.load(TEXT_FONT_20_PATH());
 		assetManager.load(HANDWRITTEN_FONT_20_PATH());
 
 		if (!game.isInDevEnv())
@@ -81,16 +107,22 @@ public class LoadingScreen extends BaseLoadingScreen {
 
 	@Override
 	protected void onFinishedLoading() {
+		BitmapFont main18Font = assetManager.get(MAIN_FONT_18_PATH());
 		BitmapFont main19Font = assetManager.get(MAIN_FONT_19_PATH());
 		main19Font.getData().markupEnabled = true;
+		BitmapFont main20Font = assetManager.get(MAIN_FONT_20_PATH());
 		BitmapFont main22Font = assetManager.get(MAIN_FONT_22_PATH());
+		BitmapFont text20Font = assetManager.get(TEXT_FONT_20_PATH());
 		BitmapFont title24Font = assetManager.get(TITLE_FONT_24_PATH());
 		BitmapFont handwritten20Font = assetManager
 				.get(HANDWRITTEN_FONT_20_PATH());
 
 		ObjectMap<String, Object> fontMap = new ObjectMap<String, Object>();
+		fontMap.put("main-18", main18Font);
 		fontMap.put("main-19", main19Font);
+		fontMap.put("main-20", main20Font);
 		fontMap.put("main-22", main22Font);
+		fontMap.put("text-20", text20Font);
 		fontMap.put("title-24", title24Font);
 		fontMap.put("handwritten-20", handwritten20Font);
 		assetManager.load(SKIN_PATH, Skin.class,

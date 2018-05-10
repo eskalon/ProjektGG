@@ -80,6 +80,10 @@
 			font: main-19
 			fontColor: white
 		},
+		main-white-18: {
+			font: main-18
+			fontColor: white
+		},
 		dark: {
 			font: main-19
 			fontColor: dark_grey
@@ -103,6 +107,10 @@
 		},
 		handwritten: { 
 			font: handwritten-20
+			fontColor: white
+		},
+		text-white-20: { 
+			font: text-20
 			fontColor: white
 		}
 	},

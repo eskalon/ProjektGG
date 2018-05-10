@@ -19,6 +19,7 @@ import de.gg.game.entity.Player;
 import de.gg.game.type.PositionTypes.PositionType;
 import de.gg.input.ButtonClickListener;
 import de.gg.ui.CharacterComponent;
+import de.gg.ui.OffsetableImageTextButton;
 
 /**
  * This screen is responsible for the votes cast at the beginning of a round.
@@ -38,7 +39,7 @@ public class GameVoteScreen extends BaseGameScreen {
 		localPlayer = game.getClient().getLocalPlayer();
 
 		labelTable = new Table();
-		infoText = new Label("Laden...", skin);
+		infoText = new Label("Laden...", skin, "text-white-20");
 		infoText.setWrap(true);
 
 		optionTable = new Table();
@@ -50,7 +51,7 @@ public class GameVoteScreen extends BaseGameScreen {
 		mainTable.add(labelTable).padBottom(80).top().center().row();
 		buttonTable.add(voterTable).left();
 		buttonTable.add("").expandX();
-		buttonTable.add(optionTable).top().right();
+		buttonTable.add(optionTable).padTop(20).top().right();
 		mainTable.add(buttonTable).top().fill();
 	}
 
@@ -79,8 +80,7 @@ public class GameVoteScreen extends BaseGameScreen {
 					.add(new CharacterComponent(skin,
 							city.getFullCharacterName(s),
 							posT == null ? null : posT.getName(),
-							isLocalPlayer
-									? -1
+							isLocalPlayer ? -1
 									: game.getClient()
 											.getOpinionOfOtherCharacter(s)))
 					.left().padBottom(25).row();
@@ -91,8 +91,8 @@ public class GameVoteScreen extends BaseGameScreen {
 				.contains(localPlayer.getCurrentlyPlayedCharacterId())) {
 			for (VoteOption option : ev.getMatterToVoteOn().getOptions()) {
 
-				ImageTextButton button = new ImageTextButton(option.getText(),
-						skin, "small");
+				ImageTextButton button = new OffsetableImageTextButton(
+						option.getText(), skin, 5);
 				button.addListener(new ButtonClickListener(assetManager,
 						game.getSettings()) {
 					@Override

@@ -127,6 +127,9 @@ public class CharacterBehaviour {
 				session);
 
 		// TODO weitere Modifikatoren mit einbeziehen
+		
+		if (characterId == otherCharacterId)
+			tmp = 150;
 
 		return tmp < 0 ? otherCharacterId : -1;
 	}
@@ -141,8 +144,11 @@ public class CharacterBehaviour {
 
 			tmp += getOpinionOfAnotherCharacter(otherCharacterId, characterId,
 					session);
-
+			
 			// TODO weitere Modifikatoren mit einbeziehen
+
+			if (characterId == otherCharacterId)
+				tmp = 125;
 
 			options.put(vo.getValue(), tmp);
 		}

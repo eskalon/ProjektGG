@@ -7,6 +7,7 @@ import com.google.common.eventbus.Subscribe;
 
 import de.gg.event.RoundEndDataReceivedEvent;
 import de.gg.game.entity.BuildingSlot;
+import de.gg.game.factory.CharacterFactory;
 import de.gg.game.type.BuildingTypes;
 import de.gg.game.type.ItemTypes;
 import de.gg.game.type.PositionTypes;
@@ -31,6 +32,7 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 
 	@Override
 	protected void initAssets() {
+		assetManager.load(CharacterFactory.class);
 		assetManager.load(TestShader.class);
 		assetManager.load(BuildingTypes.class);
 		assetManager.load(PositionTypes.class);
@@ -63,6 +65,7 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 		SocialStatusS.finishLoading(assetManager);
 		ItemTypes.finishLoading(assetManager);
 		ItemTypes.finishLoading(assetManager);
+		CharacterFactory.finishLoading(assetManager);
 
 		// TODO folgendes als Worker, der in eigenen Loading-Screen integriert
 		// ist, umsetzen, sodass sich für den Nutzer sichtbar ein Balken bewegt

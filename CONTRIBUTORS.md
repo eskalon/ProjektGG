@@ -102,3 +102,8 @@ Eine Liste aller Contributor und der genutzten externen Assets:
   Path: fonts/HomemadeApple/\
   Author: Font Diner\
   License: [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+  
+- **Jim Nightshade**\
+  Path: fonts/jim-nightshade/\
+  Author: Brian J. Bonislawsky DBA Astigmatic (AOETI)\
+  License: [OFL 1.1](http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL_web)

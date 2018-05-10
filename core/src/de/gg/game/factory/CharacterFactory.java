@@ -1,6 +1,9 @@
 package de.gg.game.factory;
 
+import java.util.ArrayList;
 import java.util.Random;
+
+import com.google.common.reflect.TypeToken;
 
 import de.gg.game.data.GameDifficulty;
 import de.gg.game.entity.Character;
@@ -9,15 +12,27 @@ import de.gg.game.type.ProfessionTypes.ProfessionType;
 import de.gg.game.type.Religion;
 import de.gg.game.type.SocialStatusS;
 import de.gg.game.type.SocialStatusS.SocialStatus;
+import de.gg.util.JSONParser;
 import de.gg.util.RandomUtils;
+import de.gg.util.asset.Text;
+import net.dermetfan.gdx.assets.AnnotationAssetManager;
+import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 /**
  * This class is responsible for creating the character entities.
  */
 public class CharacterFactory {
 
-	private static final String[] SURNAMES = { "Vorname" };
-	private static final String[] NAMES = { "Nachname" };
+	private static ArrayList<String> SURNAMES;
+	private static ArrayList<String> MALE_NAMES;
+	private static ArrayList<String> FEMALE_NAMES;
+
+	@Asset(Text.class)
+	private static final String SURNAMES_JSON_PATH = "data/misc/surnames.json";
+	@Asset(Text.class)
+	private static final String FEMALE_NAMES_JSON_PATH = "data/misc/female_names.json";
+	@Asset(Text.class)
+	private static final String MALE_NAMES_JSON_PATH = "data/misc/male_names.json";
 
 	private CharacterFactory() {
 	}
@@ -59,15 +74,21 @@ public class CharacterFactory {
 		c.setHp(RandomUtils.getRandomNumber(random, 85, 105));
 		c.setMale(RandomUtils.rollTheDice(random, 2));
 		c.setMarried(!RandomUtils.rollTheDice(random, 3)); // two thirds of the
-		// characters cannot get
-		// married
-		c.setName(NAMES[RandomUtils.getRandomNumber(random, 0,
-				NAMES.length - 1)]);
+		// characters cannot get married
+
+		if (c.isMale()) {
+			c.setName(MALE_NAMES.get(RandomUtils.getRandomNumber(random, 0,
+					MALE_NAMES.size() - 1)));
+		} else {
+			c.setName(FEMALE_NAMES.get(RandomUtils.getRandomNumber(random, 0,
+					FEMALE_NAMES.size() - 1)));
+		}
+
 		c.setReligion(RandomUtils.rollTheDice(random, 2) ? Religion.CATHOLIC
 				: Religion.ORTHODOX);
 		c.setStatus(status);
-		c.setSurname(SURNAMES[RandomUtils.getRandomNumber(random, 0,
-				SURNAMES.length - 1)]);
+		c.setSurname(SURNAMES.get(
+				RandomUtils.getRandomNumber(random, 0, SURNAMES.size() - 1)));
 
 		switch (RandomUtils.getRandomNumber(random, 0, 7)) {
 		case 0:
@@ -126,6 +147,23 @@ public class CharacterFactory {
 		c.setNPCTrait(null);
 
 		return c;
+	}
+
+	public static void finishLoading(AnnotationAssetManager assetManager) {
+		FEMALE_NAMES = JSONParser
+				.parseFromJson(
+						assetManager.get(FEMALE_NAMES_JSON_PATH, Text.class)
+								.getString(),
+						new TypeToken<ArrayList<String>>() {
+						}.getType());
+		MALE_NAMES = JSONParser.parseFromJson(
+				assetManager.get(MALE_NAMES_JSON_PATH, Text.class).getString(),
+				new TypeToken<ArrayList<String>>() {
+				}.getType());
+		SURNAMES = JSONParser.parseFromJson(
+				assetManager.get(SURNAMES_JSON_PATH, Text.class).getString(),
+				new TypeToken<ArrayList<String>>() {
+				}.getType());
 	}
 
 }
