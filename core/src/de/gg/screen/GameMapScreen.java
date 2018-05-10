@@ -107,7 +107,7 @@ public class GameMapScreen extends BaseGameScreen {
 		this.gameInputProcessors.addProcessor(movementInputController);
 
 		GameSpeedInputProcessor gameSpeedInputProcessor = new GameSpeedInputProcessor(
-				game.getClient().getActionHandler());
+				game.getSettings(), game.getClient().getActionHandler());
 		this.gameInputProcessors.addProcessor(gameSpeedInputProcessor);
 	}
 

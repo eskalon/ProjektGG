@@ -18,6 +18,8 @@ public class GameSettings {
 	public static final String LEFT_KEY = "leftKey";
 	public static final String BACKWARD_KEY = "backwardKey";
 	public static final String RIGHT_KEY = "rightKey";
+	public static final String SPEED_UP_KEY = "speedUpKey";
+	public static final String SPEED_DOWN_KEY = "speedDownKey";
 
 	/**
 	 * @param fileName
@@ -88,6 +90,24 @@ public class GameSettings {
 
 	public void setRightKey(int key) {
 		configHandler.setInt(RIGHT_KEY, key);
+	}
+
+	// Speed up key
+	public int getSpeedUpKey() {
+		return configHandler.getInt(SPEED_UP_KEY, Keys.PLUS);
+	}
+
+	public void setSpeedUpKey(int key) {
+		configHandler.setInt(SPEED_UP_KEY, key);
+	}
+
+	// Speed down key
+	public int getSpeedDownKey() {
+		return configHandler.getInt(SPEED_DOWN_KEY, Keys.MINUS);
+	}
+
+	public void setSpeedDownKey(int key) {
+		configHandler.setInt(SPEED_DOWN_KEY, key);
 	}
 
 }

@@ -162,8 +162,6 @@ public class LobbyScreen extends BaseUIScreen {
 						List<LobbyPlayer> tmpPlayers = new ArrayList<>(
 								players.values());
 						tmpPlayers.remove(getLocalPlayer());
-						tmpPlayers.add(new LobbyPlayer(null, null, selectedIcon,
-								true));
 
 						List<PlayerIcon> availableIcons = PlayerUtils
 								.getAvailableIcons(tmpPlayers);

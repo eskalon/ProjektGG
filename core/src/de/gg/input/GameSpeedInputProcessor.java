@@ -1,9 +1,8 @@
 package de.gg.input;
 
-import com.badlogic.gdx.Input.Keys;
-
 import de.gg.network.rmi.ClientActionHandler;
 import de.gg.network.rmi.SlaveActionListener;
+import de.gg.setting.GameSettings;
 
 /**
  * This input processor takes care of relaying the game speed actions to the
@@ -11,12 +10,15 @@ import de.gg.network.rmi.SlaveActionListener;
  */
 public class GameSpeedInputProcessor implements DefaultInputProcessor {
 
-	private int INCREASE_SPEED_KEY = Keys.PLUS;
-	private int DECREASE_SPEED_KEY = Keys.MINUS;
+	private int INCREASE_SPEED_KEY;
+	private int DECREASE_SPEED_KEY;
 	private ClientActionHandler actionHandler;
 
-	public GameSpeedInputProcessor(ClientActionHandler actionHandler) {
+	public GameSpeedInputProcessor(GameSettings settings,
+			ClientActionHandler actionHandler) {
 		this.actionHandler = actionHandler;
+		this.INCREASE_SPEED_KEY = settings.getSpeedUpKey();
+		this.DECREASE_SPEED_KEY = settings.getSpeedDownKey();
 	}
 
 	@Override

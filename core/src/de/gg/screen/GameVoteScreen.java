@@ -26,7 +26,7 @@ import de.gg.ui.CharacterComponent;
 public class GameVoteScreen extends BaseGameScreen {
 
 	private Label infoText;
-	private Table optionTable, voterTable, labelTable;
+	private Table optionTable, voterTable, labelTable, buttonTable;
 	private List<Button> buttons = new ArrayList<>();
 
 	private City city;
@@ -43,12 +43,15 @@ public class GameVoteScreen extends BaseGameScreen {
 
 		optionTable = new Table();
 		voterTable = new Table();
+		buttonTable = new Table();
 
-		labelTable.add(infoText).width(700).padLeft(20).padRight(20);
-		mainTable.add(labelTable).padBottom(30).top().center().row();
-		mainTable.add(voterTable).left();
-		mainTable.add(optionTable).right();
-		stage.setDebugAll(true);
+		buttonTable.setSkin(skin);
+		labelTable.add(infoText).width(700).padLeft(180).padRight(180);
+		mainTable.add(labelTable).padBottom(80).top().center().row();
+		buttonTable.add(voterTable).left();
+		buttonTable.add("").expandX();
+		buttonTable.add(optionTable).top().right();
+		mainTable.add(buttonTable).top().fill();
 	}
 
 	@Subscribe
@@ -64,12 +67,26 @@ public class GameVoteScreen extends BaseGameScreen {
 
 		infoText.setText(ev.getMatterToVoteOn().getInfoText());
 
-		// TODO berechtigte voters anzeigen (voterTable)
-		System.out.println("Zur Wahl berechtigt sind:");
+		// Display the voters
+		voterTable.add(new Label("Stimmberechtigt sind:", skin)).padBottom(30)
+				.row();
 		for (short s : ev.getMatterToVoteOn().getVoters()) {
-			System.out.println("- " + city.getFullCharacterName(s));
+			PositionType posT = city.getCharacter(s).getPosition();
+			boolean isLocalPlayer = s == game.getClient().getLocalPlayer()
+					.getCurrentlyPlayedCharacterId();
+
+			voterTable
+					.add(new CharacterComponent(skin,
+							city.getFullCharacterName(s),
+							posT == null ? null : posT.getName(),
+							isLocalPlayer
+									? -1
+									: game.getClient()
+											.getOpinionOfOtherCharacter(s)))
+					.left().padBottom(25).row();
 		}
 
+		// Display the options (if the player can vote)
 		if (ev.getMatterToVoteOn().getVoters()
 				.contains(localPlayer.getCurrentlyPlayedCharacterId())) {
 			for (VoteOption option : ev.getMatterToVoteOn().getOptions()) {
@@ -89,7 +106,9 @@ public class GameVoteScreen extends BaseGameScreen {
 					}
 				});
 				buttons.add(button);
-				if (option.isCharacter()) {
+				if (option.isCharacter() && option.getValue() != game
+						.getClient().getLocalPlayer()
+						.getCurrentlyPlayedCharacterId()) {
 					PositionType posT = city.getCharacters()
 							.get((short) option.getValue()).getPosition();
 
@@ -100,9 +119,9 @@ public class GameVoteScreen extends BaseGameScreen {
 									posT.getName(),
 									game.getClient().getOpinionOfOtherCharacter(
 											(short) option.getValue())))
-							.right().padBottom(5).row();
+							.right().padBottom(8).row();
 				}
-				optionTable.add(button).right().padBottom(10).row();
+				optionTable.add(button).right().padBottom(15).row();
 			}
 		}
 	}
