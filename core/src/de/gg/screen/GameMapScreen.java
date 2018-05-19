@@ -51,6 +51,7 @@ public class GameMapScreen extends BaseGameScreen {
 
 	private MapMovementInputController movementInputController;
 	private MapSelectionInputController selectionInputController;
+	private GameSpeedInputProcessor gameSpeedInputProcessor;
 	private InputMultiplexer gameInputProcessors;
 
 	private Renderable renderable;
@@ -106,7 +107,7 @@ public class GameMapScreen extends BaseGameScreen {
 				game.getGameCamera(), game.getSettings());
 		this.gameInputProcessors.addProcessor(movementInputController);
 
-		GameSpeedInputProcessor gameSpeedInputProcessor = new GameSpeedInputProcessor(
+		this.gameSpeedInputProcessor = new GameSpeedInputProcessor(
 				game.getSettings(), game.getClient().getActionHandler());
 		this.gameInputProcessors.addProcessor(gameSpeedInputProcessor);
 	}
@@ -308,6 +309,8 @@ public class GameMapScreen extends BaseGameScreen {
 		});
 
 		movementInputController.resetInput();
+		movementInputController.setKeys(game.getSettings());
+		gameSpeedInputProcessor.setKeys(game.getSettings());
 		game.getInputMultiplexer().addProcessor(gameInputProcessors);
 	}
 

@@ -29,7 +29,7 @@ public class SettingsScreen extends BaseUIScreen {
 		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
 
 		// VOLUME
-		Label masterVolume = new Label("Master Volume: ", skin);
+		Label masterVolume = new Label("Gesamt-Lautstärke: ", skin);
 		Slider masterSlider = new Slider(0, 1, 0.05F, false, skin);
 		masterSlider.setValue(game.getSettings().getMasterVolume());
 		masterSlider.addListener(new InputListener() {
@@ -46,7 +46,7 @@ public class SettingsScreen extends BaseUIScreen {
 			}
 		});
 
-		Label effectVolume = new Label("Effect Volume: ", skin);
+		Label effectVolume = new Label("Effekt-Lautstärke: ", skin);
 		Slider effectSlider = new Slider(0, 1, 0.05F, false, skin);
 		effectSlider.setValue(game.getSettings().getEffectVolume());
 		effectSlider.addListener(new InputListener() {
@@ -63,7 +63,7 @@ public class SettingsScreen extends BaseUIScreen {
 			}
 		});
 
-		Label musicVolume = new Label("Music Volume: ", skin);
+		Label musicVolume = new Label("Musik-Lautstärke: ", skin);
 		Slider musicSlider = new Slider(0, 1, 0.05F, false, skin);
 		musicSlider.setValue(game.getSettings().getMusicVolume());
 		musicSlider.addListener(new InputListener() {
@@ -81,7 +81,7 @@ public class SettingsScreen extends BaseUIScreen {
 		});
 
 		// KEYS
-		Label forwardLabel = new Label("Forward: ", skin);
+		Label forwardLabel = new Label("Vorwärts: ", skin);
 		KeySelectionInputField forwardButton = new KeySelectionInputField(
 				Keys.toString(game.getSettings().getForwardKey()), skin, stage,
 				assetManager, game.getSettings(),
@@ -91,7 +91,7 @@ public class SettingsScreen extends BaseUIScreen {
 						game.getSettings().setForwardKey(key);
 					}
 				});
-		Label leftLabel = new Label("Left: ", skin);
+		Label leftLabel = new Label("Links: ", skin);
 		KeySelectionInputField leftButton = new KeySelectionInputField(
 				Keys.toString(game.getSettings().getLeftKey()), skin, stage,
 				assetManager, game.getSettings(),
@@ -101,7 +101,7 @@ public class SettingsScreen extends BaseUIScreen {
 						game.getSettings().setLeftKey(key);
 					}
 				});
-		Label backwardLabel = new Label("Backward: ", skin);
+		Label backwardLabel = new Label("Rückwärts: ", skin);
 		KeySelectionInputField backwardButton = new KeySelectionInputField(
 				Keys.toString(game.getSettings().getBackwardKey()), skin, stage,
 				assetManager, game.getSettings(),
@@ -111,7 +111,7 @@ public class SettingsScreen extends BaseUIScreen {
 						game.getSettings().setBackwardKey(key);
 					}
 				});
-		Label rightLabel = new Label("Right: ", skin);
+		Label rightLabel = new Label("Rechts: ", skin);
 		KeySelectionInputField rightButton = new KeySelectionInputField(
 				Keys.toString(game.getSettings().getRightKey()), skin, stage,
 				assetManager, game.getSettings(),
@@ -119,6 +119,26 @@ public class SettingsScreen extends BaseUIScreen {
 					@Override
 					public void onKeySelection(int key) {
 						game.getSettings().setRightKey(key);
+					}
+				});
+		Label speedUpLabel = new Label("Geschwindigkeit (+): ", skin);
+		KeySelectionInputField speedUpButton = new KeySelectionInputField(
+				Keys.toString(game.getSettings().getSpeedUpKey()), skin, stage,
+				assetManager, game.getSettings(),
+				new KeySelectionEventListener() {
+					@Override
+					public void onKeySelection(int key) {
+						game.getSettings().setSpeedUpKey(key);
+					}
+				});
+		Label speedDownLabel = new Label("Geschwindigkeit (-): ", skin);
+		KeySelectionInputField speedDownButton = new KeySelectionInputField(
+				Keys.toString(game.getSettings().getSpeedDownKey()), skin,
+				stage, assetManager, game.getSettings(),
+				new KeySelectionEventListener() {
+					@Override
+					public void onKeySelection(int key) {
+						game.getSettings().setSpeedDownKey(key);
 					}
 				});
 
@@ -137,31 +157,37 @@ public class SettingsScreen extends BaseUIScreen {
 
 		Table settingsTable = new Table();
 		Table settings2ColTable = new Table();
-		settings2ColTable.padTop(60);
+		settings2ColTable.padTop(20);
 		Table buttonTable = new Table();
 
-		settings2ColTable.add(forwardLabel).padBottom(30);
-		settings2ColTable.add(forwardButton).padBottom(30);
+		settings2ColTable.add(forwardLabel).padBottom(25);
+		settings2ColTable.add(forwardButton).padBottom(25);
 
-		settings2ColTable.add(masterVolume).padBottom(30).padLeft(70);
-		settings2ColTable.add(masterSlider).padBottom(30).row();
+		settings2ColTable.add(masterVolume).padBottom(25).padLeft(70);
+		settings2ColTable.add(masterSlider).padBottom(25).row();
 
-		settings2ColTable.add(leftLabel).padBottom(30);
-		settings2ColTable.add(leftButton).padBottom(30);
+		settings2ColTable.add(leftLabel).padBottom(25);
+		settings2ColTable.add(leftButton).padBottom(25);
 
-		settings2ColTable.add(effectVolume).padBottom(30).padLeft(70);
-		settings2ColTable.add(effectSlider).padBottom(30).row();
+		settings2ColTable.add(effectVolume).padBottom(25).padLeft(70);
+		settings2ColTable.add(effectSlider).padBottom(25).row();
 
-		settings2ColTable.add(backwardLabel).padBottom(30);
-		settings2ColTable.add(backwardButton).padBottom(30);
+		settings2ColTable.add(backwardLabel).padBottom(25);
+		settings2ColTable.add(backwardButton).padBottom(25);
 
-		settings2ColTable.add(musicVolume).padBottom(30).padLeft(70);
-		settings2ColTable.add(musicSlider).padBottom(30).row();
+		settings2ColTable.add(musicVolume).padBottom(25).padLeft(70);
+		settings2ColTable.add(musicSlider).padBottom(25).row();
 
-		settings2ColTable.add(rightLabel).padBottom(30);
-		settings2ColTable.add(rightButton).padBottom(30);
+		settings2ColTable.add(rightLabel).padBottom(50);
+		settings2ColTable.add(rightButton).padBottom(50).row();
 
-		settingsTable.left().top().add(settings2ColTable).padBottom(40).row();
+		settings2ColTable.add(speedUpLabel).padBottom(25);
+		settings2ColTable.add(speedUpButton).padBottom(25).row();
+
+		settings2ColTable.add(speedDownLabel).padBottom(25);
+		settings2ColTable.add(speedDownButton).padBottom(25);
+
+		settingsTable.left().top().add(settings2ColTable).row();
 
 		buttonTable.add(backButton);
 
@@ -169,7 +195,7 @@ public class SettingsScreen extends BaseUIScreen {
 		mTable.setWidth(615);
 		mTable.setHeight(475);
 		mTable.setBackground(skin.getDrawable("parchment2"));
-		mTable.add(settingsTable).width(580).height(405).row();
+		mTable.add(settingsTable).width(580).height(405).padRight(70).row();
 		mTable.add(buttonTable).height(50).bottom();
 
 		mainTable.add(mTable);

@@ -17,6 +17,10 @@ public class GameSpeedInputProcessor implements DefaultInputProcessor {
 	public GameSpeedInputProcessor(GameSettings settings,
 			ClientActionHandler actionHandler) {
 		this.actionHandler = actionHandler;
+		setKeys(settings);
+	}
+	
+	public void setKeys(GameSettings settings) {
 		this.INCREASE_SPEED_KEY = settings.getSpeedUpKey();
 		this.DECREASE_SPEED_KEY = settings.getSpeedDownKey();
 	}
