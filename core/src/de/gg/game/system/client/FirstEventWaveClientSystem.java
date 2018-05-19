@@ -7,12 +7,12 @@ import com.google.common.eventbus.EventBus;
 import de.gg.event.NewNotificationEvent;
 import de.gg.game.data.NotificationData;
 import de.gg.game.entity.Character;
-import de.gg.game.entity.City;
 import de.gg.game.entity.Player;
 import de.gg.game.entity.Position;
 import de.gg.game.system.ProcessingSystem;
 import de.gg.game.type.PositionTypes.PositionType;
 import de.gg.game.type.SocialStatusS;
+import de.gg.game.world.City;
 
 /**
  * This system processes after 60 seconds and takes care of the first wave of

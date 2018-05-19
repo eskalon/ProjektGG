@@ -127,7 +127,7 @@ public class CharacterBehaviour {
 				session);
 
 		// TODO weitere Modifikatoren mit einbeziehen
-		
+
 		if (characterId == otherCharacterId)
 			tmp = 150;
 
@@ -144,7 +144,7 @@ public class CharacterBehaviour {
 
 			tmp += getOpinionOfAnotherCharacter(otherCharacterId, characterId,
 					session);
-			
+
 			// TODO weitere Modifikatoren mit einbeziehen
 
 			if (characterId == otherCharacterId)

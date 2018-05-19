@@ -51,9 +51,13 @@ public class CharacterFactory {
 			SocialStatus status) {
 		Character c = new Character();
 		c.setAge(RandomUtils.getRandomNumber(random, 17, 60));
-		c.setGold(RandomUtils.getRandomNumber(random,
-				status.getFortuneRequirement(),
-				status.getFortuneRequirement() * 2 - 200));
+
+		if (status != SocialStatusS.NON_CITIZEN)
+			c.setGold(RandomUtils.getRandomNumber(random,
+					status.getFortuneRequirement(),
+					status.getFortuneRequirement() * 2 - 200));
+		else
+			c.setGold(RandomUtils.getRandomNumber(random, 135, 735));
 
 		if (status == SocialStatusS.NON_CITIZEN)
 			c.setHighestPositionLevel(
@@ -114,6 +118,32 @@ public class CharacterFactory {
 		}
 
 		return c;
+	}
+
+	/**
+	 * Creates a random non-player character.
+	 * 
+	 * @param random
+	 *            The random generator for this session.
+	 * @return a random non-player character.
+	 * @see #createCharacterWithStatus(Random, SocialStatus)
+	 */
+	public static Character createRandomCharacter(Random random) {
+		SocialStatus status;
+
+		if (RandomUtils.rollTheDice(2)) {
+			status = SocialStatusS.CITIZEN; // 50%
+		} else if (!RandomUtils.rollTheDice(3)) {
+			status = SocialStatusS.PATRICIAN; // 33%
+		} else if (!RandomUtils.rollTheDice(3)) {
+			status = SocialStatusS.CAVALIER; // 11%
+		} else if (!RandomUtils.rollTheDice(4)) {
+			status = SocialStatusS.BARON; // 4%
+		} else {
+			status = SocialStatusS.NON_CITIZEN; // 1%
+		}
+
+		return createCharacterWithStatus(random, status);
 	}
 
 	/**

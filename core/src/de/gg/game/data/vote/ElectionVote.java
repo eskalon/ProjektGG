@@ -3,10 +3,10 @@ package de.gg.game.data.vote;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.gg.game.entity.City;
 import de.gg.game.entity.Position;
 import de.gg.game.type.PositionTypes;
 import de.gg.game.type.PositionTypes.PositionType;
+import de.gg.game.world.City;
 
 public class ElectionVote extends VoteableMatter {
 

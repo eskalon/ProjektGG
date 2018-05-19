@@ -3,8 +3,8 @@ package de.gg.game.system.server;
 import java.util.Random;
 
 import de.gg.game.AuthoritativeSession;
-import de.gg.game.entity.City;
 import de.gg.game.entity.Player;
+import de.gg.game.world.City;
 import de.gg.util.RandomUtils;
 
 /**

@@ -3,10 +3,10 @@ package de.gg.game.data.vote;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.gg.game.entity.City;
 import de.gg.game.entity.Position;
 import de.gg.game.type.PositionTypes;
 import de.gg.game.type.PositionTypes.PositionType;
+import de.gg.game.world.City;
 
 public class ImpeachmentVote extends VoteableMatter {
 
@@ -63,14 +63,14 @@ public class ImpeachmentVote extends VoteableMatter {
 
 	@Override
 	public String getResultText(VoteResults results) {
-		if (results.getOverallResult() == 1)
-			return String.format(
-					"Die Mitglieder des Kabinetts haben %s ihr Misstrauen ausgesprochen. Er wird daher seines Amtes als %s enthoben.",
-					city.getFullCharacterName(currentHolder), type.getName());
-		else
+		if (results.getOverallResult() == -1)
 			return String.format(
 					"Die Abstimmung %s seines Amtes zu entheben ist gescheitert.",
 					city.getFullCharacterName(currentHolder));
+		else
+			return String.format(
+					"Die Mitglieder des Kabinetts haben %s ihr Misstrauen ausgesprochen. Er wird daher seines Amtes als %s enthoben.",
+					city.getFullCharacterName(currentHolder), type.getName());
 	}
 
 	public PositionType getType() {

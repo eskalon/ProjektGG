@@ -15,7 +15,6 @@ import de.gg.game.data.RoundEndData;
 import de.gg.game.data.vote.ImpeachmentVote;
 import de.gg.game.data.vote.VoteResults;
 import de.gg.game.data.vote.VoteableMatter;
-import de.gg.game.entity.Position;
 import de.gg.game.system.ProcessingSystem;
 import de.gg.game.system.client.FirstEventWaveClientSystem;
 import de.gg.game.type.PositionTypes.PositionType;

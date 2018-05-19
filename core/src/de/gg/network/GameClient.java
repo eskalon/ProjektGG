@@ -27,8 +27,8 @@ import de.gg.game.GameSession;
 import de.gg.game.SlaveSession;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.data.NotificationData;
-import de.gg.game.entity.City;
 import de.gg.game.entity.Player;
+import de.gg.game.world.City;
 import de.gg.network.message.ChatMessageSentMessage;
 import de.gg.network.message.GameSetupMessage;
 import de.gg.network.message.PlayerChangedMessage;
@@ -121,11 +121,11 @@ public class GameClient {
 		listener.addTypeHandler(GameSetupMessage.class, (con, msg) -> {
 			if (gameVersion.equals(msg.getServerVersion())) { // right server
 																// version
+				Log.info("Client", "Lobby beigetreten. Netzwerk-ID: %d",
+						localClientId);
 				eventBus.post(new ConnectionEstablishedEvent(msg.getPlayers(),
 						msg.getId(), msg.getSettings()));
 				localClientId = msg.getId();
-				Log.info("Client", "Verbindung hergestellt. Netzwerk ID: %d",
-						localClientId);
 			} else { // wrong server version
 				eventBus.post(
 						new ConnectionFailedEvent(new ServerRejectionMessage() {
@@ -181,7 +181,7 @@ public class GameClient {
 			public void run() {
 				try {
 					client.connect(6000, ip, port);
-					Log.info("Client", "Lobby beigetreten");
+					Log.info("Client", "Verbindung zum Server hergestellt");
 					// Das Event hierfür wird beim Empfangen des Game Setups
 					// gepostet
 				} catch (IOException e) {

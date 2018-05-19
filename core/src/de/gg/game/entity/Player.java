@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.gg.game.type.PlayerIcon;
 import de.gg.game.type.PlayerTasks.PlayerTask;
+import de.gg.game.world.City;
 
 public class Player {
 

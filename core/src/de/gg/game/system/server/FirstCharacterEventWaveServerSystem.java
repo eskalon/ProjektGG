@@ -4,8 +4,8 @@ import java.util.Random;
 
 import de.gg.game.AuthoritativeSession;
 import de.gg.game.entity.Character;
-import de.gg.game.entity.City;
 import de.gg.game.entity.Player;
+import de.gg.game.world.City;
 
 /**
  * This system processes after 60 seconds and takes care of the first wave of

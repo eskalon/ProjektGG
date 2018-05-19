@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.Disposable;
 
 import de.gg.game.entity.Building;
 import de.gg.game.entity.BuildingSlot;
-import de.gg.game.entity.City;
+import de.gg.game.world.City;
 
 /**
  * This class is responsible for rendering the city.

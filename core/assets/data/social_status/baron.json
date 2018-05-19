@@ -1,6 +1,6 @@
 {
 	"name": "Freiherr",
-	"fortuneRequirement": 100,
+	"fortuneRequirement": 15000,
 	"positionLevelRequirement": 7,
 	"isTitle": true,
 	"level": 4

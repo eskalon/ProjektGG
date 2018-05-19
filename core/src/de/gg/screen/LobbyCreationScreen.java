@@ -91,6 +91,7 @@ public class LobbyCreationScreen extends BaseUIScreen {
 									game.getVersion(), true);
 							GameSessionSetup sessionSetup = new GameSessionSetup(
 									difficulty, 0, System.currentTimeMillis());
+							Log.info("Server", "Server wird gestartet...");
 							game.setServer(new GameServer(serverSetup,
 									sessionSetup, new IHostCallback() {
 										@Override
@@ -115,7 +116,6 @@ public class LobbyCreationScreen extends BaseUIScreen {
 									"Starten...", skin);
 							connectingDialog.text("Server startet...");
 							connectingDialog.show(stage);
-							Log.info("Server", "Server startet");
 						} else {
 							AnimationlessDialog dialog = new AnimationlessDialog(
 									"Felder unausgefüllt", skin);

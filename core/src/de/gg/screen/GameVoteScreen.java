@@ -14,9 +14,9 @@ import com.google.common.eventbus.Subscribe;
 import de.gg.event.NewVoteEvent;
 import de.gg.event.VoteFinishedEvent;
 import de.gg.game.data.vote.VoteOption;
-import de.gg.game.entity.City;
 import de.gg.game.entity.Player;
 import de.gg.game.type.PositionTypes.PositionType;
+import de.gg.game.world.City;
 import de.gg.input.ButtonClickListener;
 import de.gg.ui.CharacterComponent;
 import de.gg.ui.OffsetableImageTextButton;
@@ -47,7 +47,8 @@ public class GameVoteScreen extends BaseGameScreen {
 		buttonTable = new Table();
 
 		buttonTable.setSkin(skin);
-		labelTable.add(infoText).width(700).padLeft(180).padRight(180);
+		mainTable.padTop(-250);
+		labelTable.add(infoText).center().width(700).padLeft(180).padRight(180);
 		mainTable.add(labelTable).padBottom(80).top().center().row();
 		buttonTable.add(voterTable).left();
 		buttonTable.add("").expandX();

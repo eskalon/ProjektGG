@@ -109,10 +109,6 @@ public class AuthoritativeSession extends GameSession
 		this.characterSystems.add(s);
 	}
 
-	public void saveGame() {
-		// TODO save the game
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -138,7 +134,10 @@ public class AuthoritativeSession extends GameSession
 		// Process the last round
 		super.processRoundEnd(data);
 
-		// Save the stats
+		// Save automatically on the round end
+		saveGame();
+
+		// Save the statistics
 		saveStats();
 	}
 
@@ -231,6 +230,10 @@ public class AuthoritativeSession extends GameSession
 
 	public void saveStats() {
 		// TODO generate & save stats
+	}
+
+	public void saveGame() {
+		// TODO save the game
 	}
 
 	@Override
