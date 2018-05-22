@@ -8,7 +8,10 @@ import de.gg.setting.GameSettings;
  * This input processor takes care of relaying the game speed actions to the
  * {@link SlaveActionListener}.
  */
-public class GameSpeedInputProcessor implements DefaultInputProcessor {
+public class GameSpeedInputProcessor
+		implements
+			DefaultInputProcessor,
+			SettableKeysProcessor {
 
 	private int INCREASE_SPEED_KEY;
 	private int DECREASE_SPEED_KEY;
@@ -17,10 +20,11 @@ public class GameSpeedInputProcessor implements DefaultInputProcessor {
 	public GameSpeedInputProcessor(GameSettings settings,
 			ClientActionHandler actionHandler) {
 		this.actionHandler = actionHandler;
-		setKeys(settings);
+		loadKeybinds(settings);
 	}
-	
-	public void setKeys(GameSettings settings) {
+
+	@Override
+	public void loadKeybinds(GameSettings settings) {
 		this.INCREASE_SPEED_KEY = settings.getSpeedUpKey();
 		this.DECREASE_SPEED_KEY = settings.getSpeedDownKey();
 	}

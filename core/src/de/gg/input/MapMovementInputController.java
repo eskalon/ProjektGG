@@ -10,7 +10,10 @@ import de.gg.setting.GameSettings;
 /**
  * @see CameraInputController The libgdx class this is based on.
  */
-public class MapMovementInputController implements DefaultInputProcessor {
+public class MapMovementInputController
+		implements
+			DefaultInputProcessor,
+			SettableKeysProcessor {
 
 	public CameraWrapper camera;
 
@@ -38,10 +41,13 @@ public class MapMovementInputController implements DefaultInputProcessor {
 			final GameSettings settings) {
 		this.camera = camera;
 
-		setKeys(settings);
+		loadKeybinds(settings);
 	}
 
-	public void setKeys(GameSettings settings) {
+	@Override
+	public void loadKeybinds(GameSettings settings) {
+		resetInput();
+		
 		this.forwardKey = settings.getForwardKey();
 		this.backwardKey = settings.getBackwardKey();
 		this.rightKey = settings.getRightKey();
@@ -69,7 +75,7 @@ public class MapMovementInputController implements DefaultInputProcessor {
 		}
 	}
 
-	public void resetInput() {
+	private void resetInput() {
 		rightPressed = false;
 		leftPressed = false;
 		forwardPressed = false;
@@ -147,4 +153,5 @@ public class MapMovementInputController implements DefaultInputProcessor {
 			leftPressed = false;
 		return false;
 	}
+
 }

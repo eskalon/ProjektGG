@@ -1,9 +1,12 @@
 package de.gg.screen;
 
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.utils.Array;
 
 import de.gg.core.ProjektGG;
+import de.gg.input.SettableKeysProcessor;
 import net.dermetfan.gdx.assets.AnnotationAssetManager;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
@@ -27,6 +30,14 @@ public abstract class BaseScreen implements Screen {
 	protected Color backgroundColor = Color.BLACK;
 	protected ProjektGG game;
 	protected AnnotationAssetManager assetManager;
+	/**
+	 * Input processors added to this list get automatically registered when the
+	 * screen is {@linkplain #show() shown} and unregistered when the screen is
+	 * {@linkplain #hide() hidden}.
+	 * 
+	 * @see #addInputProcessor(InputProcessor)
+	 */
+	private Array<InputProcessor> inputProcessors = new Array<>(4);
 	/**
 	 * Indicates whether the assets already got loaded.
 	 */
@@ -72,6 +83,12 @@ public abstract class BaseScreen implements Screen {
 	@Override
 	public void show() {
 		game.getEventBus().register(this);
+		game.getInputMultiplexer().setProcessors(new Array<>(inputProcessors));
+
+		for (InputProcessor p : inputProcessors) {
+			if (p instanceof SettableKeysProcessor)
+				((SettableKeysProcessor) p).loadKeybinds(game.getSettings());
+		}
 	}
 
 	/**
@@ -80,6 +97,7 @@ public abstract class BaseScreen implements Screen {
 	@Override
 	public void hide() {
 		game.getEventBus().unregister(this);
+		game.getInputMultiplexer().removeInputProcessors(inputProcessors);
 	}
 
 	@Override
@@ -95,6 +113,19 @@ public abstract class BaseScreen implements Screen {
 	@Override
 	public void resize(int width, int height) {
 		// isn't needed as the game can't be resized
+	}
+
+	/**
+	 * Adds an input processors that is automatically registered and
+	 * unregistered with the screen. If the processor implements
+	 * {@link SettableKeysProcessor} the key binds are set automatically as
+	 * well.
+	 * 
+	 * @param processor
+	 *            The processor to add.
+	 */
+	protected void addInputProcessor(InputProcessor processor) {
+		inputProcessors.add(processor);
 	}
 
 }

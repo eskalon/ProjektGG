@@ -99,20 +99,6 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 		game.pushScreen("roundEnd");
 	}
 
-	@Override
-	public void show() {
-		super.show();
-
-		game.getEventBus().register(this);
-	}
-
-	@Override
-	public void hide() {
-		super.hide();
-
-		game.getEventBus().unregister(this);
-	}
-
 	@Subscribe
 	public void onRoundEndDataArrived(RoundEndDataReceivedEvent event) {
 		((GameRoundendScreen) game.getScreen("roundEnd"))

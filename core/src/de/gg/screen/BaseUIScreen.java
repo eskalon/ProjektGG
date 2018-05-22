@@ -19,11 +19,13 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 public abstract class BaseUIScreen extends BaseScreen {
 
 	/**
-	 * Contains a {@linkplain #mainTable table} by default.
+	 * Contains a {@linkplain #mainTable table} by default. The stage is cleared
+	 * whenever the screen is {@linkplain #show() shown}.
 	 */
 	protected Stage stage;
 	/**
-	 * The main table, to which all {@link Actor}s will be added.
+	 * The main table, to which all {@link Actor}s will be added. The mainTable
+	 * is recreated whenever the screen is {@linkplain #show() shown}.
 	 */
 	protected Table mainTable;
 	/**
@@ -40,6 +42,8 @@ public abstract class BaseUIScreen extends BaseScreen {
 	@Override
 	protected void onInit() {
 		skin = game.getUISkin();
+		stage = new Stage(new ScreenViewport(), game.getSpriteBatch());
+		addInputProcessor(stage);
 	}
 
 	/**
@@ -76,22 +80,17 @@ public abstract class BaseUIScreen extends BaseScreen {
 	@Override
 	public void show() {
 		super.show();
-		stage = new Stage(new ScreenViewport(), game.getSpriteBatch());
+		stage.clear();
 		mainTable = new Table();
 		stage.addActor(mainTable);
 		mainTable.setFillParent(true);
 
 		mainTable.setDebug((boolean) game.showDebugStuff());
 
-		game.getInputMultiplexer().addProcessor(stage);
-
 		initUI();
-	}
 
-	@Override
-	public void hide() {
-		super.hide();
-		game.getInputMultiplexer().removeInputProcessors();
+		stage.mouseMoved(1, 1); // verhindert einen kleinen Anzeige-Bug bei
+								// erneuten Anzeigen eines Screens
 	}
 
 	@Override
