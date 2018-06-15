@@ -4,7 +4,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 
 import de.gg.game.entity.Building;
 import de.gg.game.type.BuildingTypes;
-import de.gg.game.type.PositionTypes;
+import de.gg.game.type.SocialStatusS;
+import de.gg.game.world.City;
 import de.gg.input.BackInputProcessor;
 import de.gg.input.ButtonClickListener;
 
@@ -29,32 +30,37 @@ public class GameInHouseScreen extends BaseGameScreen {
 
 	@Override
 	protected void initUI() {
-		Building b = game.getClient().getCity()
-				.getBuildingSlots()[selectedHouseId].getBuilding();
+		short playerCharId = game.getClient().getLocalPlayer()
+				.getCurrentlyPlayedCharacterId();
+		City city = game.getClient().getCity();
+		Building b = city.getBuildingSlots()[selectedHouseId].getBuilding();
 
-		// TOWNHALL
 		if (b.getType() == BuildingTypes.TOWN_HALL) {
-			// TODO UI-Komponenten für Rathaus-Test hinzufügen (Heiraten nach
-			// Verlobung, Bürger-Status kaufen)
+			// TOWNHALL
+			// Buy citizenship
+			if (city.getCharacter(playerCharId)
+					.getStatus() == SocialStatusS.NON_CITIZEN) {
+				if (game.getClient().getLocalPlayer()
+						.getFortune(city) >= SocialStatusS.NON_CITIZEN
+								.getFortuneRequirement()) {
+					ImageTextButton applyForCitizenshipButton = new ImageTextButton(
+							"Bürgerrecht erwerben", skin, "small");
+					applyForCitizenshipButton
+							.addListener(new ButtonClickListener(assetManager,
+									game.getSettings()) {
+								@Override
+								protected void onClick() {
+									// TODO Server informieren!
+									// TODO Bei Server-Antwort (?): Popup
+								}
+							});
 
-			ImageTextButton applyButton = new ImageTextButton("Standesamt",
-					skin, "small");
-
-			ImageTextButton kickButton = new ImageTextButton(
-					"[Test] Bürgermeister herauswerfen", skin, "small");
-			kickButton.addListener(
-					new ButtonClickListener(assetManager, game.getSettings()) {
-						@Override
-						protected void onClick() {
-							game.getClient().getActionHandler()
-									.arrangeImpeachmentVote(game.getClient()
-											.getCity()
-											.getPosition(PositionTypes.MAYOR)
-											.getCurrentHolder());
-						}
-					});
-
-			mainTable.add(kickButton);
+					mainTable.add(applyForCitizenshipButton);
+				}
+			}
+		} else if (b.getType().isProductionBuilding()) {
+			// PRODUCTION BUILDING
+			// TODO
 		}
 	}
 

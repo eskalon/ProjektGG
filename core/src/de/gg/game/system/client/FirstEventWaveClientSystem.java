@@ -63,7 +63,10 @@ public class FirstEventWaveClientSystem extends ProcessingSystem<Player> {
 			}
 
 			if (c.getStatus() == SocialStatusS.NON_CITIZEN) {
-				// TODO inform about possibility to buy citizen status
+				if (p.getFortune(city) >= SocialStatusS.NON_CITIZEN
+						.getFortuneRequirement()) {
+					// TODO inform about possibility to buy citizen status
+				}
 			}
 		}
 	}

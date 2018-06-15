@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.google.common.eventbus.Subscribe;
@@ -23,6 +24,10 @@ import de.gg.event.FullHourEvent;
 import de.gg.event.HouseEnterEvent;
 import de.gg.event.HouseSelectionEvent;
 import de.gg.event.NewNotificationEvent;
+import de.gg.game.entity.Position;
+import de.gg.game.type.PositionTypes;
+import de.gg.game.world.City;
+import de.gg.input.ButtonClickListener;
 import de.gg.input.GameSpeedInputProcessor;
 import de.gg.input.MapMovementInputController;
 import de.gg.input.MapSelectionInputController;
@@ -108,8 +113,103 @@ public class GameMapScreen extends BaseGameScreen {
 
 	@Override
 	protected void initUI() {
+		short playerCharId = game.getClient().getLocalPlayer()
+				.getCurrentlyPlayedCharacterId();
+		City city = game.getClient().getCity();
+
+		// CHARACTER DIALOG
+		AnimationlessDialog characterMenuDialog = new AnimationlessDialog(
+				"Spielerkonfiguration", skin, "window");
+		ImageTextButton closeCharacterMenuButton = new ImageTextButton(
+				"Schließen", skin, "small");
+		closeCharacterMenuButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						characterMenuDialog.hide();
+					}
+				});
+
+		Table characterMenuTable = new Table();
+		Table changeableCharacterMenuTable = new Table();
+		ImageTextButton characterMenuTab1Button = new ImageTextButton(
+				"Charakter", skin, "small");
+		ImageTextButton characterMenuTab2Button = new ImageTextButton(
+				"Privilegien", skin, "small");
+		characterMenuTab1Button.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						// CHARACTER & FAMILY
+						changeableCharacterMenuTable.clear();
+						changeableCharacterMenuTable
+								.add(new Label("Name: XYZ, etc.", skin, "dark"))
+								.padBottom(50).row();
+						changeableCharacterMenuTable
+								.add(new Label("Familie", skin, "dark")).row();
+						changeableCharacterMenuTable.add(new Label(
+								"Lebenspartner suchen...", skin, "dark"));
+					}
+				});
+		characterMenuTab2Button.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						// PRIVILEGES
+						changeableCharacterMenuTable.clear();
+						changeableCharacterMenuTable.add(
+								new Label("Privilegien-Liste", skin, "dark"))
+								.row();
+
+						if (city.getCharacter(playerCharId)
+								.getPosition() != null) {
+							// TODO Amts-Privilegien
+
+							// TODO Abwahlen
+							ImageTextButton kickButton = new ImageTextButton(
+									"[Test] Bürgermeister herauswerfen", skin,
+									"small");
+							kickButton.addListener(new ButtonClickListener(
+									assetManager, game.getSettings()) {
+								@Override
+								protected void onClick() {
+									short mayor = city
+											.getPosition(PositionTypes.MAYOR)
+											.getCurrentHolder();
+
+									if (mayor != -1)
+										game.getClient().getActionHandler()
+												.arrangeImpeachmentVote(mayor);
+								}
+							});
+							changeableCharacterMenuTable.add(kickButton);
+						}
+					}
+				});
+
+		Table characterMenuTabTable = new Table();
+		characterMenuTabTable.add(characterMenuTab1Button).padRight(5);
+		characterMenuTabTable.add(characterMenuTab2Button);
+
+		characterMenuTable.add(characterMenuTabTable).padRight(30).padBottom(15)
+				.center().top().row();
+		characterMenuTable.add(changeableCharacterMenuTable).padBottom(15).top()
+				.height(315).row();
+		characterMenuTable.add(closeCharacterMenuButton).padRight(30).center()
+				.top();
+
+		characterMenuDialog.add(characterMenuTable).pad(30);
+
 		// PLAYER ICON
 		ImageButton iconButton = new ImageButton(skin, "icon_1");
+		iconButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						characterMenuDialog.show(stage);
+						characterMenuDialog.setPosition(0, 103);
+					}
+				});
 		Table iconTable = new Table();
 		iconTable.setBackground(skin.getDrawable("icon_background"));
 		iconTable.add(iconButton).padLeft(8).padRight(10).padBottom(1);
