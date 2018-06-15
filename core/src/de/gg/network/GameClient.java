@@ -257,18 +257,16 @@ public class GameClient {
 		sendObject(new ChatMessageSentMessage(localClientId, message));
 	}
 
-	/**
-	 * Creates a new notification.
-	 * 
-	 * @param title
-	 * @param text
-	 * @param icon
-	 */
 	@Subscribe
 	public void onNotificationCreation(NewNotificationEvent ev) {
 		notifications.add(ev.getData());
 	}
 
+	/**
+	 * @return A list of all notifications for this client.
+	 * @see NewNotificationEvent The event with which new notifications get
+	 *      added.
+	 */
 	public List<NotificationData> getNotifications() {
 		return notifications;
 	}

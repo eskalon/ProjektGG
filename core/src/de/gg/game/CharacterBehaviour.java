@@ -122,14 +122,15 @@ public class CharacterBehaviour {
 			ImpeachmentVote matter, GameSession session) {
 		int tmp = -20;
 		short otherCharacterId = matter.getPos().getCurrentHolder();
-
-		tmp += getOpinionOfAnotherCharacter(otherCharacterId, characterId,
-				session);
+		
+		if (characterId == otherCharacterId) {
+			tmp = 150;
+		} else {
+			tmp += getOpinionOfAnotherCharacter(otherCharacterId, characterId,
+					session);
+		}
 
 		// TODO weitere Modifikatoren mit einbeziehen
-
-		if (characterId == otherCharacterId)
-			tmp = 150;
 
 		return tmp < 0 ? otherCharacterId : -1;
 	}

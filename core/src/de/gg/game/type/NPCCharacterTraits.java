@@ -8,15 +8,16 @@ import com.badlogic.gdx.assets.AssetManager;
 public class NPCCharacterTraits {
 
 	/**
-	 * Values his own benefit higher than the average citizen.
+	 * Values his own benefit higher than the one of others.
 	 */
 	public static CharacterTrait AMBITIOUS;
 	/**
-	 * The default trait.
+	 * The default trait for npcs.
 	 */
 	public static CharacterTrait EVEN_TEMPERED;
 	/**
-	 * Tries to do the right thing. Bribes aren't as effective.
+	 * A character with this trait tries to do the right thing. Bribes aren't as
+	 * effective.
 	 */
 	public static CharacterTrait RIGHTEOUS;
 	/**

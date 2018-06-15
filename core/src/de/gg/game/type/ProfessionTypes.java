@@ -13,15 +13,18 @@ import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 public class ProfessionTypes {
 
 	public static ProfessionType SMITH;
+	public static ProfessionType TEACHER;
 	private static List<ProfessionType> VALUES;
 
 	@Asset(Text.class)
 	private static final String SMITH_JSON_PATH = "data/professions/smith.json";
+	@Asset(Text.class)
+	private static final String TEACHER_JSON_PATH = "data/professions/teacher.json";
 
 	private ProfessionTypes() {
 		// shouldn't get instantiated
 	}
-	
+
 	public static List<ProfessionType> getValues() {
 		return VALUES;
 	}
@@ -33,6 +36,11 @@ public class ProfessionTypes {
 				assetManager.get(SMITH_JSON_PATH, Text.class).getString(),
 				ProfessionType.class);
 		VALUES.add(SMITH);
+
+		TEACHER = JSONParser.parseFromJson(
+				assetManager.get(TEACHER_JSON_PATH, Text.class).getString(),
+				ProfessionType.class);
+		VALUES.add(TEACHER);
 	}
 
 	public static ProfessionType getByIndex(int index) {

@@ -8,6 +8,7 @@ import com.google.common.reflect.TypeToken;
 import de.gg.game.data.GameDifficulty;
 import de.gg.game.entity.Character;
 import de.gg.game.type.NPCCharacterTraits;
+import de.gg.game.type.PositionTypes.PositionType;
 import de.gg.game.type.ProfessionTypes.ProfessionType;
 import de.gg.game.type.Religion;
 import de.gg.game.type.SocialStatusS;
@@ -144,6 +145,56 @@ public class CharacterFactory {
 		}
 
 		return createCharacterWithStatus(random, status);
+	}
+
+	public static Character createCharacterForPosition(Random random,
+			PositionType posType) {
+		SocialStatus status;
+
+		switch (posType.getLevel()) {
+		default:
+		case 1:
+		case 2: {
+			status = SocialStatusS.CITIZEN;
+			break;
+		}
+		case 3: {
+			status = RandomUtils.rollTheDice(random, 3)
+					? SocialStatusS.PATRICIAN
+					: SocialStatusS.CITIZEN;
+			break;
+		}
+		case 4:
+		case 5: {
+			status = SocialStatusS.PATRICIAN;
+			break;
+		}
+		case 6: {
+			status = RandomUtils.rollTheDice(random, 2)
+					? SocialStatusS.PATRICIAN
+					: SocialStatusS.CAVALIER;
+			break;
+		}
+		case 7: {
+			status = SocialStatusS.CAVALIER;
+			break;
+		}
+		case 8: {
+			status = RandomUtils.rollTheDice(random, 3) ? SocialStatusS.CAVALIER
+					: SocialStatusS.BARON;
+			break;
+		}
+		case 9: {
+			status = SocialStatusS.BARON;
+			break;
+		}
+		}
+
+		Character c = createCharacterWithStatus(random, status);
+		c.setHighestPositionLevel(posType.getLevel());
+		c.setPosition(posType);
+
+		return c;
 	}
 
 	/**

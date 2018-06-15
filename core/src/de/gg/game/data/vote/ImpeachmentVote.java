@@ -31,9 +31,12 @@ public class ImpeachmentVote extends VoteableMatter {
 	@Override
 	public String getInfoText() {
 		return String.format(
-				"%s hat seine Unzufriedenheit über %s %s deutlich gemacht und hat eine Abstimmung anberaumt, diesen seines Amtes zu entheben.",
-				city.getFullCharacterName(voteCaller), type.getName(),
-				city.getFullCharacterName(currentHolder));
+				"%s hat %s Unzufriedenheit über %s %s deutlich gemacht und hat eine Abstimmung anberaumt, %s Amtes zu entheben.",
+				city.getFullCharacterName(voteCaller),
+				(city.getCharacter(voteCaller).isMale() ? "seine" : "ihre"),
+				type.getName(), city.getFullCharacterName(currentHolder),
+				(city.getCharacter(currentHolder).isMale() ? "diesen seines"
+						: "diese ihres"));
 	}
 
 	@Override
@@ -65,12 +68,18 @@ public class ImpeachmentVote extends VoteableMatter {
 	public String getResultText(VoteResults results) {
 		if (results.getOverallResult() == -1)
 			return String.format(
-					"Die Abstimmung %s seines Amtes zu entheben ist gescheitert.",
-					city.getFullCharacterName(currentHolder));
+					"Die Abstimmung %s %s Amtes zu entheben ist gescheitert.",
+					city.getFullCharacterName(currentHolder),
+					(city.getCharacter(currentHolder).isMale() ? "seines"
+							: "ihres"));
 		else
 			return String.format(
-					"Die Mitglieder des Kabinetts haben %s ihr Misstrauen ausgesprochen. Er wird daher seines Amtes als %s enthoben.",
-					city.getFullCharacterName(currentHolder), type.getName());
+					"Die Mitglieder des Kabinetts haben %s ihr Misstrauen ausgesprochen. %s wird daher %s Amtes als %s enthoben.",
+					city.getFullCharacterName(currentHolder),
+					(city.getCharacter(currentHolder).isMale() ? "Er" : "Sie"),
+					(city.getCharacter(currentHolder).isMale() ? "seines"
+							: "ihres"),
+					type.getName());
 	}
 
 	public PositionType getType() {

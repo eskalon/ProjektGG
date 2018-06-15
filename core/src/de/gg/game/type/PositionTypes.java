@@ -38,6 +38,10 @@ public class PositionTypes {
 		VALUES.add(COUNCILMAN_1);
 	}
 
+	public static List<PositionType> getValues() {
+		return VALUES;
+	}
+
 	public static PositionType getByIndex(int index) {
 		if (index == -1 || index > VALUES.size() - 1)
 			return null;

@@ -1,9 +1,11 @@
 package de.gg.event;
 
 import de.gg.game.data.NotificationData;
+import de.gg.network.GameClient;
 
 /**
- * Is posted when a new notification is thrown.
+ * Is posted to create a new notification.
+ * @see GameClient#onNotificationCreation(NewNotificationEvent)
  */
 public class NewNotificationEvent {
 

@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 
 import de.gg.game.entity.Building;
 import de.gg.game.type.BuildingTypes;
+import de.gg.game.type.PositionTypes;
 import de.gg.input.BackInputProcessor;
 import de.gg.input.ButtonClickListener;
 
@@ -46,7 +47,10 @@ public class GameInHouseScreen extends BaseGameScreen {
 						@Override
 						protected void onClick() {
 							game.getClient().getActionHandler()
-									.arrangeImpeachmentVote((short) 1);
+									.arrangeImpeachmentVote(game.getClient()
+											.getCity()
+											.getPosition(PositionTypes.MAYOR)
+											.getCurrentHolder());
 						}
 					});
 
