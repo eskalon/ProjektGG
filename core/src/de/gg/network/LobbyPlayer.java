@@ -1,6 +1,7 @@
 package de.gg.network;
 
 import de.gg.game.type.PlayerIcon;
+import de.gg.game.type.ProfessionTypes.ProfessionType;
 import de.gg.game.type.Religion;
 
 /**
@@ -13,11 +14,12 @@ public class LobbyPlayer {
 	}
 
 	public LobbyPlayer(String name, String surname, PlayerIcon icon,
-			boolean male) {
+			ProfessionType profession, boolean male) {
 		this.name = name;
 		this.surname = surname;
 		this.male = male;
 		this.icon = icon;
+		this.profession = profession;
 		this.ready = false;
 	}
 
@@ -29,6 +31,7 @@ public class LobbyPlayer {
 	private boolean male;
 	private boolean ready;
 	private Religion religion = Religion.values()[0];
+	private ProfessionType profession;
 
 	public String getSurname() {
 		return surname;
@@ -87,6 +90,14 @@ public class LobbyPlayer {
 
 	public void setReligion(Religion religion) {
 		this.religion = religion;
+	}
+
+	public ProfessionType getProfessionType() {
+		return profession;
+	}
+
+	public void setProfessionType(ProfessionType profession) {
+		this.profession = profession;
 	}
 
 }

@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ObjectMap;
 
 import de.gg.game.type.GameMaps;
+import de.gg.game.type.ProfessionTypes;
 import de.gg.input.ButtonClickListener;
 import de.gg.util.PlayerUtils;
 
@@ -86,6 +87,7 @@ public class LoadingScreen extends BaseLoadingScreen {
 		// Add assets to loading queue
 		assetManager.load(PlayerUtils.class);
 		assetManager.load(GameMaps.class);
+		assetManager.load(ProfessionTypes.class);
 
 		assetManager.load(ButtonClickListener.class);
 
@@ -138,6 +140,7 @@ public class LoadingScreen extends BaseLoadingScreen {
 
 		PlayerUtils.finishLoading(assetManager);
 		GameMaps.finishLoading(assetManager);
+		ProfessionTypes.finishLoading(assetManager);
 
 		// Notify loaded screens
 		game.getScreen("mainMenu").finishLoading();

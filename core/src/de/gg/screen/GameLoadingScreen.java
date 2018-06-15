@@ -36,7 +36,6 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 		assetManager.load(TestShader.class);
 		assetManager.load(BuildingTypes.class);
 		assetManager.load(PositionTypes.class);
-		assetManager.load(ProfessionTypes.class);
 		assetManager.load(SocialStatusS.class);
 		assetManager.load(ItemTypes.class);
 		assetManager.load(ItemTypes.class);
@@ -61,7 +60,6 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 		game.getScreen("vote").finishLoading();
 		BuildingTypes.finishLoading(assetManager);
 		PositionTypes.finishLoading(assetManager);
-		ProfessionTypes.finishLoading(assetManager);
 		SocialStatusS.finishLoading(assetManager);
 		ItemTypes.finishLoading(assetManager);
 		ItemTypes.finishLoading(assetManager);

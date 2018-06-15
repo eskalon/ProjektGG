@@ -12,6 +12,8 @@ import de.gg.game.data.RoundEndData;
 import de.gg.game.data.vote.VoteResults;
 import de.gg.game.type.PlayerIcon;
 import de.gg.game.type.PositionTypes.PositionType;
+import de.gg.game.type.ProfessionTypes.ProfessionType;
+import de.gg.game.type.Religion;
 import de.gg.network.message.ChatMessageSentMessage;
 import de.gg.network.message.GameSetupMessage;
 import de.gg.network.message.PlayerChangedMessage;
@@ -48,7 +50,8 @@ public class NetworkRegisterer {
 		// Lobby (Player) Stuff
 		kryo.register(LobbyPlayer.class);
 		kryo.register(PlayerIcon.class);
-		kryo.register(de.gg.game.type.Religion.class);
+		kryo.register(Religion.class);
+		kryo.register(ProfessionType.class);
 
 		// Map Stuff
 		kryo.register(GameDifficulty.class);

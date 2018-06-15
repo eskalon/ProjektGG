@@ -21,6 +21,10 @@ public class ProfessionTypes {
 	private ProfessionTypes() {
 		// shouldn't get instantiated
 	}
+	
+	public static List<ProfessionType> getValues() {
+		return VALUES;
+	}
 
 	public static void finishLoading(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
@@ -37,7 +41,7 @@ public class ProfessionTypes {
 		return VALUES.get(index);
 	}
 
-	public class ProfessionType {
+	public static class ProfessionType {
 
 		private String nameLevel1;
 		private String nameLevel2;

@@ -30,6 +30,8 @@ public class City {
 	HashMap<Short, Character> characters = new HashMap<>();
 	HashMap<Short, Player> players = new HashMap<>();
 	List<Short> prisonPopulation = new ArrayList<>();
+	
+	short characterIndex = 1; 
 
 	HashMap<PositionType, Position> positions = new HashMap<>();
 	/**

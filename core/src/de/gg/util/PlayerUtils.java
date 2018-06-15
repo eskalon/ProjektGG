@@ -7,6 +7,8 @@ import java.util.List;
 import com.google.common.reflect.TypeToken;
 
 import de.gg.game.type.PlayerIcon;
+import de.gg.game.type.ProfessionTypes;
+import de.gg.game.type.ProfessionTypes.ProfessionType;
 import de.gg.network.LobbyPlayer;
 import de.gg.util.asset.Text;
 import net.dermetfan.gdx.assets.AnnotationAssetManager;
@@ -44,6 +46,30 @@ public class PlayerUtils {
 
 			if (!taken)
 				tmp.add(i);
+		}
+
+		return tmp;
+	}
+
+	/**
+	 * @return A list of all unused professions.
+	 */
+	public static List<ProfessionType> getAvailableProfessions(
+			Collection<LobbyPlayer> players) {
+		List<ProfessionType> tmp = new ArrayList<>();
+
+		for (ProfessionType type : ProfessionTypes.getValues()) {
+			boolean taken = false;
+			for (LobbyPlayer p : players) {
+				if (p.getProfessionType() == type) {
+					taken = true;
+
+					break;
+				}
+			}
+
+			if (!taken)
+				tmp.add(type);
 		}
 
 		return tmp;
@@ -111,17 +137,17 @@ public class PlayerUtils {
 	 *            unused player icons.
 	 * @return The random player.
 	 */
-	public static LobbyPlayer getRandomPlayer(
-			Collection<LobbyPlayer> collection) {
+	public static LobbyPlayer getRandomPlayer(Collection<LobbyPlayer> players) {
 		PlayerStub stub = VALUES.get(getRandomIndex());
 
 		return new LobbyPlayer(stub.name, stub.surname,
-				PlayerUtils.getAvailableIcons(collection).get(0), stub.isMale);
+				getAvailableIcons(players).get(0),
+				getAvailableProfessions(players).get(0), stub.isMale);
 	}
 
 	/**
 	 * This class represents the player data read via {@linkplain JSONParser
-	 * json}.
+	 * json} and holds a name as well as a surname.
 	 */
 	public static class PlayerStub {
 		public String name, surname;

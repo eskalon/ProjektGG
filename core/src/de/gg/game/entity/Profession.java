@@ -14,6 +14,16 @@ public class Profession {
 	private int level;
 	private int experience;
 
+	public Profession(ProfessionType profession) {
+		this(profession, 1, 0);
+	}
+
+	public Profession(ProfessionType profession, int level, int experience) {
+		this.profession = profession;
+		this.level = level;
+		this.experience = experience;
+	}
+
 	public ProfessionType getProfession() {
 		return profession;
 	}

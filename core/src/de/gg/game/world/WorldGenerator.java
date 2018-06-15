@@ -1,9 +1,9 @@
 package de.gg.game.world;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Random;
 
-import de.gg.game.data.GameDifficulty;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.entity.Building;
 import de.gg.game.entity.BuildingSlot;
@@ -15,13 +15,9 @@ import de.gg.game.factory.CharacterFactory;
 import de.gg.game.factory.PlayerFactory;
 import de.gg.game.type.BuildingTypes;
 import de.gg.game.type.GameMaps;
-import de.gg.game.type.PlayerIcon;
-import de.gg.game.type.PositionTypes;
-import de.gg.game.type.ProfessionTypes;
-import de.gg.game.type.Religion;
-import de.gg.game.type.SocialStatusS;
 import de.gg.game.type.GameMaps.GameMap;
-import de.gg.game.type.PositionTypes.PositionType;
+import de.gg.game.type.PositionTypes;
+import de.gg.game.type.SocialStatusS;
 import de.gg.network.LobbyPlayer;
 import de.gg.util.RandomUtils;
 
@@ -45,7 +41,7 @@ public class WorldGenerator {
 	public void generate() {
 		generateBuildings();
 
-		generatePlayers(city.getPlayers());
+		generatePlayers();
 
 		generateCharacters();
 	}
@@ -70,41 +66,56 @@ public class WorldGenerator {
 	private void generateCharacters() {
 		// Mayor
 		// TODO über Position Liste iterieren
-		city.characters.put((short) 1,
+		city.characters.put(city.characterIndex,
 				CharacterFactory.createCharacterWithStatus(random,
 						RandomUtils.rollTheDice(random, 2)
 								? SocialStatusS.PATRICIAN
 								: SocialStatusS.CAVALIER));
-		city.characters.get((short) 1).setHighestPositionLevel(6);
-		city.characters.get((short) 1).setPosition(PositionTypes.MAYOR);
-		city.positions.put(PositionTypes.MAYOR, new Position((short) 1));
-
-		// Add the stuff for testing the voting process
-		testVotingProcess(random);
+		city.characters.get(city.characterIndex).setHighestPositionLevel(6);
+		city.characters.get(city.characterIndex)
+				.setPosition(PositionTypes.MAYOR);
+		city.positions.put(PositionTypes.MAYOR,
+				new Position(city.characterIndex));
+		city.characterIndex++;
 
 		// Add the other characters
 		for (short i = (short) (29 + players.size()); i <= 100; i++) {
-			city.characters.put(i,
+			city.characters.put(city.characterIndex,
 					CharacterFactory.createRandomCharacter(random));
+			city.characterIndex++;
 		}
 	}
 
-	private void generatePlayers(HashMap<Short, Player> players) {
+	private void generatePlayers() {
+		for (Entry<Short, LobbyPlayer> entry : players.entrySet()) {
+			LobbyPlayer lp = entry.getValue();
 
-	}
+			Profession profession = new Profession(lp.getProfessionType());
 
-	private void testVotingProcess(Random random) {
-		city.characters.put((short) 2,
-				CharacterFactory.createPlayerCharacter(random,
-						ProfessionTypes.SMITH, GameDifficulty.EASY, true,
-						Religion.ORTHODOX, "Martin", "Luther"));
-		city.characters.get((short) 2).setHighestPositionLevel(4);
-		city.characters.get((short) 2).setPosition(PositionTypes.COUNCILMAN_1);
-		city.positions.put(PositionTypes.COUNCILMAN_1, new Position((short) 2));
-		city.players.put((short) 0,
-				PlayerFactory.createPlayerCharacter((short) 2,
-						PlayerIcon.ICON_1, new Profession(), (short) 0,
-						(short) 0, 1, 1, 1, 1, 1, 1));
+			Character character = CharacterFactory.createPlayerCharacter(random,
+					lp.getProfessionType(), setup.getDifficulty(), lp.isMale(),
+					lp.getReligion(), lp.getName(), lp.getSurname());
+
+			// TMP-Voting Test
+			character.setHighestPositionLevel(4);
+			character.setPosition(PositionTypes.COUNCILMAN_1);
+			city.positions.put(PositionTypes.COUNCILMAN_1,
+					new Position(city.characterIndex));
+			// END
+
+			city.characters.put(city.characterIndex, character);
+
+			// TODO 1. Skill-Werte aus LobbyPlayer hinzufügen (Reihenfolge:
+			// agility, bargain, combat, crafting, rhetorical, stealth)
+			// TODO 2. House-IDS setzen
+			Player player = PlayerFactory.createPlayerCharacter(
+					city.characterIndex, lp.getIcon(), profession, (short) 0,
+					(short) 0, 1, 1, 1, 1, 1, 1);
+
+			city.players.put(entry.getKey(), player);
+
+			city.characterIndex++;
+		}
 	}
 
 }
