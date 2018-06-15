@@ -1,7 +1,6 @@
 package de.gg.screen;
 
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Material;
@@ -49,14 +48,12 @@ public class GameMapScreen extends BaseGameScreen {
 
 	private SceneRenderer sceneRenderer;
 
-	private MapMovementInputController movementInputController;
-	private MapSelectionInputController selectionInputController;
-	private GameSpeedInputProcessor gameSpeedInputProcessor;
-	private InputMultiplexer gameInputProcessors;
-
 	private Renderable renderable;
 
 	private Sound clockTickSound;
+
+	private MapSelectionInputController selectionInputController;
+	private MapMovementInputController movementInputController;
 
 	/**
 	 * The pause dialog.
@@ -97,19 +94,16 @@ public class GameMapScreen extends BaseGameScreen {
 		shader = new TestShader(game.getAssetManager());
 		shader.init();
 
-		this.gameInputProcessors = new InputMultiplexer();
-		this.selectionInputController = new MapSelectionInputController(
-				game.getSettings(), game.getEventBus(),
-				game.getGameCamera().getCamera(), game.getClient().getCity());
-		this.gameInputProcessors.addProcessor(selectionInputController);
-
-		this.movementInputController = new MapMovementInputController(
+		// TODO city erst in initUI übergeben
+		selectionInputController = new MapSelectionInputController(
+				game.getEventBus(), game.getGameCamera().getCamera(),
+				game.getClient().getCity());
+		addInputProcessor(selectionInputController);
+		movementInputController = new MapMovementInputController(
 				game.getGameCamera(), game.getSettings());
-		this.gameInputProcessors.addProcessor(movementInputController);
-
-		this.gameSpeedInputProcessor = new GameSpeedInputProcessor(
-				game.getSettings(), game.getClient().getActionHandler());
-		this.gameInputProcessors.addProcessor(gameSpeedInputProcessor);
+		addInputProcessor(movementInputController);
+		addInputProcessor(new GameSpeedInputProcessor(game.getSettings(),
+				game.getClient().getActionHandler()));
 	}
 
 	@Override
@@ -307,18 +301,6 @@ public class GameMapScreen extends BaseGameScreen {
 				return false;
 			}
 		});
-
-		movementInputController.resetInput();
-		movementInputController.setKeys(game.getSettings());
-		gameSpeedInputProcessor.setKeys(game.getSettings());
-		game.getInputMultiplexer().addProcessor(gameInputProcessors);
-	}
-
-	@Override
-	public void hide() {
-		super.hide();
-
-		selectionInputController.resetSelection();
 	}
 
 	@Override

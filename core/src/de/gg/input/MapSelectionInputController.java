@@ -10,11 +10,13 @@ import de.gg.event.HouseSelectionEvent;
 import de.gg.game.world.City;
 import de.gg.setting.GameSettings;
 
-public class MapSelectionInputController implements DefaultInputProcessor {
+public class MapSelectionInputController
+		implements
+			DefaultInputProcessor,
+			SettableKeysProcessor {
 
 	private int SELECTION_BUTTON = Buttons.LEFT;
 
-	private GameSettings settings;
 	private EventBus eventBus;
 	private PerspectiveCamera camera;
 
@@ -29,9 +31,8 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 
 	private int clickX, clickY;
 
-	public MapSelectionInputController(GameSettings settings, EventBus bus,
-			PerspectiveCamera camera, City city) {
-		this.settings = settings;
+	public MapSelectionInputController(EventBus bus, PerspectiveCamera camera,
+			City city) {
 		this.eventBus = bus;
 		this.camera = camera;
 		this.city = city;
@@ -134,6 +135,11 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 			}
 		}
 		return result;
+	}
+
+	@Override
+	public void loadKeybinds(GameSettings settings) {
+		resetSelection();
 	}
 
 }

@@ -17,7 +17,13 @@ public class GameInHouseScreen extends BaseGameScreen {
 	@Override
 	protected void onInit() {
 		super.onInit();
-		// TODO Auto-generated method stub
+
+		addInputProcessor(new BackInputProcessor() {
+			@Override
+			public void onBackAction() {
+				game.pushScreen("map");
+			}
+		});
 	}
 
 	@Override
@@ -52,17 +58,6 @@ public class GameInHouseScreen extends BaseGameScreen {
 	public void renderGame(float delta) {
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public void show() {
-		super.show();
-		game.getInputMultiplexer().addProcessor(new BackInputProcessor() {
-			@Override
-			public void onBackAction() {
-				game.pushScreen("map");
-			}
-		});
 	}
 
 	public void setSelectedHouseId(short selectedHouseId) {

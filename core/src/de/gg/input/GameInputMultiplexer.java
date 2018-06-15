@@ -2,6 +2,8 @@ package de.gg.input;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.utils.Array;
 
 import de.gg.core.ProjektGG;
 import de.gg.util.Log;
@@ -42,6 +44,19 @@ public class GameInputMultiplexer extends InputMultiplexer {
 	 */
 	public void removeInputProcessors() {
 		this.clear();
+	}
+
+	/**
+	 * Removes all input processors contained in the given array.
+	 * 
+	 * @param processors
+	 *            The processor to remove.
+	 * @see #removeProcessor(InputProcessor)
+	 */
+	public void removeInputProcessors(Array<InputProcessor> processors) {
+		for (InputProcessor p : processors) {
+			removeProcessor(p);
+		}
 	}
 
 }

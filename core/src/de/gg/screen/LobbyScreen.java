@@ -186,7 +186,7 @@ public class LobbyScreen extends BaseUIScreen {
 					}
 				});
 
-		// apply and discard button
+		// Apply and discard buttons
 		applyButton.addListener(
 				new ButtonClickListener(assetManager, game.getSettings()) {
 					@Override
