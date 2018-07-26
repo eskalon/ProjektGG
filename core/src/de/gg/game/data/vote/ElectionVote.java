@@ -8,6 +8,10 @@ import de.gg.game.type.PositionTypes;
 import de.gg.game.type.PositionTypes.PositionType;
 import de.gg.game.world.City;
 
+/**
+ * This class represents the vote held on electing an {@linkplain Position
+ * official}.
+ */
 public class ElectionVote extends VoteableMatter {
 
 	private City city;

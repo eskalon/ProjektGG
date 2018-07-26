@@ -25,7 +25,7 @@ public abstract class VoteableMatter {
 	/**
 	 * @param voteResults
 	 *            The results of the vote.
-	 * @return the text displayed to describe the vote result.
+	 * @return the text displayed to describe the vote's result.
 	 */
 	public abstract String getResultText(VoteResults voteResults);
 

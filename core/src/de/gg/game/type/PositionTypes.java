@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.assets.AssetManager;
 
+import de.gg.game.type.LawTypes.LawType;
 import de.gg.game.type.SocialStatusS.SocialStatus;
 import de.gg.util.JSONParser;
 import de.gg.util.asset.Text;
@@ -130,6 +131,8 @@ public class PositionTypes {
 		private int statusRequirementIndex;
 		private int salary;
 		private int cabinet;
+		private List<Integer> lawsToVoteFor;
+		private List<LawType> lawsToVoteFor2 = null;
 		private boolean popularVote = false;
 
 		PositionType() {
@@ -170,6 +173,23 @@ public class PositionTypes {
 		 */
 		public SocialStatus getStatusRequirement() {
 			return SocialStatusS.getByIndex(statusRequirementIndex);
+		}
+
+		/**
+		 * 
+		 * @return All laws the holder of this position can vote on. Is an empty
+		 *         list if there are none.
+		 */
+		public List<LawType> getLawsToVoteFor() {
+			if (lawsToVoteFor2 == null) {
+				lawsToVoteFor2 = new ArrayList<>();
+
+				for (Integer i : lawsToVoteFor) {
+					lawsToVoteFor2.add(LawTypes.getByIndex(i));
+				}
+			}
+
+			return lawsToVoteFor2;
 		}
 
 	}
