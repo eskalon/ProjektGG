@@ -23,6 +23,7 @@ import de.gg.event.PlayerConnectedEvent;
 import de.gg.event.PlayerDisconnectedEvent;
 import de.gg.event.RoundEndEvent;
 import de.gg.game.CharacterBehaviour;
+import de.gg.game.GameClock;
 import de.gg.game.GameSession;
 import de.gg.game.SlaveSession;
 import de.gg.game.data.GameSessionSetup;
@@ -82,22 +83,19 @@ public class GameClient {
 	 * The last measured ping.
 	 */
 	private int ping;
-	/**
-	 * The version of the game.
-	 */
-	private String gameVersion;
 
 	private List<NotificationData> notifications = new ArrayList<>();
 
 	private SlaveSession session;
 
 	/**
-	 * Creates a game client and connects the client to the server. After it is
-	 * finished a {@link ConnectionEstablishedEvent} is posted on the
+	 * Creates a game client and tries to connect the client to the server.
+	 * After it is finished either a {@link ConnectionEstablishedEvent} or a
+	 * {@link ConnectionFailedEvent} is posted on the
 	 * {@linkplain ProjektGG#getEventBus() event bus}.
 	 * 
 	 * @param ip
-	 *            The server's ip.
+	 *            The server's ip address.
 	 * @param port
 	 *            The server's port.
 	 */
@@ -108,7 +106,6 @@ public class GameClient {
 
 		this.eventBus = eventBus;
 		this.eventBus.register(this);
-		this.gameVersion = gameVersion;
 
 		client = new Client();
 		client.start();
@@ -334,6 +331,20 @@ public class GameClient {
 	 */
 	public Player getLocalPlayer() {
 		return session.getCity().getPlayers().get(localClientId);
+	}
+
+	/**
+	 * @return the current round.
+	 */
+	public int getGameRound() {
+		return session.getRound();
+	}
+
+	/**
+	 * @return the game's clock.
+	 */
+	public GameClock getGameClock() {
+		return session.getClock();
 	}
 
 }

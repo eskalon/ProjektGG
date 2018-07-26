@@ -62,4 +62,43 @@ public class GameClock {
 		return (int) minute;
 	}
 
+	/**
+	 * 
+	 * @param round
+	 *            The current game round.
+	 * @return The season for the respective round.
+	 */
+	public static String getSeason(int round) {
+		String season = null;
+		switch (round % 4) {
+			case 0 : {
+				season = "Winter";
+				break;
+			}
+			case 1 : {
+				season = "Frühjahr";
+				break;
+			}
+			case 2 : {
+				season = "Sommer";
+				break;
+			}
+			case 3 : {
+				season = "Herbst";
+				break;
+			}
+		}
+		return season;
+	}
+
+	/**
+	 * 
+	 * @param round
+	 *            The game round.
+	 * @return The year the game round takes place in.
+	 */
+	public static int getYear(int round) {
+		return round + 1304;
+	}
+
 }

@@ -24,7 +24,7 @@ import de.gg.event.FullHourEvent;
 import de.gg.event.HouseEnterEvent;
 import de.gg.event.HouseSelectionEvent;
 import de.gg.event.NewNotificationEvent;
-import de.gg.game.entity.Position;
+import de.gg.game.GameClock;
 import de.gg.game.type.PositionTypes;
 import de.gg.game.world.City;
 import de.gg.input.ButtonClickListener;
@@ -245,8 +245,11 @@ public class GameMapScreen extends BaseGameScreen {
 		// Date
 		Table dateTable = new Table();
 		dateTable.setBackground(skin.getDrawable("date_background"));
-		dateTable.add(new Label("Frühjahr - 1305 a.d.", skin, "dark"))
-				.padLeft(9).padBottom(5).expandX().left();
+		dateTable.add(new Label(
+				String.format("%s - %s a.d.",
+						GameClock.getSeason(game.getClient().getGameRound()),
+						GameClock.getYear(game.getClient().getGameRound())),
+				skin, "dark")).padLeft(9).padBottom(5).expandX().left();
 
 		// Clock
 		Table clockTable = new Table();

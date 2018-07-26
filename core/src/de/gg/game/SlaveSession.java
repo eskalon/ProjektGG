@@ -15,6 +15,7 @@ import de.gg.game.data.RoundEndData;
 import de.gg.game.data.vote.ImpeachmentVote;
 import de.gg.game.data.vote.VoteResults;
 import de.gg.game.data.vote.VoteableMatter;
+import de.gg.game.entity.Player;
 import de.gg.game.system.ProcessingSystem;
 import de.gg.game.system.client.FirstEventWaveClientSystem;
 import de.gg.game.type.PositionTypes.PositionType;
@@ -27,7 +28,8 @@ import de.gg.util.Log;
  * is also implementing the interface used for the RMI by the server.
  */
 public class SlaveSession extends GameSession
-		implements AuthoritativeResultListener {
+		implements
+			AuthoritativeResultListener {
 
 	private EventBus eventBus;
 
@@ -60,7 +62,7 @@ public class SlaveSession extends GameSession
 		super.setupGame();
 
 		// Setup the client systems
-		ProcessingSystem s;
+		ProcessingSystem<Player> s;
 		s = new FirstEventWaveClientSystem(eventBus, localNetworkId);
 		s.init(city, getGameSeed());
 		this.playerSystems.add(s);
