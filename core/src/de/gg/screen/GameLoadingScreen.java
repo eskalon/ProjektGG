@@ -11,7 +11,6 @@ import de.gg.game.factory.CharacterFactory;
 import de.gg.game.type.BuildingTypes;
 import de.gg.game.type.ItemTypes;
 import de.gg.game.type.PositionTypes;
-import de.gg.game.type.ProfessionTypes;
 import de.gg.game.type.SocialStatusS;
 import de.gg.render.RenderData;
 import de.gg.render.TestShader;

@@ -32,19 +32,19 @@ public class FirstCharacterEventWaveServerSystem
 	public void process(short id, Character c) {
 		// DEATH
 		if (c.getHp() <= 0) {
-			// Player-Characters
+			// Player characters:
 			Player p = city.getPlayerByCharacterId(id);
 			if (p != null) {
 				// TODO Charakter tauschen, Erbe, Illness-Reset, Family-Reset
 			}
 
-			// Player siblings
+			// Player siblings:
 			// TODO Erbe
 
-			// Other characters
+			// Other characters:
 			// TODO replace character by random new one
 
-			// Für alle:
+			// For everyone:
 			// TODO Ämter resetten, Character aus Liste entfernen
 
 			serverSession.getResultListenerStub().onCharacterDeath(id);

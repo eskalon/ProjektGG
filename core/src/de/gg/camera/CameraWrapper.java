@@ -143,7 +143,7 @@ public class CameraWrapper {
 	 * @return the unit length direction vector of the camera; the direction the
 	 *         camera is facing in
 	 */
-	private Vector3 getDirection() {
+	public Vector3 getDirection() {
 		return camera.direction;
 	}
 
@@ -151,7 +151,7 @@ public class CameraWrapper {
 	 * @return the unit length up vector of the camera; is perpendicular to the
 	 *         direction vector
 	 */
-	private Vector3 getUp() {
+	public Vector3 getUp() {
 		return camera.up;
 	}
 

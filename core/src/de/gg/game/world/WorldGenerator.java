@@ -18,9 +18,7 @@ import de.gg.game.type.GameMaps;
 import de.gg.game.type.GameMaps.GameMap;
 import de.gg.game.type.PositionTypes;
 import de.gg.game.type.PositionTypes.PositionType;
-import de.gg.game.type.SocialStatusS;
 import de.gg.network.LobbyPlayer;
-import de.gg.util.RandomUtils;
 
 public class WorldGenerator {
 

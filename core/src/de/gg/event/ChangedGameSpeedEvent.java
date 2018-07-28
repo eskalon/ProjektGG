@@ -13,4 +13,8 @@ public class ChangedGameSpeedEvent {
 		this.gameSpeed = gameSpeed;
 	}
 
+	public GameSpeed getGameSpeed() {
+		return gameSpeed;
+	}
+
 }
