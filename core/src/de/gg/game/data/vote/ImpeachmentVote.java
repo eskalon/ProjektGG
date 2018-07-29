@@ -14,6 +14,7 @@ import de.gg.game.world.City;
  */
 public class ImpeachmentVote extends VoteableMatter {
 
+	public static short DONT_IMPEACH_OPTION_INDEX = -1;
 	private City city;
 	private PositionType type;
 	private Position pos;
@@ -64,14 +65,14 @@ public class ImpeachmentVote extends VoteableMatter {
 	public List<VoteOption> getOptions() {
 		List<VoteOption> tmp = List.of(
 				new VoteOption("Misstrauen aussprechen", currentHolder, true),
-				new VoteOption("Im Amt belassen", -1));
+				new VoteOption("Im Amt belassen", DONT_IMPEACH_OPTION_INDEX));
 
 		return tmp;
 	}
 
 	@Override
 	public String getResultText(VoteResults results) {
-		if (results.getOverallResult() == -1)
+		if (results.getOverallResult() == DONT_IMPEACH_OPTION_INDEX)
 			return String.format(
 					"Die Abstimmung %s %s Amtes zu entheben ist gescheitert.",
 					city.getFullCharacterName(currentHolder),
@@ -95,6 +96,10 @@ public class ImpeachmentVote extends VoteableMatter {
 
 	public Position getPos() {
 		return pos;
+	}
+	
+	public short getCharacterToImpeach() {
+		return currentHolder;
 	}
 
 }

@@ -59,15 +59,16 @@ public class RoundEndSystem {
 		// TEMPORARY OPINION MODIFIERS
 		for (Entry<Short, Integer> opinionEntry : c.getOpinionModifiers()
 				.entrySet()) {
-			if (opinionEntry.getValue() == -3 || opinionEntry.getValue() == 4) {
-				c.getOpinionModifiers().remove(opinionEntry.getKey());
-				break;
-			}
-
-			if (opinionEntry.getValue() > 0)
+			if (opinionEntry.getValue() > 0) {
 				opinionEntry.setValue(opinionEntry.getValue() - 4);
-			if (opinionEntry.getValue() < 0)
+				if (opinionEntry.getValue() < 0)
+					c.getOpinionModifiers().remove(opinionEntry.getKey());
+			}
+			if (opinionEntry.getValue() < 0) {
 				c.setReputationModifiers(c.getReputationModifiers() + 3);
+				if (opinionEntry.getValue() > 0)
+					c.getOpinionModifiers().remove(opinionEntry.getKey());
+			}
 		}
 
 		// REPUTATION MODIFIERS
@@ -90,48 +91,48 @@ public class RoundEndSystem {
 
 		// SOCIAL STATUS
 		switch (c.getStatus().getLevel()) {
-		case 1: {
-			SocialStatus superiorStatus = SocialStatusS
-					.getByIndex(c.getStatus().getLevel() + 1);
-			if (p.getFortune(city) >= superiorStatus.getFortuneRequirement()
-					&& c.getHighestPositionLevel() >= superiorStatus
-							.getPositionLevelRequirement()) {
-				c.setStatus(superiorStatus);// PATRICIAN
+			case 1 : {
+				SocialStatus superiorStatus = SocialStatusS
+						.getByIndex(c.getStatus().getLevel() + 1);
+				if (p.getFortune(city) >= superiorStatus.getFortuneRequirement()
+						&& c.getHighestPositionLevel() >= superiorStatus
+								.getPositionLevelRequirement()) {
+					c.setStatus(superiorStatus);// PATRICIAN
 
-				if (localPlayerId == id) {
-					// TODO notification!
+					if (localPlayerId == id) {
+						// TODO notification!
+					}
 				}
+				break;
 			}
-			break;
-		}
-		case 2: {
-			SocialStatus superiorStatus = SocialStatusS
-					.getByIndex(c.getStatus().getLevel() + 1);
-			if (p.getFortune(city) >= superiorStatus.getFortuneRequirement()
-					&& c.getHighestPositionLevel() >= superiorStatus
-							.getPositionLevelRequirement()) {
-				c.setStatus(superiorStatus);// CAVALIER
+			case 2 : {
+				SocialStatus superiorStatus = SocialStatusS
+						.getByIndex(c.getStatus().getLevel() + 1);
+				if (p.getFortune(city) >= superiorStatus.getFortuneRequirement()
+						&& c.getHighestPositionLevel() >= superiorStatus
+								.getPositionLevelRequirement()) {
+					c.setStatus(superiorStatus);// CAVALIER
 
-				if (localPlayerId == id) {
-					// TODO notification!
+					if (localPlayerId == id) {
+						// TODO notification!
+					}
 				}
+				break;
 			}
-			break;
-		}
-		case 3: {
-			SocialStatus superiorStatus = SocialStatusS
-					.getByIndex(c.getStatus().getLevel() + 1);
-			if (p.getFortune(city) >= superiorStatus.getFortuneRequirement()
-					&& c.getHighestPositionLevel() >= superiorStatus
-							.getPositionLevelRequirement()) {
-				c.setStatus(superiorStatus);// BARON
+			case 3 : {
+				SocialStatus superiorStatus = SocialStatusS
+						.getByIndex(c.getStatus().getLevel() + 1);
+				if (p.getFortune(city) >= superiorStatus.getFortuneRequirement()
+						&& c.getHighestPositionLevel() >= superiorStatus
+								.getPositionLevelRequirement()) {
+					c.setStatus(superiorStatus);// BARON
 
-				if (localPlayerId == id) {
-					// TODO notification!
+					if (localPlayerId == id) {
+						// TODO notification!
+					}
 				}
+				break;
 			}
-			break;
-		}
 		}
 
 		// AP

@@ -22,7 +22,8 @@ public class Character {
 	private int highestPositionLevel;
 	/**
 	 * The reputation modifiers. Should be between <code>-20</code> and
-	 * <code>+15</code>. Slowly shifts back to <code>0</code>.
+	 * <code>+15</code>. Slowly shifts back to <code>0</code>. <br>
+	 * A positive value is denoting a loyal, trustful and law-abiding citizen.
 	 */
 	private int reputationModifiers;
 	/**
@@ -141,6 +142,31 @@ public class Character {
 
 	public HashMap<Short, Integer> getOpinionModifiers() {
 		return opinionModifiers;
+	}
+
+	/**
+	 * Adds an opinion another character has on this character. Takes the
+	 * previously present modifiers into account.
+	 * 
+	 * @param charId
+	 *            The other character's id.
+	 * @param modifier
+	 *            The opinion modifier.
+	 * @see #opinionModifiers
+	 */
+	public void addOpinionModifier(short charId, int modifier) {
+		Integer currentMod = opinionModifiers.get(charId);
+		if (currentMod == null)
+			currentMod = 0;
+
+		// A character with a strong opinion isn't swayed easily in either a
+		// positive nor negative direction
+		if (Math.abs(currentMod) > 40)
+			modifier = (int) Math.round(modifier * 0.7);
+		else if (Math.abs(currentMod) > 20)
+			modifier = (int) Math.round(modifier * 0.9);
+
+		opinionModifiers.put(charId, currentMod + modifier);
 	}
 
 	public CharacterTrait getNPCTrait() {

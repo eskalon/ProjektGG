@@ -12,6 +12,7 @@ import de.gg.game.data.GameSpeed;
 import de.gg.game.data.RoundEndData;
 import de.gg.game.data.vote.ElectionVote;
 import de.gg.game.data.vote.ImpeachmentVote;
+import de.gg.game.data.vote.VoteOption;
 import de.gg.game.data.vote.VoteResults;
 import de.gg.game.data.vote.VoteableMatter;
 import de.gg.game.entity.Character;
@@ -348,23 +349,56 @@ public abstract class GameSession {
 	 */
 	private void processVoteResult(VoteableMatter matterToVoteOn,
 			VoteResults result) {
-
 		// ELECTION
 		if (matterToVoteOn instanceof ElectionVote) {
 			ElectionVote vote = ((ElectionVote) matterToVoteOn);
+
+			// Reputation & opinion effects
+			for (Entry<Short, Integer> e : result.getIndividualVotes()
+					.entrySet()) {
+				Character voter = city.getCharacter(e.getKey());
+				for (VoteOption option : vote.getOptions()) {
+					if (option.getValue() == e.getValue()) {
+						voter.addOpinionModifier((short) option.getValue(), 12);
+					} else {
+						voter.addOpinionModifier((short) option.getValue(), -8);
+					}
+				}
+			}
+
+			// Actual effect
 			vote.getPos().setCurrentHolder(vote.getPos().getApplicants()
 					.get(result.getOverallResult()));
 			vote.getPos().getApplicants().clear();
+
 		} else
 		// IMPEACHMENT
 		if (matterToVoteOn instanceof ImpeachmentVote) {
 			ImpeachmentVote vote = ((ImpeachmentVote) matterToVoteOn);
 
-			if (result.getOverallResult() != -1) {
+			// Reputation & opinion effects
+			for (Entry<Short, Integer> e : result.getIndividualVotes()
+					.entrySet()) {
+				Character voter = city.getCharacter(e.getKey());
+
+				if (e.getValue() == ImpeachmentVote.DONT_IMPEACH_OPTION_INDEX) {
+					voter.addOpinionModifier(vote.getCharacterToImpeach(), 8);
+				} else {
+					voter.addOpinionModifier(vote.getCharacterToImpeach(), -16);
+					if (city.getCharacter(vote.getCharacterToImpeach())
+							.getReputation() > 0)
+						voter.setReputationModifiers(
+								voter.getReputationModifiers() - 1);
+				}
+			}
+
+			// Actual effect
+			if (result
+					.getOverallResult() == ImpeachmentVote.DONT_IMPEACH_OPTION_INDEX) {
+				// Stay
+			} else {
 				// Remove
 				vote.getPos().setCurrentHolder((short) -1);
-			} else {
-				// Stay
 			}
 		}
 	}
