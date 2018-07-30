@@ -8,7 +8,7 @@ import com.badlogic.gdx.assets.AssetManager;
 public class CrimeTypes {
 
 	private static List<CrimeType> VALUES;
-	
+
 	private CrimeTypes() {
 		// shouldn't get instantiated
 	}

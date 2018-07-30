@@ -46,8 +46,7 @@ public class WorldGenerator {
 
 		// Player Vote Test
 		city.getCharacter((short) 1).setPosition(PositionTypes.COUNCILMAN_1);
-		city.positions.put(PositionTypes.COUNCILMAN_1,
-				new Position((short) 1));
+		city.positions.put(PositionTypes.COUNCILMAN_1, new Position((short) 1));
 	}
 
 	private void generateBuildings() {

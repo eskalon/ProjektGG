@@ -5,6 +5,7 @@ import de.gg.network.GameClient;
 
 /**
  * Is posted to create a new notification.
+ * 
  * @see GameClient#onNotificationCreation(NewNotificationEvent)
  */
 public class NewNotificationEvent {

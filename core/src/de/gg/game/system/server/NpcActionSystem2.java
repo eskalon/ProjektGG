@@ -18,9 +18,9 @@ public class NpcActionSystem2 extends ServerProcessingSystem<Character> {
 
 	@Override
 	public int getTickRate() {
-		return 3000; 
+		return 3000;
 	}
-	
+
 	@Override
 	public boolean isProcessedContinuously() {
 		return false;

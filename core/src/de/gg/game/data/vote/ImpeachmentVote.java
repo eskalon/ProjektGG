@@ -40,8 +40,7 @@ public class ImpeachmentVote extends VoteableMatter {
 				city.getFullCharacterName(voteCaller),
 				(city.getCharacter(voteCaller).isMale() ? "seine" : "ihre"),
 				type.getName(), city.getFullCharacterName(currentHolder),
-				(city.getCharacter(currentHolder).isMale()
-						? "diesen seines"
+				(city.getCharacter(currentHolder).isMale() ? "diesen seines"
 						: "diese ihres"));
 	}
 
@@ -76,16 +75,14 @@ public class ImpeachmentVote extends VoteableMatter {
 			return String.format(
 					"Die Abstimmung %s %s Amtes zu entheben ist gescheitert.",
 					city.getFullCharacterName(currentHolder),
-					(city.getCharacter(currentHolder).isMale()
-							? "seines"
+					(city.getCharacter(currentHolder).isMale() ? "seines"
 							: "ihres"));
 		else
 			return String.format(
 					"Die Mitglieder des Kabinetts haben %s ihr Misstrauen ausgesprochen. %s wird daher %s Amtes als %s enthoben.",
 					city.getFullCharacterName(currentHolder),
 					(city.getCharacter(currentHolder).isMale() ? "Er" : "Sie"),
-					(city.getCharacter(currentHolder).isMale()
-							? "seines"
+					(city.getCharacter(currentHolder).isMale() ? "seines"
 							: "ihres"),
 					type.getName());
 	}
@@ -97,7 +94,7 @@ public class ImpeachmentVote extends VoteableMatter {
 	public Position getPos() {
 		return pos;
 	}
-	
+
 	public short getCharacterToImpeach() {
 		return currentHolder;
 	}

@@ -11,9 +11,7 @@ import de.gg.game.world.City;
 import de.gg.setting.GameSettings;
 
 public class MapSelectionInputController
-		implements
-			DefaultInputProcessor,
-			SettableKeysProcessor {
+		implements DefaultInputProcessor, SettableKeysProcessor {
 
 	private int SELECTION_BUTTON = Buttons.LEFT;
 

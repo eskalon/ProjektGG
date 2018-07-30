@@ -122,7 +122,7 @@ public class CharacterBehaviour {
 			ImpeachmentVote matter, GameSession session) {
 		int tmp = -20;
 		short otherCharacterId = matter.getPos().getCurrentHolder();
-		
+
 		if (characterId == otherCharacterId) {
 			tmp = 150;
 		} else {

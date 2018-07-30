@@ -32,7 +32,7 @@ public class CreditsScreen extends BaseScreen {
 		h2Font = this.game.getUISkin().getFont("title-24");
 		h3Font = this.game.getUISkin().getFont("main-22");
 		textFont = this.game.getUISkin().getFont("main-19");
-		
+
 		addInputProcessor(new BackInputProcessor() {
 			@Override
 			public void onBackAction() {

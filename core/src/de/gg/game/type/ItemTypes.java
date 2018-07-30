@@ -10,7 +10,7 @@ import de.gg.game.entity.ItemPrice;
 public class ItemTypes {
 
 	private static List<ItemType> VALUES;
-	
+
 	private ItemTypes() {
 		// shouldn't get instantiated
 	}

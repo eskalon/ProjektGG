@@ -91,48 +91,48 @@ public class RoundEndSystem {
 
 		// SOCIAL STATUS
 		switch (c.getStatus().getLevel()) {
-			case 1 : {
-				SocialStatus superiorStatus = SocialStatusS
-						.getByIndex(c.getStatus().getLevel() + 1);
-				if (p.getFortune(city) >= superiorStatus.getFortuneRequirement()
-						&& c.getHighestPositionLevel() >= superiorStatus
-								.getPositionLevelRequirement()) {
-					c.setStatus(superiorStatus);// PATRICIAN
+		case 1: {
+			SocialStatus superiorStatus = SocialStatusS
+					.getByIndex(c.getStatus().getLevel() + 1);
+			if (p.getFortune(city) >= superiorStatus.getFortuneRequirement()
+					&& c.getHighestPositionLevel() >= superiorStatus
+							.getPositionLevelRequirement()) {
+				c.setStatus(superiorStatus);// PATRICIAN
 
-					if (localPlayerId == id) {
-						// TODO notification!
-					}
+				if (localPlayerId == id) {
+					// TODO notification!
 				}
-				break;
 			}
-			case 2 : {
-				SocialStatus superiorStatus = SocialStatusS
-						.getByIndex(c.getStatus().getLevel() + 1);
-				if (p.getFortune(city) >= superiorStatus.getFortuneRequirement()
-						&& c.getHighestPositionLevel() >= superiorStatus
-								.getPositionLevelRequirement()) {
-					c.setStatus(superiorStatus);// CAVALIER
+			break;
+		}
+		case 2: {
+			SocialStatus superiorStatus = SocialStatusS
+					.getByIndex(c.getStatus().getLevel() + 1);
+			if (p.getFortune(city) >= superiorStatus.getFortuneRequirement()
+					&& c.getHighestPositionLevel() >= superiorStatus
+							.getPositionLevelRequirement()) {
+				c.setStatus(superiorStatus);// CAVALIER
 
-					if (localPlayerId == id) {
-						// TODO notification!
-					}
+				if (localPlayerId == id) {
+					// TODO notification!
 				}
-				break;
 			}
-			case 3 : {
-				SocialStatus superiorStatus = SocialStatusS
-						.getByIndex(c.getStatus().getLevel() + 1);
-				if (p.getFortune(city) >= superiorStatus.getFortuneRequirement()
-						&& c.getHighestPositionLevel() >= superiorStatus
-								.getPositionLevelRequirement()) {
-					c.setStatus(superiorStatus);// BARON
+			break;
+		}
+		case 3: {
+			SocialStatus superiorStatus = SocialStatusS
+					.getByIndex(c.getStatus().getLevel() + 1);
+			if (p.getFortune(city) >= superiorStatus.getFortuneRequirement()
+					&& c.getHighestPositionLevel() >= superiorStatus
+							.getPositionLevelRequirement()) {
+				c.setStatus(superiorStatus);// BARON
 
-					if (localPlayerId == id) {
-						// TODO notification!
-					}
+				if (localPlayerId == id) {
+					// TODO notification!
 				}
-				break;
 			}
+			break;
+		}
 		}
 
 		// AP

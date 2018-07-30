@@ -9,9 +9,7 @@ import de.gg.setting.GameSettings;
  * {@link SlaveActionListener}.
  */
 public class GameSpeedInputProcessor
-		implements
-			DefaultInputProcessor,
-			SettableKeysProcessor {
+		implements DefaultInputProcessor, SettableKeysProcessor {
 
 	private int INCREASE_SPEED_KEY;
 	private int DECREASE_SPEED_KEY;
