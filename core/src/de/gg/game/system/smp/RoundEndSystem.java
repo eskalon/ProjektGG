@@ -65,7 +65,7 @@ public class RoundEndSystem {
 					c.getOpinionModifiers().remove(opinionEntry.getKey());
 			}
 			if (opinionEntry.getValue() < 0) {
-				c.setReputationModifiers(c.getReputationModifiers() + 3);
+				opinionEntry.setValue(opinionEntry.getValue() + 3);
 				if (opinionEntry.getValue() > 0)
 					c.getOpinionModifiers().remove(opinionEntry.getKey());
 			}
