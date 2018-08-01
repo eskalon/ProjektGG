@@ -126,7 +126,8 @@ public class GameRoundendScreen extends BaseGameScreen {
 	}
 
 	@Subscribe
-	public synchronized void onRoundEndDataArrived(RoundEndDataReceivedEvent event) {
+	public synchronized void onRoundEndDataArrived(
+			RoundEndDataReceivedEvent event) {
 		this.setData(event.getData());
 
 		updateUI();
