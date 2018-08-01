@@ -14,11 +14,11 @@ allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
 
-    version = '0.1.0'
+    version = "0.1.0"
     ext {
         appName = "Projekt GG"
-        gdxVersion = '1.9.8'
-        aiVersion = '1.8.1'
+        gdxVersion = "1.9.8"
+        aiVersion = "1.8.1"
     }
 
     repositories {
@@ -26,7 +26,7 @@ allprojects {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
-        maven { url 'https://jitpack.io' }
+        maven { url "https://jitpack.io" }
     }
 }
 
@@ -54,8 +54,10 @@ project(":core") {
 		compile "com.github.crykn:kryonet:2.22.2"
 		compile "commons-io:commons-io:2.6"
 		compile "com.google.guava:guava:24.1-jre"
-		compile 'com.google.code.gson:gson:2.8.2'
+		compile "com.google.code.gson:gson:2.8.2"
         //compile fileTree(dir: 'libs', include: '*.jar')
+        
+        testCompile "org.junit.jupiter:junit-jupiter-engine:5.2.0"
     }
 }
 
