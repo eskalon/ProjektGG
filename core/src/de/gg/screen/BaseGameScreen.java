@@ -90,8 +90,7 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 
 		// Anschließend die Spiel-Logik updaten
 		if (updateGame && game.getClient() != null) { // Der Client ist null,
-			// wenn der Spieler
-			// gerade disconnected
+			// wenn der Spieler gerade disconnected
 			game.getClient().update();
 			game.getClient().updatePing(delta);
 

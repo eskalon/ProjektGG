@@ -13,6 +13,7 @@ import com.esotericsoftware.kryonet.Listener.TypeListener;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.kryonet.ServerDiscoveryHandler;
 import com.esotericsoftware.kryonet.rmi.ObjectSpace;
+import com.esotericsoftware.kryonet.rmi.RemoteObject;
 
 import de.gg.core.ProjektGG;
 import de.gg.event.ConnectionEstablishedEvent;
@@ -269,13 +270,14 @@ public class GameServer {
 			AuthoritativeResultListener resultListener = ObjectSpace
 					.getRemoteObject(e.getValue(), e.getKey(),
 							AuthoritativeResultListener.class);
-			resultListeners.put(e.getKey(), resultListener);
-
-			if (resultListener == null)
+			if (resultListener == null) {
 				Log.error("Server",
 						"Der resultListener des Spielers %d ist null",
 						e.getKey());
-
+				break;
+			}
+			((RemoteObject) resultListener).setNonBlocking(true);
+			resultListeners.put(e.getKey(), resultListener);
 		}
 
 		session.setResultListeners(resultListeners);

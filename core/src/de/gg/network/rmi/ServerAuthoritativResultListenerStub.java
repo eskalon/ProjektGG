@@ -26,17 +26,16 @@ public class ServerAuthoritativResultListenerStub
 			AuthoritativeSession serverSession) {
 		this.serverSession = serverSession;
 
-		// damit alle bearbeiteten Anfragen nacheinander an die Clienten verteil
-		// werden
+		// only a single thread is used so results are distributed one after
+		// another
 		this.executor = Executors.newSingleThreadExecutor();
-		// this.executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 	}
 
 	@Override
 	public void onAllPlayersReadied() {
-		executor.submit(new AuthoritativeResultListenerRunnable() {
+		informClients(new ResultTask() {
 			@Override
-			protected void informListener(
+			protected void informClient(
 					AuthoritativeResultListener resultListener) {
 				resultListener.onAllPlayersReadied();
 			}
@@ -45,9 +44,9 @@ public class ServerAuthoritativResultListenerStub
 
 	@Override
 	public void onRoundEnd(RoundEndData data) {
-		executor.submit(new AuthoritativeResultListenerRunnable() {
+		informClients(new ResultTask() {
 			@Override
-			protected void informListener(
+			protected void informClient(
 					AuthoritativeResultListener resultListener) {
 				resultListener.onRoundEnd(data);
 			}
@@ -56,9 +55,9 @@ public class ServerAuthoritativResultListenerStub
 
 	@Override
 	public void onCharacterDeath(short characterId) {
-		executor.submit(new AuthoritativeResultListenerRunnable() {
+		informClients(new ResultTask() {
 			@Override
-			protected void informListener(
+			protected void informClient(
 					AuthoritativeResultListener resultListener) {
 				resultListener.onCharacterDeath(characterId);
 			}
@@ -67,9 +66,9 @@ public class ServerAuthoritativResultListenerStub
 
 	@Override
 	public void onCharacterDamage(short characterId, short damage) {
-		executor.submit(new AuthoritativeResultListenerRunnable() {
+		informClients(new ResultTask() {
 			@Override
-			protected void informListener(
+			protected void informClient(
 					AuthoritativeResultListener resultListener) {
 				resultListener.onCharacterDamage(characterId, damage);
 			}
@@ -78,9 +77,9 @@ public class ServerAuthoritativResultListenerStub
 
 	@Override
 	public void onPlayerIllnessChange(short playerId, boolean isIll) {
-		executor.submit(new AuthoritativeResultListenerRunnable() {
+		informClients(new ResultTask() {
 			@Override
-			protected void informListener(
+			protected void informClient(
 					AuthoritativeResultListener resultListener) {
 				resultListener.onPlayerIllnessChange(playerId, isIll);
 			}
@@ -89,9 +88,9 @@ public class ServerAuthoritativResultListenerStub
 
 	@Override
 	public void setGameSpeed(int index) {
-		executor.submit(new AuthoritativeResultListenerRunnable() {
+		informClients(new ResultTask() {
 			@Override
-			protected void informListener(
+			protected void informClient(
 					AuthoritativeResultListener resultListener) {
 				resultListener.setGameSpeed(index);
 			}
@@ -100,9 +99,9 @@ public class ServerAuthoritativResultListenerStub
 
 	@Override
 	public void onVoteFinished(VoteResults results) {
-		executor.submit(new AuthoritativeResultListenerRunnable() {
+		informClients(new ResultTask() {
 			@Override
-			protected void informListener(
+			protected void informClient(
 					AuthoritativeResultListener resultListener) {
 				resultListener.onVoteFinished(results);
 			}
@@ -111,9 +110,9 @@ public class ServerAuthoritativResultListenerStub
 
 	@Override
 	public void onAppliedForPosition(short playerId, PositionType type) {
-		executor.submit(new AuthoritativeResultListenerRunnable() {
+		informClients(new ResultTask() {
 			@Override
-			protected void informListener(
+			protected void informClient(
 					AuthoritativeResultListener resultListener) {
 				resultListener.onAppliedForPosition(playerId, type);
 			}
@@ -123,9 +122,9 @@ public class ServerAuthoritativResultListenerStub
 	@Override
 	public void onImpeachmentVoteArranged(short targetCharacterId,
 			short callerCharacterId) {
-		executor.submit(new AuthoritativeResultListenerRunnable() {
+		informClients(new ResultTask() {
 			@Override
-			protected void informListener(
+			protected void informClient(
 					AuthoritativeResultListener resultListener) {
 				resultListener.onImpeachmentVoteArranged(targetCharacterId,
 						callerCharacterId);
@@ -134,22 +133,27 @@ public class ServerAuthoritativResultListenerStub
 	}
 
 	/**
-	 * This runnable is used to easily inform every
-	 * {@linkplain AuthoritativeSession#resultListeners result listener} on a
-	 * separate thread.
+	 * This method takes care of informing every
+	 * {@linkplain AuthoritativeSession#resultListeners result listener} about a
+	 * result that happened on the server on another thread.
+	 * 
+	 * @param task
+	 *            The task that is used to denote the result.
 	 */
-	public abstract class AuthoritativeResultListenerRunnable
-			implements Runnable {
-
-		@Override
-		public void run() {
-			for (AuthoritativeResultListener resultListener : serverSession
-					.getResultListeners().values()) {
-				informListener(resultListener);
+	private void informClients(ResultTask task) {
+		executor.submit(new Runnable() {
+			@Override
+			public void run() {
+				for (AuthoritativeResultListener resultListener : serverSession
+						.getResultListeners().values()) {
+					task.informClient(resultListener);
+				}
 			}
-		}
+		});
+	}
 
-		protected abstract void informListener(
+	public abstract class ResultTask {
+		protected abstract void informClient(
 				AuthoritativeResultListener resultListener);
 	}
 

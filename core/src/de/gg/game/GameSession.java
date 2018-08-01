@@ -178,6 +178,7 @@ public abstract class GameSession {
 			// Die Zeit für das erste Update setzen
 			if (lastTime == -1)
 				lastTime = System.currentTimeMillis();
+
 			// Zeit-Delta ermitteln
 			long currentTime = System.currentTimeMillis();
 			long delta = (currentTime - lastTime)
@@ -210,7 +211,7 @@ public abstract class GameSession {
 
 			return false;
 		} else {
-			// VOTES
+			// PROCESS VOTES
 			if (matterToVoteOn == null) {
 				matterToVoteOn = city.getMattersToHoldVoteOn().pollFirst();
 

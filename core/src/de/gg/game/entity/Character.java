@@ -22,7 +22,8 @@ public class Character {
 	private int highestPositionLevel;
 	/**
 	 * The reputation modifiers. Should be between <code>-20</code> and
-	 * <code>+15</code>. Slowly shifts back to <code>0</code>. <br>
+	 * <code>+15</code>. Slowly shifts back to <code>0</code>.
+	 * <p>
 	 * A positive value is denoting a loyal, trustful and law-abiding citizen.
 	 */
 	private int reputationModifiers;

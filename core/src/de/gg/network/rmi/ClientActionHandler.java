@@ -37,8 +37,9 @@ public class ClientActionHandler {
 		actionListener.onAppliedForPosition(t, networkId);
 	}
 
-	public void arrangeImpeachmentVote(short targetCharacterId) {
-		actionListener.onImpeachmentVoteArranged(targetCharacterId, networkId);
+	public boolean arrangeImpeachmentVote(short targetCharacterId) {
+		return actionListener.onImpeachmentVoteArranged(targetCharacterId,
+				networkId);
 	}
 
 }

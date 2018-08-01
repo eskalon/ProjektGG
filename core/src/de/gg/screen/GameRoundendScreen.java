@@ -99,7 +99,7 @@ public class GameRoundendScreen extends BaseGameScreen {
 		mainTable.add(mTable);
 	}
 
-	private void updateUI() {
+	private synchronized void updateUI() {
 		// Data anzeigen
 		if (data != null) {
 			lastYearTitle.setText("Das vergangene Jahr");
@@ -126,7 +126,7 @@ public class GameRoundendScreen extends BaseGameScreen {
 	}
 
 	@Subscribe
-	public void onRoundEndDataArrived(RoundEndDataReceivedEvent event) {
+	public synchronized void onRoundEndDataArrived(RoundEndDataReceivedEvent event) {
 		this.setData(event.getData());
 
 		updateUI();
