@@ -462,8 +462,12 @@ public abstract class GameSession {
 		return currentRoundTime / (float) ROUND_DURATION;
 	}
 
-	public long getGameSeed() {
+	protected long getGameSeed() {
 		return sessionSetup.getSeed();
+	}
+
+	public long getRandomSeedForCurrentRound() {
+		return sessionSetup.getSeed() + currentRound;
 	}
 
 	/**

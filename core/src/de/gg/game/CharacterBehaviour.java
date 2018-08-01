@@ -82,8 +82,8 @@ public class CharacterBehaviour {
 
 		// Temporary Round Modifier (-3, 4)
 		opinion += getPerRoundAndCharacterPopularityModifier(
-				session.getGameSeed(), thisCharacterId, otherCharacterId,
-				session.getRound());
+				session.getRandomSeedForCurrentRound(), thisCharacterId,
+				otherCharacterId);
 
 		return opinion < 0 ? 0 : opinion;
 	}
@@ -92,20 +92,18 @@ public class CharacterBehaviour {
 	 * Returns the popularity modifier of a character towards another character
 	 * in this specific round.
 	 * 
-	 * @param gameSeed
-	 *            The seed of this game session.
+	 * @param seed
+	 *            The random seed for this round.
 	 * @param characterIdA
 	 *            The id of character a.
 	 * @param characterIdB
 	 *            The id of character b.
-	 * @param round
-	 *            The current round.
 	 * @return The popularity modifier of character a towards character b in
 	 *         this specific round.
 	 */
-	public static int getPerRoundAndCharacterPopularityModifier(long gameSeed,
-			short characterIdA, short characterIdB, int round) {
-		Random r = new Random(gameSeed * characterIdA * characterIdB * round);
+	public static int getPerRoundAndCharacterPopularityModifier(long seed,
+			short characterIdA, short characterIdB) {
+		Random r = new Random(seed * characterIdA * characterIdB);
 		return RandomUtils.getRandomNumber(r, -3, 4);
 	}
 
