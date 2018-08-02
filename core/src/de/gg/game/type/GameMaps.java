@@ -37,7 +37,7 @@ public class GameMaps {
 		return VALUES;
 	}
 
-	public static void finishLoading(AssetManager assetManager) {
+	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 
 		BAMBERG = JSONParser.parseFromJson(

@@ -35,7 +35,7 @@ public class NPCCharacterTraits {
 		// shouldn't get instantiated
 	}
 
-	public static void finishLoading(AssetManager assetManager) {
+	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 
 		/*

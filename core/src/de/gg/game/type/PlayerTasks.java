@@ -24,7 +24,7 @@ public class PlayerTasks {
 		// shouldn't get instantiated
 	}
 
-	public static void finishLoading(AssetManager assetManager) {
+	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 
 		LEARNING_SKILL = JSONParser.parseFromJson(assetManager

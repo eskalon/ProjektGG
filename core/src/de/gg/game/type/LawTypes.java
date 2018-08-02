@@ -6,6 +6,7 @@ import java.util.List;
 import com.badlogic.gdx.assets.AssetManager;
 import com.google.common.collect.Range;
 
+import de.gg.game.type.PositionTypes.PositionType;
 import de.gg.util.JSONParser;
 import de.gg.util.asset.Text;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
@@ -29,18 +30,35 @@ public class LawTypes {
 		// shouldn't get instantiated
 	}
 
-	public static void finishLoading(AssetManager assetManager) {
+	/**
+	 * Initializes the law types after the respective assets are loaded.
+	 * <p>
+	 * Has to be called after {@link PositionTypes#initialize(AssetManager)}.
+	 * 
+	 * @param assetManager
+	 */
+	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 
 		IMPORT_TARIFF = JSONParser.parseFromJson(assetManager
 				.get(IMPORT_TARIFF_JSON_PATH, Text.class).getString(),
 				LawType.class);
+		IMPORT_TARIFF.setVoters(new ArrayList<>());
 		VALUES.add(IMPORT_TARIFF);
 
 		INHERITANCE_TAX = JSONParser.parseFromJson(assetManager
 				.get(INHERITANCE_TAX_JSON_PATH, Text.class).getString(),
 				LawType.class);
+		INHERITANCE_TAX.setVoters(new ArrayList<>());
 		VALUES.add(INHERITANCE_TAX);
+
+		for (PositionType pos : PositionTypes.getValues()) {
+			if (pos.hasLawsToVoteFor()) {
+				for (Integer i : pos.getLawsToVoteFor()) {
+					getByIndex(i).getVoters().add(pos);
+				}
+			}
+		}
 	}
 
 	public static LawType getByIndex(int index) {
@@ -55,6 +73,7 @@ public class LawTypes {
 		private int upperBound;
 		private int lowerBound;
 		private Object defaultValue;
+		private List<PositionType> voters;
 
 		LawType() {
 		}
@@ -78,6 +97,27 @@ public class LawTypes {
 		public Range<Integer> getRange() {
 			return Range.closed(lowerBound, upperBound);
 		}
+
+		protected void setVoters(List<PositionType> voters) {
+			this.voters = voters;
+		}
+
+		/**
+		 * @return A list of every position that can vote on this law. Is empty
+		 *         if this law is unchangeable.
+		 */
+		public List<PositionType> getVoters() {
+			return voters;
+		}
+
+		/**
+		 * @return <code>true</code> when this law can be changed by a single
+		 *         position.
+		 */
+		public boolean isDecree() {
+			return voters.size() < 2;
+		}
+
 	}
 
 }

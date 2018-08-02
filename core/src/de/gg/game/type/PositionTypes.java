@@ -25,7 +25,7 @@ public class PositionTypes {
 		// shouldn't get instantiated
 	}
 
-	public static void finishLoading(AssetManager assetManager) {
+	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 
 		MAYOR = JSONParser.parseFromJson(
@@ -132,7 +132,6 @@ public class PositionTypes {
 		private int salary;
 		private int cabinet;
 		private List<Integer> lawsToVoteFor;
-		private List<LawType> lawsToVoteFor2 = null;
 		private boolean popularVote = false;
 
 		PositionType() {
@@ -176,20 +175,20 @@ public class PositionTypes {
 		}
 
 		/**
-		 * 
-		 * @return All laws the holder of this position can vote on. Is an empty
-		 *         list if there are none.
+		 * @return
+		 * @see #getLawsToVoteFor()
 		 */
-		public List<LawType> getLawsToVoteFor() {
-			if (lawsToVoteFor2 == null) {
-				lawsToVoteFor2 = new ArrayList<>();
+		public boolean hasLawsToVoteFor() {
+			return lawsToVoteFor != null;
+		}
 
-				for (Integer i : lawsToVoteFor) {
-					lawsToVoteFor2.add(LawTypes.getByIndex(i));
-				}
-			}
-
-			return lawsToVoteFor2;
+		/**
+		 * @return The indices of all laws the holder of this position can vote
+		 *         on. Is an empty list if there are none.
+		 * @see LawType#getVoters()
+		 */
+		public List<Integer> getLawsToVoteFor() {
+			return lawsToVoteFor;
 		}
 
 	}

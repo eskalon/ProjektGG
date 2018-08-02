@@ -138,9 +138,9 @@ public class LoadingScreen extends BaseLoadingScreen {
 		// VisUI.load();
 		// game.setUISkin(VisUI.getSkin());
 
-		PlayerUtils.finishLoading(assetManager);
-		GameMaps.finishLoading(assetManager);
-		ProfessionTypes.finishLoading(assetManager);
+		PlayerUtils.initialize(assetManager);
+		GameMaps.initialize(assetManager);
+		ProfessionTypes.initialize(assetManager);
 
 		// Notify loaded screens
 		game.getScreen("mainMenu").finishLoading();

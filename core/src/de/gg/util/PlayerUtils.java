@@ -154,7 +154,7 @@ public class PlayerUtils {
 		public boolean isMale;
 	}
 
-	public static void finishLoading(AnnotationAssetManager assetManager) {
+	public static void initialize(AnnotationAssetManager assetManager) {
 		VALUES = JSONParser
 				.parseFromJson(
 						assetManager.get(PLAYER_PRESETS_JSON_PATH, Text.class)

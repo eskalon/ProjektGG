@@ -230,7 +230,7 @@ public class CharacterFactory {
 		return c;
 	}
 
-	public static void finishLoading(AnnotationAssetManager assetManager) {
+	public static void initialize(AnnotationAssetManager assetManager) {
 		FEMALE_NAMES = JSONParser
 				.parseFromJson(
 						assetManager.get(FEMALE_NAMES_JSON_PATH, Text.class)

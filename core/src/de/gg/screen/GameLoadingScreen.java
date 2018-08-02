@@ -10,6 +10,7 @@ import de.gg.game.entity.BuildingSlot;
 import de.gg.game.factory.CharacterFactory;
 import de.gg.game.type.BuildingTypes;
 import de.gg.game.type.ItemTypes;
+import de.gg.game.type.LawTypes;
 import de.gg.game.type.PositionTypes;
 import de.gg.game.type.SocialStatusS;
 import de.gg.render.RenderData;
@@ -35,6 +36,7 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 		assetManager.load(TestShader.class);
 		assetManager.load(BuildingTypes.class);
 		assetManager.load(PositionTypes.class);
+		assetManager.load(LawTypes.class);
 		assetManager.load(SocialStatusS.class);
 		assetManager.load(ItemTypes.class);
 		assetManager.load(ItemTypes.class);
@@ -57,12 +59,13 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 		game.getScreen("house").finishLoading();
 		game.getScreen("roundEnd").finishLoading();
 		game.getScreen("vote").finishLoading();
-		BuildingTypes.finishLoading(assetManager);
-		PositionTypes.finishLoading(assetManager);
-		SocialStatusS.finishLoading(assetManager);
-		ItemTypes.finishLoading(assetManager);
-		ItemTypes.finishLoading(assetManager);
-		CharacterFactory.finishLoading(assetManager);
+		BuildingTypes.initialize(assetManager);
+		PositionTypes.initialize(assetManager);
+		LawTypes.initialize(assetManager);
+		SocialStatusS.initialize(assetManager);
+		ItemTypes.initialize(assetManager);
+		ItemTypes.initialize(assetManager);
+		CharacterFactory.initialize(assetManager);
 
 		// TODO folgendes als Worker, der in eigenen Loading-Screen integriert
 		// ist, umsetzen, sodass sich für den Nutzer sichtbar ein Balken bewegt

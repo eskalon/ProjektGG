@@ -29,7 +29,7 @@ public class ProfessionTypes {
 		return VALUES;
 	}
 
-	public static void finishLoading(AssetManager assetManager) {
+	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 
 		SMITH = JSONParser.parseFromJson(
