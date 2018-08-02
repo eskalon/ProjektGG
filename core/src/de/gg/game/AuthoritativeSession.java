@@ -10,6 +10,7 @@ import java.util.Random;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.data.GameSpeed;
 import de.gg.game.data.RoundEndData;
+import de.gg.game.data.vote.ElectionVote;
 import de.gg.game.data.vote.ImpeachmentVote;
 import de.gg.game.data.vote.VoteResults;
 import de.gg.game.data.vote.VoteableMatter;
@@ -194,7 +195,7 @@ public class AuthoritativeSession extends GameSession
 			Map<Integer, Integer> resultMap = new HashMap<Integer, Integer>();
 			for (int i : voteResults.getIndividualVotes().values()) {
 				Integer count = resultMap.get(i);
-				resultMap.put(i, count != null ? count + 1 : 0);
+				resultMap.put(i, count != null ? count + 1 : 1);
 			}
 
 			resultMap = CollectionUtils.sortByValue(resultMap);
@@ -206,15 +207,22 @@ public class AuthoritativeSession extends GameSession
 					&& entries[0].getValue() == entries[1].getValue()) {
 				List<Integer> resultOptions = new ArrayList<>();
 
+				// Collect all tied options
 				for (Entry<Integer, Integer> entry : entries) {
 					if (entry.getValue() == entries[0].getValue()) {
 						resultOptions.add(entry.getKey());
 					}
 				}
+				if (!(matterToVoteOn instanceof ElectionVote)
+						&& matterToVoteOn.getOptions().size() == 2) // the
+																	// majority
+																	// is needed
+					voteResults.setOverallResult(-1);
+				else // Random option wins
+					voteResults.setOverallResult(
+							CollectionUtils.getRandomElementInList(
+									resultOptions, new Random(getGameSeed())));
 
-				voteResults.setOverallResult(
-						CollectionUtils.getRandomElementInList(resultOptions,
-								new Random(getGameSeed())));
 			} else {
 				// One result
 				voteResults.setOverallResult(entries[0].getKey());
