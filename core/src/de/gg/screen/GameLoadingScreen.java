@@ -92,7 +92,7 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 				assetManager.get(SKYBOX_MODEL_PATH, Model.class)));
 
 		// Change the screen
-		Log.info("Client", "Spiel gestartet");
+		Log.info("Client", "Spiel geladen & gestartet");
 		game.pushScreen("roundEnd");
 	}
 

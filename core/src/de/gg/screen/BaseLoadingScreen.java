@@ -98,16 +98,6 @@ public abstract class BaseLoadingScreen extends BaseScreen {
 	protected abstract void onFinishedLoading();
 
 	@Override
-	public void show() {
-		// unused
-	}
-
-	@Override
-	public void hide() {
-		// unused
-	}
-
-	@Override
 	public void dispose() {
 		// unused
 	}

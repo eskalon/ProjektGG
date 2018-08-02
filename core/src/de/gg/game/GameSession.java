@@ -205,7 +205,6 @@ public abstract class GameSession {
 					waitingForNextRound = true;
 
 					return true;
-
 				}
 			}
 
@@ -382,10 +381,14 @@ public abstract class GameSession {
 					.entrySet()) {
 				Character voter = city.getCharacter(e.getKey());
 
+				if (e.getKey() == vote.getVoteCaller()) {
+					voter.addOpinionModifier(vote.getCharacterToImpeach(), -18);
+				}
+
 				if (e.getValue() == ImpeachmentVote.DONT_IMPEACH_OPTION_INDEX) {
-					voter.addOpinionModifier(vote.getCharacterToImpeach(), 8);
+					voter.addOpinionModifier(vote.getCharacterToImpeach(), 7);
 				} else {
-					voter.addOpinionModifier(vote.getCharacterToImpeach(), -16);
+					voter.addOpinionModifier(vote.getCharacterToImpeach(), -12);
 					if (city.getCharacter(vote.getCharacterToImpeach())
 							.getReputation() > 0)
 						voter.setReputationModifiers(

@@ -312,14 +312,15 @@ public class AuthoritativeSession extends GameSession
 				.getPosition();
 
 		if (t != null) {
-			// TODO checken, ob nicht bereits ein Anderer einen Vote initiiert
-			// hat
+			// TODO überprüfen, ob nicht bereits ein anderer einen Vote
+			// initiiert hat
 
 			city.getMattersToHoldVoteOn().add(new ImpeachmentVote(city, t,
 					city.getPlayer(clientId).getCurrentlyPlayedCharacterId()));
 
 			resultListenerStub.onImpeachmentVoteArranged(targetCharacterId,
 					city.getPlayer(clientId).getCurrentlyPlayedCharacterId());
+			return true;
 		}
 
 		return false;

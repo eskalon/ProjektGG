@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -31,7 +32,7 @@ public class ServerBrowserScreen extends BaseUIScreen {
 	private final String BACKGROUND_IMAGE_PATH = "ui/backgrounds/town.jpg";
 	@Asset(Texture.class)
 	private final String TICK_IMAGE_PATH = "ui/icons/ready.png";
-	private AnimationlessDialog connectingDialog;
+	private Dialog connectingDialog;
 	private Table serverTable;
 	/**
 	 * This list holds all local LAN servers that were discovered.
@@ -93,10 +94,9 @@ public class ServerBrowserScreen extends BaseUIScreen {
 											Integer.valueOf(
 													portInputField.getText())));
 
-									connectingDialog = new AnimationlessDialog(
-											"Verbinden...", skin);
-									connectingDialog.text("Spiel beitreten...");
-									connectingDialog.show(stage);
+									connectingDialog = showInfoDialog(
+											"Verbinden...",
+											"Spiel beitreten...", false);
 								}
 							}
 						};
@@ -172,11 +172,8 @@ public class ServerBrowserScreen extends BaseUIScreen {
 					protected void onClick() {
 						game.setClient(new GameClient(game.getEventBus(),
 								game.getVersion(), ip, port));
-
-						connectingDialog = new AnimationlessDialog(
-								"Verbinden...", skin);
-						connectingDialog.text("Spiel beitreten...");
-						connectingDialog.show(stage);
+						connectingDialog = showInfoDialog("Verbinden...",
+								"Spiel beitreten...", false);
 					}
 				});
 
@@ -190,8 +187,6 @@ public class ServerBrowserScreen extends BaseUIScreen {
 
 	@Subscribe
 	public void onClientConnected(ConnectionEstablishedEvent event) {
-		connectingDialog.setVisible(false);
-
 		((LobbyScreen) game.getScreen("lobby")).setupLobby(event);
 		game.pushScreen("lobby");
 	}
@@ -201,14 +196,11 @@ public class ServerBrowserScreen extends BaseUIScreen {
 		connectingDialog.setVisible(false);
 		game.setClient(null);
 
-		AnimationlessDialog dialog = new AnimationlessDialog("Fehler", skin);
 		if (event.getException() != null)
-			dialog.text(event.getException().getMessage());
+			showInfoDialog("Fehler", event.getException().getMessage(), true);
 		else
-			dialog.text(event.getServerRejectionMessage().getMessage());
-		dialog.button("Ok", true);
-		dialog.key(Keys.ENTER, true);
-		dialog.show(stage);
+			showInfoDialog("Fehler",
+					event.getServerRejectionMessage().getMessage(), true);
 	}
 
 }

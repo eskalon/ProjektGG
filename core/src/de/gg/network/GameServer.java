@@ -232,6 +232,9 @@ public class GameServer {
 
 	// ON PLAYER CHANGE
 	private void onPlayerChange(Connection con, PlayerChangedMessage msg) {
+		Log.debug("Server",
+				"Die Konfiguration von Spieler %d hat sich geändert",
+				msg.getId());
 		server.sendToAllExceptTCP(con.getID(), msg);
 
 		players.put(msg.getId(), msg.getPlayer());
@@ -240,7 +243,8 @@ public class GameServer {
 			// Establish RMI connection
 			establishRMIConnections();
 			Log.info("Server",
-					"RMI-Netzwerkverbindung zu den Clienten eingerichtet");
+					"RMI-Netzwerkverbindung zu den %d Clienten eingerichtet",
+					players.size());
 
 			// Close Broadcast-Server
 			(new Thread(new Runnable() {

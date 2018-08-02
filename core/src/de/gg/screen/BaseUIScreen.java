@@ -1,6 +1,7 @@
 package de.gg.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -9,6 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
+import de.gg.ui.AnimationlessDialog;
 
 /**
  * The base class of all UI screens. It automatically loads the
@@ -97,5 +100,45 @@ public abstract class BaseUIScreen extends BaseScreen {
 	public void dispose() {
 		if (stage != null)
 			stage.dispose();
+	}
+
+	/**
+	 * Shows an informational dialog on the current screen.
+	 * 
+	 * @param title
+	 *            The dialog's title.
+	 * @param text
+	 *            The dialog's informational text.
+	 * @param showButton
+	 *            Whether this dialog should show an "Ok" button to close
+	 *            itself.
+	 * @return The dialog.
+	 * @see AnimationlessDialog#show(Stage)
+	 */
+	protected AnimationlessDialog showInfoDialog(String title, String text,
+			boolean showButton) {
+		AnimationlessDialog dialog = new AnimationlessDialog(title, skin);
+		dialog.text(text);
+		if (showButton) {
+			dialog.key(Keys.ENTER, true);
+			dialog.button("Ok");
+		}
+
+		dialog.show(stage);
+		return dialog;
+	}
+
+	/**
+	 * Shows an informational dialog on the current screen.
+	 * 
+	 * @param title
+	 *            The dialog's title.
+	 * @param text
+	 *            The dialog's informational text.
+	 * @return The dialog.
+	 * @see #showInfoDialog(String, String)
+	 */
+	protected AnimationlessDialog showInfoDialog(String title, String text) {
+		return showInfoDialog(title, text, true);
 	}
 }

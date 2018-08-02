@@ -37,6 +37,7 @@ import de.gg.render.SceneRenderer;
 import de.gg.render.TestShader;
 import de.gg.ui.AnimationlessDialog;
 import de.gg.util.Log;
+import de.gg.util.SimpleCallback;
 import de.gg.util.asset.Text;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
@@ -179,7 +180,22 @@ public class GameMapScreen extends BaseGameScreen {
 
 									if (mayor != -1)
 										game.getClient().getActionHandler()
-												.arrangeImpeachmentVote(mayor);
+												.arrangeImpeachmentVote(mayor,
+														new SimpleCallback() {
+															@Override
+															public void call(
+																	Object param) {
+																if ((Boolean) param == true) {
+																	showInfoDialog(
+																			"Absetzung beantragt",
+																			"WIP");
+																} else {
+																	showInfoDialog(
+																			"FEHLER",
+																			"Verbindungsfehler!");
+																}
+															}
+														});
 								}
 							});
 							changeableCharacterMenuTable.add(kickButton);

@@ -6,13 +6,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton.ImageTextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 /**
- * This is a dialog without animations. It should always be used instead of
- * {@link Dialog}.
+ * This is a dialog without fade-out and fade-in animations. It should always be
+ * used instead of {@link Dialog}.
  * <p>
  * The dialog has convenience methods for adding buttons on the bottom of the
- * window and keyboard listeners({@link #button(String, Object)},
+ * window and keyboard listeners ({@link #button(String, Object)},
  * {@link #key(int, Object)}). The results of these methods can get processed by
  * overriding {@link #result(Object)}.
+ * <p>
+ * To display a dialog the {@link #show(Stage)}-method is used.
  */
 public class AnimationlessDialog extends Dialog {
 
@@ -38,7 +40,7 @@ public class AnimationlessDialog extends Dialog {
 
 	/**
 	 * {@link #pack() Packs} the dialog and adds it to the stage, centered but
-	 * without a fade in action.
+	 * without a fade-in action.
 	 */
 	public Dialog show(Stage stage) {
 		show(stage, null);
@@ -48,8 +50,8 @@ public class AnimationlessDialog extends Dialog {
 	}
 
 	/**
-	 * Hides the dialog. Called automatically when a button is clicked. No fade
-	 * out animation is played.
+	 * Hides the dialog. Is called automatically when a button is clicked. No
+	 * fade-out animation is played.
 	 */
 	public void hide() {
 		hide(null);

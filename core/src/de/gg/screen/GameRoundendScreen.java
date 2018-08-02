@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
-import com.esotericsoftware.minlog.Log;
 import com.google.common.eventbus.Subscribe;
 
 import de.gg.event.NextRoundEvent;
@@ -69,7 +68,7 @@ public class GameRoundendScreen extends BaseGameScreen {
 						* game.getSettings().getMasterVolume());
 				nextButton.setText("Warten...");
 
-				Log.debug("Client", "Client ist bereit");
+				// Log.debug("Client", "Client ist bereit");
 
 				game.getClient().getActionHandler().readyUp();
 
@@ -126,6 +125,7 @@ public class GameRoundendScreen extends BaseGameScreen {
 	}
 
 	@Subscribe
+	@Override
 	public synchronized void onRoundEndDataArrived(
 			RoundEndDataReceivedEvent event) {
 		this.setData(event.getData());

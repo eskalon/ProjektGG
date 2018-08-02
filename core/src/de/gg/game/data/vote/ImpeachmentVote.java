@@ -99,4 +99,8 @@ public class ImpeachmentVote extends VoteableMatter {
 		return currentHolder;
 	}
 
+	public short getVoteCaller() {
+		return voteCaller;
+	}
+
 }

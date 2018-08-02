@@ -22,8 +22,8 @@ public interface AuthoritativeResultListener {
 	 * Called after a round ended to inform about the changes.
 	 * 
 	 * @param data
-	 *            this data contains all calculations done after a round i.e. a
-	 *            salary costs, tuition effects, etc.
+	 *            this data contains all server-side calculations done after a
+	 *            round.
 	 */
 	public void onRoundEnd(RoundEndData data);
 

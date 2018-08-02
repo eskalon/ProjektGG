@@ -118,11 +118,11 @@ public class GameClient {
 		listener.addTypeHandler(GameSetupMessage.class, (con, msg) -> {
 			if (gameVersion.equals(msg.getServerVersion())) { // right server
 																// version
+				localClientId = msg.getId();
 				Log.info("Client", "Lobby beigetreten. Netzwerk-ID: %d",
 						localClientId);
 				eventBus.post(new ConnectionEstablishedEvent(msg.getPlayers(),
 						msg.getId(), msg.getSettings()));
-				localClientId = msg.getId();
 			} else { // wrong server version
 				eventBus.post(
 						new ConnectionFailedEvent(new ServerRejectionMessage() {
