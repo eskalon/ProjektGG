@@ -7,8 +7,8 @@ import com.badlogic.gdx.assets.AssetManager;
 
 import de.gg.game.type.LawTypes.LawType;
 import de.gg.game.type.SocialStatusS.SocialStatus;
-import de.gg.util.JSONParser;
 import de.gg.util.asset.Text;
+import de.gg.util.json.SimpleJSONParser;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class PositionTypes {
@@ -28,12 +28,12 @@ public class PositionTypes {
 	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 
-		MAYOR = JSONParser.parseFromJson(
+		MAYOR = SimpleJSONParser.parseFromJson(
 				assetManager.get(MAYOR_JSON_PATH, Text.class).getString(),
 				PositionType.class);
 		VALUES.add(MAYOR);
 
-		COUNCILMAN_1 = JSONParser.parseFromJson(assetManager
+		COUNCILMAN_1 = SimpleJSONParser.parseFromJson(assetManager
 				.get(COUNCILMAN_1_JSON_PATH, Text.class).getString(),
 				PositionType.class);
 		VALUES.add(COUNCILMAN_1);
@@ -131,7 +131,7 @@ public class PositionTypes {
 		private int statusRequirementIndex;
 		private int salary;
 		private int cabinet;
-		private List<Integer> lawsToVoteFor;
+		private List<Integer> lawsToVoteForIndices;
 		private boolean popularVote = false;
 
 		PositionType() {
@@ -179,7 +179,7 @@ public class PositionTypes {
 		 * @see #getLawsToVoteFor()
 		 */
 		public boolean hasLawsToVoteFor() {
-			return lawsToVoteFor != null;
+			return lawsToVoteForIndices != null;
 		}
 
 		/**
@@ -187,8 +187,8 @@ public class PositionTypes {
 		 *         on. Is an empty list if there are none.
 		 * @see LawType#getVoters()
 		 */
-		public List<Integer> getLawsToVoteFor() {
-			return lawsToVoteFor;
+		public List<Integer> getIndicesOfLawsToVoteFor() {
+			return lawsToVoteForIndices;
 		}
 
 	}

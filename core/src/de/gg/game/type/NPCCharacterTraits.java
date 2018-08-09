@@ -35,6 +35,10 @@ public class NPCCharacterTraits {
 		// shouldn't get instantiated
 	}
 
+	public static List<CharacterTrait> getValues() {
+		return VALUES;
+	}
+
 	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 

@@ -15,6 +15,10 @@ public class ItemTypes {
 		// shouldn't get instantiated
 	}
 
+	public static List<ItemType> getValues() {
+		return VALUES;
+	}
+
 	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 

@@ -13,6 +13,10 @@ public class CrimeTypes {
 		// shouldn't get instantiated
 	}
 
+	public static List<CrimeType> getValues() {
+		return VALUES;
+	}
+
 	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 

@@ -1,35 +1,33 @@
-package de.gg.util;
+package de.gg.util.json;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
+import de.gg.util.json.ExcludeAnnotationExclusionStrategy.ExcludeFromJSON;
+
 /**
- * A JSON Paser based on {@linkplain Gson Gson}.
+ * A simple JSON parser based on {@linkplain Gson Gson}.
+ * <p>
+ * Use the {@link ExcludeFromJSON} annotation to exclude classes and fields from
+ * serialization.
  * 
  * @see #parseJson(String, Class)
  */
-public class JSONParser {
+public class SimpleJSONParser {
 
 	/**
 	 * Gson-Parser.
 	 */
 	private static Gson gson = new GsonBuilder()
 			.excludeFieldsWithModifiers(Modifier.STATIC)
-			.setExclusionStrategies(
-					new JSONParser().new ExcludeAnnotationExclusionStrategy())
+			.setExclusionStrategies(new ExcludeAnnotationExclusionStrategy())
 			.setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 
-	private JSONParser() {
+	private SimpleJSONParser() {
 	}
 
 	/**
@@ -61,6 +59,7 @@ public class JSONParser {
 	 * @throws JsonSyntaxException
 	 *             if there is a problem processing the JSON elements.
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T parseFromJson(String jsonInput, Type type)
 			throws JsonSyntaxException {
 		return (T) gson.fromJson(jsonInput, type);
@@ -79,32 +78,4 @@ public class JSONParser {
 		return gson.toJson(object);
 	}
 
-	/**
-	 * Excludes fields marked with {@link ExcludeFromJSON} from the
-	 * serialization.
-	 */
-	public class ExcludeAnnotationExclusionStrategy
-			implements ExclusionStrategy {
-
-		@Override
-		public boolean shouldSkipClass(Class<?> arg0) {
-			return false;
-		}
-
-		@Override
-		public boolean shouldSkipField(FieldAttributes f) {
-			return f.getAnnotation(ExcludeFromJSON.class) != null;
-		}
-	}
-
-	/**
-	 * If a field is marked with this annotation it is excluded from the json
-	 * serialization.
-	 * 
-	 * @see ExcludeAnnotationExclusionStrategy
-	 */
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ ElementType.FIELD })
-	public @interface ExcludeFromJSON {
-	}
 }

@@ -7,8 +7,8 @@ import com.badlogic.gdx.assets.AssetManager;
 
 import de.gg.game.type.ItemTypes.ItemType;
 import de.gg.game.type.ProfessionTypes.ProfessionType;
-import de.gg.util.JSONParser;
 import de.gg.util.asset.Text;
+import de.gg.util.json.SimpleJSONParser;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public final class BuildingTypes {
@@ -27,18 +27,22 @@ public final class BuildingTypes {
 		// shouldn't get instantiated
 	}
 
+	public static List<BuildingType> getValues() {
+		return VALUES;
+	}
+
 	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 
-		TOWN_HALL = JSONParser.parseFromJson(
+		TOWN_HALL = SimpleJSONParser.parseFromJson(
 				assetManager.get(TOWN_HALL_JSON_PATH, Text.class).getString(),
 				BuildingType.class);
 		VALUES.add(TOWN_HALL);
-		FORGE_1 = JSONParser.parseFromJson(
+		FORGE_1 = SimpleJSONParser.parseFromJson(
 				assetManager.get(FORGE_1_JSON_PATH, Text.class).getString(),
 				BuildingType.class);
 		VALUES.add(FORGE_1);
-		FORGE_2 = JSONParser.parseFromJson(
+		FORGE_2 = SimpleJSONParser.parseFromJson(
 				assetManager.get(FORGE_2_JSON_PATH, Text.class).getString(),
 				BuildingType.class);
 		VALUES.add(FORGE_2);

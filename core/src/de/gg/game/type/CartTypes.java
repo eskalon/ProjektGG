@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.badlogic.gdx.assets.AssetManager;
 
-import de.gg.util.JSONParser;
 import de.gg.util.asset.Text;
+import de.gg.util.json.SimpleJSONParser;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class CartTypes {
@@ -21,10 +21,14 @@ public class CartTypes {
 		// shouldn't get instantiated
 	}
 
+	public static List<CartType> getValues() {
+		return VALUES;
+	}
+
 	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 
-		BASIC = JSONParser.parseFromJson(
+		BASIC = SimpleJSONParser.parseFromJson(
 				assetManager.get(BASIC_JSON_PATH, Text.class).getString(),
 				CartType.class);
 		VALUES.add(BASIC);

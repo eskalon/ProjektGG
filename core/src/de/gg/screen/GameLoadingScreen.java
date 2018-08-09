@@ -16,6 +16,7 @@ import de.gg.game.type.SocialStatusS;
 import de.gg.render.RenderData;
 import de.gg.render.TestShader;
 import de.gg.util.Log;
+import de.gg.util.json.SaveGameParser;
 
 /**
  * This screen takes care of loading the assets for all ingame screens.
@@ -66,6 +67,7 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 		ItemTypes.initialize(assetManager);
 		ItemTypes.initialize(assetManager);
 		CharacterFactory.initialize(assetManager);
+		SaveGameParser.initialize();
 
 		// TODO folgendes als Worker, der in eigenen Loading-Screen integriert
 		// ist, umsetzen, sodass sich für den Nutzer sichtbar ein Balken bewegt

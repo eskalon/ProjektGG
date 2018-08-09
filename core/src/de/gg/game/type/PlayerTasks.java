@@ -6,8 +6,8 @@ import java.util.List;
 import com.badlogic.gdx.assets.AssetManager;
 
 import de.gg.game.entity.Player;
-import de.gg.util.JSONParser;
 import de.gg.util.asset.Text;
+import de.gg.util.json.SimpleJSONParser;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class PlayerTasks {
@@ -24,15 +24,19 @@ public class PlayerTasks {
 		// shouldn't get instantiated
 	}
 
+	public static List<PlayerTask> getValues() {
+		return VALUES;
+	}
+
 	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 
-		LEARNING_SKILL = JSONParser.parseFromJson(assetManager
+		LEARNING_SKILL = SimpleJSONParser.parseFromJson(assetManager
 				.get(LEARNING_AGILITY_JSON_PATH, Text.class).getString(),
 				PlayerTask.class);
 		VALUES.add(LEARNING_SKILL);
 
-		UPGRADING_MASTER = JSONParser.parseFromJson(assetManager
+		UPGRADING_MASTER = SimpleJSONParser.parseFromJson(assetManager
 				.get(UPGRADING_MASTER_JSON_PATH, Text.class).getString(),
 				PlayerTask.class);
 		VALUES.add(UPGRADING_MASTER);

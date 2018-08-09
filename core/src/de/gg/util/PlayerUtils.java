@@ -11,6 +11,7 @@ import de.gg.game.type.ProfessionTypes;
 import de.gg.game.type.ProfessionTypes.ProfessionType;
 import de.gg.network.LobbyPlayer;
 import de.gg.util.asset.Text;
+import de.gg.util.json.SimpleJSONParser;
 import net.dermetfan.gdx.assets.AnnotationAssetManager;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
@@ -146,8 +147,8 @@ public class PlayerUtils {
 	}
 
 	/**
-	 * This class represents the player data read via {@linkplain JSONParser
-	 * json} and holds a name as well as a surname.
+	 * This class represents the player data read via
+	 * {@linkplain SimpleJSONParser json} and holds a name as well as a surname.
 	 */
 	public static class PlayerStub {
 		public String name, surname;
@@ -155,7 +156,7 @@ public class PlayerUtils {
 	}
 
 	public static void initialize(AnnotationAssetManager assetManager) {
-		VALUES = JSONParser
+		VALUES = SimpleJSONParser
 				.parseFromJson(
 						assetManager.get(PLAYER_PRESETS_JSON_PATH, Text.class)
 								.getString(),

@@ -6,15 +6,17 @@ import java.util.List;
 import de.gg.game.type.BuildingTypes.BuildingType;
 import de.gg.render.RenderData;
 import de.gg.render.SceneRenderer;
+import de.gg.util.json.ExcludeAnnotationExclusionStrategy.ExcludeFromJSON;
 
 /**
  * A building located on an {@link BuildingSlot}.
  */
 public class Building {
 
+	@ExcludeFromJSON
 	private RenderData renderData;
 	private BuildingType type;
-	private Player owner;
+	private short owner;
 	private int health;
 	private List<Cart> cartsOnSite = new ArrayList<>();
 	private List<Employee> employees = new ArrayList<>();
@@ -52,11 +54,11 @@ public class Building {
 		this.type = type;
 	}
 
-	public Player getOwner() {
+	public short getOwner() {
 		return owner;
 	}
 
-	public void setOwner(Player owner) {
+	public void setOwner(short owner) {
 		this.owner = owner;
 	}
 

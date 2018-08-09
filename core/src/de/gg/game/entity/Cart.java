@@ -10,7 +10,7 @@ public class Cart {
 	private CartType type;
 	private List<ItemStack> stacks = new ArrayList<>();
 	private int hp;
-	private Player owner;
+	private short owner;
 
 	public CartType getType() {
 		return type;
@@ -36,11 +36,11 @@ public class Cart {
 		this.hp = hp;
 	}
 
-	public Player getOwner() {
+	public short getOwner() {
 		return owner;
 	}
 
-	public void setOwner(Player owner) {
+	public void setOwner(short owner) {
 		this.owner = owner;
 	}
 

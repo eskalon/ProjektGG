@@ -13,9 +13,9 @@ import de.gg.game.type.ProfessionTypes.ProfessionType;
 import de.gg.game.type.Religion;
 import de.gg.game.type.SocialStatusS;
 import de.gg.game.type.SocialStatusS.SocialStatus;
-import de.gg.util.JSONParser;
 import de.gg.util.RandomUtils;
 import de.gg.util.asset.Text;
+import de.gg.util.json.SimpleJSONParser;
 import net.dermetfan.gdx.assets.AnnotationAssetManager;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
@@ -231,17 +231,17 @@ public class CharacterFactory {
 	}
 
 	public static void initialize(AnnotationAssetManager assetManager) {
-		FEMALE_NAMES = JSONParser
+		FEMALE_NAMES = SimpleJSONParser
 				.parseFromJson(
 						assetManager.get(FEMALE_NAMES_JSON_PATH, Text.class)
 								.getString(),
 						new TypeToken<ArrayList<String>>() {
 						}.getType());
-		MALE_NAMES = JSONParser.parseFromJson(
+		MALE_NAMES = SimpleJSONParser.parseFromJson(
 				assetManager.get(MALE_NAMES_JSON_PATH, Text.class).getString(),
 				new TypeToken<ArrayList<String>>() {
 				}.getType());
-		SURNAMES = JSONParser.parseFromJson(
+		SURNAMES = SimpleJSONParser.parseFromJson(
 				assetManager.get(SURNAMES_JSON_PATH, Text.class).getString(),
 				new TypeToken<ArrayList<String>>() {
 				}.getType());

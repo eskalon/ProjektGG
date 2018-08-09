@@ -6,8 +6,8 @@ import java.util.List;
 import com.badlogic.gdx.assets.AssetManager;
 
 import de.gg.game.type.BuildingTypes.BuildingType;
-import de.gg.util.JSONParser;
 import de.gg.util.asset.Text;
+import de.gg.util.json.SimpleJSONParser;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class ProfessionTypes {
@@ -32,12 +32,12 @@ public class ProfessionTypes {
 	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 
-		SMITH = JSONParser.parseFromJson(
+		SMITH = SimpleJSONParser.parseFromJson(
 				assetManager.get(SMITH_JSON_PATH, Text.class).getString(),
 				ProfessionType.class);
 		VALUES.add(SMITH);
 
-		TEACHER = JSONParser.parseFromJson(
+		TEACHER = SimpleJSONParser.parseFromJson(
 				assetManager.get(TEACHER_JSON_PATH, Text.class).getString(),
 				ProfessionType.class);
 		VALUES.add(TEACHER);

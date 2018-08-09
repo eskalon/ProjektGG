@@ -144,10 +144,11 @@ public abstract class GameSession {
 	}
 
 	/**
-	 * Sets the city, the game entities and the processing systems up.
+	 * Sets the game up by initializing the city, the game entities and the
+	 * processing systems.
 	 * <p>
-	 * To update the session after the initialization {@link #update()} has to
-	 * get called. To resume the game after a round ended
+	 * After the initialization the session can be updated via calling
+	 * {@link #update()}. To resume the game after a round ended
 	 * {@link #startNextRound()} has to get called.
 	 */
 	public synchronized void setupGame() {
@@ -161,8 +162,8 @@ public abstract class GameSession {
 
 	/**
 	 * Updates the game session. The session has to get {@linkplain #setupGame()
-	 * setup} before. Returns true once, when a round is over. To start the next
-	 * round call {@link #startNextRound()}.
+	 * setup} before. Returns <code>true</code> once, when a round is over. To
+	 * start the next round call {@link #startNextRound()}.
 	 * 
 	 * @return whether the ingame day is over (8 minutes).
 	 */

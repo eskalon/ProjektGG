@@ -1,11 +1,20 @@
 package de.gg.game;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.io.FileUtils;
+
+import com.google.common.base.Stopwatch;
+import com.google.gson.JsonSyntaxException;
 
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.data.GameSpeed;
@@ -33,6 +42,7 @@ import de.gg.util.CollectionUtils;
 import de.gg.util.Log;
 import de.gg.util.PlayerUtils;
 import de.gg.util.RandomUtils;
+import de.gg.util.json.SaveGameParser;
 
 /**
  * This class takes care of simulating the game session on the server side and
@@ -41,6 +51,11 @@ import de.gg.util.RandomUtils;
  */
 public class AuthoritativeSession extends GameSession
 		implements SlaveActionListener {
+
+	public static final String SAVES_DIR = "./saves/";
+	private static final Charset CHARSET = Charset.isSupported("UTF-8")
+			? Charset.forName("UTF-8")
+			: Charset.defaultCharset();
 
 	private HashMap<Short, AuthoritativeResultListener> resultListeners;
 	private AuthoritativeResultListener resultListenerStub;
@@ -136,7 +151,7 @@ public class AuthoritativeSession extends GameSession
 		super.processRoundEnd(data);
 
 		// Save automatically on the round end
-		saveGame();
+		// saveGame();
 
 		// Save the statistics
 		saveStats();
@@ -241,7 +256,40 @@ public class AuthoritativeSession extends GameSession
 	}
 
 	public void saveGame() {
-		// TODO save the game
+		Log.info("Server", "Spiel speichern...");
+		Stopwatch timer = Stopwatch.createStarted();
+
+		SavedGame save = new SavedGame();
+		save.city = this.city;
+		save.serverSetup = this.serverSetup;
+		GameSessionSetup sessionSetup = new GameSessionSetup(getDifficulty(),
+				-1, getGameSeed());
+		save.gameSessionSetup = sessionSetup;
+		save.currentRound = getCurrentRound();
+
+		// TODO client-identifiers über IPs (?)
+		// TODO der aktuelle Rundenzeitpunkt
+
+		File savesFile = new File(SAVES_DIR + serverSetup.getGameName());
+
+		try {
+			// Rename old file
+			if (savesFile.exists())
+				FileUtils.copyFile(savesFile,
+						new File(SAVES_DIR + serverSetup.getGameName() + "_"
+								+ (System.currentTimeMillis() / 1000)));
+
+			// Save new one
+			FileUtils.writeStringToFile(savesFile,
+					SaveGameParser.parseToJson(save), CHARSET, false);
+		} catch (JsonSyntaxException | IOException e) {
+			Log.error("Server", "Spiel konnte nicht gespeichert werden: %s",
+					e.getMessage());
+		}
+
+		Log.info("Server", "Spiel gespeichert als '%s' in %d miliseconds!",
+				savesFile.getAbsolutePath(),
+				timer.elapsed(TimeUnit.MILLISECONDS));
 	}
 
 	@Override

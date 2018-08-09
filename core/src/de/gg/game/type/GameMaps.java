@@ -8,14 +8,14 @@ import com.badlogic.gdx.assets.AssetManager;
 
 import de.gg.game.entity.BuildingSlot;
 import de.gg.render.RenderData;
-import de.gg.util.JSONParser;
 import de.gg.util.asset.Text;
+import de.gg.util.json.SimpleJSONParser;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 /**
  * This class holds all the information about the map's setup, e.g. the map
  * boundaries, the building positions, modifiers, etc. This class should get
- * loaded via {@linkplain JSONParser JSON} and the values of its members
+ * loaded via {@linkplain SimpleJSONParser JSON} and the values of its members
  * shouldn't change!
  */
 public class GameMaps {
@@ -40,7 +40,7 @@ public class GameMaps {
 	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 
-		BAMBERG = JSONParser.parseFromJson(
+		BAMBERG = SimpleJSONParser.parseFromJson(
 				assetManager.get(BAMBERG_JSON_PATH, Text.class).getString(),
 				GameMap.class);
 		VALUES.add(BAMBERG);

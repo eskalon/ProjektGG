@@ -6,8 +6,8 @@ import java.util.List;
 import com.badlogic.gdx.assets.AssetManager;
 
 import de.gg.game.type.PositionTypes.PositionType;
-import de.gg.util.JSONParser;
 import de.gg.util.asset.Text;
+import de.gg.util.json.SimpleJSONParser;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class SocialStatusS {
@@ -30,26 +30,30 @@ public class SocialStatusS {
 		// shouldn't get instantiated
 	}
 
+	public static List<SocialStatus> getValues() {
+		return VALUES;
+	}
+
 	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 
-		NON_CITIZEN = JSONParser.parseFromJson(
+		NON_CITIZEN = SimpleJSONParser.parseFromJson(
 				assetManager.get(NON_CITIZEN_JSON_PATH, Text.class).getString(),
 				SocialStatus.class);
 		VALUES.add(NON_CITIZEN);
-		CITIZEN = JSONParser.parseFromJson(
+		CITIZEN = SimpleJSONParser.parseFromJson(
 				assetManager.get(CITIZEN_JSON_PATH, Text.class).getString(),
 				SocialStatus.class);
 		VALUES.add(CITIZEN);
-		PATRICIAN = JSONParser.parseFromJson(
+		PATRICIAN = SimpleJSONParser.parseFromJson(
 				assetManager.get(PATRICIAN_JSON_PATH, Text.class).getString(),
 				SocialStatus.class);
 		VALUES.add(PATRICIAN);
-		CAVALIER = JSONParser.parseFromJson(
+		CAVALIER = SimpleJSONParser.parseFromJson(
 				assetManager.get(CAVALIER_JSON_PATH, Text.class).getString(),
 				SocialStatus.class);
 		VALUES.add(CAVALIER);
-		BARON = JSONParser.parseFromJson(
+		BARON = SimpleJSONParser.parseFromJson(
 				assetManager.get(BARON_JSON_PATH, Text.class).getString(),
 				SocialStatus.class);
 		VALUES.add(BARON);

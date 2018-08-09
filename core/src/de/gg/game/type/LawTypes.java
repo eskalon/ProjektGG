@@ -7,8 +7,8 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.google.common.collect.Range;
 
 import de.gg.game.type.PositionTypes.PositionType;
-import de.gg.util.JSONParser;
 import de.gg.util.asset.Text;
+import de.gg.util.json.SimpleJSONParser;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class LawTypes {
@@ -30,6 +30,10 @@ public class LawTypes {
 		// shouldn't get instantiated
 	}
 
+	public static List<LawType> getValues() {
+		return VALUES;
+	}
+
 	/**
 	 * Initializes the law types after the respective assets are loaded.
 	 * <p>
@@ -40,13 +44,13 @@ public class LawTypes {
 	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 
-		IMPORT_TARIFF = JSONParser.parseFromJson(assetManager
+		IMPORT_TARIFF = SimpleJSONParser.parseFromJson(assetManager
 				.get(IMPORT_TARIFF_JSON_PATH, Text.class).getString(),
 				LawType.class);
 		IMPORT_TARIFF.setVoters(new ArrayList<>());
 		VALUES.add(IMPORT_TARIFF);
 
-		INHERITANCE_TAX = JSONParser.parseFromJson(assetManager
+		INHERITANCE_TAX = SimpleJSONParser.parseFromJson(assetManager
 				.get(INHERITANCE_TAX_JSON_PATH, Text.class).getString(),
 				LawType.class);
 		INHERITANCE_TAX.setVoters(new ArrayList<>());
@@ -54,7 +58,7 @@ public class LawTypes {
 
 		for (PositionType pos : PositionTypes.getValues()) {
 			if (pos.hasLawsToVoteFor()) {
-				for (Integer i : pos.getLawsToVoteFor()) {
+				for (Integer i : pos.getIndicesOfLawsToVoteFor()) {
 					getByIndex(i).getVoters().add(pos);
 				}
 			}
