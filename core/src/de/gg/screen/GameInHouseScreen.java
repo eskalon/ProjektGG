@@ -51,12 +51,27 @@ public class GameInHouseScreen extends BaseGameScreen {
 								@Override
 								protected void onClick() {
 									// TODO Server informieren!
-									// TODO Bei Server-Antwort (?): Popup
+									// TODO anschließend Button deaktivieren;
+									// außerdem flag in Player setzen und über
+									// dieses den Button dann später nicht
+									// anzeigen lassen
 								}
 							});
 
 					mainTable.add(applyForCitizenshipButton);
 				}
+			} else {
+				// Apply for position
+				ImageTextButton applyForPositionButton = new ImageTextButton(
+						"Auf Amt bewerben", skin, "small");
+				applyForPositionButton.addListener(new ButtonClickListener(
+						assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						// TODO Dialog mit allen verfügbaren Positionen anzeigen
+					}
+				});
+				mainTable.add(applyForPositionButton);
 			}
 		} else if (b.getType().isProductionBuilding()) {
 			// PRODUCTION BUILDING
