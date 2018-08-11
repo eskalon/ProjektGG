@@ -1,6 +1,7 @@
 package de.gg.util;
 
 import java.util.Formatter;
+import java.util.concurrent.TimeUnit;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
@@ -11,6 +12,8 @@ import com.badlogic.gdx.Gdx;
  * called to set an active log level.
  */
 public class Log {
+	
+	public static TimeUnit DEFAULT_TIME_UNIT = TimeUnit.MILLISECONDS;
 
 	private Log() {
 	}

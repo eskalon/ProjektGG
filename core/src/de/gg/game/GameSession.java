@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import com.badlogic.gdx.Gdx;
+import com.google.common.base.Stopwatch;
 
 import de.gg.game.data.GameDifficulty;
 import de.gg.game.data.GameSessionSetup;
@@ -25,7 +26,6 @@ import de.gg.game.world.City;
 import de.gg.network.LobbyPlayer;
 import de.gg.screen.GameVoteScreen;
 import de.gg.util.Log;
-import de.gg.util.MeasuringUtil;
 
 /**
  * This class holds the game data and takes care of processing the rounds
@@ -125,7 +125,7 @@ public abstract class GameSession {
 
 	private RoundEndSystem roundEndSystem;
 
-	private MeasuringUtil measuringUtil = new MeasuringUtil();
+	private Stopwatch timer = Stopwatch.createUnstarted();
 
 	/**
 	 * Creates a new game session.
@@ -273,7 +273,7 @@ public abstract class GameSession {
 			for (ProcessingSystem<Character> sys : characterSystems) {
 				if (sys.isProcessedContinuously() || (!sys.wasProcessed())) {
 					if (isRightTick(sys.getTickRate())) {
-						measuringUtil.start();
+						timer.reset().start();
 						for (Entry<Short, Character> e : city.getCharacters()
 								.entrySet()) {
 							sys.process(e.getKey(), e.getValue());
@@ -281,7 +281,7 @@ public abstract class GameSession {
 						Log.info(localNetworkId == -1 ? "Server" : "Client",
 								"Processed the %s-System in %d miliseconds",
 								sys.getClass().getSimpleName(),
-								measuringUtil.stop());
+								timer.elapsed(Log.DEFAULT_TIME_UNIT));
 
 						if (!sys.isProcessedContinuously()) {
 							sys.setAsProcessed(true);
@@ -293,7 +293,7 @@ public abstract class GameSession {
 			for (ProcessingSystem<Player> sys : playerSystems) {
 				if (sys.isProcessedContinuously() || (!sys.wasProcessed())) {
 					if (isRightTick(sys.getTickRate())) {
-						measuringUtil.start();
+						timer.reset().start();
 						for (Entry<Short, Player> e : city.getPlayers()
 								.entrySet()) {
 							sys.process(e.getKey(), e.getValue());
@@ -301,7 +301,7 @@ public abstract class GameSession {
 						Log.info(localNetworkId == -1 ? "Server" : "Client",
 								"Processed the %s-System in %d miliseconds",
 								sys.getClass().getSimpleName(),
-								measuringUtil.stop());
+								timer.elapsed(Log.DEFAULT_TIME_UNIT));
 
 						if (!sys.isProcessedContinuously()) {
 							sys.setAsProcessed(true);
@@ -319,7 +319,7 @@ public abstract class GameSession {
 	 *            The relevant round end data.
 	 */
 	protected void processRoundEnd(RoundEndData data) {
-		measuringUtil.start();
+		timer.reset().start();
 		// Character
 		for (Entry<Short, Character> e : city.getCharacters().entrySet()) {
 			roundEndSystem.processCharacter(e.getKey(), e.getValue());
@@ -337,7 +337,7 @@ public abstract class GameSession {
 
 		Log.info(localNetworkId == -1 ? "Server" : "Client",
 				"Processed the RoundEnd-System in %d miliseconds",
-				measuringUtil.stop());
+				timer.elapsed(Log.DEFAULT_TIME_UNIT));
 	}
 
 	/**

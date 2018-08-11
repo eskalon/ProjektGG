@@ -46,14 +46,9 @@ public class CharacterComponent extends Table {
 			this.shapeRenderer = new ShapeRenderer();
 
 			this.opinionPercentage = opinion / 100F;
-			float[] tmp = ColorUtils
-					.hsvToRgb(
-							ColorUtils.interpolateValue(0, 128,
-									opinionPercentage <= 0.1F ? 0
-											: (opinionPercentage - 0.1F)),
-							75F, 70F);
-
-			color = new Color(tmp[0], tmp[1], tmp[2], 1);
+			color = ColorUtils.getInterpolatedColor(0, 128,
+					opinionPercentage <= 0.1F ? 0 : (opinionPercentage - 0.1F),
+					75, 70);
 
 			this.addActor(new Actor() {
 				@Override

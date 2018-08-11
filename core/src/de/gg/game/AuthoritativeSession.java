@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 
@@ -289,7 +288,7 @@ public class AuthoritativeSession extends GameSession
 
 		Log.info("Server", "Spiel gespeichert als '%s' in %d miliseconds!",
 				savesFile.getAbsolutePath(),
-				timer.elapsed(TimeUnit.MILLISECONDS));
+				timer.elapsed(Log.DEFAULT_TIME_UNIT));
 	}
 
 	@Override
