@@ -126,7 +126,8 @@ public class GameServer {
 										DiscoveryResponsePacket packet = new DiscoveryResponsePacket(
 												serverSetup.getPort(),
 												serverSetup.getGameName(),
-												players.size());
+												players.size(), serverSetup
+														.getMaxPlayerCount());
 
 										ByteBuffer buffer = ByteBuffer
 												.allocate(256);

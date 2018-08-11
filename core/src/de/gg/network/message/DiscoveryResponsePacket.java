@@ -14,6 +14,10 @@ public class DiscoveryResponsePacket {
 	 */
 	private int playerCount;
 	/**
+	 * The maximum number of players.
+	 */
+	private int maxPlayerCount;
+	/**
 	 * The game's name.
 	 */
 	private String gameName;
@@ -21,10 +25,12 @@ public class DiscoveryResponsePacket {
 	public DiscoveryResponsePacket() {
 	}
 
-	public DiscoveryResponsePacket(int port, String gameName, int playerCount) {
+	public DiscoveryResponsePacket(int port, String gameName, int playerCount,
+			int maxPlayerCount) {
 		this.port = port;
 		this.gameName = gameName;
 		this.playerCount = playerCount;
+		this.maxPlayerCount = maxPlayerCount;
 	}
 
 	public int getPort() {
@@ -37,6 +43,10 @@ public class DiscoveryResponsePacket {
 
 	public int getPlayerCount() {
 		return playerCount;
+	}
+
+	public int getMaxPlayerCount() {
+		return maxPlayerCount;
 	}
 
 }

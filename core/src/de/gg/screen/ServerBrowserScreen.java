@@ -151,9 +151,8 @@ public class ServerBrowserScreen extends BaseUIScreen {
 									dicoveredServers
 											.add(datagramPacket.getGameName()
 													+ datagramPacket.getPort());
-									addServerToUI(serverTable,
-											datagramPacket.getGameName(),
-											address, datagramPacket.getPort());
+									addServerToUI(serverTable, address,
+											datagramPacket);
 								}
 							}
 						});
@@ -162,8 +161,8 @@ public class ServerBrowserScreen extends BaseUIScreen {
 		(new Thread(discoveryThread)).start();
 	}
 
-	private void addServerToUI(Table serverTable, String gameName, String ip,
-			int port) {
+	private void addServerToUI(Table serverTable, String address,
+			DiscoveryResponsePacket packet) {
 		ImageTextButton joinButton = new ImageTextButton("Beitreten", skin,
 				"small");
 		joinButton.addListener(
@@ -171,7 +170,7 @@ public class ServerBrowserScreen extends BaseUIScreen {
 					@Override
 					protected void onClick() {
 						game.setClient(new GameClient(game.getEventBus(),
-								game.getVersion(), ip, port));
+								game.getVersion(), address, packet.getPort()));
 						connectingDialog = showInfoDialog("Verbinden...",
 								"Spiel beitreten...", false);
 					}
@@ -180,7 +179,9 @@ public class ServerBrowserScreen extends BaseUIScreen {
 		serverTable.left().top()
 				.add(new Image((Texture) assetManager.get(TICK_IMAGE_PATH)))
 				.padRight(15).padLeft(12);
-		serverTable.add(new Label(gameName, skin)).expandX();
+		String serverTitle = String.format("%s (%d/%d)", packet.getGameName(),
+				packet.getPlayerCount(), packet.getMaxPlayerCount());
+		serverTable.add(new Label(serverTitle, skin)).expandX();
 		serverTable.add(joinButton).padRight(12);
 		serverTable.row().padTop(20);
 	}
