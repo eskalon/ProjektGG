@@ -6,5 +6,6 @@
 	"nameLevel5": "Rektor5",
 	"nameLevel6": "Rektor6",
 	"startingGold": 100,
-	"startingBuildingIndex": 1
+	"startingBuildingIndex": 1,
+	"iconFileName": "gold_coin"
 }

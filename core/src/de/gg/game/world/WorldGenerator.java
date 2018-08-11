@@ -18,6 +18,7 @@ import de.gg.game.type.GameMaps;
 import de.gg.game.type.GameMaps.GameMap;
 import de.gg.game.type.PositionTypes;
 import de.gg.game.type.PositionTypes.PositionType;
+import de.gg.game.type.ProfessionTypes;
 import de.gg.network.LobbyPlayer;
 
 public class WorldGenerator {
@@ -88,11 +89,13 @@ public class WorldGenerator {
 		for (Entry<Short, LobbyPlayer> entry : players.entrySet()) {
 			LobbyPlayer lp = entry.getValue();
 
-			Profession profession = new Profession(lp.getProfessionType());
+			Profession profession = new Profession(
+					ProfessionTypes.getByIndex(lp.getProfessionTypeIndex()));
 
 			Character character = CharacterFactory.createPlayerCharacter(random,
-					lp.getProfessionType(), setup.getDifficulty(), lp.isMale(),
-					lp.getReligion(), lp.getName(), lp.getSurname());
+					profession.getProfession(), setup.getDifficulty(),
+					lp.isMale(), lp.getReligion(), lp.getName(),
+					lp.getSurname());
 			city.characters.put(city.characterIndex, character);
 
 			// TODO 1. Skill-Werte aus LobbyPlayer hinzufügen (Reihenfolge:

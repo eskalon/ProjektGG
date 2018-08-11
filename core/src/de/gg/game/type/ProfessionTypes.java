@@ -59,6 +59,7 @@ public class ProfessionTypes {
 		private String nameLevel6;
 		private int startingGold;
 		private int startingBuildingIndex;
+		private String iconFileName;
 
 		ProfessionType() {
 		}
@@ -93,6 +94,10 @@ public class ProfessionTypes {
 
 		public int getStartingGold() {
 			return startingGold;
+		}
+
+		public String getIconFileName() {
+			return iconFileName;
 		}
 
 	}

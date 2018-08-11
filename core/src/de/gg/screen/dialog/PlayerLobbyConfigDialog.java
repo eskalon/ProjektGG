@@ -15,6 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import de.gg.core.ProjektGG;
 import de.gg.event.PlayerChangedEvent;
 import de.gg.game.type.PlayerIcon;
+import de.gg.game.type.ProfessionTypes;
+import de.gg.game.type.ProfessionTypes.ProfessionType;
 import de.gg.game.type.Religion;
 import de.gg.input.ButtonClickListener;
 import de.gg.network.LobbyPlayer;
@@ -27,8 +29,7 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 	private boolean selectedSex;
 	private Religion selectedReligion;
 	private PlayerIcon selectedIcon;
-
-	private AnimationlessDialog iconDialog;
+	private int selectedProfessionIndex;
 
 	private TextField surnameTextField;
 	private TextField nameTextField;
@@ -41,7 +42,10 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 		super("Spielerkonfiguration", skin, "window");
 
 		// Create UI elements for player configuration dialog
-		iconDialog = new AnimationlessDialog("Wappen", skin, "window");
+		AnimationlessDialog iconDialog = new AnimationlessDialog("Wappen", skin,
+				"window");
+		AnimationlessDialog professionDialog = new AnimationlessDialog(
+				"Profession", skin, "window");
 
 		surnameTextField = new OffsetableTextField("StandardSurname", skin, 8);
 		nameTextField = new OffsetableTextField("StandardName", skin, 8);
@@ -58,6 +62,14 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 		ImageTextButton iconButton = new ImageTextButton("Anpassen...", skin,
 				"small");
 		Label iconLabel = new Label("Wappen: ", skin);
+
+		ImageTextButton professionButton = new ImageTextButton("Anpassen...",
+				skin, "small");
+		Label professionLabel = new Label("Profession: ", skin);
+
+		// ImageTextButton skillButton = new ImageTextButton("Anpassen...",
+		// skin, "small");
+		// Label skillLabel = new Label("Fähigkeiten: ", skin);
 
 		ImageTextButton applyButton = new ImageTextButton("Übernehmen", skin,
 				"small");
@@ -129,6 +141,44 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 					}
 				});
 
+		Table professionTable = new Table();
+		professionButton.addListener(
+				new ButtonClickListener(assetManager, game.getSettings()) {
+					@Override
+					protected void onClick() {
+						professionTable.clear();
+
+						// Only currently unused professions can be selected
+						List<LobbyPlayer> tmpPlayers = new ArrayList<>(
+								players.values());
+						tmpPlayers.remove(players.get(localPlayerId));
+
+						List<Integer> availableProfessions = PlayerUtils
+								.getAvailableProfessionIndices(tmpPlayers);
+
+						for (int i = 0; i < availableProfessions.size(); i++) {
+							ProfessionType prof = ProfessionTypes
+									.getByIndex(availableProfessions.get(i));
+
+							ImageButton profButton = new ImageButton(
+									skin.getDrawable(prof.getIconFileName()));
+							final int index = i;
+							profButton.addListener(new ButtonClickListener(
+									assetManager, game.getSettings()) {
+								@Override
+								protected void onClick() {
+									selectedProfessionIndex = index;
+									professionDialog.hide();
+								}
+							});
+							professionTable.add(profButton).pad(25);
+						}
+
+						professionDialog
+								.show(PlayerLobbyConfigDialog.this.getStage());
+					}
+				});
+
 		// Apply button
 		applyButton.addListener(
 				new ButtonClickListener(assetManager, game.getSettings()) {
@@ -142,6 +192,8 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 						players.get(localPlayerId)
 								.setReligion(selectedReligion);
 						players.get(localPlayerId).setIcon(selectedIcon);
+						players.get(localPlayerId).setProfessionTypeIndex(
+								selectedProfessionIndex);
 
 						// To update the ui
 						game.getEventBus().post(new PlayerChangedEvent(
@@ -166,22 +218,28 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 
 		// Adding all UI elements
 		Table playerConfigurationTable = new Table();
-		playerConfigurationTable.add(nameLabel).padBottom(15);
-		playerConfigurationTable.add(nameTextField).padBottom(15).row();
-		playerConfigurationTable.add(surnameLabel).padBottom(45);
-		playerConfigurationTable.add(surnameTextField).padBottom(45).row();
-		playerConfigurationTable.add(sexLabel).padBottom(15);
-		playerConfigurationTable.add(sexButton).padBottom(15).row();
-		playerConfigurationTable.add(religionLabel).padBottom(15);
-		playerConfigurationTable.add(religionButton).padBottom(15).row();
-		playerConfigurationTable.add(iconLabel).padBottom(60);
-		playerConfigurationTable.add(iconButton).padBottom(60).row();
+		playerConfigurationTable.add(nameLabel).padBottom(14);
+		playerConfigurationTable.add(nameTextField).padBottom(14).row();
+		playerConfigurationTable.add(surnameLabel).padBottom(40);
+		playerConfigurationTable.add(surnameTextField).padBottom(40).row();
+		playerConfigurationTable.add(sexLabel).padBottom(14);
+		playerConfigurationTable.add(sexButton).padBottom(14).row();
+		playerConfigurationTable.add(religionLabel).padBottom(14);
+		playerConfigurationTable.add(religionButton).padBottom(14).row();
+		playerConfigurationTable.add(iconLabel).padBottom(14);
+		playerConfigurationTable.add(iconButton).padBottom(14).row();
+		playerConfigurationTable.add(professionLabel).padBottom(55);
+		playerConfigurationTable.add(professionButton).padBottom(55).row();
+		// playerConfigurationTable.add(skillLabel).padBottom(55);
+		// playerConfigurationTable.add(skillButton).padBottom(55).row();
 		playerConfigurationTable.add(applyButton);
 		playerConfigurationTable.add(discardButton);
 
-		this.add(playerConfigurationTable).pad(100);
+		this.add(playerConfigurationTable).pad(80);
 
 		iconDialog.add(iconTable).pad(20);
+
+		professionDialog.add(professionTable).pad(20);
 	}
 
 	/**
@@ -194,6 +252,7 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 		selectedSex = localPlayer.isMale();
 		selectedReligion = localPlayer.getReligion();
 		selectedIcon = localPlayer.getIcon();
+		selectedProfessionIndex = localPlayer.getProfessionTypeIndex();
 
 		String sexString = selectedSex ? "Männlich" : "Weiblich";
 		String religionString = localPlayer.getReligion()

@@ -183,8 +183,8 @@ public class GameServer {
 	 * Stops the server. Also takes care of saving the game.
 	 */
 	public void stop() {
-		if (session != null)
-			session.saveGame();
+		// if (session != null)
+		// session.saveGame();
 		server.stop();
 		if (broadcastServer != null)
 			broadcastServer.stop();

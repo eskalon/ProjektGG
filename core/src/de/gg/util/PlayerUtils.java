@@ -8,7 +8,6 @@ import com.google.common.reflect.TypeToken;
 
 import de.gg.game.type.PlayerIcon;
 import de.gg.game.type.ProfessionTypes;
-import de.gg.game.type.ProfessionTypes.ProfessionType;
 import de.gg.network.LobbyPlayer;
 import de.gg.util.asset.Text;
 import de.gg.util.json.SimpleJSONParser;
@@ -53,16 +52,16 @@ public class PlayerUtils {
 	}
 
 	/**
-	 * @return A list of all unused professions.
+	 * @return A list of all unused professions indices.
 	 */
-	public static List<ProfessionType> getAvailableProfessions(
+	public static List<Integer> getAvailableProfessionIndices(
 			Collection<LobbyPlayer> players) {
-		List<ProfessionType> tmp = new ArrayList<>();
+		List<Integer> tmp = new ArrayList<>();
 
-		for (ProfessionType type : ProfessionTypes.getValues()) {
+		for (int i = 0; i < ProfessionTypes.getValues().size(); i++) {
 			boolean taken = false;
 			for (LobbyPlayer p : players) {
-				if (p.getProfessionType() == type) {
+				if (p.getProfessionTypeIndex() == i) {
 					taken = true;
 
 					break;
@@ -70,7 +69,7 @@ public class PlayerUtils {
 			}
 
 			if (!taken)
-				tmp.add(type);
+				tmp.add(i);
 		}
 
 		return tmp;
@@ -143,7 +142,7 @@ public class PlayerUtils {
 
 		return new LobbyPlayer(stub.name, stub.surname,
 				getAvailableIcons(players).get(0),
-				getAvailableProfessions(players).get(0), stub.isMale);
+				getAvailableProfessionIndices(players).get(0), stub.isMale);
 	}
 
 	/**

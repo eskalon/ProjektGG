@@ -251,7 +251,7 @@ public class AuthoritativeSession extends GameSession
 	}
 
 	public void saveStats() {
-		// TODO generate & save stats
+		// TODO generate & save stats for last round
 	}
 
 	public void saveGame() {
