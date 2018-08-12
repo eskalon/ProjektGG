@@ -57,8 +57,8 @@ public class SlaveSession extends GameSession
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setupGame() {
-		super.setupGame();
+	public void setupGame(SavedGame savedGame) {
+		super.setupGame(savedGame);
 
 		// Setup the client systems
 		ProcessingSystem<Player> s;

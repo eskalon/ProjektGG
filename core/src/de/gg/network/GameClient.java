@@ -306,10 +306,11 @@ public class GameClient {
 	}
 
 	/**
-	 * Sets up the session. The game assets have to get loaded first.
+	 * Sets up the session. The {@linkplain de.gg.game.type game assets} have to
+	 * get loaded first.
 	 */
 	public void setupGameSession() {
-		session.setupGame();
+		session.setupGame(null);
 	}
 
 	public City getCity() {

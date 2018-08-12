@@ -78,9 +78,10 @@ public class GameMapScreen extends BaseGameScreen {
 
 		clockTickSound = assetManager.get(CLOCK_TICK_SOUND);
 
-		Text t = game.getAssetManager().get(FRAGMENT_SHADER_PATH);
+		Text fragmentShaderPath = game.getAssetManager()
+				.get(FRAGMENT_SHADER_PATH);
 		sceneRenderer = new SceneRenderer(game.getGameCamera().getCamera(),
-				game.getClient().getCity(), t.getString());
+				fragmentShaderPath.getString());
 
 		// SPHERE (temp)
 		ModelBuilder modelBuilder = new ModelBuilder();
@@ -100,10 +101,8 @@ public class GameMapScreen extends BaseGameScreen {
 		shader = new TestShader(game.getAssetManager());
 		shader.init();
 
-		// TODO city erst in initUI übergeben
 		selectionInputController = new MapSelectionInputController(
-				game.getEventBus(), game.getGameCamera().getCamera(),
-				game.getClient().getCity());
+				game.getEventBus(), game.getGameCamera().getCamera());
 		addInputProcessor(selectionInputController);
 		movementInputController = new MapMovementInputController(
 				game.getGameCamera(), game.getSettings());
@@ -117,6 +116,8 @@ public class GameMapScreen extends BaseGameScreen {
 		short playerCharId = game.getClient().getLocalPlayer()
 				.getCurrentlyPlayedCharacterId();
 		City city = game.getClient().getCity();
+
+		selectionInputController.setCity(city);
 
 		// CHARACTER DIALOG
 		AnimationlessDialog characterMenuDialog = new AnimationlessDialog(
@@ -352,7 +353,7 @@ public class GameMapScreen extends BaseGameScreen {
 		selectionInputController.update();
 
 		// Render city
-		sceneRenderer.render();
+		sceneRenderer.render(game.getClient().getCity());
 
 		// Render sphere with shader (temp)
 		renderContext.begin();

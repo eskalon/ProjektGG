@@ -19,4 +19,10 @@ public class SavedGame {
 
 	public int currentRound;
 
+	/**
+	 * The states of the processing systems. The key is their
+	 * {@linkplain Class#getSimpleName() simple class name}.
+	 */
+	public HashMap<String, HashMap<String, Object>> processingSystemStates = new HashMap<>();
+
 }

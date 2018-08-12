@@ -140,7 +140,6 @@ public abstract class GameSession {
 		this.sessionSetup = sessionSetup;
 		this.players = players;
 		this.localNetworkId = localNetworkId;
-		this.city = new City();
 	}
 
 	/**
@@ -151,8 +150,15 @@ public abstract class GameSession {
 	 * {@link #update()}. To resume the game after a round ended
 	 * {@link #startNextRound()} has to get called.
 	 */
-	public synchronized void setupGame() {
-		this.city.generate(sessionSetup, players);
+	public synchronized void setupGame(SavedGame savedGame) {
+		if (savedGame == null) {
+			this.city = new City();
+			this.city.generate(sessionSetup, players);
+		} else {
+			this.city = savedGame.city;
+			// TODO Momentanen Rundenzeitpunkt aufsetzen
+		}
+
 		this.initialized = true;
 
 		// Add and initialize the smp systems

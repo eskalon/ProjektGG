@@ -1,12 +1,12 @@
 package de.gg.game.system.server;
 
-import de.gg.game.AuthoritativeSession;
 import de.gg.game.entity.Character;
+import de.gg.network.rmi.AuthoritativeResultListener;
 
 public class NpcActionSystem2 extends ServerProcessingSystem<Character> {
 
-	public NpcActionSystem2(AuthoritativeSession serverSession) {
-		super(serverSession);
+	public NpcActionSystem2(AuthoritativeResultListener resultListener) {
+		super(resultListener);
 	}
 
 	@Override

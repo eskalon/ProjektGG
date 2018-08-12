@@ -2,9 +2,9 @@ package de.gg.game.system.server;
 
 import java.util.Random;
 
-import de.gg.game.AuthoritativeSession;
 import de.gg.game.entity.Player;
 import de.gg.game.world.City;
+import de.gg.network.rmi.AuthoritativeResultListener;
 import de.gg.util.RandomUtils;
 
 /**
@@ -17,8 +17,8 @@ public class FirstPlayerEventWaveServerSystem
 	private Random random;
 
 	public FirstPlayerEventWaveServerSystem(
-			AuthoritativeSession serverSession) {
-		super(serverSession);
+			AuthoritativeResultListener resultListener) {
+		super(resultListener);
 	}
 
 	@Override
@@ -33,15 +33,13 @@ public class FirstPlayerEventWaveServerSystem
 			if (RandomUtils.rollTheDice(random, 6)) { // Genesung
 				p.setIll(false);
 
-				serverSession.getResultListenerStub().onPlayerIllnessChange(id,
-						false);
+				resultListener.onPlayerIllnessChange(id, false);
 			}
 		} else { // Erkrankung
 			if (RandomUtils.rollTheDice(random, 90)) {
 				p.setIll(true);
 
-				serverSession.getResultListenerStub().onPlayerIllnessChange(id,
-						true);
+				resultListener.onPlayerIllnessChange(id, true);
 			}
 		}
 

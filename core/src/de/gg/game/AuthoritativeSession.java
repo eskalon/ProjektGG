@@ -22,6 +22,7 @@ import de.gg.game.data.vote.ElectionVote;
 import de.gg.game.data.vote.ImpeachmentVote;
 import de.gg.game.data.vote.VoteResults;
 import de.gg.game.data.vote.VoteableMatter;
+import de.gg.game.entity.Character;
 import de.gg.game.entity.Player;
 import de.gg.game.entity.Position;
 import de.gg.game.system.ProcessingSystem;
@@ -30,6 +31,7 @@ import de.gg.game.system.server.FirstPlayerEventWaveServerSystem;
 import de.gg.game.system.server.IllnessDamageSystem;
 import de.gg.game.system.server.NpcActionSystem;
 import de.gg.game.system.server.NpcActionSystem2;
+import de.gg.game.system.server.ServerProcessingSystem;
 import de.gg.game.type.PositionTypes.PositionType;
 import de.gg.network.GameServer;
 import de.gg.network.LobbyPlayer;
@@ -94,34 +96,48 @@ public class AuthoritativeSession extends GameSession
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setupGame() {
+	public void setupGame(SavedGame savedGame) {
 		for (LobbyPlayer player : players.values()) {
 			player.setReady(false);
 		}
 
-		super.setupGame();
+		super.setupGame(savedGame);
 
 		// Setup the server processing systems
-		ProcessingSystem s;
-		s = new FirstCharacterEventWaveServerSystem(this);
+		ServerProcessingSystem s;
+		s = new FirstCharacterEventWaveServerSystem(resultListenerStub);
 		s.init(city, getGameSeed());
 		this.characterSystems.add(s);
 
-		s = new FirstPlayerEventWaveServerSystem(this);
+		s = new FirstPlayerEventWaveServerSystem(resultListenerStub);
 		s.init(city, getGameSeed());
 		this.playerSystems.add(s);
 
-		s = new IllnessDamageSystem(this);
+		s = new IllnessDamageSystem(resultListenerStub);
 		s.init(city, getGameSeed());
 		this.playerSystems.add(s);
 
-		s = new NpcActionSystem(this);
+		s = new NpcActionSystem(resultListenerStub);
 		s.init(city, getGameSeed());
 		this.characterSystems.add(s);
 
-		s = new NpcActionSystem2(this);
+		s = new NpcActionSystem2(resultListenerStub);
 		s.init(city, getGameSeed());
 		this.characterSystems.add(s);
+
+		// Load the systems states
+		if (savedGame != null) {
+			for (ProcessingSystem<Character> c : characterSystems) {
+				((ServerProcessingSystem<Character>) c)
+						.loadSavedState(savedGame.processingSystemStates
+								.get(c.getClass().getSimpleName()));
+			}
+			for (ProcessingSystem<Player> p : playerSystems) {
+				((ServerProcessingSystem<Player>) p)
+						.loadSavedState(savedGame.processingSystemStates
+								.get(p.getClass().getSimpleName()));
+			}
+		}
 	}
 
 	/**
@@ -265,6 +281,17 @@ public class AuthoritativeSession extends GameSession
 				-1, getGameSeed());
 		save.gameSessionSetup = sessionSetup;
 		save.currentRound = getCurrentRound();
+
+		// Save the systems states
+		for (ProcessingSystem<Character> c : characterSystems) {
+
+			save.processingSystemStates.put(c.getClass().getSimpleName(),
+					((ServerProcessingSystem<Character>) c).getSaveState());
+		}
+		for (ProcessingSystem<Player> p : playerSystems) {
+			save.processingSystemStates.put(p.getClass().getSimpleName(),
+					((ServerProcessingSystem<Player>) p).getSaveState());
+		}
 
 		// TODO client-identifiers über IPs (?)
 		// TODO der aktuelle Rundenzeitpunkt

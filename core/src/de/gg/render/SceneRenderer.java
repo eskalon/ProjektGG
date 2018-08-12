@@ -22,15 +22,11 @@ public class SceneRenderer implements Disposable {
 
 	private PerspectiveCamera camera;
 
-	private City city;
-
 	private ModelBatch modelBatch, outlineModelBatch;
 	public Environment environment;
 
-	public SceneRenderer(PerspectiveCamera camera, City city,
-			String fragmentShader) {
+	public SceneRenderer(PerspectiveCamera camera, String fragmentShader) {
 		this.camera = camera;
-		this.city = city;
 
 		Config config = new Config();
 		config.fragmentShader = fragmentShader;
@@ -51,7 +47,7 @@ public class SceneRenderer implements Disposable {
 		this.camera.update();
 	}
 
-	public void render() {
+	public void render(City city) {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT

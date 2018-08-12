@@ -29,11 +29,10 @@ public class MapSelectionInputController
 
 	private int clickX, clickY;
 
-	public MapSelectionInputController(EventBus bus, PerspectiveCamera camera,
-			City city) {
+	public MapSelectionInputController(EventBus bus, PerspectiveCamera camera) {
 		this.eventBus = bus;
 		this.camera = camera;
-		this.city = city;
+
 	}
 
 	public void update() {
@@ -138,6 +137,10 @@ public class MapSelectionInputController
 	@Override
 	public void loadKeybinds(GameSettings settings) {
 		resetSelection();
+	}
+
+	public void setCity(City city) {
+		this.city = city;
 	}
 
 }

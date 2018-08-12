@@ -2,10 +2,10 @@ package de.gg.game.system.server;
 
 import java.util.Random;
 
-import de.gg.game.AuthoritativeSession;
 import de.gg.game.entity.Character;
 import de.gg.game.entity.Player;
 import de.gg.game.world.City;
+import de.gg.network.rmi.AuthoritativeResultListener;
 
 /**
  * This system processes after 60 seconds and takes care of the first wave of
@@ -18,8 +18,8 @@ public class FirstCharacterEventWaveServerSystem
 	private City city;
 
 	public FirstCharacterEventWaveServerSystem(
-			AuthoritativeSession serverSession) {
-		super(serverSession);
+			AuthoritativeResultListener resultListener) {
+		super(resultListener);
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class FirstCharacterEventWaveServerSystem
 			// For everyone:
 			// TODO Ämter resetten, Character aus Liste entfernen
 
-			serverSession.getResultListenerStub().onCharacterDeath(id);
+			resultListener.onCharacterDeath(id);
 
 			return;
 		}

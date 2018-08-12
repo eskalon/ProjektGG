@@ -1,15 +1,15 @@
 package de.gg.game.system.server;
 
-import de.gg.game.AuthoritativeSession;
 import de.gg.game.entity.Player;
 import de.gg.game.world.City;
+import de.gg.network.rmi.AuthoritativeResultListener;
 
 public class IllnessDamageSystem extends ServerProcessingSystem<Player> {
 
 	private City city;
 
-	public IllnessDamageSystem(AuthoritativeSession serverSession) {
-		super(serverSession);
+	public IllnessDamageSystem(AuthoritativeResultListener resultListener) {
+		super(resultListener);
 	}
 
 	@Override
@@ -23,8 +23,7 @@ public class IllnessDamageSystem extends ServerProcessingSystem<Player> {
 			p.getCurrentlyPlayedCharacter(city)
 					.setHp(p.getCurrentlyPlayedCharacter(city).getHp() - 1);
 
-			serverSession.getResultListenerStub().onCharacterDamage(id,
-					(short) 1);
+			resultListener.onCharacterDamage(id, (short) 1);
 		}
 	}
 

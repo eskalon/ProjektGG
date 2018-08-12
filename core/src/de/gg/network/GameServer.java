@@ -171,12 +171,13 @@ public class GameServer {
 	}
 
 	/**
-	 * Sets up the game session.
+	 * Sets up the game session. The {@linkplain de.gg.game.type game assets}
+	 * have to get loaded first.
 	 * 
 	 * @see GameSession#setupGame()
 	 */
 	public void setupGameSession() {
-		session.setupGame();
+		session.setupGame(null);
 		Log.info("Server", "Spiel gestartet");
 	}
 
