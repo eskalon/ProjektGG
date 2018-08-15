@@ -56,7 +56,14 @@ project(":core") {
 		compile "com.google.code.gson:gson:2.8.2"
         //compile fileTree(dir: 'libs', include: '*.jar')
         
+        testCompile "org.junit.platform:junit-platform-launcher:1.2.0"
+        
         testCompile "org.junit.jupiter:junit-jupiter-engine:5.2.0"
+        testCompile "com.github.jhalterman:concurrentunit:concurrentunit-0.4.3"
+   		testCompile "org.mockito:mockito-core:2.21.0"
+        testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     }
 }
 
