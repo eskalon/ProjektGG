@@ -10,8 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.google.common.eventbus.Subscribe;
 
-import de.gg.event.RoundEndDataReceivedEvent;
 import de.gg.event.RoundEndEvent;
+import de.gg.event.ServerReadyEvent;
 import de.gg.input.ButtonClickListener;
 import de.gg.ui.KeySelectionInputField;
 import de.gg.ui.KeySelectionInputField.KeySelectionEventListener;
@@ -221,9 +221,8 @@ public class SettingsScreen extends BaseUIScreen {
 	}
 
 	@Subscribe
-	public void onRoundEndDataArrived(RoundEndDataReceivedEvent event) {
-		((GameRoundendScreen) game.getScreen("roundEnd"))
-				.setData(event.getData());
+	public void onRoundEndDataArrived(ServerReadyEvent event) {
+		((GameRoundendScreen) game.getScreen("roundEnd")).setServerReady();
 	}
 
 	public BaseScreen getCaller() {

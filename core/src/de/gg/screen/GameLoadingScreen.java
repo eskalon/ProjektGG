@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 import com.google.common.eventbus.Subscribe;
 
-import de.gg.event.RoundEndDataReceivedEvent;
+import de.gg.event.ServerReadyEvent;
 import de.gg.game.entity.BuildingSlot;
 import de.gg.game.factory.CharacterFactory;
 import de.gg.game.type.BuildingTypes;
@@ -97,13 +97,16 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 
 		// Change the screen
 		Log.info("Client", "Spiel geladen & gestartet");
+
+		if (game.isHost())
+			game.getServer().startGame();
+
 		game.pushScreen("roundEnd");
 	}
 
 	@Subscribe
-	public void onRoundEndDataArrived(RoundEndDataReceivedEvent event) {
-		((GameRoundendScreen) game.getScreen("roundEnd"))
-				.setData(event.getData());
+	public void onRoundEndDataArrived(ServerReadyEvent event) {
+		((GameRoundendScreen) game.getScreen("roundEnd")).setServerReady();
 	}
 
 }

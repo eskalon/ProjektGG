@@ -1,6 +1,5 @@
 package de.gg.network.rmi;
 
-import de.gg.game.data.RoundEndData;
 import de.gg.game.data.vote.VoteResults;
 import de.gg.game.type.PositionTypes.PositionType;
 
@@ -19,13 +18,10 @@ public interface AuthoritativeResultListener {
 	public void onAllPlayersReadied();
 
 	/**
-	 * Called after a round ended to inform about the changes.
-	 * 
-	 * @param data
-	 *            this data contains all server-side calculations done after a
-	 *            round.
+	 * Called when the server is ready to continue the game session's
+	 * processing. Is normally called when a round is over.
 	 */
-	public void onRoundEnd(RoundEndData data);
+	public void onServerReady();
 
 	public void onCharacterDeath(short characterId);
 

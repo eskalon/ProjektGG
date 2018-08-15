@@ -51,6 +51,7 @@ public class RoundEndSystem {
 		}
 
 		// SALARY
+		// TODO statt am Rundenende am Rundenstart berechnen
 		PositionType position = c.getPosition();
 		if (position != null) {
 			c.setGold(c.getGold() + position.getSalary());

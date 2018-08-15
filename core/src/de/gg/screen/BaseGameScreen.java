@@ -7,8 +7,8 @@ import com.google.common.eventbus.Subscribe;
 
 import de.gg.event.NewChatMessagEvent;
 import de.gg.event.PlayerDisconnectedEvent;
-import de.gg.event.RoundEndDataReceivedEvent;
 import de.gg.event.RoundEndEvent;
+import de.gg.event.ServerReadyEvent;
 
 public abstract class BaseGameScreen extends BaseUIScreen {
 
@@ -45,9 +45,8 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 	}
 
 	@Subscribe
-	public void onRoundEndDataArrived(RoundEndDataReceivedEvent event) {
-		((GameRoundendScreen) game.getScreen("roundEnd"))
-				.setData(event.getData());
+	public void onServerReady(ServerReadyEvent event) {
+		((GameRoundendScreen) game.getScreen("roundEnd")).setServerReady();
 	}
 
 	@Subscribe

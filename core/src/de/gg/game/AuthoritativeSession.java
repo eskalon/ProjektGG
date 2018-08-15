@@ -17,7 +17,6 @@ import com.google.gson.JsonSyntaxException;
 
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.data.GameSpeed;
-import de.gg.game.data.RoundEndData;
 import de.gg.game.data.vote.VoteResults;
 import de.gg.game.entity.Character;
 import de.gg.game.entity.Player;
@@ -42,7 +41,6 @@ import de.gg.network.rmi.SlaveActionListener;
 import de.gg.util.CollectionUtils;
 import de.gg.util.Log;
 import de.gg.util.PlayerUtils;
-import de.gg.util.RandomUtils;
 import de.gg.util.json.SaveGameParser;
 
 /**
@@ -153,17 +151,10 @@ public class AuthoritativeSession extends GameSession
 	}
 
 	public void onRoundEnd() {
-		// RoundEndData generieren
-		RoundEndData data = new RoundEndData();
-		data.setOpeningHourNextDay(RandomUtils.getRandomNumber(6, 9));
-
 		Log.debug("Server", "Runde zu Ende");
 
 		// Inform the clients
-		resultListenerStub.onRoundEnd(data);
-
-		// Process the last round
-		super.processRoundEnd(data);
+		resultListenerStub.onServerReady();
 
 		// Save automatically on the round end
 		// saveGame();
@@ -284,7 +275,6 @@ public class AuthoritativeSession extends GameSession
 
 		// Save the systems states
 		for (ProcessingSystem<Character> c : characterSystems) {
-
 			save.processingSystemStates.put(c.getClass().getSimpleName(),
 					((ServerProcessingSystem<Character>) c).getSaveState());
 		}

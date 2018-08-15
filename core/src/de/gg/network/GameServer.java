@@ -183,6 +183,16 @@ public class GameServer {
 	}
 
 	/**
+	 * Starts the actual game. Has to get called after the session is
+	 * {@linkplain #initGameSession() initialized}.
+	 * 
+	 * @see AuthoritativeResultListener#onServerReady()
+	 */
+	public void startGame() {
+		session.getResultListenerStub().onServerReady();
+	}
+
+	/**
 	 * Stops the server. Also takes care of saving the game.
 	 */
 	public void stop() {

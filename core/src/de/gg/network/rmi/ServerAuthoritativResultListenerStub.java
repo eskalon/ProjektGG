@@ -4,7 +4,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import de.gg.game.AuthoritativeSession;
-import de.gg.game.data.RoundEndData;
 import de.gg.game.data.vote.VoteResults;
 import de.gg.game.type.PositionTypes.PositionType;
 
@@ -43,12 +42,12 @@ public class ServerAuthoritativResultListenerStub
 	}
 
 	@Override
-	public void onRoundEnd(RoundEndData data) {
+	public void onServerReady() {
 		informClients(new ResultTask() {
 			@Override
 			protected void informClient(
 					AuthoritativeResultListener resultListener) {
-				resultListener.onRoundEnd(data);
+				resultListener.onServerReady();
 			}
 		});
 	}

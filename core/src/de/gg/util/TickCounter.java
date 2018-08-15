@@ -12,8 +12,7 @@ public class TickCounter {
 	private int tickCount = 0;
 
 	/**
-	 * Creates a tick counter. Has to be {@linkplain #reset() reset} first to
-	 * get used.
+	 * Creates a tick counter.
 	 * 
 	 * @param tickHandler
 	 * @param maxTicks
@@ -28,8 +27,6 @@ public class TickCounter {
 		this.tickHandler = tickHandler;
 		this.maxTicks = maxTicks;
 		this.tickDuration = tickDuration;
-
-		tickCount = maxTicks;
 	}
 
 	/**

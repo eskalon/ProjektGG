@@ -4,14 +4,13 @@ import java.util.HashMap;
 
 import com.google.common.eventbus.EventBus;
 
+import de.gg.event.AllPlayersReadyEvent;
 import de.gg.event.ChangedGameSpeedEvent;
 import de.gg.event.NewVoteEvent;
-import de.gg.event.NextRoundEvent;
-import de.gg.event.RoundEndDataReceivedEvent;
+import de.gg.event.ServerReadyEvent;
 import de.gg.event.VoteFinishedEvent;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.data.GameSpeed;
-import de.gg.game.data.RoundEndData;
 import de.gg.game.data.vote.VoteResults;
 import de.gg.game.entity.Player;
 import de.gg.game.system.ProcessingSystem;
@@ -99,16 +98,15 @@ public class SlaveSession extends GameSession
 		Log.debug("Client", "Alle Spieler sind bereit! Nächste Runde startet");
 
 		this.startNextRound();
-		eventBus.post(new NextRoundEvent());
+		eventBus.post(new AllPlayersReadyEvent(true));
 	}
 
 	@Override
-	public void onRoundEnd(RoundEndData data) { // Inherited from
-												// AuthoritativeResultListener
-		eventBus.post(new RoundEndDataReceivedEvent(data));
-
-		// Process the last round
-		super.processRoundEnd(data); // Inherited from GameSession
+	public void onServerReady() {
+		Log.info("Client", "Der Server is bereit");
+		Log.debug("Client", "%d Ticks hinter der Server-Simulation",
+				TICKS_PER_ROUND - getTickCount());
+		eventBus.post(new ServerReadyEvent());
 	}
 
 	@Override

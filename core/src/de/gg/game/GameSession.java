@@ -9,7 +9,6 @@ import com.google.common.base.Stopwatch;
 import de.gg.game.data.GameDifficulty;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.data.GameSpeed;
-import de.gg.game.data.RoundEndData;
 import de.gg.game.data.vote.VoteResults;
 import de.gg.game.entity.Character;
 import de.gg.game.entity.Player;
@@ -32,15 +31,13 @@ import de.gg.util.TickCounter.TickHandler;
  * <p>
  * Following are the different phases a game session can be in:
  * <ul>
- * <li>{@link #init(SavedGame))}: Initializes the game session, has to get
- * called before the first {@link #update()}-call</li>
+ * <li>{@link #init(SavedGame)}: Initializes the game session, has to get called
+ * before the first {@link #update()}-call</li>
  * <li>{@link #update()}: Processes the current round; has to get called
  * continually; returns <code>true</code> <i>once</i> when the current round is
  * over</li>
- * <li>{@link #processRoundEnd(RoundEndData)}: Has to get called by the child
- * classes to set up the next round after a round ended</li>
- * <li>{@link #startNextRound()}: Has to get called (internally) after
- * {@link #processRoundEnd(RoundEndData)} to start the next round</li>
+ * <li>{@link #startNextRound()}: Has to get called (internally) to start the
+ * next round</li>
  * <li>{@link #finishCurrentVote(VoteResults)}: If there are any votes to hold
  * after {@link #startNextRound()} has been called, this method has to get
  * called to inform the session about its results</li>
@@ -52,7 +49,7 @@ public abstract class GameSession {
 	static final int ROUND_DURATION_IN_SECONDS = 35; // 8*60
 	protected static final int TICKS_PER_SECOND = 10;
 
-	private static final int TICKS_PER_ROUND = ROUND_DURATION_IN_SECONDS
+	protected static final int TICKS_PER_ROUND = ROUND_DURATION_IN_SECONDS
 			* TICKS_PER_SECOND;
 	private static final int TICK_DURATION = 1000
 			* GameSpeed.NORMAL.getDeltaTimeMultiplied() / TICKS_PER_SECOND;
@@ -167,7 +164,11 @@ public abstract class GameSession {
 
 		if (!holdVote) {
 			// NORMAL UPDATE CYCLE
-			return tickCounter.update();
+			if (tickCounter.update()) {
+				processRoundEnd();
+				return true;
+			}
+			return false;
 		} else {
 			// PROCESS VOTES
 			if (matterToVoteOn == null) {
@@ -192,61 +193,7 @@ public abstract class GameSession {
 		}
 	}
 
-	/**
-	 * This is used to process the game. It is called ten times per second if
-	 * the game is running on {@linkplain GameSpeed#NORMAL normal speed}.
-	 */
-	protected synchronized void fixedUpdate() {
-		if (isRightTick(TICKS_PER_SECOND)) {
-			// PROCESSING SYSTEMS
-			// Character
-			for (ProcessingSystem<Character> sys : characterSystems) {
-				if (sys.isProcessedContinuously() || (!sys.wasProcessed())) {
-					if (isRightTick(sys.getTickRate())) {
-						logTimer.reset().start();
-						for (Entry<Short, Character> e : city.getCharacters()
-								.entrySet()) {
-							sys.process(e.getKey(), e.getValue());
-						}
-						Log.info(localNetworkId == -1 ? "Server" : "Client",
-								"%s-System in %d ms verarbeitet",
-								sys.getClass().getSimpleName(),
-								logTimer.elapsed(Log.DEFAULT_TIME_UNIT));
-
-						// if (!sys.isProcessedContinuously())
-						sys.setAsProcessed(true);
-					}
-				}
-			}
-			// Player
-			for (ProcessingSystem<Player> sys : playerSystems) {
-				if (sys.isProcessedContinuously() || (!sys.wasProcessed())) {
-					if (isRightTick(sys.getTickRate())) {
-						logTimer.reset().start();
-						for (Entry<Short, Player> e : city.getPlayers()
-								.entrySet()) {
-							sys.process(e.getKey(), e.getValue());
-						}
-						Log.info(localNetworkId == -1 ? "Server" : "Client",
-								"%s-System in %d ms verarbeitet",
-								sys.getClass().getSimpleName(),
-								logTimer.elapsed(Log.DEFAULT_TIME_UNIT));
-
-						// (!sys.isProcessedContinuously())
-						sys.setAsProcessed(true);
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * Called after a round ended to setup the next round.
-	 * 
-	 * @param data
-	 *            The relevant round end data.
-	 */
-	protected void processRoundEnd(RoundEndData data) {
+	private void processRoundEnd() {
 		logTimer.reset().start();
 		// Character
 		for (Entry<Short, Character> e : city.getCharacters().entrySet()) {
@@ -269,15 +216,62 @@ public abstract class GameSession {
 	}
 
 	/**
+	 * This is used to process the game. It is called ten times per second if
+	 * the game is running on {@linkplain GameSpeed#NORMAL normal speed}.
+	 */
+	protected synchronized void fixedUpdate() {
+		if (isRightTick(TICKS_PER_SECOND)) {
+			// PROCESSING SYSTEMS
+			// Character
+			for (ProcessingSystem<Character> sys : characterSystems) {
+				if (sys.isProcessedContinuously() || (!sys.wasProcessed())) {
+					if (isRightTick(sys.getTickRate())) {
+						logTimer.reset().start();
+						for (Entry<Short, Character> e : city.getCharacters()
+								.entrySet()) {
+							sys.process(e.getKey(), e.getValue());
+						}
+						Log.info(localNetworkId == -1 ? "Server" : "Client",
+								"%s-System in %d ms verarbeitet",
+								sys.getClass().getSimpleName(),
+								logTimer.elapsed(Log.DEFAULT_TIME_UNIT));
+
+						sys.setAsProcessed(true);
+					}
+				}
+			}
+			// Player
+			for (ProcessingSystem<Player> sys : playerSystems) {
+				if (sys.isProcessedContinuously() || (!sys.wasProcessed())) {
+					if (isRightTick(sys.getTickRate())) {
+						logTimer.reset().start();
+						for (Entry<Short, Player> e : city.getPlayers()
+								.entrySet()) {
+							sys.process(e.getKey(), e.getValue());
+						}
+						Log.info(localNetworkId == -1 ? "Server" : "Client",
+								"%s-System in %d ms verarbeitet",
+								sys.getClass().getSimpleName(),
+								logTimer.elapsed(Log.DEFAULT_TIME_UNIT));
+
+						sys.setAsProcessed(true);
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * Called after a round ended to start the next round. If there are any
 	 * {@linkplain City#getMattersToHoldVoteOn() matters to hold a vote on}
 	 * those are done first.
 	 */
 	protected synchronized void startNextRound() {
-		Log.debug(localNetworkId == -1 ? "Server" : "Client",
-				"Runde %s zuende; %s Ticks verarbeitet", currentRound,
-				tickCounter.getTickCount());
 		currentRound++;
+
+		Log.debug(localNetworkId == -1 ? "Server" : "Client",
+				"Runde %s gestartet; Letzte Runde wurden %s Ticks gezählt",
+				currentRound, tickCounter.getTickCount());
 
 		// Reset the tick counter
 		tickCounter.reset();
@@ -293,7 +287,8 @@ public abstract class GameSession {
 		}
 
 		// Take care of votes
-		Log.info("Client", "Es stehen %d Tagesordnunspunkte an",
+		Log.info(localNetworkId == -1 ? "Server" : "Client",
+				"Es stehen %d Tagesordnunspunkte an",
 				city.getMattersToHoldVoteOn().size());
 		holdVote = !city.getMattersToHoldVoteOn().isEmpty();
 	}
@@ -330,6 +325,14 @@ public abstract class GameSession {
 	 */
 	protected boolean isRightTick(int tickInterval) {
 		return tickCounter.getTickCount() % tickInterval == 0;
+	}
+
+	/**
+	 * @return the current tick count. <code>-1</code> if the session didn't get
+	 *         {@linkplain #init(SavedGame) initialized}.
+	 */
+	protected int getTickCount() {
+		return tickCounter == null ? -1 : tickCounter.getTickCount();
 	}
 
 	protected void setGameSpeed(GameSpeed gameSpeed) {

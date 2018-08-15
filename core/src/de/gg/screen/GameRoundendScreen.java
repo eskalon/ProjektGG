@@ -12,14 +12,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.google.common.eventbus.Subscribe;
 
-import de.gg.event.NextRoundEvent;
-import de.gg.event.RoundEndDataReceivedEvent;
-import de.gg.game.data.RoundEndData;
+import de.gg.event.AllPlayersReadyEvent;
+import de.gg.event.ServerReadyEvent;
 import de.gg.util.Log;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 /**
- * This screen is rendered after a round ends.
+ * This screen is rendered after a round ends. When the server is
+ * {@linkplain #serverReady ready} all clients can
+ * {@linkplain #onAllPlayersReady(AllPlayersReadyEvent) ready up} and after that
+ * this screen switches either to the voting or the map screen.
  */
 public class GameRoundendScreen extends BaseGameScreen {
 
@@ -29,7 +31,12 @@ public class GameRoundendScreen extends BaseGameScreen {
 	private final String FLIP_SOUND = "audio/flip-page.mp3";
 	private Sound flipSound;
 
-	private volatile RoundEndData data = null;
+	/**
+	 * Whether the server is ready to process the next round.
+	 * 
+	 * @see ServerReadyEvent
+	 */
+	private volatile boolean serverReady = false;
 
 	private ImageTextButton nextButton;
 	private Label lastYearTitle, comingYearTitle, lastYearData, comingYearData;
@@ -100,56 +107,51 @@ public class GameRoundendScreen extends BaseGameScreen {
 	}
 
 	private synchronized void updateUI() {
-		// Data anzeigen
-		if (data != null) {
+		// Informationen zu Rundenende anzeigen
+		if (serverReady) {
 			lastYearTitle.setText("Das vergangene Jahr");
 			comingYearTitle.setText("Kommendes Jahr");
 
 			lastYearData.setText("-3 Gold für XYZ");
-			comingYearData.setText(String.format(
-					"-15 Gold für XYZ \n+3 AP\n Die Geschäfte öffnen um %d",
-					data.getOpeningHourNextDay()));
+			comingYearData.setText(String.format("-15 Gold für XYZ \n+3 AP"));
 		}
 
 		nextButton.setText("Weiter");
-		nextButton.setDisabled(data == null);
+		nextButton.setDisabled(!serverReady);
 		nextButton.setTouchable(
-				data == null ? Touchable.disabled : Touchable.enabled);
+				!serverReady ? Touchable.disabled : Touchable.enabled);
 	}
 
 	@Override
 	public void renderGame(float delta) {
 		game.getClient().updatePing(delta);
 
-		if (game.isHost())
-			game.getServer().update();
+		// if (game.isHost())
+		// game.getServer().update();
 	}
 
 	@Subscribe
 	@Override
-	public synchronized void onRoundEndDataArrived(
-			RoundEndDataReceivedEvent event) {
-		this.setData(event.getData());
+	public synchronized void onServerReady(ServerReadyEvent event) {
+		this.serverReady = true;
 
 		updateUI();
 	}
 
-	@Subscribe
-	public void onNextRound(NextRoundEvent event) {
-		setData(null);
-		if (!game.getClient().getCity().getMattersToHoldVoteOn().isEmpty())
-			game.pushScreen("vote");
-		else
-			game.pushScreen("map");
+	public void setServerReady() {
+		this.serverReady = true;
 	}
 
-	/**
-	 * Set the round end data that should get applied.
-	 * 
-	 * @param data
-	 */
-	public void setData(RoundEndData data) {
-		this.data = data;
+	@Subscribe
+	public void onAllPlayersReady(AllPlayersReadyEvent event) {
+		this.serverReady = false;
+
+		if (event.isNextRound()) {
+			if (!game.getClient().getCity().getMattersToHoldVoteOn().isEmpty())
+				game.pushScreen("vote");
+			else
+				game.pushScreen("map");
+		}
 	}
 
 	@Override
