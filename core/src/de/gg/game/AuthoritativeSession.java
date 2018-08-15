@@ -18,10 +18,7 @@ import com.google.gson.JsonSyntaxException;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.data.GameSpeed;
 import de.gg.game.data.RoundEndData;
-import de.gg.game.data.vote.ElectionVote;
-import de.gg.game.data.vote.ImpeachmentVote;
 import de.gg.game.data.vote.VoteResults;
-import de.gg.game.data.vote.VoteableMatter;
 import de.gg.game.entity.Character;
 import de.gg.game.entity.Player;
 import de.gg.game.entity.Position;
@@ -33,6 +30,9 @@ import de.gg.game.system.server.NpcActionSystem;
 import de.gg.game.system.server.NpcActionSystem2;
 import de.gg.game.system.server.ServerProcessingSystem;
 import de.gg.game.type.PositionTypes.PositionType;
+import de.gg.game.vote.ElectionVote;
+import de.gg.game.vote.ImpeachmentVote;
+import de.gg.game.vote.VoteableMatter;
 import de.gg.network.GameServer;
 import de.gg.network.LobbyPlayer;
 import de.gg.network.ServerSetup;
@@ -96,12 +96,12 @@ public class AuthoritativeSession extends GameSession
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setupGame(SavedGame savedGame) {
+	public void init(SavedGame savedGame) {
 		for (LobbyPlayer player : players.values()) {
 			player.setReady(false);
 		}
 
-		super.setupGame(savedGame);
+		super.init(savedGame);
 
 		// Setup the server processing systems
 		ServerProcessingSystem s;
@@ -335,7 +335,7 @@ public class AuthoritativeSession extends GameSession
 		return true;
 	}
 
-	public void startNextRoundForEveryone() {
+	public synchronized void startNextRoundForEveryone() {
 		Log.info("Server", "Alle Spieler sind für die Runde bereit");
 
 		for (LobbyPlayer player : players.values()) {

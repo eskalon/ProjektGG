@@ -51,7 +51,6 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 		// TODO replace with one big scene
 		assetManager.load(HOUSE1_MODEL_PATH, Model.class);
 		assetManager.load(SKYBOX_MODEL_PATH, Model.class);
-
 	}
 
 	@Override
@@ -74,8 +73,8 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 
 		// Set up the game (server and client side)
 		if (game.isHost())
-			game.getServer().setupGameSession();
-		game.getClient().setupGameSession();
+			game.getServer().initGameSession();
+		game.getClient().initGameSession();
 
 		// Create the ModelInstances
 		for (BuildingSlot s : game.getClient().getCity().getBuildingSlots()) {

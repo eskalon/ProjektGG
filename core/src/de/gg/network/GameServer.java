@@ -19,6 +19,7 @@ import de.gg.core.ProjektGG;
 import de.gg.event.ConnectionEstablishedEvent;
 import de.gg.game.AuthoritativeSession;
 import de.gg.game.GameSession;
+import de.gg.game.SavedGame;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.network.message.ChatMessageSentMessage;
 import de.gg.network.message.DiscoveryResponsePacket;
@@ -171,13 +172,13 @@ public class GameServer {
 	}
 
 	/**
-	 * Sets up the game session. The {@linkplain de.gg.game.type game assets}
-	 * have to get loaded first.
+	 * Initializes the game session. The {@linkplain de.gg.game.type game
+	 * assets} have to get loaded first.
 	 * 
-	 * @see GameSession#setupGame()
+	 * @see GameSession#init(SavedGame)
 	 */
-	public void setupGameSession() {
-		session.setupGame(null);
+	public void initGameSession() {
+		session.init(null);
 		Log.info("Server", "Spiel gestartet");
 	}
 
@@ -257,7 +258,6 @@ public class GameServer {
 					Log.info("Server", "Broadcast-Server geschlossen");
 				}
 			})).start();
-
 		}
 	}
 

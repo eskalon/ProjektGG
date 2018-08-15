@@ -1,5 +1,7 @@
 package de.gg.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Formatter;
 import java.util.concurrent.TimeUnit;
 
@@ -12,8 +14,13 @@ import com.badlogic.gdx.Gdx;
  * called to set an active log level.
  */
 public class Log {
-	
-	public static TimeUnit DEFAULT_TIME_UNIT = TimeUnit.MILLISECONDS;
+
+	public static final TimeUnit DEFAULT_TIME_UNIT = TimeUnit.MILLISECONDS;
+	private static final SimpleDateFormat INFO_TIME_FORMAT = new SimpleDateFormat(
+			"HH:mm:ss");
+	private static final SimpleDateFormat DEBUG_TIME_FORMAT = new SimpleDateFormat(
+			"HH:mm:ss.SSS");
+	private static SimpleDateFormat USED_TIME_FORMAT = INFO_TIME_FORMAT;
 
 	private Log() {
 	}
@@ -24,6 +31,7 @@ public class Log {
 	public static void enableDebugLogging() {
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		com.esotericsoftware.minlog.Log.INFO();
+		USED_TIME_FORMAT = DEBUG_TIME_FORMAT;
 	}
 
 	/**
@@ -32,6 +40,7 @@ public class Log {
 	public static void disableDebugLogging() {
 		Gdx.app.setLogLevel(Application.LOG_INFO);
 		com.esotericsoftware.minlog.Log.ERROR();
+		USED_TIME_FORMAT = INFO_TIME_FORMAT;
 	}
 
 	/**
@@ -51,7 +60,8 @@ public class Log {
 	 * @see Formatter
 	 */
 	public static void info(String tag, String message, Object... args) {
-		Gdx.app.log(tag.toUpperCase(), String.format(message, args));
+		Gdx.app.log(getCurrentTime() + tag.toUpperCase(),
+				String.format(message, args));
 	}
 
 	/**
@@ -71,7 +81,8 @@ public class Log {
 	 * @see Formatter
 	 */
 	public static void error(String tag, String message, Object... args) {
-		Gdx.app.error(tag.toUpperCase(), String.format(message, args));
+		Gdx.app.error(getCurrentTime() + tag.toUpperCase(),
+				String.format(message, args));
 	}
 
 	/**
@@ -92,7 +103,12 @@ public class Log {
 	 * @see #enableDebugLogging()
 	 */
 	public static void debug(String tag, String message, Object... args) {
-		Gdx.app.debug(tag.toUpperCase(), String.format(message, args));
+		Gdx.app.debug(getCurrentTime() + tag.toUpperCase(),
+				String.format(message, args));
+	}
+
+	private static String getCurrentTime() {
+		return USED_TIME_FORMAT.format(new Date()) + " - ";
 	}
 
 }

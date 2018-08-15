@@ -1,8 +1,12 @@
-package de.gg.game.data.vote;
+package de.gg.game.vote;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
+import de.gg.game.data.vote.VoteOption;
+import de.gg.game.data.vote.VoteResults;
+import de.gg.game.entity.Character;
 import de.gg.game.entity.Position;
 import de.gg.game.type.PositionTypes;
 import de.gg.game.type.PositionTypes.PositionType;
@@ -71,6 +75,26 @@ public class ElectionVote extends VoteableMatter {
 
 	public Position getPos() {
 		return pos;
+	}
+
+	@Override
+	public void processVoteResult(VoteResults result, City city) {
+		// Reputation & opinion effects
+		for (Entry<Short, Integer> e : result.getIndividualVotes().entrySet()) {
+			Character voter = city.getCharacter(e.getKey());
+			for (VoteOption option : this.getOptions()) {
+				if (option.getValue() == e.getValue()) {
+					voter.addOpinionModifier((short) option.getValue(), 12);
+				} else {
+					voter.addOpinionModifier((short) option.getValue(), -8);
+				}
+			}
+		}
+
+		// Actual effect
+		pos.setCurrentHolder(
+				pos.getApplicants().get(result.getOverallResult()));
+		pos.getApplicants().clear();
 	}
 
 }

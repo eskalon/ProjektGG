@@ -80,7 +80,6 @@ public class SaveGameParser {
 						new JsonIndexSerializer<>(ItemTypes.getValues()))
 				.registerTypeAdapter(ItemType.class,
 						new JsonIndexDeserializer<>(ItemTypes.getValues()))
-
 				// Crime Type
 				.registerTypeAdapter(CrimeType.class,
 						new JsonIndexSerializer<>(CrimeTypes.getValues()))

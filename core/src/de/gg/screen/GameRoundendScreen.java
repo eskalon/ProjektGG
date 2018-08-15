@@ -15,6 +15,7 @@ import com.google.common.eventbus.Subscribe;
 import de.gg.event.NextRoundEvent;
 import de.gg.event.RoundEndDataReceivedEvent;
 import de.gg.game.data.RoundEndData;
+import de.gg.util.Log;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 /**
@@ -68,7 +69,7 @@ public class GameRoundendScreen extends BaseGameScreen {
 						* game.getSettings().getMasterVolume());
 				nextButton.setText("Warten...");
 
-				// Log.debug("Client", "Client ist bereit");
+				Log.debug("Client", "Client ist bereit");
 
 				game.getClient().getActionHandler().readyUp();
 

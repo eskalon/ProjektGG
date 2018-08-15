@@ -1,7 +1,7 @@
 package de.gg.event;
 
 import de.gg.game.data.vote.VoteResults;
-import de.gg.game.data.vote.VoteableMatter;
+import de.gg.game.vote.VoteableMatter;
 import de.gg.network.GameClient;
 
 /**

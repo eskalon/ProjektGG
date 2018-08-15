@@ -56,7 +56,7 @@ import de.gg.util.Log;
  * <li>{@link #establishRMIConnection(HashMap, GameSessionSetup)}: Establishes
  * the client's RMI connection. Has to get called after the client is
  * connected.</li>
- * <li>{@link #setupGameSession()}: Sets up the client's game session. Has to
+ * <li>{@link #initGameSession()}: Initializes the client's game session. Has to
  * get called after the client is connected and before the session is
  * {@linkplain GameSession#update() updated}.</li>
  * <li>{@link #update()}: Has to get called continually to update the client's
@@ -109,6 +109,8 @@ public class GameClient {
 
 		client = new Client();
 		client.start();
+
+		Log.info("Client", "--- Neuem Spiel wird beigetreten ---");
 
 		NetworkRegisterer.registerClasses(client.getKryo());
 
@@ -306,11 +308,11 @@ public class GameClient {
 	}
 
 	/**
-	 * Sets up the session. The {@linkplain de.gg.game.type game assets} have to
-	 * get loaded first.
+	 * Initializes the session. The {@linkplain de.gg.game.type game assets}
+	 * have to get loaded first.
 	 */
-	public void setupGameSession() {
-		session.setupGame(null);
+	public void initGameSession() {
+		session.init(null);
 	}
 
 	public City getCity() {

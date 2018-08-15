@@ -60,6 +60,7 @@ public class GameMapScreen extends BaseGameScreen {
 
 	private MapSelectionInputController selectionInputController;
 	private MapMovementInputController movementInputController;
+	private GameSpeedInputProcessor gameSpeedInputProcessor;
 
 	/**
 	 * The pause dialog.
@@ -107,8 +108,9 @@ public class GameMapScreen extends BaseGameScreen {
 		movementInputController = new MapMovementInputController(
 				game.getGameCamera(), game.getSettings());
 		addInputProcessor(movementInputController);
-		addInputProcessor(new GameSpeedInputProcessor(game.getSettings(),
-				game.getClient().getActionHandler()));
+		gameSpeedInputProcessor = new GameSpeedInputProcessor(
+				game.getSettings());
+		addInputProcessor(gameSpeedInputProcessor);
 	}
 
 	@Override
@@ -118,6 +120,8 @@ public class GameMapScreen extends BaseGameScreen {
 		City city = game.getClient().getCity();
 
 		selectionInputController.setCity(city);
+		gameSpeedInputProcessor
+				.setClientActionHandler(game.getClient().getActionHandler());
 
 		// CHARACTER DIALOG
 		AnimationlessDialog characterMenuDialog = new AnimationlessDialog(
@@ -314,7 +318,9 @@ public class GameMapScreen extends BaseGameScreen {
 							.setCaller(GameMapScreen.this);
 					game.pushScreen("settings");
 				} else {
-					// Zuerst null setzen, damit das Spiel aufhört zu updaten
+					Log.info("Client", "Verbindung wird getrennt");
+					// Zuerst auf null setzen, damit das Spiel aufhört zu
+					// updaten
 					final GameClient client = game.getClient();
 					game.setClient(null);
 					final GameServer server = game.getServer();
@@ -353,7 +359,8 @@ public class GameMapScreen extends BaseGameScreen {
 		selectionInputController.update();
 
 		// Render city
-		sceneRenderer.render(game.getClient().getCity());
+		if (game.getClient() != null) // Fürs disconnecten
+			sceneRenderer.render(game.getClient().getCity());
 
 		// Render sphere with shader (temp)
 		renderContext.begin();

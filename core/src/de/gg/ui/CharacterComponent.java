@@ -46,6 +46,8 @@ public class CharacterComponent extends Table {
 			this.shapeRenderer = new ShapeRenderer();
 
 			this.opinionPercentage = opinion / 100F;
+			if (this.opinionPercentage < 0.025F)
+				this.opinionPercentage = 0.025F;
 			color = ColorUtils.getInterpolatedColor(0, 128,
 					opinionPercentage <= 0.1F ? 0 : (opinionPercentage - 0.1F),
 					75, 70);

@@ -5,11 +5,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import de.gg.game.data.vote.ElectionVote;
-import de.gg.game.data.vote.ImpeachmentVote;
 import de.gg.game.data.vote.VoteOption;
-import de.gg.game.data.vote.VoteableMatter;
 import de.gg.game.entity.Character;
+import de.gg.game.vote.ElectionVote;
+import de.gg.game.vote.ImpeachmentVote;
+import de.gg.game.vote.VoteableMatter;
 import de.gg.util.CollectionUtils;
 import de.gg.util.RandomUtils;
 

@@ -2,7 +2,6 @@ package de.gg.game.system.smp;
 
 import java.util.Map.Entry;
 
-import de.gg.game.data.vote.ElectionVote;
 import de.gg.game.entity.Character;
 import de.gg.game.entity.Player;
 import de.gg.game.entity.Position;
@@ -10,6 +9,7 @@ import de.gg.game.type.LawTypes;
 import de.gg.game.type.PositionTypes.PositionType;
 import de.gg.game.type.SocialStatusS;
 import de.gg.game.type.SocialStatusS.SocialStatus;
+import de.gg.game.vote.ElectionVote;
 import de.gg.game.world.City;
 
 public class RoundEndSystem {

@@ -1,7 +1,7 @@
 package de.gg.event;
 
 import de.gg.game.SlaveSession;
-import de.gg.game.data.vote.VoteableMatter;
+import de.gg.game.vote.VoteableMatter;
 
 /**
  * Is posted by the {@link SlaveSession} when a new vote is started.

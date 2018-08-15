@@ -91,6 +91,8 @@ public class LobbyCreationScreen extends BaseUIScreen {
 									game.getVersion(), true);
 							GameSessionSetup sessionSetup = new GameSessionSetup(
 									difficulty, 0, System.currentTimeMillis());
+							Log.info("Client",
+									"--- Neues Spiel wird erstellt ---");
 							Log.info("Server", "Server wird gestartet...");
 							game.setServer(new GameServer(serverSetup,
 									sessionSetup, new IHostCallback() {

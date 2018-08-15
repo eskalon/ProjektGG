@@ -1,8 +1,12 @@
-package de.gg.game.data.vote;
+package de.gg.game.vote;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
+import de.gg.game.data.vote.VoteOption;
+import de.gg.game.data.vote.VoteResults;
+import de.gg.game.entity.Character;
 import de.gg.game.entity.Position;
 import de.gg.game.type.PositionTypes;
 import de.gg.game.type.PositionTypes.PositionType;
@@ -95,12 +99,35 @@ public class ImpeachmentVote extends VoteableMatter {
 		return pos;
 	}
 
-	public short getCharacterToImpeach() {
-		return currentHolder;
-	}
+	@Override
+	public void processVoteResult(VoteResults result, City city) {
+		// Reputation & opinion effects
+		for (Entry<Short, Integer> e : result.getIndividualVotes().entrySet()) {
+			Character voter = city.getCharacter(e.getKey());
 
-	public short getVoteCaller() {
-		return voteCaller;
+			if (e.getKey() == voteCaller) {
+				voter.addOpinionModifier(currentHolder, -18);
+			}
+
+			if (e.getValue() == ImpeachmentVote.DONT_IMPEACH_OPTION_INDEX) {
+				voter.addOpinionModifier(currentHolder, 7);
+			} else {
+				voter.addOpinionModifier(currentHolder, -12);
+				if (city.getCharacter(currentHolder).getReputation() > 0)
+					voter.setReputationModifiers(
+							voter.getReputationModifiers() - 1);
+			}
+		}
+
+		// Actual effect
+		if (result
+				.getOverallResult() == ImpeachmentVote.DONT_IMPEACH_OPTION_INDEX) {
+			// Stay: nothing to do
+		} else {
+			// Remove
+			pos.setCurrentHolder((short) -1);
+		}
+
 	}
 
 }

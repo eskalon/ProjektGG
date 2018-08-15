@@ -15,10 +15,12 @@ public class GameSpeedInputProcessor
 	private int DECREASE_SPEED_KEY;
 	private ClientActionHandler actionHandler;
 
-	public GameSpeedInputProcessor(GameSettings settings,
-			ClientActionHandler actionHandler) {
-		this.actionHandler = actionHandler;
+	public GameSpeedInputProcessor(GameSettings settings) {
 		loadKeybinds(settings);
+	}
+
+	public void setClientActionHandler(ClientActionHandler actionHandler) {
+		this.actionHandler = actionHandler;
 	}
 
 	@Override

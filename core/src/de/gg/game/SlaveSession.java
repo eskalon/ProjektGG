@@ -12,13 +12,13 @@ import de.gg.event.VoteFinishedEvent;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.data.GameSpeed;
 import de.gg.game.data.RoundEndData;
-import de.gg.game.data.vote.ImpeachmentVote;
 import de.gg.game.data.vote.VoteResults;
-import de.gg.game.data.vote.VoteableMatter;
 import de.gg.game.entity.Player;
 import de.gg.game.system.ProcessingSystem;
 import de.gg.game.system.client.FirstEventWaveClientSystem;
 import de.gg.game.type.PositionTypes.PositionType;
+import de.gg.game.vote.ImpeachmentVote;
+import de.gg.game.vote.VoteableMatter;
 import de.gg.network.LobbyPlayer;
 import de.gg.network.rmi.AuthoritativeResultListener;
 import de.gg.util.Log;
@@ -57,8 +57,8 @@ public class SlaveSession extends GameSession
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setupGame(SavedGame savedGame) {
-		super.setupGame(savedGame);
+	public void init(SavedGame savedGame) {
+		super.init(savedGame);
 
 		// Setup the client systems
 		ProcessingSystem<Player> s;
@@ -71,7 +71,7 @@ public class SlaveSession extends GameSession
 	 * {@inheritDoc}
 	 */
 	@Override
-	public synchronized void fixedUpdate() {
+	protected synchronized void fixedUpdate() {
 		super.fixedUpdate();
 
 		if (isRightTick(TICKS_PER_SECOND)) {

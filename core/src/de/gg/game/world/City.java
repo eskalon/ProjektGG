@@ -8,7 +8,6 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 
 import de.gg.game.data.GameSessionSetup;
-import de.gg.game.data.vote.VoteableMatter;
 import de.gg.game.entity.BuildingSlot;
 import de.gg.game.entity.Cart;
 import de.gg.game.entity.Character;
@@ -18,6 +17,7 @@ import de.gg.game.entity.Position;
 import de.gg.game.type.ItemTypes.ItemType;
 import de.gg.game.type.LawTypes.LawType;
 import de.gg.game.type.PositionTypes.PositionType;
+import de.gg.game.vote.VoteableMatter;
 import de.gg.network.LobbyPlayer;
 import de.gg.render.RenderData;
 
