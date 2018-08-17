@@ -2,6 +2,8 @@ package de.gg.setting;
 
 import com.badlogic.gdx.Input.Keys;
 
+import de.gg.util.MathUtils;
+
 /**
  * Manages the actual game settings. Encapsulates {@link ConfigHandler}.
  */
@@ -54,6 +56,12 @@ public class GameSettings {
 
 	public void setMusicVolume(float musicVolume) {
 		configHandler.setFloat(MUSIC_VOLUME, musicVolume);
+	}
+
+	// Utility methods
+	public float getUIVolumeLevel() {
+		return (float) MathUtils.linToExp(getEffectVolume() * getMasterVolume(),
+				2);
 	}
 
 	// Forward key

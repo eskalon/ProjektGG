@@ -31,7 +31,7 @@ public class SettingsScreen extends BaseUIScreen {
 		// VOLUME
 		Label masterVolume = new Label("Gesamt-Lautstärke: ", skin);
 		Slider masterSlider = new Slider(0, 1, 0.05F, false, skin);
-		masterSlider.setValue(game.getSettings().getMasterVolume());
+		masterSlider.setValue(game.getSettings().getUIVolumeLevel());
 		masterSlider.addListener(new InputListener() {
 			@Override
 			public void touchUp(InputEvent event, float x, float y, int pointer,

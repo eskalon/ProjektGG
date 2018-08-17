@@ -34,6 +34,21 @@ public class MathUtils {
 	}
 
 	/**
+	 * Converts a linear level to an exponential one. Is especially useful for
+	 * sound levels.
+	 * 
+	 * @param x
+	 *            The linear level. Is usually in the range of <code>0</code> to
+	 *            <code>1</code>.
+	 * @param base
+	 *            The exponential base to use.
+	 * @return
+	 */
+	public static double linToExp(double x, int base) {
+		return (Math.pow(base, x) - 1) / (base - 1);
+	}
+
+	/**
 	 * Calculates the probability for a skill based action to succeed using a
 	 * {@linkplain #sigmoid(double) sigmoid function}. This means that the
 	 * probability change is smaller towards the end and the beginning of the

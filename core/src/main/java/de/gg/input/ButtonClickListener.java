@@ -35,8 +35,7 @@ public abstract class ButtonClickListener extends InputListener {
 	public boolean touchDown(InputEvent event, float x, float y, int pointer,
 			int button) {
 		if (arePreconditionsMet()) {
-			clickSound.play(
-					settings.getEffectVolume() * settings.getMasterVolume());
+			clickSound.play(settings.getUIVolumeLevel());
 			onClick();
 
 			return true;

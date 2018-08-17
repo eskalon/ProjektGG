@@ -72,8 +72,7 @@ public class GameRoundendScreen extends BaseGameScreen {
 		nextButton.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
-				flipSound.play(game.getSettings().getEffectVolume()
-						* game.getSettings().getMasterVolume());
+				flipSound.play(game.getSettings().getUIVolumeLevel());
 				nextButton.setText("Warten...");
 
 				Log.debug("Client", "Client ist bereit");

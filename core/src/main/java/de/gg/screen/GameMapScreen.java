@@ -398,8 +398,7 @@ public class GameMapScreen extends BaseGameScreen {
 
 	@Subscribe
 	public void onFollHour(FullHourEvent ev) {
-		clockTickSound.play(game.getSettings().getEffectVolume()
-				* game.getSettings().getMasterVolume());
+		clockTickSound.play(game.getSettings().getUIVolumeLevel());
 	}
 
 	@Subscribe
