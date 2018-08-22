@@ -135,18 +135,15 @@ public class ServerAuthoritativResultListenerStub
 	 * This method takes care of informing every
 	 * {@linkplain AuthoritativeSession#resultListeners result listener} about a
 	 * result that happened on the server on another thread.
-	 * 
+	 *
 	 * @param task
 	 *            The task that is used to denote the result.
 	 */
 	private void informClients(ResultTask task) {
-		executor.submit(new Runnable() {
-			@Override
-			public void run() {
-				for (AuthoritativeResultListener resultListener : serverSession
-						.getResultListeners().values()) {
-					task.informClient(resultListener);
-				}
+		executor.submit(() -> {
+			for (AuthoritativeResultListener resultListener : serverSession
+					.getResultListeners().values()) {
+				task.informClient(resultListener);
 			}
 		});
 	}

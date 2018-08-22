@@ -13,7 +13,7 @@ public class TickCounter {
 
 	/**
 	 * Creates a tick counter.
-	 * 
+	 *
 	 * @param tickHandler
 	 * @param maxTicks
 	 *            The maximum number of ticks. The counter can be reset via
@@ -29,7 +29,7 @@ public class TickCounter {
 
 	/**
 	 * Creates a tick counter.
-	 * 
+	 *
 	 * @param tickHandler
 	 * @param maxTicks
 	 *            The maximum number of ticks. The counter can be reset via
@@ -52,7 +52,7 @@ public class TickCounter {
 	/**
 	 * Updates the tick counter. Whenever a tick is over,
 	 * {@link TickHandler#onTick()} is called on the tick handler.
-	 * 
+	 *
 	 * @return Returns <code>true</code> <i>once<i>, when the max tick count is
 	 *         reached. After that {@link #reset()} has to be called.
 	 */

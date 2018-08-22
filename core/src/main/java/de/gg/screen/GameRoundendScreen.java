@@ -33,7 +33,7 @@ public class GameRoundendScreen extends BaseGameScreen {
 
 	/**
 	 * Whether the server is ready to process the next round.
-	 * 
+	 *
 	 * @see ServerReadyEvent
 	 */
 	private volatile boolean serverReady = false;
@@ -70,6 +70,7 @@ public class GameRoundendScreen extends BaseGameScreen {
 		nextButton = new ImageTextButton("Weiter", skin, "normal");
 
 		nextButton.addListener(new InputListener() {
+			@Override
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				flipSound.play(game.getSettings().getUIVolumeLevel());

@@ -39,7 +39,7 @@ public class LawTypes {
 	 * Initializes the law types after the respective assets are loaded.
 	 * <p>
 	 * Has to be called after {@link PositionTypes#initialize(AssetManager)}.
-	 * 
+	 *
 	 * @param assetManager
 	 */
 	public static void initialize(AssetManager assetManager) {

@@ -42,6 +42,7 @@ public class AnimationlessDialog extends Dialog {
 	 * {@link #pack() Packs} the dialog and adds it to the stage, centered but
 	 * without a fade-in action.
 	 */
+	@Override
 	public Dialog show(Stage stage) {
 		show(stage, null);
 		setPosition(Math.round((stage.getWidth() - getWidth()) / 2),
@@ -53,17 +54,19 @@ public class AnimationlessDialog extends Dialog {
 	 * Hides the dialog. Is called automatically when a button is clicked. No
 	 * fade-out animation is played.
 	 */
+	@Override
 	public void hide() {
 		hide(null);
 	}
 
 	/**
 	 * Adds a button to the button table.
-	 * 
+	 *
 	 * @param object
 	 *            The object that will be passed to {@link #result(Object)} if
 	 *            this button is clicked. May be <code>null</code>.
 	 */
+	@Override
 	public Dialog button(String text, Object object) {
 		return button(text, object,
 				skin.get("small", ImageTextButtonStyle.class));

@@ -28,7 +28,7 @@ public class CharacterBehaviour {
 	 * Has to get compared with the specific skill and trait modifiers as well
 	 * as the own usefulness and threat modifiers to determine whether a npc
 	 * should execute a specific action.
-	 * 
+	 *
 	 * @param thisCharacterId
 	 *            The id of the character that the opinion is held of.
 	 * @param otherCharacterId
@@ -91,7 +91,7 @@ public class CharacterBehaviour {
 	/**
 	 * Returns the popularity modifier of a character towards another character
 	 * in this specific round.
-	 * 
+	 *
 	 * @param seed
 	 *            The random seed for this round.
 	 * @param characterIdA

@@ -84,6 +84,7 @@ public class ServerBrowserScreen extends BaseUIScreen {
 
 						AnimationlessDialog dialog = new AnimationlessDialog(
 								"Direkt verbinden", skin) {
+							@Override
 							public void result(Object obj) {
 								if ((Boolean) obj) {
 									// Connect to client

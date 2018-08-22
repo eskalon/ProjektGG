@@ -85,19 +85,16 @@ public class LobbyScreen extends BaseUIScreen {
 						final GameServer server = game.getServer();
 						game.setServer(null);
 
-						(new Thread(new Runnable() {
-							@Override
-							public void run() {
-								client.disconnect();
+						(new Thread(() -> {
+							client.disconnect();
 
-								Log.info("Client", "Client beendet");
+							Log.info("Client", "Client beendet");
 
-								if (server != null) {
-									server.stop();
-								}
-
-								Log.info("Server", "Server beendet");
+							if (server != null) {
+								server.stop();
 							}
+
+							Log.info("Server", "Server beendet");
 						})).start();
 
 						game.pushScreen("mainMenu");
@@ -258,7 +255,7 @@ public class LobbyScreen extends BaseUIScreen {
 
 	/**
 	 * Adds a chat message to the ui.
-	 * 
+	 *
 	 * @param sender
 	 *            The sender. Can be null for system messages.
 	 * @param message
@@ -322,7 +319,7 @@ public class LobbyScreen extends BaseUIScreen {
 	 * Is called <i>before</i> this screen is
 	 * {@linkplain ProjektGG#pushScreen(String) pushed} to setup the data of the
 	 * current game.
-	 * 
+	 *
 	 * @param event
 	 */
 	public void setupLobby(ConnectionEstablishedEvent event) {

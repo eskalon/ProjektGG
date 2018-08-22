@@ -22,7 +22,7 @@ public class RenderData extends ModelInstance {
 
 	/**
 	 * Whether this model is selected by the player.
-	 * 
+	 *
 	 * @see SceneRenderer#renderOutlines(BuildingSlot[])
 	 */
 	public boolean isSelected = false;

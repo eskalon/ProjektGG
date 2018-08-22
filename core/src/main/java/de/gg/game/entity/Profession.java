@@ -8,7 +8,7 @@ public class Profession {
 	private ProfessionType profession;
 	/**
 	 * If the player got enough experience he can level up.
-	 * 
+	 *
 	 * @see PlayerTasks#UPGRADING_MASTER
 	 */
 	private int level;

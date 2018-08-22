@@ -26,63 +26,35 @@ public class ClientActionHandler {
 	}
 
 	public void readyUp() {
-		executor.submit(new Runnable() {
-			@Override
-			public void run() {
-				if (!actionListener.readyUp(networkId))
-					Log.error("Client", "Fehler beim \"auf Bereit stellen\"");
-				else
-					Log.info("Client", "Client ist bereit");
-			}
+		executor.submit(() -> {
+			if (!actionListener.readyUp(networkId))
+				Log.error("Client", "Fehler beim \"auf Bereit stellen\"");
+			else
+				Log.info("Client", "Client ist bereit");
 		});
 	}
 
 	public void increaseGameSpeed() {
-		executor.submit(new Runnable() {
-			@Override
-			public void run() {
-				actionListener.increaseGameSpeed(networkId);
-			}
-		});
+		executor.submit(() -> actionListener.increaseGameSpeed(networkId));
 	}
 
 	public void decreaseGameSpeed() {
-		executor.submit(new Runnable() {
-			@Override
-			public void run() {
-				actionListener.decreaseGameSpeed(networkId);
-			}
-		});
+		executor.submit(() -> actionListener.decreaseGameSpeed(networkId));
 	}
 
 	public void castVote(int vote) {
-		executor.submit(new Runnable() {
-			@Override
-			public void run() {
-				actionListener.onVoteCast(vote, networkId);
-			}
-		});
+		executor.submit(() -> actionListener.onVoteCast(vote, networkId));
 	}
 
 	public void applyForPosition(PositionType t, SimpleCallback callback) {
-		executor.submit(new Runnable() {
-			@Override
-			public void run() {
-				callback.call(
-						actionListener.onAppliedForPosition(t, networkId));
-			}
-		});
+		executor.submit(() -> callback.call(
+				actionListener.onAppliedForPosition(t, networkId)));
 	}
 
 	public void arrangeImpeachmentVote(short targetCharacterId,
 			SimpleCallback callback) {
-		executor.submit(new Runnable() {
-			@Override
-			public void run() {
-				callback.call(actionListener.onImpeachmentVoteArranged(
-						targetCharacterId, networkId));
-			}
-		});
+		executor.submit(() -> callback.call(actionListener.onImpeachmentVoteArranged(
+				targetCharacterId, networkId)));
 	}
 
 }

@@ -106,7 +106,7 @@ public class SaveGameParser {
 
 	/**
 	 * Parses the JSON input to the given Java type.
-	 * 
+	 *
 	 * @param jsonInput
 	 *            The JSON input as string.
 	 * @param clazz
@@ -123,7 +123,7 @@ public class SaveGameParser {
 
 	/**
 	 * Parses the Java input to the a JSON string.
-	 * 
+	 *
 	 * @param object
 	 *            The java object as input.
 	 * @return The parsed string.

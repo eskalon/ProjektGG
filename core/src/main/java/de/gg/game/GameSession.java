@@ -42,7 +42,7 @@ import de.gg.util.TickCounter.TickHandler;
  * after {@link #startNextRound()} has been called, this method has to get
  * called to inform the session about its results</li>
  * </ul>
- * 
+ *
  */
 public abstract class GameSession {
 
@@ -66,7 +66,7 @@ public abstract class GameSession {
 	/**
 	 * Is set to <code>true</code> when the game is in the voting mode before
 	 * the next round begins.
-	 * 
+	 *
 	 * @see GameVoteScreen the screen responsible for rendering the voting
 	 *      process.
 	 */
@@ -97,7 +97,7 @@ public abstract class GameSession {
 
 	/**
 	 * Creates a new game session.
-	 * 
+	 *
 	 * @param sessionSetup
 	 *            the settings of the game session.
 	 * @param players
@@ -117,7 +117,7 @@ public abstract class GameSession {
 	 * After the initialization the session can be updated via calling
 	 * {@link #update()}. To resume the game after a round ended
 	 * {@link #startNextRound()} has to get called.
-	 * 
+	 *
 	 * @param savedGame
 	 *            <i>Not</i> <code>null</code> if this is a loaded game state.
 	 */
@@ -144,7 +144,7 @@ public abstract class GameSession {
 					}
 				}
 				// Revert the IDs back to positive numbers
-				for (short s : city.getPlayers().keySet()) {
+				for (short s : savedGame.city.getPlayers().keySet()) {
 					city.switchPlayerId(s, (short) -s);
 				}
 			}
@@ -179,7 +179,7 @@ public abstract class GameSession {
 	 * {@linkplain #init(SavedGame) initialized} before. Returns
 	 * <code>true</code> <i>once</i>, when a round is over. To start the next
 	 * round {@link #startNextRound()}.
-	 * 
+	 *
 	 * @return whether the in-game day is over (8 minutes).
 	 */
 	public synchronized boolean update() {
@@ -322,7 +322,7 @@ public abstract class GameSession {
 
 	/**
 	 * Has to get called to finish the current vote and go on to the next one.
-	 * 
+	 *
 	 * @param result
 	 *            the result of the vote.
 	 */
@@ -334,7 +334,7 @@ public abstract class GameSession {
 
 	/**
 	 * Is called by the session when a new vote is started.
-	 * 
+	 *
 	 * @param matterToVoteOn
 	 *            The new matter to vote on. Is <code>null</code> when the
 	 *            voting process is over.
@@ -344,7 +344,7 @@ public abstract class GameSession {
 	/**
 	 * Returns whether the specified interval is over and an action should get
 	 * executed.
-	 * 
+	 *
 	 * @param tickInterval
 	 *            the interval after which this method is supposed to return
 	 *            true.

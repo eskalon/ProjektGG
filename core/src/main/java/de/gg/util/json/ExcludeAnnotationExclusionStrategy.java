@@ -26,7 +26,7 @@ public class ExcludeAnnotationExclusionStrategy implements ExclusionStrategy {
 	/**
 	 * If a field is marked with this annotation it is excluded from the json
 	 * serialization.
-	 * 
+	 *
 	 * @see ExcludeAnnotationExclusionStrategy
 	 */
 	@Retention(RetentionPolicy.RUNTIME)

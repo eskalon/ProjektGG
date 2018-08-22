@@ -10,7 +10,7 @@ public class ColorUtils {
 	/**
 	 * Returns a color, that is located in between the given hue values.
 	 * Deciding parameter is the <code>currentPercantage</code>.
-	 * 
+	 *
 	 * @param startHue
 	 *            The minimum hue.
 	 * @param endHue
@@ -35,7 +35,7 @@ public class ColorUtils {
 
 	/**
 	 * Converts a hsv color to a rgb one.
-	 * 
+	 *
 	 * @param hue
 	 * @param saturation
 	 * @param value

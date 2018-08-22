@@ -46,7 +46,7 @@ public class Log {
 	/**
 	 * Logs an informal message. The message is formatted via
 	 * {@link String#format(String, Object...)}.
-	 * 
+	 *
 	 * @param tag
 	 *            The tag in front of the message. I usually used to denote the
 	 *            logging entity.
@@ -67,7 +67,7 @@ public class Log {
 	/**
 	 * Logs an <i>error</i> message. The message is formatted via
 	 * {@link String#format(String, Object...)}.
-	 * 
+	 *
 	 * @param tag
 	 *            The tag in front of the message. I usually used to denote the
 	 *            logging entity.
@@ -88,7 +88,7 @@ public class Log {
 	/**
 	 * Logs a <i>debug</i> message. The message is formatted via
 	 * {@link String#format(String, Object...)}.
-	 * 
+	 *
 	 * @param tag
 	 *            The tag in front of the message. I usually used to denote the
 	 *            logging entity.

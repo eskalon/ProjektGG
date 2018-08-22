@@ -37,7 +37,7 @@ public abstract class ServerProcessingSystem<E> extends ProcessingSystem<E> {
 
 	/**
 	 * Loads a previously saved state of this processing system.
-	 * 
+	 *
 	 * @param savedState
 	 *            The saved state. <code>null</code> if no state was saved.
 	 * @see #getSaveState()

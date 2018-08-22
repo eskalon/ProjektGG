@@ -311,6 +311,7 @@ public class GameMapScreen extends BaseGameScreen {
 
 		// PAUSE DIALOG
 		pauseDialog = new AnimationlessDialog("", skin) {
+			@Override
 			protected void result(Object object) {
 				pauseShown = false;
 				if (object == (Integer) 1) {
@@ -328,18 +329,15 @@ public class GameMapScreen extends BaseGameScreen {
 
 					// Dann in einem Thread das mitunter langwierige
 					// Disconnecten durchführen
-					(new Thread(new Runnable() {
-						@Override
-						public void run() {
-							client.disconnect();
+					(new Thread(() -> {
+						client.disconnect();
 
-							Log.info("Client", "Client beendet");
+						Log.info("Client", "Client beendet");
 
-							if (server != null) {
-								server.stop();
+						if (server != null) {
+							server.stop();
 
-								Log.info("Server", "Server beendet");
-							}
+							Log.info("Server", "Server beendet");
 						}
 					})).start();
 

@@ -32,7 +32,7 @@ public class ConfigHandler {
 	/**
 	 * Looks up a String value and sets it to the default value if it's not
 	 * existing.
-	 * 
+	 *
 	 * @param key
 	 *            The preference key.
 	 * @param defaultValue
@@ -51,7 +51,7 @@ public class ConfigHandler {
 	/**
 	 * Looks up a String value and sets it to an empty String if it's not
 	 * existing.
-	 * 
+	 *
 	 * @param key
 	 *            The preference key.
 	 * @return The value. If not existing an empty String.
@@ -62,7 +62,7 @@ public class ConfigHandler {
 
 	/**
 	 * Sets a preference key to the given value.
-	 * 
+	 *
 	 * @param key
 	 *            The preference key.
 	 * @param value
@@ -77,7 +77,7 @@ public class ConfigHandler {
 	/**
 	 * Looks up an integer value and sets it to the default value if it's not
 	 * existing.
-	 * 
+	 *
 	 * @param key
 	 *            The preference key.
 	 * @param defaultValue
@@ -95,7 +95,7 @@ public class ConfigHandler {
 
 	/**
 	 * Looks up an integer value and sets it to 0 if it's not existing.
-	 * 
+	 *
 	 * @param key
 	 *            The preference key.
 	 * @return The value. If not existing 0.
@@ -106,7 +106,7 @@ public class ConfigHandler {
 
 	/**
 	 * Sets a preference key to the given value.
-	 * 
+	 *
 	 * @param key
 	 *            The preference key.
 	 * @param value
@@ -119,7 +119,7 @@ public class ConfigHandler {
 
 	/**
 	 * Adds a given amount to a numeric preference.
-	 * 
+	 *
 	 * @param key
 	 *            The preference key.
 	 * @param addition
@@ -133,7 +133,7 @@ public class ConfigHandler {
 	/**
 	 * Looks up a float value and sets it to the default value if it's not
 	 * existing.
-	 * 
+	 *
 	 * @param key
 	 *            The preference key.
 	 * @param defaultValue
@@ -151,7 +151,7 @@ public class ConfigHandler {
 
 	/**
 	 * Looks up a float value and sets it to 0 if it's not existing.
-	 * 
+	 *
 	 * @param key
 	 *            The preference key.
 	 * @return The value. If not existing 0.
@@ -162,7 +162,7 @@ public class ConfigHandler {
 
 	/**
 	 * Sets a preference key to the given value.
-	 * 
+	 *
 	 * @param key
 	 *            The preference key.
 	 * @param value
@@ -175,7 +175,7 @@ public class ConfigHandler {
 
 	/**
 	 * Adds a given amount to a numeric preference.
-	 * 
+	 *
 	 * @param key
 	 *            The preference key.
 	 * @param addition

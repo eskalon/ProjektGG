@@ -35,7 +35,7 @@ public abstract class VoteableMatter {
 
 	/**
 	 * Processes the results of a vote.
-	 * 
+	 *
 	 * @param result
 	 *            The result of the vote.
 	 * @param city

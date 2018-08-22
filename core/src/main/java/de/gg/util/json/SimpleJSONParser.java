@@ -14,7 +14,7 @@ import de.gg.util.json.ExcludeAnnotationExclusionStrategy.ExcludeFromJSON;
  * <p>
  * Use the {@link ExcludeFromJSON} annotation to exclude classes and fields from
  * serialization.
- * 
+ *
  * @see #parseJson(String, Class)
  */
 public class SimpleJSONParser {
@@ -32,7 +32,7 @@ public class SimpleJSONParser {
 
 	/**
 	 * Parses the JSON input to the given Java class.
-	 * 
+	 *
 	 * @param <T>
 	 *            Return Type.
 	 * @param jsonInput
@@ -45,12 +45,12 @@ public class SimpleJSONParser {
 	 */
 	public static <T> T parseFromJson(String jsonInput, Class<T> clazz)
 			throws JsonSyntaxException {
-		return (T) gson.fromJson(jsonInput, clazz);
+		return gson.fromJson(jsonInput, clazz);
 	}
 
 	/**
 	 * Parses the JSON input to the given Java type.
-	 * 
+	 *
 	 * @param jsonInput
 	 *            The JSON input as string.
 	 * @param clazz
@@ -67,7 +67,7 @@ public class SimpleJSONParser {
 
 	/**
 	 * Parses the Java input to the a JSON string.
-	 * 
+	 *
 	 * @param object
 	 *            The java object as input.
 	 * @return The parsed string.

@@ -95,7 +95,7 @@ public class GameClient {
 
 	/**
 	 * Creates a game client.
-	 * 
+	 *
 	 * @param eventBus
 	 *            the event bus used by the client.
 	 */
@@ -110,7 +110,7 @@ public class GameClient {
 	 * Tries to connect the client to the server. After it is finished either a
 	 * {@link ConnectionEstablishedEvent} or a {@link ConnectionFailedEvent} is
 	 * posted on the {@linkplain ProjektGG#getEventBus() event bus}.
-	 * 
+	 *
 	 * @param gameVersion
 	 *            the client's game version.
 	 * @param ip
@@ -200,17 +200,15 @@ public class GameClient {
 			}
 		});
 
-		final Thread connectingThread = new Thread(new Runnable() {
-			public void run() {
-				try {
-					client.connect(6000, ip, port);
-					Log.info("Client", "Verbindung zum Server hergestellt");
-					// Das Event für einen erfolgreichen Verbingungsvorgang wird
-					// beim Empfangen des Game Setups gepostet
-				} catch (IOException e) {
-					Log.error("Client", "Fehler beim Verbinden: ", e);
-					eventBus.post(new ConnectionFailedEvent(e));
-				}
+		final Thread connectingThread = new Thread(() -> {
+			try {
+				client.connect(6000, ip, port);
+				Log.info("Client", "Verbindung zum Server hergestellt");
+				// Das Event für einen erfolgreichen Verbingungsvorgang wird
+				// beim Empfangen des Game Setups gepostet
+			} catch (IOException e) {
+				Log.error("Client", "Fehler beim Verbinden: ", e);
+				eventBus.post(new ConnectionFailedEvent(e));
 			}
 		});
 		connectingThread.start();
@@ -231,7 +229,7 @@ public class GameClient {
 
 	/**
 	 * Updates the ping.
-	 * 
+	 *
 	 * @param delta
 	 *            The time delta in seconds.
 	 * @see #PING_UPDATE_INTERVAL
@@ -262,7 +260,7 @@ public class GameClient {
 
 	/**
 	 * Sends a chat message to the server.
-	 * 
+	 *
 	 * @param message
 	 *            The actual chat message.
 	 */
@@ -287,7 +285,7 @@ public class GameClient {
 	/**
 	 * Returns the last measured ping. Only gets updated if
 	 * {@link #updatePing(float)} is called regularly.
-	 * 
+	 *
 	 * @return The last measured ping.
 	 */
 	public int getPing() {
@@ -296,7 +294,7 @@ public class GameClient {
 
 	/**
 	 * Establishes the RMI connection to the server.
-	 * 
+	 *
 	 * @param players
 	 * @param sessionSetup
 	 */

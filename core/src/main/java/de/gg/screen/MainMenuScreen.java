@@ -83,6 +83,7 @@ public class MainMenuScreen extends BaseUIScreen {
 				new TextureRegionDrawable(new TextureRegion(
 						assetManager.get(GITHUB_ICON_PATH, Texture.class))));
 		githubRepoButton.addListener(new InputListener() {
+			@Override
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				Gdx.net.openURI("https://github.com/eskalon/ProjektGG");

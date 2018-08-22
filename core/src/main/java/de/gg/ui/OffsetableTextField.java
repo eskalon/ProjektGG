@@ -43,6 +43,7 @@ public class OffsetableTextField extends TextField {
 		this.textOffset = offset;
 	}
 
+	@Override
 	protected void calculateOffsets() {
 		super.calculateOffsets();
 

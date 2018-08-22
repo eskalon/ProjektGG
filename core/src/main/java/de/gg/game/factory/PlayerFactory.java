@@ -14,7 +14,7 @@ public class PlayerFactory {
 
 	/**
 	 * Creates a player.
-	 * 
+	 *
 	 * @param characterId
 	 * @param icon
 	 * @param profession

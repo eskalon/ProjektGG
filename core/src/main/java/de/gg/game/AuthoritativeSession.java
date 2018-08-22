@@ -68,7 +68,7 @@ public class AuthoritativeSession extends GameSession
 
 	/**
 	 * Creates a new multiplayer session.
-	 * 
+	 *
 	 * @param sessionSetup
 	 *            the settings of the game session.
 	 * @param players

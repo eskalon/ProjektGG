@@ -7,7 +7,7 @@ import de.gg.network.LobbyPlayer;
 
 /**
  * Is posted when the client connected to the server successfully.
- * 
+ *
  * @see ConnectionFailedEvent
  */
 public class ConnectionEstablishedEvent {

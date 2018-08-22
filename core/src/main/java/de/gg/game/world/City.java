@@ -58,10 +58,10 @@ public class City {
 	/**
 	 * Changes all mentions of the current player id to the new one. Is used
 	 * when a saved game is loaded.
-	 * 
+	 *
 	 * @param currentId
 	 * @param newId
-	 * 
+	 *
 	 * @see SavedGame#clientIdentifiers
 	 */
 	public void switchPlayerId(short currentId, short newId) {

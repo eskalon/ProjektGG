@@ -39,7 +39,7 @@ public class GameInputMultiplexer extends InputMultiplexer {
 
 	/**
 	 * Removes all input processors.
-	 * 
+	 *
 	 * @see #clear()
 	 */
 	public void removeInputProcessors() {
@@ -48,7 +48,7 @@ public class GameInputMultiplexer extends InputMultiplexer {
 
 	/**
 	 * Removes all input processors contained in the given array.
-	 * 
+	 *
 	 * @param processors
 	 *            The processor to remove.
 	 * @see #removeProcessor(InputProcessor)

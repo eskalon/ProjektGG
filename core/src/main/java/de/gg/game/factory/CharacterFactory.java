@@ -40,7 +40,7 @@ public class CharacterFactory {
 
 	/**
 	 * Creates a random non-player character specified by its social status.
-	 * 
+	 *
 	 * @param random
 	 *            The random generator for this session.
 	 * @param status
@@ -123,7 +123,7 @@ public class CharacterFactory {
 
 	/**
 	 * Creates a random non-player character.
-	 * 
+	 *
 	 * @param random
 	 *            The random generator for this session.
 	 * @return a random non-player character.
@@ -199,7 +199,7 @@ public class CharacterFactory {
 
 	/**
 	 * Creates a character for a player.
-	 * 
+	 *
 	 * @param random
 	 *            The random generator for this session.
 	 * @param profession

@@ -77,7 +77,7 @@ public class PlayerUtils {
 
 	/**
 	 * Returns whether all players set their status to ready.
-	 * 
+	 *
 	 * @param players
 	 *            The players.
 	 * @return The overall ready status.
@@ -98,7 +98,7 @@ public class PlayerUtils {
 	/**
 	 * Returns whether all players except one (normally the host) set their
 	 * status to ready.
-	 * 
+	 *
 	 * @param players
 	 *            The players.
 	 * @param player
@@ -131,7 +131,7 @@ public class PlayerUtils {
 
 	/**
 	 * Returns a random player.
-	 * 
+	 *
 	 * @param collection
 	 *            A collection of all of the already used players to specify the
 	 *            unused player icons.

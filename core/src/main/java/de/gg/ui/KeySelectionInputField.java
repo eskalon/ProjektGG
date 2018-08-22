@@ -67,10 +67,10 @@ public class KeySelectionInputField extends ImageTextButton {
 	public interface KeySelectionEventListener {
 		/**
 		 * Called when a key is selected by the {@link KeySelectionInputField}.
-		 * 
+		 *
 		 * @param key
 		 *            The selected key's code.
-		 * 
+		 *
 		 * @see Keys The class holding all the key code constants.
 		 */
 		public void onKeySelection(int key);

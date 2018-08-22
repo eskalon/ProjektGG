@@ -245,14 +245,11 @@ public class SettingsScreen extends BaseUIScreen {
 			game.setServer(null);
 
 			// Close server
-			(new Thread(new Runnable() {
-				@Override
-				public void run() {
-					if (server != null) {
-						server.stop();
+			(new Thread(() -> {
+				if (server != null) {
+					server.stop();
 
-						Log.info("Server", "Server beendet");
-					}
+					Log.info("Server", "Server beendet");
 				}
 			})).start();
 

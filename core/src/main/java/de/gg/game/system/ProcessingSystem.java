@@ -14,7 +14,7 @@ public abstract class ProcessingSystem<E> {
 
 	/**
 	 * Is called to initialize the system.
-	 * 
+	 *
 	 * @param city
 	 * @param seed
 	 */
@@ -32,7 +32,7 @@ public abstract class ProcessingSystem<E> {
 	/**
 	 * I responsible for processing one entity. Is called either once per round
 	 * or at a steady tick rate depending on {@link #isProcessedContinuously()}.
-	 * 
+	 *
 	 * @param id
 	 *            The id of the entity in question.
 	 * @param e

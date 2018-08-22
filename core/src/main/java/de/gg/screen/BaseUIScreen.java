@@ -89,7 +89,7 @@ public abstract class BaseUIScreen extends BaseScreen {
 		stage.addActor(mainTable);
 		mainTable.setFillParent(true);
 
-		mainTable.setDebug((boolean) game.showDebugStuff());
+		mainTable.setDebug(game.showDebugStuff());
 
 		initUI();
 
@@ -105,7 +105,7 @@ public abstract class BaseUIScreen extends BaseScreen {
 
 	/**
 	 * Shows an informational dialog on the current screen.
-	 * 
+	 *
 	 * @param title
 	 *            The dialog's title.
 	 * @param text
@@ -116,7 +116,7 @@ public abstract class BaseUIScreen extends BaseScreen {
 	 * @param listener
 	 *            A result listener for the dialog.
 	 * @return The dialog.
-	 * 
+	 *
 	 * @see AnimationlessDialog#show(Stage)
 	 * @see #showInfoDialog(String, String, boolean)
 	 * @see #showInfoDialog(String, String)
@@ -124,6 +124,7 @@ public abstract class BaseUIScreen extends BaseScreen {
 	protected AnimationlessDialog showInfoDialog(String title, String text,
 			boolean showButton, SimpleListener listener) {
 		AnimationlessDialog dialog = new AnimationlessDialog(title, skin) {
+			@Override
 			public void result(Object obj) {
 				if (listener != null)
 					listener.listen(obj);
@@ -143,7 +144,7 @@ public abstract class BaseUIScreen extends BaseScreen {
 
 	/**
 	 * Shows an informational dialog on the current screen.
-	 * 
+	 *
 	 * @param title
 	 *            The dialog's title.
 	 * @param text
@@ -152,7 +153,7 @@ public abstract class BaseUIScreen extends BaseScreen {
 	 *            Whether this dialog should show an "Ok" button to close
 	 *            itself.
 	 * @return The dialog.
-	 * 
+	 *
 	 * @see #showInfoDialog(String, String, boolean, SimpleListener)
 	 * @see #showInfoDialog(String, String)
 	 */
@@ -164,13 +165,13 @@ public abstract class BaseUIScreen extends BaseScreen {
 	/**
 	 * Shows an informational dialog on the current screen with an "Ok" button
 	 * to close it.
-	 * 
+	 *
 	 * @param title
 	 *            The dialog's title.
 	 * @param text
 	 *            The dialog's informational text.
 	 * @return The dialog.
-	 * 
+	 *
 	 * @see #showInfoDialog(String, String, boolean, SimpleListener)
 	 * @see #showInfoDialog(String, String, boolean)
 	 */

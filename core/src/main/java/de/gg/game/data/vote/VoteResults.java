@@ -9,7 +9,7 @@ public class VoteResults {
 
 	/**
 	 * A hashmap of the individual votes.
-	 * 
+	 *
 	 * @see VoteOption#getValue()
 	 */
 	private HashMap<Short, Integer> individualVotes;

@@ -115,8 +115,8 @@ public class MapSelectionInputController
 					.getRenderData().isSelected = true;
 		}
 
-		eventBus.post(new HouseSelectionEvent((short) selectedObjectID, clickX,
-				clickY));
+		eventBus.post(
+				new HouseSelectionEvent(selectedObjectID, clickX, clickY));
 	}
 
 	private short getObjectAtPositon(int screenX, int screenY) {

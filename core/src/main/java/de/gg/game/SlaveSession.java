@@ -35,7 +35,7 @@ public class SlaveSession extends GameSession
 
 	/**
 	 * Creates a new multiplayer session.
-	 * 
+	 *
 	 * @param eventBus
 	 *            the game's event bus.
 	 * @param sessionSetup

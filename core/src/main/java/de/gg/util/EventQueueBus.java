@@ -32,9 +32,10 @@ public class EventQueueBus extends EventBus {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * The events get queued until {@link #distributeEvents()} is called.
 	 */
+	@Override
 	public void post(Object event) {
 		this.eventQueue.add(event);
 	}

@@ -27,7 +27,7 @@ import de.gg.network.rmi.SlaveActionListener;
 /**
  * This class takes care of registering all classes needed by the multiplayer
  * endpoints.
- * 
+ *
  * @see Kryo#register(Class)
  */
 public class NetworkRegisterer {
@@ -38,7 +38,7 @@ public class NetworkRegisterer {
 
 	/**
 	 * Registers all needed classes to the given kryo serialization manager.
-	 * 
+	 *
 	 * @param kryo
 	 *            The kryo serialization manager.
 	 */

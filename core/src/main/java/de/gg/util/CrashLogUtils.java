@@ -26,7 +26,7 @@ public class CrashLogUtils {
 	/**
 	 * Writes a crash log to the {@linkplain #CRASH_LOG_FILE crash log file}.
 	 * Appends to any existing logs.
-	 * 
+	 *
 	 * @param e
 	 *            The exception.
 	 * @see #writeCrashLogToFile(Exception, boolean)
@@ -38,7 +38,7 @@ public class CrashLogUtils {
 	/**
 	 * Writes a crash log to the {@linkplain #CRASH_LOG_FILE crash log file}.
 	 * Appends to any existing logs.
-	 * 
+	 *
 	 * @param e
 	 *            The exception.
 	 * @param forceExit

@@ -23,7 +23,7 @@ public enum GameDifficulty {
 
 	/**
 	 * This value is applied to the opinion of every character.
-	 * 
+	 *
 	 * @return a modifier for the opinion.
 	 */
 	public float getOpinionModifer() {
@@ -33,7 +33,7 @@ public enum GameDifficulty {
 	/**
 	 * This value influences the probability a npc does something in favor of
 	 * the player.
-	 * 
+	 *
 	 * @return a modifier for npc actions.
 	 */
 	public float getActionModifer() {

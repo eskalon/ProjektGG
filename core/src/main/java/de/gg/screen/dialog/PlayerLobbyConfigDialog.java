@@ -245,7 +245,7 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 	/**
 	 * Sets up the text for all buttons and textfields in the player
 	 * configuration dialog.
-	 * 
+	 *
 	 * @param localPlayer
 	 */
 	public void setLocalPlayerValues(LobbyPlayer localPlayer) {

@@ -14,7 +14,7 @@ public class RandomUtils {
 
 	/**
 	 * Generates a random number within the specified range.
-	 * 
+	 *
 	 * @param min
 	 *            Included minimal value.
 	 * @param max
@@ -27,7 +27,7 @@ public class RandomUtils {
 
 	/**
 	 * Generates a random number within the specified range.
-	 * 
+	 *
 	 * @param random
 	 *            The random generator used.
 	 * @param min
@@ -42,7 +42,7 @@ public class RandomUtils {
 
 	/**
 	 * Rolls the dice and returns true with the chance {@code 1/x }
-	 * 
+	 *
 	 * @param x
 	 *            The reciprocal of the chance.
 	 * @return Whether the roll succeeded.
@@ -53,7 +53,7 @@ public class RandomUtils {
 
 	/**
 	 * Rolls the dice and returns true with the chance {@code 1/x }
-	 * 
+	 *
 	 * @param random
 	 *            The random generator used.
 	 * @param x

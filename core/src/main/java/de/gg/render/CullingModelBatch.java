@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 
 /**
  * This model batch takes care of the frustum culling calculations.
- * 
+ *
  * @param cam
  *            The camera.
  * @return Whether the object is visible for the camera.

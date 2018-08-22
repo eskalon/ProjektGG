@@ -21,7 +21,7 @@ public class CollectionUtils {
 
 	/**
 	 * Searches a map for the key to a given value.
-	 * 
+	 *
 	 * @param map
 	 *            The map.
 	 * @param value
@@ -40,7 +40,7 @@ public class CollectionUtils {
 
 	/**
 	 * Sorts a hashmap by its value.
-	 * 
+	 *
 	 * @param map
 	 * @return the sorted hashmap.
 	 */
@@ -59,7 +59,7 @@ public class CollectionUtils {
 
 	/**
 	 * Returns the most popular element in a list.
-	 * 
+	 *
 	 * @param list
 	 *            The list to look at.
 	 * @param T
@@ -96,7 +96,7 @@ public class CollectionUtils {
 
 	/**
 	 * Returns a random element from the given list.
-	 * 
+	 *
 	 * @param list
 	 * @param random
 	 * @return

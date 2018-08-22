@@ -63,7 +63,7 @@ public class GameClock {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param round
 	 *            The current game round.
 	 * @return The season for the respective round.
@@ -92,7 +92,7 @@ public class GameClock {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param round
 	 *            The game round.
 	 * @return The year the game round takes place in.

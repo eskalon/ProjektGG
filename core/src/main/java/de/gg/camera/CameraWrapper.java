@@ -42,9 +42,9 @@ public class CameraWrapper {
 	 * Recalculates the projection and view matrix of this camera and the
 	 * Frustum planes. Use this after you've manipulated any of the attributes
 	 * of the camera.
-	 * 
+	 *
 	 * @see PerspectiveCamera#update()
-	 * 
+	 *
 	 */
 	public void update() {
 		camera.update();
@@ -52,7 +52,7 @@ public class CameraWrapper {
 
 	/**
 	 * Moves the camera by the given amount on each axis.
-	 * 
+	 *
 	 * @param x
 	 *            the displacement on the x-axis
 	 * @param y
@@ -69,7 +69,7 @@ public class CameraWrapper {
 
 	/**
 	 * Moves the camera by the given vector.
-	 * 
+	 *
 	 * @param vec
 	 *            the displacement vector
 	 */
@@ -84,7 +84,7 @@ public class CameraWrapper {
 	 * Rotates the direction and up vector of this camera by the given angle
 	 * around the given axis, with the axis attached to given point. The
 	 * direction and up vector will not be orthogonalized.
-	 * 
+	 *
 	 * @param point
 	 *            the point to attach the axis to
 	 * @param axis
@@ -98,7 +98,7 @@ public class CameraWrapper {
 
 	/**
 	 * Rotates the camera around the target.
-	 * 
+	 *
 	 * @param angleX
 	 *            the x angle in degrees
 	 * @param angleY
@@ -117,7 +117,7 @@ public class CameraWrapper {
 	/**
 	 * Translates the camera in the given direction (specified by the angel) on
 	 * the x-z-plane. Is commonly used to process key movement events.
-	 * 
+	 *
 	 * @param angle
 	 * @param units
 	 */
@@ -129,7 +129,7 @@ public class CameraWrapper {
 	/**
 	 * Moves closer in/out to the point the camera is pointing on. Moves "on the
 	 * {@linkplain CameraWrapper#getDirection() direction vector}".
-	 * 
+	 *
 	 * @param amount
 	 *            The amount to zoom.
 	 */

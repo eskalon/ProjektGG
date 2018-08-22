@@ -191,7 +191,7 @@ public class ProjektGG extends Game {
 	 * Adds a screen to the game and
 	 * {@linkplain BaseScreen#init(ProjektGG, AnnotationAssetManager)
 	 * initializes} it.
-	 * 
+	 *
 	 * @param name
 	 *            the name of the screen.
 	 * @param screen
@@ -210,42 +210,39 @@ public class ProjektGG extends Game {
 	 * {@link Screen#hide()} is called on the previously {@linkplain Game#screen
 	 * active screen} and {@link Screen#show()} is called on the new active
 	 * screen.
-	 * 
+	 *
 	 * @param name
 	 *            the name of the pushed screen.
 	 */
 	public synchronized void pushScreen(String name) {
-		Gdx.app.postRunnable(new Runnable() {
-			@Override
-			public void run() {
-				Log.debug("Screen", "Screen gepushed: %s", name);
-				BaseScreen pushedScreen = screens.get(name);
+		Gdx.app.postRunnable(() -> {
+			Log.debug("Screen", "Screen gepushed: %s", name);
+			BaseScreen pushedScreen = screens.get(name);
 
-				if (pushedScreen == null) {
-					throw new ScreenNotFoundException(String.format(
-							"Es konnte kein Screen mit dem Namen \"%s\" gefunden werden. Füge den Screen zunächst über #addScreen(String, BaseScreen) hinzu.",
-							name));
-				}
-
-				if (screen != null) {
-					screen.hide();
-				}
-
-				if (!pushedScreen.isLoaded()) {
-					assetManager.load(pushedScreen);
-					assetManager.finishLoading();
-					pushedScreen.finishLoading();
-				}
-
-				pushedScreen.show();
-				screen = pushedScreen;
+			if (pushedScreen == null) {
+				throw new ScreenNotFoundException(String.format(
+						"Es konnte kein Screen mit dem Namen \"%s\" gefunden werden. Füge den Screen zunächst über #addScreen(String, BaseScreen) hinzu.",
+						name));
 			}
+
+			if (screen != null) {
+				screen.hide();
+			}
+
+			if (!pushedScreen.isLoaded()) {
+				assetManager.load(pushedScreen);
+				assetManager.finishLoading();
+				pushedScreen.finishLoading();
+			}
+
+			pushedScreen.show();
+			screen = pushedScreen;
 		});
 	}
 
 	/**
 	 * Returns a screen in the game.
-	 * 
+	 *
 	 * @param name
 	 *            the name of the screen.
 	 * @return the screen.
@@ -312,7 +309,7 @@ public class ProjektGG extends Game {
 
 	/**
 	 * Sets the UI skin.
-	 * 
+	 *
 	 * @param skin
 	 *            the UI skin.
 	 */
@@ -380,7 +377,7 @@ public class ProjektGG extends Game {
 	/**
 	 * Returns the input multiplexer of the game. Should be used to add input
 	 * listeners instead of {@link Input#setInputProcessor(InputProcessor)}.
-	 * 
+	 *
 	 * @return the game's input multiplexer.
 	 */
 	public GameInputMultiplexer getInputMultiplexer() {

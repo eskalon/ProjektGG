@@ -16,7 +16,7 @@ package de.gg.util;
 
 /**
  * A simple class for configuring and parsing command-line options.
- * 
+ *
  * @author Andrew Hayden
  * @version 1.1
  */
@@ -72,7 +72,7 @@ public class MicroOptions {
 
 		/**
 		 * Provides a human-readable description for this option.
-		 * 
+		 *
 		 * @param d
 		 *            the description
 		 * @return this option
@@ -84,7 +84,7 @@ public class MicroOptions {
 
 		/**
 		 * Specifies that this option is required.
-		 * 
+		 *
 		 * @return this option
 		 */
 		public Option isRequired() {
@@ -94,7 +94,7 @@ public class MicroOptions {
 
 		/**
 		 * Specifies that this option takes no arguments.
-		 * 
+		 *
 		 * @return this option
 		 */
 		public Option isUnary() {
@@ -140,7 +140,7 @@ public class MicroOptions {
 	/**
 	 * Parses the specified array of Strings and populates values for all
 	 * configured options.
-	 * 
+	 *
 	 * @param strings
 	 *            e.g., the arguments on the command line
 	 */
@@ -174,7 +174,7 @@ public class MicroOptions {
 	 * must be non-null, non-empty, and must not start with a hypen. Spaces are
 	 * allowed but discouraged since they complicate command-line construction
 	 * in most environments.
-	 * 
+	 *
 	 * @param name
 	 *            the name to assign to the option
 	 * @return the option object, which can be used for further configuration
@@ -195,7 +195,7 @@ public class MicroOptions {
 	/**
 	 * Checks a name for validity and throws an UnsupportedOptionException if it
 	 * is invalid.
-	 * 
+	 *
 	 * @param name
 	 *            the name to check
 	 * @throws UnsupportedOperationException
@@ -209,7 +209,7 @@ public class MicroOptions {
 
 	/**
 	 * Returns true iff the specified option was encountered during parsing.
-	 * 
+	 *
 	 * @param option
 	 *            the option to look for
 	 * @return true if so, otherwise false
@@ -227,7 +227,7 @@ public class MicroOptions {
 
 	/**
 	 * Returns the argument that was associated with the specified option.
-	 * 
+	 *
 	 * @param option
 	 *            the option to look up the argument for
 	 * @return the argument, iff the option takes and argument (is not unary)
@@ -245,7 +245,7 @@ public class MicroOptions {
 	/**
 	 * Returns the argument that was associated with the specified option, or
 	 * the specified default value.
-	 * 
+	 *
 	 * @param option
 	 *            the option to look up the argument for
 	 * @param defaultValue

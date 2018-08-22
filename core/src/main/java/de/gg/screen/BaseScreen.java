@@ -34,7 +34,7 @@ public abstract class BaseScreen implements Screen {
 	 * Input processors added to this list get automatically registered when the
 	 * screen is {@linkplain #show() shown} and unregistered when the screen is
 	 * {@linkplain #hide() hidden}.
-	 * 
+	 *
 	 * @see #addInputProcessor(InputProcessor)
 	 */
 	private Array<InputProcessor> inputProcessors = new Array<>(4);
@@ -45,7 +45,7 @@ public abstract class BaseScreen implements Screen {
 
 	/**
 	 * Initializes the screen. Is automatically called by {@link ProjectGG}.
-	 * 
+	 *
 	 * @param game
 	 * @param assetManager
 	 */
@@ -120,7 +120,7 @@ public abstract class BaseScreen implements Screen {
 	 * unregistered with the screen. If the processor implements
 	 * {@link SettableKeysProcessor} the key binds are set automatically as
 	 * well.
-	 * 
+	 *
 	 * @param processor
 	 *            The processor to add.
 	 */

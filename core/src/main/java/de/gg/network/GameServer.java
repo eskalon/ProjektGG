@@ -32,7 +32,6 @@ import de.gg.network.message.PlayerLeftMessage;
 import de.gg.network.message.ServerAcceptanceMessage;
 import de.gg.network.message.ServerRejectionMessage;
 import de.gg.network.rmi.AuthoritativeResultListener;
-import de.gg.network.rmi.SlaveActionListener;
 import de.gg.util.Log;
 import de.gg.util.PlayerUtils;
 
@@ -70,7 +69,7 @@ public class GameServer {
 
 	/**
 	 * Creates a server object with the specified settings.
-	 * 
+	 *
 	 * @param serverSetup
 	 *            The server's settings, especially containing the port.
 	 * @param sessionSetup
@@ -89,7 +88,7 @@ public class GameServer {
 	/**
 	 * Sets up a server asynchronously. After it is finished the callback is
 	 * informed.
-	 * 
+	 *
 	 * @param callback
 	 *            the callback that is informed when the server is started.
 	 */
@@ -127,62 +126,60 @@ public class GameServer {
 
 		this.server.addListener(typeListener);
 
-		Thread t = new Thread(new Runnable() {
-			public void run() {
-				try {
-					// Server starten
-					server.bind(serverSetup.getPort());
-					Log.info("Server", "Server gestartet");
+		Thread t = new Thread(() -> {
+			try {
+				// Server starten
+				server.bind(serverSetup.getPort());
+				Log.info("Server", "Server gestartet");
 
-					// Wenn das erfolgreich war, einen Broadcast Server starten
-					if (serverSetup.isPublic()) {
-						broadcastServer = new Server();
-						broadcastServer.start();
-						broadcastServer.getKryo()
-								.register(DiscoveryResponsePacket.class);
-						broadcastServer.setDiscoveryHandler(
-								new ServerDiscoveryHandler() {
-									@Override
-									public boolean onDiscoverHost(
-											DatagramChannel datagramChannel,
-											InetSocketAddress fromAddress)
-											throws IOException {
-										DiscoveryResponsePacket packet = new DiscoveryResponsePacket(
-												serverSetup.getPort(),
-												serverSetup.getGameName(),
-												players.size(), serverSetup
-														.getMaxPlayerCount());
+				// Wenn das erfolgreich war, einen Broadcast Server starten
+				if (serverSetup.isPublic()) {
+					broadcastServer = new Server();
+					broadcastServer.start();
+					broadcastServer.getKryo()
+							.register(DiscoveryResponsePacket.class);
+					broadcastServer.setDiscoveryHandler(
+							new ServerDiscoveryHandler() {
+								@Override
+								public boolean onDiscoverHost(
+										DatagramChannel datagramChannel,
+										InetSocketAddress fromAddress)
+										throws IOException {
+									DiscoveryResponsePacket packet = new DiscoveryResponsePacket(
+											serverSetup.getPort(),
+											serverSetup.getGameName(),
+											players.size(), serverSetup
+													.getMaxPlayerCount());
 
-										ByteBuffer buffer = ByteBuffer
-												.allocate(256);
-										broadcastServer
-												.getSerializationFactory()
-												.newInstance(null)
-												.write(buffer, packet);
-										buffer.flip();
+									ByteBuffer buffer = ByteBuffer
+											.allocate(256);
+									broadcastServer
+											.getSerializationFactory()
+											.newInstance(null)
+											.write(buffer, packet);
+									buffer.flip();
 
-										datagramChannel.send(buffer,
-												fromAddress);
+									datagramChannel.send(buffer,
+											fromAddress);
 
-										return true;
-									}
-								});
+									return true;
+								}
+							});
 
-						try {
-							broadcastServer.bind(0, UDP_DISCOVER_PORT);
-							Log.info("Server", "Broadcast-Server gestartet");
-						} catch (IOException e) {
-							Log.error("Server",
-									"Der Broadcast-Server konnte nicht gestartet werden: %s",
-									e);
-						}
+					try {
+						broadcastServer.bind(0, UDP_DISCOVER_PORT);
+						Log.info("Server", "Broadcast-Server gestartet");
+					} catch (IOException e1) {
+						Log.error("Server",
+								"Der Broadcast-Server konnte nicht gestartet werden: %s",
+								e1);
 					}
-					callback.onHostStarted(null);
-				} catch (IOException | IllegalArgumentException e) {
-					callback.onHostStarted(e);
-					Log.error("Server",
-							"Der Server konnte nicht gestartet werden: %s", e);
 				}
+				callback.onHostStarted(null);
+			} catch (IOException | IllegalArgumentException e2) {
+				callback.onHostStarted(e2);
+				Log.error("Server",
+						"Der Server konnte nicht gestartet werden: %s", e2);
 			}
 		});
 		t.start();
@@ -197,7 +194,7 @@ public class GameServer {
 	/**
 	 * Initializes the game session. The {@linkplain de.gg.game.type game
 	 * assets} have to get loaded first.
-	 * 
+	 *
 	 * @see GameSession#init(SavedGame)
 	 */
 	public void initGameSession() {
@@ -208,7 +205,7 @@ public class GameServer {
 	/**
 	 * Starts the actual game. Has to get called after the session is
 	 * {@linkplain #initGameSession() initialized}.
-	 * 
+	 *
 	 * @see AuthoritativeResultListener#onServerReady()
 	 */
 	public void startGame() {
@@ -342,13 +339,10 @@ public class GameServer {
 					players.size());
 
 			// Close Broadcast-Server
-			(new Thread(new Runnable() {
-				@Override
-				public void run() {
-					broadcastServer.close();
-					broadcastServer = null;
-					Log.info("Server", "Broadcast-Server geschlossen");
-				}
+			(new Thread(() -> {
+				broadcastServer.close();
+				broadcastServer = null;
+				Log.info("Server", "Broadcast-Server geschlossen");
 			})).start();
 		}
 	}
@@ -360,7 +354,7 @@ public class GameServer {
 		HashMap<Short, AuthoritativeResultListener> resultListeners = new HashMap<>();
 		ObjectSpace.registerClasses(server.getKryo());
 		ObjectSpace objectSpace = new ObjectSpace();
-		objectSpace.register(254, (SlaveActionListener) session);
+		objectSpace.register(254, session);
 
 		for (Entry<Connection, Short> e : connections.entrySet()) {
 			objectSpace.addConnection(e.getKey());

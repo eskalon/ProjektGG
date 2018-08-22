@@ -148,7 +148,7 @@ public class Character {
 	/**
 	 * Adds an opinion another character has on this character. Takes the
 	 * previously present modifiers into account.
-	 * 
+	 *
 	 * @param charId
 	 *            The other character's id.
 	 * @param modifier

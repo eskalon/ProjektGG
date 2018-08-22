@@ -50,7 +50,7 @@ public class ServerDiscoveryHandler {
 	public interface HostDiscoveryListener {
 		/**
 		 * Is called when the {@linkplain ServerDiscoveryHandler} finds a host.
-		 * 
+		 *
 		 * @param address
 		 * @param datagramPacket
 		 * @see DiscoveryResponsePacket
