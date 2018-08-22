@@ -88,7 +88,7 @@ public class LobbyCreationScreen extends BaseUIScreen {
 							ServerSetup serverSetup = new ServerSetup(
 									nameField.getText(), 8,
 									Integer.valueOf(portField.getText()), true,
-									game.getVersion(), true);
+									game.VERSION, true);
 							GameSessionSetup sessionSetup = new GameSessionSetup(
 									difficulty, 0, System.currentTimeMillis());
 							Log.info("Client",
@@ -103,8 +103,8 @@ public class LobbyCreationScreen extends BaseUIScreen {
 										// Connect client to server
 										game.setClient(new GameClient(
 												game.getEventBus()));
-										game.getClient().connect(
-												game.getVersion(), "localhost",
+										game.getClient().connect(game.VERSION,
+												"localhost",
 												serverSetup.getPort());
 									} else {
 										game.getEventBus().post(

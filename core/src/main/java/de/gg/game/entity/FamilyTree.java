@@ -10,6 +10,10 @@ public class FamilyTree {
 
 	private short fatherCharacterId = -1, motherCharacterId = -1;
 	private List<Short> childrenCharacterIds = new ArrayList<>();
+	
+	public FamilyTree() {
+		// default public constructor
+	}
 
 	public short getFatherCharacterId() {
 		return fatherCharacterId;

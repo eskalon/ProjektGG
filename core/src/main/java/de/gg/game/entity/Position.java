@@ -14,6 +14,10 @@ public class Position {
 	private short currentHolder;
 	private List<Short> applicants = new ArrayList<>();
 
+	public Position() {
+		// default public constructor
+	}
+
 	public Position(short currentHolder) {
 		this.currentHolder = currentHolder;
 	}

@@ -62,7 +62,7 @@ public class MainMenuScreen extends BaseUIScreen {
 				new ButtonClickListener(assetManager, game.getSettings()) {
 					@Override
 					protected void onClick() {
-						if (!game.isInDevEnv())
+						if (!game.IN_DEV_ENV)
 							game.pushScreen("credits");
 					}
 				});
@@ -91,7 +91,7 @@ public class MainMenuScreen extends BaseUIScreen {
 			}
 		});
 
-		Label versionLabel = new Label(game.getVersion(), skin);
+		Label versionLabel = new Label(game.VERSION, skin);
 		Table versionTable = new Table();
 		versionTable.add(versionLabel);
 
@@ -107,7 +107,7 @@ public class MainMenuScreen extends BaseUIScreen {
 		githubRepoButton.padLeft(3).padBottom(3).bottom().left();
 
 		GlyphLayout layout = new GlyphLayout(skin.getFont("main-19"),
-				game.getVersion());
+				game.VERSION);
 		versionTable.padBottom(28)
 				.padLeft(game.getViewportWidth() * 2 - layout.width - 8);
 

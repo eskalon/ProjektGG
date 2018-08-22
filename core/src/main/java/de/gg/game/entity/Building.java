@@ -23,6 +23,7 @@ public class Building {
 	private List<ItemStack> stacks = new ArrayList<>();
 
 	public Building() {
+		// default public constructor
 	}
 
 	/**

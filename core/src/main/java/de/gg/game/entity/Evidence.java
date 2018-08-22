@@ -14,6 +14,10 @@ public class Evidence {
 	 */
 	private boolean isStaged;
 	private CrimeType crime;
+	
+	public Evidence() {
+		// default public constructor
+	}
 
 	public Character getOffender() {
 		return offender;

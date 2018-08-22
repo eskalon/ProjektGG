@@ -13,6 +13,7 @@ public class PlayerSkillSet {
 	private int stealthSkill;
 
 	public PlayerSkillSet() {
+		// default public constructor
 	}
 
 	public PlayerSkillSet(int agilitySkill, int bargainSkill, int craftingSkill,

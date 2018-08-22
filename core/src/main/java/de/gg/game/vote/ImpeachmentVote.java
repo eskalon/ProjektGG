@@ -18,7 +18,7 @@ import de.gg.game.world.City;
  */
 public class ImpeachmentVote extends VoteableMatter {
 
-	public static short DONT_IMPEACH_OPTION_INDEX = -1;
+	public static final short DONT_IMPEACH_OPTION_INDEX = -1;
 	private City city;
 	private PositionType type;
 	private Position pos;

@@ -5,7 +5,7 @@ import de.gg.game.entity.Profession;
 import de.gg.game.type.PlayerIcon;
 
 /**
- * This class is responsible for creating the player entities.
+ * This class is responsible for creating the {@link Player} entities.
  */
 public class PlayerFactory {
 

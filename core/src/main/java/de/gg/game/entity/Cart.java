@@ -11,6 +11,10 @@ public class Cart {
 	private List<ItemStack> stacks = new ArrayList<>();
 	private int hp;
 	private short owner;
+	
+	public Cart() {
+		// default public constructor
+	}
 
 	public CartType getType() {
 		return type;

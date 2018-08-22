@@ -11,6 +11,7 @@ public class BuildingSlot {
 	private Building building;
 
 	public BuildingSlot() {
+		// default public constructor
 	}
 
 	/**

@@ -7,12 +7,17 @@ public class Profession {
 
 	private ProfessionType profession;
 	/**
-	 * If the player got enough experience he can level up.
+	 * If the player got enough experience in a profession he can level up.
+	 * Starts with <code>1</code>.
 	 *
 	 * @see PlayerTasks#UPGRADING_MASTER
 	 */
 	private int level;
 	private int experience;
+
+	public Profession() {
+		// default public constructor
+	}
 
 	public Profession(ProfessionType profession) {
 		this(profession, 1, 0);

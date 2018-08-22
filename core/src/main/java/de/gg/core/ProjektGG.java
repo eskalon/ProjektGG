@@ -57,13 +57,18 @@ import net.dermetfan.gdx.assets.AnnotationAssetManager;
  */
 public class ProjektGG extends Game {
 
-	public static final String name = "ProjektGG";
-	private final String version;
+	public static final String NAME = "ProjektGG";
+	/**
+	 * the version the application is running on. Set via the jar manifest. Is
+	 * <code>Development</code> if the game is started in a development
+	 * environment.
+	 */
+	public final String VERSION;
 	/**
 	 * Whether the application is running in a development environment. Checks
 	 * if a version is set in the jar manifest.
 	 */
-	private final boolean inDevEnv;
+	public final boolean IN_DEV_ENV;
 
 	private SpriteBatch batch;
 	/**
@@ -95,13 +100,14 @@ public class ProjektGG extends Game {
 	 * rendering thread.
 	 */
 	private EventQueueBus eventBus;
+
 	private GameServer server;
 	private GameClient client;
 
 	public ProjektGG(boolean debug, boolean showSplashscreen,
 			boolean fpsCounter) {
-		inDevEnv = getClass().getPackage().getImplementationVersion() == null;
-		version = inDevEnv ? "Development"
+		IN_DEV_ENV = getClass().getPackage().getImplementationVersion() == null;
+		VERSION = IN_DEV_ENV ? "Development"
 				: getClass().getPackage().getImplementationVersion();
 
 		this.debug = debug;
@@ -116,7 +122,7 @@ public class ProjektGG extends Game {
 		else
 			Log.disableDebugLogging();
 
-		Log.info("Version", version);
+		Log.info("Version", VERSION);
 
 		// Initialize sprite batch
 		this.batch = new SpriteBatch();
@@ -401,22 +407,6 @@ public class ProjektGG extends Game {
 
 	public void setFPSCounter(boolean fpsCounter) {
 		this.fpsCounter = fpsCounter;
-	}
-
-	/**
-	 * @return the version the application is running on. Set via the jar
-	 *         manifest. Is <code>Development</code> if the game is started in a
-	 *         development environment.
-	 */
-	public String getVersion() {
-		return version;
-	}
-
-	/**
-	 * @return whether the application is running in a development environment.
-	 */
-	public boolean isInDevEnv() {
-		return inDevEnv;
 	}
 
 }

@@ -17,8 +17,8 @@ public class RenderData extends ModelInstance {
 	public final Vector3 dimensions = new Vector3();
 	public final float radius;
 
-	private final static BoundingBox bounds = new BoundingBox();
-	private final static Vector3 position = new Vector3();
+	private static final BoundingBox bounds = new BoundingBox();
+	private static final Vector3 position = new Vector3();
 
 	/**
 	 * Whether this model is selected by the player.

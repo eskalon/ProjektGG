@@ -55,7 +55,7 @@ public class DesktopLauncher {
 					"the width and height parameter have to be positive integers");
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.title = ProjektGG.name;
+		config.title = ProjektGG.NAME;
 		config.height = height;
 		config.width = width;
 		config.resizable = false;
@@ -68,7 +68,7 @@ public class DesktopLauncher {
 			new LwjglApplication(new ProjektGG(options.has("debug"),
 					!options.has("novid"), options.has("fps")), config);
 		} catch (Exception e) {
-			Gdx.app.error(ProjektGG.name,
+			Gdx.app.error(ProjektGG.NAME,
 					"An unexpected error occurred while starting the game", e);
 
 			CrashLogUtils.writeCrashLogToFile(e, true);

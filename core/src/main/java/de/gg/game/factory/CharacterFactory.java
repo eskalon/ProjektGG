@@ -20,7 +20,7 @@ import net.dermetfan.gdx.assets.AnnotationAssetManager;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 /**
- * This class is responsible for creating the character entities.
+ * This class is responsible for creating the {@link Character} entities.
  */
 public class CharacterFactory {
 

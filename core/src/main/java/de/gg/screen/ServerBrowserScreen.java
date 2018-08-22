@@ -90,7 +90,7 @@ public class ServerBrowserScreen extends BaseUIScreen {
 									// Connect to client
 									game.setClient(
 											new GameClient(game.getEventBus()));
-									game.getClient().connect(game.getVersion(),
+									game.getClient().connect(game.VERSION,
 											ipInputField.getText(),
 											Integer.valueOf(
 													portInputField.getText()));
@@ -171,7 +171,7 @@ public class ServerBrowserScreen extends BaseUIScreen {
 					@Override
 					protected void onClick() {
 						game.setClient(new GameClient(game.getEventBus()));
-						game.getClient().connect(game.getVersion(), address,
+						game.getClient().connect(game.VERSION, address,
 								packet.getPort());
 						connectingDialog = showInfoDialog("Verbinden...",
 								"Spiel beitreten...", false);

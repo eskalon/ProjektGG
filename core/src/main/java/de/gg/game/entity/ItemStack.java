@@ -6,6 +6,10 @@ public class ItemStack {
 
 	private ItemType type;
 	private int count;
+	
+	public ItemStack() {
+		// default public constructor
+	}
 
 	public ItemType getType() {
 		return type;

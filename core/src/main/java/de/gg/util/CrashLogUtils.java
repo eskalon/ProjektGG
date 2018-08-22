@@ -8,8 +8,6 @@ import org.apache.commons.io.FileUtils;
 
 import com.badlogic.gdx.Gdx;
 
-import de.gg.core.ProjektGG;
-
 /**
  * This class holds utility methods for dealing with crash logs.
  */
@@ -49,8 +47,9 @@ public class CrashLogUtils {
 			FileUtils.writeStringToFile(CRASH_LOG_FILE, e.getLocalizedMessage(),
 					CHARSET, true);
 		} catch (IOException e1) {
-			Gdx.app.error(ProjektGG.name,
-					"An error occurred while saving the crash log", e);
+			Gdx.app.error("Fehler",
+					"Beim Speichern des Crash-Logs ist ein Fehler aufgetreten!",
+					e);
 		}
 
 		if (forceExit)

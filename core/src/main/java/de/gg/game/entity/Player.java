@@ -37,6 +37,10 @@ public class Player {
 	private List<Evidence> evidence = new ArrayList<>();
 
 	private FamilyTree family = new FamilyTree();
+	
+	public Player() {
+		// default public constructor
+	}
 
 	public int getAvailableAp() {
 		return availableAp;

@@ -7,6 +7,10 @@ public class ItemPrice {
 	private ItemType itemType;
 	private int temporaryEfects;
 	private int economyPhase;
+	
+	public ItemPrice() {
+		// default public constructor
+	}
 
 	public ItemType getItemType() {
 		return itemType;

@@ -22,7 +22,7 @@ public class SimpleJSONParser {
 	/**
 	 * Gson-Parser.
 	 */
-	private static Gson gson = new GsonBuilder()
+	private static final Gson gson = new GsonBuilder()
 			.excludeFieldsWithModifiers(Modifier.STATIC)
 			.setExclusionStrategies(new ExcludeAnnotationExclusionStrategy())
 			.setDateFormat("yyyy-MM-dd HH:mm:ss").create();

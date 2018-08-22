@@ -47,6 +47,10 @@ public class Character {
 	 */
 	private CharacterTrait trait;
 
+	public Character() {
+		// default public constructor
+	}
+
 	/**
 	 * @return the character's reputation. Is never lower than <code>0</code>
 	 *         and <i>usually</i> in the range of <code>0</code> and
