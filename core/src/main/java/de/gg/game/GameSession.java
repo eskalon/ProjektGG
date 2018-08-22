@@ -117,6 +117,9 @@ public abstract class GameSession {
 	 * After the initialization the session can be updated via calling
 	 * {@link #update()}. To resume the game after a round ended
 	 * {@link #startNextRound()} has to get called.
+	 * 
+	 * @param savedGame
+	 *            <i>Not</i> <code>null</code> if this is a loaded game state.
 	 */
 	public synchronized void init(SavedGame savedGame) {
 		if (savedGame == null) {
@@ -124,10 +127,33 @@ public abstract class GameSession {
 			this.city.generate(sessionSetup, players);
 		} else {
 			this.city = savedGame.city;
-			// TODO Momentanen Rundenzeitpunkt aufsetzen
+			this.currentRound = savedGame.currentRound;
+			// Session- & server setup get set in the constructors
+
+			// Switch player IDs when loading game
+			if (savedGame != null) {
+				for (Entry<Short, LobbyPlayer> newE : players.entrySet()) {
+					for (Entry<Short, String> oldE : savedGame.clientIdentifiers
+							.entrySet()) {
+						if (newE.getValue().getHostname()
+								.equals(oldE.getValue())) {
+							// Use negative numbers so there are no collisions
+							city.switchPlayerId(oldE.getKey(),
+									(short) -newE.getKey());
+						}
+					}
+				}
+				// Revert the IDs back to positive numbers
+				for (short s : city.getPlayers().keySet()) {
+					city.switchPlayerId(s, (short) -s);
+				}
+			}
+
+			// TODO in den Konstruktoren die Setups setzen
+			// TODO in der Lobby das Setup disablen
 		}
 
-		// Add and initialize the smp systems
+		// Add and initialize the smp system(s)
 		this.roundEndSystem = new RoundEndSystem(localNetworkId);
 		this.roundEndSystem.init(city);
 
@@ -142,7 +168,8 @@ public abstract class GameSession {
 			public int getDeltaMultiplier() {
 				return gameSpeed.getDeltaTimeMultiplied();
 			}
-		}, TICKS_PER_ROUND, TICK_DURATION);
+		}, TICKS_PER_ROUND, TICK_DURATION,
+				savedGame == null ? 0 : savedGame.lastProcessedTick);
 
 		this.initialized = true;
 	}

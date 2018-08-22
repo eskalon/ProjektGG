@@ -137,8 +137,8 @@ public class GameVoteScreen extends BaseGameScreen {
 		System.out.println("Abgestimmt wurde folgendermaßen:");
 		for (Entry<Short, Integer> e : ev.getResults().getIndividualVotes()
 				.entrySet()) {
-			System.out.println("- " + city.getFullCharacterName(e.getKey())
-					+ ": " + e.getValue());
+			System.out.println(String.format(" - %s: %d",
+					city.getFullCharacterName(e.getKey()), e.getValue()));
 		}
 	}
 

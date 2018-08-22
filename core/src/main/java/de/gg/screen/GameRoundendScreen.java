@@ -123,7 +123,8 @@ public class GameRoundendScreen extends BaseGameScreen {
 
 	@Override
 	public void renderGame(float delta) {
-		game.getClient().updatePing(delta);
+		if (game.getClient() != null)
+			game.getClient().updatePing(delta);
 
 		// if (game.isHost())
 		// game.getServer().update();

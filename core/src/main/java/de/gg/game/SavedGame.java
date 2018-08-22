@@ -13,11 +13,12 @@ public class SavedGame {
 
 	public GameSessionSetup gameSessionSetup;
 	public ServerSetup serverSetup;
-	public HashMap<Short, String> clientIdentifiers;
+	public HashMap<Short, String> clientIdentifiers = new HashMap<>();
 
 	public City city;
 
 	public int currentRound;
+	public int lastProcessedTick;
 
 	/**
 	 * The states of the processing systems. The key is their

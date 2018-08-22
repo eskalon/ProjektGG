@@ -17,7 +17,7 @@ public class PlayerChangedMessage {
 	private LobbyPlayer player;
 
 	public PlayerChangedMessage() {
-
+		// default public constructor
 	}
 
 	public PlayerChangedMessage(short id, LobbyPlayer player) {

@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.FrameworkMessage.Ping;
+import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Listener.TypeListener;
 import com.esotericsoftware.kryonet.rmi.ObjectSpace;
 import com.google.common.base.Preconditions;
@@ -16,6 +18,7 @@ import com.google.common.eventbus.Subscribe;
 import de.gg.core.ProjektGG;
 import de.gg.event.ConnectionEstablishedEvent;
 import de.gg.event.ConnectionFailedEvent;
+import de.gg.event.DisconnectionEvent;
 import de.gg.event.NewChatMessagEvent;
 import de.gg.event.NewNotificationEvent;
 import de.gg.event.PlayerChangedEvent;
@@ -31,15 +34,17 @@ import de.gg.game.data.NotificationData;
 import de.gg.game.entity.Player;
 import de.gg.game.world.City;
 import de.gg.network.message.ChatMessageSentMessage;
+import de.gg.network.message.ClientSetupMessage;
 import de.gg.network.message.GameSetupMessage;
 import de.gg.network.message.PlayerChangedMessage;
 import de.gg.network.message.PlayerJoinedMessage;
 import de.gg.network.message.PlayerLeftMessage;
-import de.gg.network.message.ServerFullMessage;
+import de.gg.network.message.ServerAcceptanceMessage;
 import de.gg.network.message.ServerRejectionMessage;
 import de.gg.network.rmi.ClientActionHandler;
 import de.gg.network.rmi.SlaveActionListener;
 import de.gg.util.Log;
+import de.gg.util.MachineIdentificationUtils;
 
 /**
  * This class takes care of handling the networking part for the client. It
@@ -50,9 +55,9 @@ import de.gg.util.Log;
  * <p>
  * Following are the relevant states the client can be in:
  * <ul>
- * <li>{@link #GameClient(EventBus, String, String, int)}: Connects the client
- * to the server. After it is finished a {@link ConnectionEstablishedEvent} is
- * posted.</li>
+ * <li>{@link #connect(String, String, int)}: Connects the client to the server.
+ * After it is finished a {@link ConnectionEstablishedEvent} is posted to the
+ * event bus.</li>
  * <li>{@link #establishRMIConnection(HashMap, GameSessionSetup)}: Establishes
  * the client's RMI connection. Has to get called after the client is
  * connected.</li>
@@ -89,23 +94,33 @@ public class GameClient {
 	private SlaveSession session;
 
 	/**
-	 * Creates a game client and tries to connect the client to the server.
-	 * After it is finished either a {@link ConnectionEstablishedEvent} or a
-	 * {@link ConnectionFailedEvent} is posted on the
-	 * {@linkplain ProjektGG#getEventBus() event bus}.
+	 * Creates a game client.
 	 * 
+	 * @param eventBus
+	 *            the event bus used by the client.
+	 */
+	public GameClient(EventBus eventBus) {
+		Preconditions.checkNotNull(eventBus, "eventBus cannot be null.");
+
+		this.eventBus = eventBus;
+		this.eventBus.register(this);
+	}
+
+	/**
+	 * Tries to connect the client to the server. After it is finished either a
+	 * {@link ConnectionEstablishedEvent} or a {@link ConnectionFailedEvent} is
+	 * posted on the {@linkplain ProjektGG#getEventBus() event bus}.
+	 * 
+	 * @param gameVersion
+	 *            the client's game version.
 	 * @param ip
 	 *            The server's ip address.
 	 * @param port
 	 *            The server's port.
 	 */
-	public GameClient(EventBus eventBus, String gameVersion, String ip,
-			int port) {
-		Preconditions.checkNotNull(eventBus, "eventBus cannot be null.");
-		Preconditions.checkNotNull(eventBus, "gameVersion cannot be null.");
-
-		this.eventBus = eventBus;
-		this.eventBus.register(this);
+	public void connect(String gameVersion, String ip, int port) {
+		Preconditions.checkNotNull(gameVersion, "gameVersion cannot be null.");
+		Preconditions.checkNotNull(ip, "ip cannot be null.");
 
 		client = new Client();
 		client.start();
@@ -116,35 +131,38 @@ public class GameClient {
 
 		TypeListener listener = new TypeListener();
 		// CLIENT CONNECTION
-		// Game setup (on client connect)
-		listener.addTypeHandler(GameSetupMessage.class, (con, msg) -> {
+		// On Server acception
+		listener.addTypeHandler(ServerAcceptanceMessage.class, (con, msg) -> {
 			if (gameVersion.equals(msg.getServerVersion())) { // right server
 																// version
-				localClientId = msg.getId();
-				Log.info("Client", "Lobby beigetreten. Netzwerk-ID: %d",
-						localClientId);
-				eventBus.post(new ConnectionEstablishedEvent(msg.getPlayers(),
-						msg.getId(), msg.getSettings()));
+				// Send client setup & wait for game setup
+				client.sendTCP(new ClientSetupMessage(
+						MachineIdentificationUtils.getHostname()));
 			} else { // wrong server version
-				eventBus.post(
-						new ConnectionFailedEvent(new ServerRejectionMessage() {
-							@Override
-							public String getMessage() {
-								return "Falsche Server-Version: "
-										+ msg.getServerVersion();
-							}
-						}));
-				con.close();
 				Log.info("Client",
 						"Fehler beim Verbinden: Falsche Server-Version (%s)",
 						msg.getServerVersion());
+
+				eventBus.post(new ConnectionFailedEvent(
+						new ServerRejectionMessage("Falsche Server-Version: "
+								+ msg.getServerVersion())));
+				con.close();
 			}
+
+		});
+		// Game setup
+		listener.addTypeHandler(GameSetupMessage.class, (con, msg) -> {
+			Log.info("Client", "Lobby beigetreten. Spieler- & Netzwerk-ID: %d",
+					msg.getId());
+			localClientId = msg.getId();
+
+			eventBus.post(new ConnectionEstablishedEvent(msg.getPlayers(),
+					msg.getId(), msg.getSessionSetup()));
 		});
 		// Server full
-		listener.addTypeHandler(ServerFullMessage.class, (con, msg) -> {
-			eventBus.post(new ConnectionFailedEvent(msg));
-			con.close();
+		listener.addTypeHandler(ServerRejectionMessage.class, (con, msg) -> {
 			Log.info("Client", "Fehler beim Verbinden: %s", msg.getMessage());
+			eventBus.post(new ConnectionFailedEvent(msg));
 		});
 
 		// PLAYER CHANGES
@@ -175,14 +193,20 @@ public class GameClient {
 			}
 		});
 		client.addListener(listener);
+		client.addListener(new Listener() {
+			@Override
+			public void disconnected(Connection connection) {
+				eventBus.post(new DisconnectionEvent());
+			}
+		});
 
 		final Thread connectingThread = new Thread(new Runnable() {
 			public void run() {
 				try {
 					client.connect(6000, ip, port);
 					Log.info("Client", "Verbindung zum Server hergestellt");
-					// Das Event hierfür wird beim Empfangen des Game Setups
-					// gepostet
+					// Das Event für einen erfolgreichen Verbingungsvorgang wird
+					// beim Empfangen des Game Setups gepostet
 				} catch (IOException e) {
 					Log.error("Client", "Fehler beim Verbinden: ", e);
 					eventBus.post(new ConnectionFailedEvent(e));
@@ -203,16 +227,6 @@ public class GameClient {
 	 */
 	public ClientActionHandler getActionHandler() {
 		return actionHandler;
-	}
-
-	/**
-	 * Sends an object to the server.
-	 * 
-	 * @param obj
-	 *            The object.
-	 */
-	public void sendObject(Object obj) {
-		client.sendTCP(obj);
 	}
 
 	/**
@@ -243,7 +257,7 @@ public class GameClient {
 	 * Updates the player on the server.
 	 */
 	public void onLocalPlayerChange(LobbyPlayer player) {
-		sendObject(new PlayerChangedMessage(localClientId, player));
+		client.sendTCP(new PlayerChangedMessage(localClientId, player));
 	}
 
 	/**
@@ -253,7 +267,7 @@ public class GameClient {
 	 *            The actual chat message.
 	 */
 	public void sendChatMessage(String message) {
-		sendObject(new ChatMessageSentMessage(localClientId, message));
+		client.sendTCP(new ChatMessageSentMessage(localClientId, message));
 	}
 
 	@Subscribe
@@ -282,6 +296,9 @@ public class GameClient {
 
 	/**
 	 * Establishes the RMI connection to the server.
+	 * 
+	 * @param players
+	 * @param sessionSetup
 	 */
 	public synchronized void establishRMIConnection(
 			HashMap<Short, LobbyPlayer> players,

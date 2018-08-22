@@ -100,8 +100,6 @@ public class ProjektGG extends Game {
 
 	public ProjektGG(boolean debug, boolean showSplashscreen,
 			boolean fpsCounter) {
-		super();
-
 		inDevEnv = getClass().getPackage().getImplementationVersion() == null;
 		version = inDevEnv ? "Development"
 				: getClass().getPackage().getImplementationVersion();
@@ -190,8 +188,9 @@ public class ProjektGG extends Game {
 	}
 
 	/**
-	 * Adds a screen to the game.
-	 * 
+	 * Adds a screen to the game and
+	 * {@linkplain BaseScreen#init(ProjektGG, AnnotationAssetManager)
+	 * initializes} it.
 	 * 
 	 * @param name
 	 *            the name of the screen.
@@ -219,14 +218,13 @@ public class ProjektGG extends Game {
 		Gdx.app.postRunnable(new Runnable() {
 			@Override
 			public void run() {
-				Log.debug("Screen", "Pushed screen: %s", name);
-
+				Log.debug("Screen", "Screen gepushed: %s", name);
 				BaseScreen pushedScreen = screens.get(name);
 
 				if (pushedScreen == null) {
-					throw new ScreenNotFoundException(
-							"Could not find a screen named '" + name
-									+ "'. Add the screen via #addScreen(String, BaseScreen) first.");
+					throw new ScreenNotFoundException(String.format(
+							"Es konnte kein Screen mit dem Namen \"%s\" gefunden werden. Füge den Screen zunächst über #addScreen(String, BaseScreen) hinzu.",
+							name));
 				}
 
 				if (screen != null) {
@@ -256,9 +254,9 @@ public class ProjektGG extends Game {
 		BaseScreen screen = this.screens.get(name);
 
 		if (screen == null) {
-			throw new ScreenNotFoundException("Could not find a screen named '"
-					+ name
-					+ "'. Add the screen via #addScreen(String, BaseScreen) first.");
+			throw new ScreenNotFoundException(String.format(
+					"Es konnte kein Screen mit dem Namen \"%s\" gefunden werden. Füge den Screen zunächst über #addScreen(String, BaseScreen) hinzu.",
+					name));
 		}
 
 		return screen;
@@ -352,8 +350,8 @@ public class ProjektGG extends Game {
 	}
 
 	/**
-	 * @return the game client. <code>Null</code> if the player is currently not
-	 *         connected to a game.
+	 * @return the game client. <code>Null</code> if the player is not in a game
+	 *         or currently disconnecting from one.
 	 */
 	public GameClient getClient() {
 		return client;
@@ -364,7 +362,8 @@ public class ProjektGG extends Game {
 	}
 
 	/**
-	 * @return the currently hosted server. Can be <code>null</code>.
+	 * @return the game server. Is <code>null</code> if the player is not
+	 *         hosting a game.
 	 */
 	public GameServer getServer() {
 		return server;

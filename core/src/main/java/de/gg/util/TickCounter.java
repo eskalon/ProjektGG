@@ -9,7 +9,7 @@ public class TickCounter {
 	private long lastTime = -1;
 	private long updateTime;
 
-	private int tickCount = 0;
+	private int tickCount;
 
 	/**
 	 * Creates a tick counter.
@@ -24,9 +24,29 @@ public class TickCounter {
 	 */
 	public TickCounter(TickHandler tickHandler, int maxTicks,
 			int tickDuration) {
+		this(tickHandler, maxTicks, tickDuration, 0);
+	}
+
+	/**
+	 * Creates a tick counter.
+	 * 
+	 * @param tickHandler
+	 * @param maxTicks
+	 *            The maximum number of ticks. The counter can be reset via
+	 *            {@link #reset()}.
+	 * @param tickDuration
+	 *            The duration of a tick in
+	 *            <code>milliseconds * {@link TickHandler#getDeltaMultiplier()}</code>.
+	 * @param tickOffset
+	 *            the initial offset of the {@linkplain #getTickCount() tick
+	 *            count}.
+	 */
+	public TickCounter(TickHandler tickHandler, int maxTicks, int tickDuration,
+			int tickOffset) {
 		this.tickHandler = tickHandler;
 		this.maxTicks = maxTicks;
 		this.tickDuration = tickDuration;
+		this.tickCount = tickOffset;
 	}
 
 	/**

@@ -11,7 +11,7 @@ public class PlayerLeftMessage {
 	private short id;
 
 	public PlayerLeftMessage() {
-
+		// default public constructor
 	}
 
 	public PlayerLeftMessage(short id) {

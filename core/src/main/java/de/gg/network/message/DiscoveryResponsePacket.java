@@ -23,6 +23,7 @@ public class DiscoveryResponsePacket {
 	private String gameName;
 
 	public DiscoveryResponsePacket() {
+		// default public constructor
 	}
 
 	public DiscoveryResponsePacket(int port, String gameName, int playerCount,

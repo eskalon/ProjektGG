@@ -5,10 +5,14 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.google.common.eventbus.Subscribe;
 
+import de.gg.event.DisconnectionEvent;
 import de.gg.event.NewChatMessagEvent;
 import de.gg.event.PlayerDisconnectedEvent;
 import de.gg.event.RoundEndEvent;
 import de.gg.event.ServerReadyEvent;
+import de.gg.network.GameServer;
+import de.gg.util.Log;
+import de.gg.util.SimpleListener;
 
 public abstract class BaseGameScreen extends BaseUIScreen {
 
@@ -42,6 +46,37 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 	@Subscribe
 	public void onPlayerDisconnect(PlayerDisconnectedEvent event) {
 
+	}
+
+	@Subscribe
+	public void onDisconnection(DisconnectionEvent event) {
+		if (game.getClient() != null) { // unexpected disconnection
+			Log.info("Client", "Verbindung zum Server getrennt");
+
+			game.setClient(null);
+			final GameServer server = game.getServer();
+			game.setServer(null);
+
+			// Close server
+			(new Thread(new Runnable() {
+				@Override
+				public void run() {
+					if (server != null) {
+						server.stop();
+
+						Log.info("Server", "Server beendet");
+					}
+				}
+			})).start();
+
+			showInfoDialog("Fehler", "Verbindung zum Server getrennt", true,
+					new SimpleListener() {
+						@Override
+						public void listen(Object param) {
+							game.pushScreen("mainMenu");
+						}
+					});
+		}
 	}
 
 	@Subscribe

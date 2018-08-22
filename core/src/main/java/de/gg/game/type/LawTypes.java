@@ -2,6 +2,7 @@ package de.gg.game.type;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.google.common.collect.Range;
@@ -120,6 +121,22 @@ public class LawTypes {
 		 */
 		public boolean isDecree() {
 			return voters.size() < 2;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(name);
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			return Objects.equals(name, ((LawType) obj).name);
 		}
 
 	}

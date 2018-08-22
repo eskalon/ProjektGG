@@ -7,16 +7,8 @@ import com.google.common.eventbus.Subscribe;
 
 import de.gg.event.ServerReadyEvent;
 import de.gg.game.entity.BuildingSlot;
-import de.gg.game.factory.CharacterFactory;
-import de.gg.game.type.BuildingTypes;
-import de.gg.game.type.ItemTypes;
-import de.gg.game.type.LawTypes;
-import de.gg.game.type.PositionTypes;
-import de.gg.game.type.SocialStatusS;
 import de.gg.render.RenderData;
-import de.gg.render.TestShader;
 import de.gg.util.Log;
-import de.gg.util.json.SaveGameParser;
 
 /**
  * This screen takes care of loading the assets for all ingame screens.
@@ -33,15 +25,6 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 
 	@Override
 	protected void initAssets() {
-		assetManager.load(CharacterFactory.class);
-		assetManager.load(TestShader.class);
-		assetManager.load(BuildingTypes.class);
-		assetManager.load(PositionTypes.class);
-		assetManager.load(LawTypes.class);
-		assetManager.load(SocialStatusS.class);
-		assetManager.load(ItemTypes.class);
-		assetManager.load(ItemTypes.class);
-
 		assetManager.load(game.getScreen("map"));
 		assetManager.load(game.getScreen("house"));
 		assetManager.load(game.getScreen("roundEnd"));
@@ -59,14 +42,6 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 		game.getScreen("house").finishLoading();
 		game.getScreen("roundEnd").finishLoading();
 		game.getScreen("vote").finishLoading();
-		BuildingTypes.initialize(assetManager);
-		PositionTypes.initialize(assetManager);
-		LawTypes.initialize(assetManager);
-		SocialStatusS.initialize(assetManager);
-		ItemTypes.initialize(assetManager);
-		ItemTypes.initialize(assetManager);
-		CharacterFactory.initialize(assetManager);
-		SaveGameParser.initialize();
 
 		// TODO folgendes als Worker, der in eigenen Loading-Screen integriert
 		// ist, umsetzen, sodass sich für den Nutzer sichtbar ein Balken bewegt
@@ -95,11 +70,12 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 		game.getClient().getCity().setSkybox(new ModelInstance(
 				assetManager.get(SKYBOX_MODEL_PATH, Model.class)));
 
-		// Change the screen
-		Log.info("Client", "Spiel geladen & gestartet");
+		Log.info("Client", "Spiel geladen");
 
-		if (game.isHost())
+		if (game.isHost()) {
 			game.getServer().startGame();
+			Log.info("Server", "Spiel gestartet");
+		}
 
 		game.pushScreen("roundEnd");
 	}

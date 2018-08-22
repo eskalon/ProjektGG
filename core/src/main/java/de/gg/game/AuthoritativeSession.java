@@ -272,6 +272,7 @@ public class AuthoritativeSession extends GameSession
 				-1, getGameSeed());
 		save.gameSessionSetup = sessionSetup;
 		save.currentRound = getCurrentRound();
+		save.lastProcessedTick = getTickCount();
 
 		// Save the systems states
 		for (ProcessingSystem<Character> c : characterSystems) {
@@ -283,9 +284,12 @@ public class AuthoritativeSession extends GameSession
 					((ServerProcessingSystem<Player>) p).getSaveState());
 		}
 
-		// TODO client-identifiers über IPs (?)
-		// TODO der aktuelle Rundenzeitpunkt
+		// Client identifiers
+		for (Entry<Short, LobbyPlayer> e : players.entrySet()) {
+			save.clientIdentifiers.put(e.getKey(), e.getValue().getHostname());
+		}
 
+		// Save in file
 		File savesFile = new File(SAVES_DIR + serverSetup.getGameName());
 
 		try {

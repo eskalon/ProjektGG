@@ -27,7 +27,8 @@ public class GameServerDiscoveryTest extends ProjektGGUnitTest {
 		GameSessionSetup sessionSetup = new GameSessionSetup(
 				GameDifficulty.EASY, 1, 25);
 
-		server = new GameServer(serverSetup, sessionSetup, new IHostCallback() {
+		server = new GameServer(serverSetup, sessionSetup, null);
+		server.start(new IHostCallback() {
 			@Override
 			public void onHostStarted(Exception e) {
 				if (e != null)

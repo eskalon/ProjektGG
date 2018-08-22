@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import de.gg.ui.AnimationlessDialog;
+import de.gg.util.SimpleListener;
 
 /**
  * The base class of all UI screens. It automatically loads the
@@ -112,12 +113,24 @@ public abstract class BaseUIScreen extends BaseScreen {
 	 * @param showButton
 	 *            Whether this dialog should show an "Ok" button to close
 	 *            itself.
+	 * @param listener
+	 *            A result listener for the dialog.
 	 * @return The dialog.
+	 * 
 	 * @see AnimationlessDialog#show(Stage)
+	 * @see #showInfoDialog(String, String, boolean)
+	 * @see #showInfoDialog(String, String)
 	 */
 	protected AnimationlessDialog showInfoDialog(String title, String text,
-			boolean showButton) {
-		AnimationlessDialog dialog = new AnimationlessDialog(title, skin);
+			boolean showButton, SimpleListener listener) {
+		AnimationlessDialog dialog = new AnimationlessDialog(title, skin) {
+			public void result(Object obj) {
+				if (listener != null)
+					listener.listen(obj);
+				else
+					super.result(obj);
+			}
+		};
 		dialog.text(text);
 		if (showButton) {
 			dialog.key(Keys.ENTER, true);
@@ -135,8 +148,31 @@ public abstract class BaseUIScreen extends BaseScreen {
 	 *            The dialog's title.
 	 * @param text
 	 *            The dialog's informational text.
+	 * @param showButton
+	 *            Whether this dialog should show an "Ok" button to close
+	 *            itself.
 	 * @return The dialog.
+	 * 
+	 * @see #showInfoDialog(String, String, boolean, SimpleListener)
 	 * @see #showInfoDialog(String, String)
+	 */
+	protected AnimationlessDialog showInfoDialog(String title, String text,
+			boolean showButton) {
+		return showInfoDialog(title, text, showButton, null);
+	}
+
+	/**
+	 * Shows an informational dialog on the current screen with an "Ok" button
+	 * to close it.
+	 * 
+	 * @param title
+	 *            The dialog's title.
+	 * @param text
+	 *            The dialog's informational text.
+	 * @return The dialog.
+	 * 
+	 * @see #showInfoDialog(String, String, boolean, SimpleListener)
+	 * @see #showInfoDialog(String, String, boolean)
 	 */
 	protected AnimationlessDialog showInfoDialog(String title, String text) {
 		return showInfoDialog(title, text, true);

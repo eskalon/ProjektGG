@@ -31,6 +31,7 @@ public class LobbyPlayer {
 	private boolean ready;
 	private Religion religion = Religion.values()[0];
 	private int professionTypeIndex;
+	private String hostname;
 
 	public String getSurname() {
 		return surname;
@@ -97,6 +98,14 @@ public class LobbyPlayer {
 
 	public void setProfessionTypeIndex(int professionTypeIndex) {
 		this.professionTypeIndex = professionTypeIndex;
+	}
+
+	public void setHostname(String hostname) {
+		this.hostname = hostname;
+	}
+
+	public String getHostname() {
+		return hostname;
 	}
 
 }

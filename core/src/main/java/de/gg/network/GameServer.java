@@ -14,23 +14,25 @@ import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.kryonet.ServerDiscoveryHandler;
 import com.esotericsoftware.kryonet.rmi.ObjectSpace;
 import com.esotericsoftware.kryonet.rmi.RemoteObject;
+import com.google.common.base.Preconditions;
 
-import de.gg.core.ProjektGG;
-import de.gg.event.ConnectionEstablishedEvent;
 import de.gg.game.AuthoritativeSession;
 import de.gg.game.GameSession;
 import de.gg.game.SavedGame;
 import de.gg.game.data.GameSessionSetup;
+import de.gg.game.entity.Character;
+import de.gg.game.entity.Player;
 import de.gg.network.message.ChatMessageSentMessage;
+import de.gg.network.message.ClientSetupMessage;
 import de.gg.network.message.DiscoveryResponsePacket;
 import de.gg.network.message.GameSetupMessage;
 import de.gg.network.message.PlayerChangedMessage;
 import de.gg.network.message.PlayerJoinedMessage;
 import de.gg.network.message.PlayerLeftMessage;
-import de.gg.network.message.ServerFullMessage;
+import de.gg.network.message.ServerAcceptanceMessage;
+import de.gg.network.message.ServerRejectionMessage;
 import de.gg.network.rmi.AuthoritativeResultListener;
 import de.gg.network.rmi.SlaveActionListener;
-import de.gg.util.CollectionUtils;
 import de.gg.util.Log;
 import de.gg.util.PlayerUtils;
 
@@ -51,28 +53,48 @@ public class GameServer {
 	 * A count of all joined players. Used to generate the player IDs.
 	 */
 	private short playerIdIterator = 0;
+	/**
+	 * A hashmap of all players, keyed by their id. After the client
+	 * {@linkplain #onClientSetup(Connection, ClientSetupMessage) is setup} the
+	 * respective {@linkplain #connections connection} gets assigned a player.
+	 */
 	private HashMap<Short, LobbyPlayer> players;
-	private HashMap<Short, Connection> connections;
+	/**
+	 * Maps the connections to the player ids.
+	 */
+	private HashMap<Connection, Short> connections;
+	/**
+	 * <i>Not</i> <code>null</code> if the server hosts a previously saved game.
+	 */
+	private SavedGame savedGame;
 
 	/**
-	 * Sets up a server asynchronously. After it is finished a
-	 * {@link ConnectionEstablishedEvent} is posted on the
-	 * {@linkplain ProjektGG#getEventBus() event bus}.
+	 * Creates a server object with the specified settings.
 	 * 
 	 * @param serverSetup
 	 *            The server's settings, especially containing the port.
 	 * @param sessionSetup
 	 *            The game session's setup.
-	 * @see ClientNetworkHandler#setUpConnectionAsClient(String, int)
 	 */
 	public GameServer(ServerSetup serverSetup, GameSessionSetup sessionSetup,
-			IHostCallback callback) {
+			SavedGame savedGame) {
 		this.players = new HashMap<>();
 		this.connections = new HashMap<>();
 
 		this.sessionSetup = sessionSetup;
 		this.serverSetup = serverSetup;
+		this.savedGame = savedGame;
+	}
 
+	/**
+	 * Sets up a server asynchronously. After it is finished the callback is
+	 * informed.
+	 * 
+	 * @param callback
+	 *            the callback that is informed when the server is started.
+	 */
+	public void start(IHostCallback callback) {
+		Preconditions.checkNotNull(callback, "callback cannot be null.");
 		this.server = new Server();
 		this.server.start();
 
@@ -91,13 +113,14 @@ public class GameServer {
 			}
 		});
 		TypeListener typeListener = new TypeListener();
+		// CLIENT SETUP
+		typeListener.addTypeHandler(ClientSetupMessage.class,
+				(con, msg) -> onClientSetup(con, msg));
 		// CHAT MESSAGE
 		typeListener.addTypeHandler(ChatMessageSentMessage.class,
 				(con, msg) -> {
 					server.sendToAllExceptTCP(con.getID(), msg);
-				}
-
-		);
+				});
 		// PLAYER CHANGED
 		typeListener.addTypeHandler(PlayerChangedMessage.class,
 				(con, msg) -> onPlayerChange(con, msg));
@@ -206,41 +229,100 @@ public class GameServer {
 	// LISTENER METHDOS
 	// ON NEW CONNECTION
 	private synchronized void onNewConnection(Connection con) {
-		Log.info("Server", "Client verbunden");
-
 		if (players.size() >= serverSetup.getMaxPlayerCount()) { // Match full
-			con.sendTCP(new ServerFullMessage());
+			Log.info("Server", "Client mangels Kapazität abgewiesen");
+
+			con.sendTCP(
+					new ServerRejectionMessage("Der Server ist bereits voll"));
+			con.close();
 		} else { // Still free slots
-			LobbyPlayer p = PlayerUtils.getRandomPlayer(players.values());
-			players.put(playerIdIterator, p);
-			connections.put(playerIdIterator, con);
+			Log.info("Server", "Client verbunden");
 
-			// Inform the other clients
-			server.sendToAllExceptTCP(con.getID(), new PlayerJoinedMessage(
-					playerIdIterator, players.get(playerIdIterator)));
-
-			// Send the setup response
-			con.sendTCP(new GameSetupMessage(players, playerIdIterator,
-					sessionSetup, serverSetup.getVersion()));
-
+			connections.put(con, playerIdIterator);
+			con.sendTCP(new ServerAcceptanceMessage(serverSetup.getVersion()));
 			playerIdIterator++;
 		}
 	}
 
 	// ON DISCONNECT
 	private synchronized void onDisconnect(Connection con) {
-		Short id = CollectionUtils.getKeyByValue(connections, con);
+		Short id = connections.remove(con);
 
 		if (id != null) {
-			Log.info("Server", "Spieler %d hat die Verbindung getrennt", id);
+			Log.info("Server", "Client %d hat die Verbindung getrennt", id);
 
-			server.sendToAllExceptTCP(con.getID(), new PlayerLeftMessage(id));
+			if (players.containsKey(id)) {
+				server.sendToAllExceptTCP(con.getID(),
+						new PlayerLeftMessage(id));
 
-			if (session != null)
-				session.getResultListeners().remove(id);
-			connections.remove(id);
-			players.remove(id);
+				if (session != null)
+					session.getResultListeners().remove(id);
+
+				players.remove(id);
+			}
 		}
+	}
+
+	// ON CLIENT SETUP
+	private synchronized void onClientSetup(Connection con,
+			ClientSetupMessage msg) {
+		Short id = connections.get(con);
+
+		Log.info("Server", "Client %d wird als Spieler registriert", id);
+		LobbyPlayer p;
+
+		if (savedGame != null) {
+			short foundId = -1;
+			for (Entry<Short, String> e : savedGame.clientIdentifiers
+					.entrySet()) {
+				if (e.getValue().equals(msg.getHostname())) {
+					foundId = e.getKey();
+					break;
+				}
+			}
+
+			if (foundId == -1) {
+				Log.info("Server",
+						"Kick: Client ist kein Teil dieser geladenen Partie");
+				con.sendTCP(new ServerRejectionMessage(
+						"Der Spieler ist kein Teil dieser geladenen Partie"));
+				con.close();
+				return;
+			} else {
+				if ((id == HOST_PLAYER_NETWORK_ID
+						&& foundId != HOST_PLAYER_NETWORK_ID)
+						|| (foundId == HOST_PLAYER_NETWORK_ID
+								&& id != HOST_PLAYER_NETWORK_ID)) {
+					// Host has hanged changed
+					Log.info("Server",
+							"Kick: Der Host einer geladenen Partie kann nicht verändert werden");
+					con.sendTCP(new ServerRejectionMessage(
+							"Der Host einer geladenen Partie kann nicht verändert werden"));
+					con.close();
+					// Server gets closed automatically
+					return;
+				}
+				Log.info("Server",
+						"Client als Teil der geladenen Partie erkannt");
+				Player oldPlayer = savedGame.city.getPlayer(foundId);
+				Character oldCharacter = savedGame.city.getCharacter(
+						oldPlayer.getCurrentlyPlayedCharacterId());
+				p = new LobbyPlayer(oldCharacter.getName(),
+						oldCharacter.getSurname(), oldPlayer.getIcon(), -1,
+						oldCharacter.isMale());
+			}
+		} else {
+			p = PlayerUtils.getRandomPlayer(players.values());
+		}
+
+		players.put(id, p);
+
+		// Inform the other clients
+		server.sendToAllExceptTCP(con.getID(),
+				new PlayerJoinedMessage(id, players.get(id)));
+
+		// Send the setup response
+		con.sendTCP(new GameSetupMessage(players, id, sessionSetup, savedGame));
 	}
 
 	// ON PLAYER CHANGE
@@ -280,11 +362,11 @@ public class GameServer {
 		ObjectSpace objectSpace = new ObjectSpace();
 		objectSpace.register(254, (SlaveActionListener) session);
 
-		for (Entry<Short, Connection> e : connections.entrySet()) {
-			objectSpace.addConnection(e.getValue());
+		for (Entry<Connection, Short> e : connections.entrySet()) {
+			objectSpace.addConnection(e.getKey());
 
 			AuthoritativeResultListener resultListener = ObjectSpace
-					.getRemoteObject(e.getValue(), e.getKey(),
+					.getRemoteObject(e.getKey(), e.getValue(),
 							AuthoritativeResultListener.class);
 			if (resultListener == null) {
 				Log.error("Server",
@@ -293,7 +375,7 @@ public class GameServer {
 				break;
 			}
 			((RemoteObject) resultListener).setNonBlocking(true);
-			resultListeners.put(e.getKey(), resultListener);
+			resultListeners.put(e.getValue(), resultListener);
 		}
 
 		session.setResultListeners(resultListeners);

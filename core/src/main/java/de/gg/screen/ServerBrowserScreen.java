@@ -87,12 +87,12 @@ public class ServerBrowserScreen extends BaseUIScreen {
 							public void result(Object obj) {
 								if ((Boolean) obj) {
 									// Connect to client
-									game.setClient(new GameClient(
-											game.getEventBus(),
-											game.getVersion(),
+									game.setClient(
+											new GameClient(game.getEventBus()));
+									game.getClient().connect(game.getVersion(),
 											ipInputField.getText(),
 											Integer.valueOf(
-													portInputField.getText())));
+													portInputField.getText()));
 
 									connectingDialog = showInfoDialog(
 											"Verbinden...",
@@ -169,8 +169,9 @@ public class ServerBrowserScreen extends BaseUIScreen {
 				new ButtonClickListener(assetManager, game.getSettings()) {
 					@Override
 					protected void onClick() {
-						game.setClient(new GameClient(game.getEventBus(),
-								game.getVersion(), address, packet.getPort()));
+						game.setClient(new GameClient(game.getEventBus()));
+						game.getClient().connect(game.getVersion(), address,
+								packet.getPort());
 						connectingDialog = showInfoDialog("Verbinden...",
 								"Spiel beitreten...", false);
 					}

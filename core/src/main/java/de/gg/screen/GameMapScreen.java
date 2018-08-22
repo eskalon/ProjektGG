@@ -337,9 +337,9 @@ public class GameMapScreen extends BaseGameScreen {
 
 							if (server != null) {
 								server.stop();
-							}
 
-							Log.info("Server", "Server beendet");
+								Log.info("Server", "Server beendet");
+							}
 						}
 					})).start();
 

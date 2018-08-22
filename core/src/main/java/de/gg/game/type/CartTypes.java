@@ -2,6 +2,7 @@ package de.gg.game.type;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.badlogic.gdx.assets.AssetManager;
 
@@ -77,6 +78,22 @@ public class CartTypes {
 
 		public int getMaxStackCount() {
 			return maxStackCount;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(name);
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			return Objects.equals(name, ((CartType) obj).name);
 		}
 
 	}

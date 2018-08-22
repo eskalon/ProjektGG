@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 
+import de.gg.game.SavedGame;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.game.entity.BuildingSlot;
 import de.gg.game.entity.Cart;
@@ -35,8 +36,8 @@ public class City {
 
 	HashMap<PositionType, Position> positions = new HashMap<>();
 	/**
-	 * A hashmap with all laws. The value object is either a boolean or an
-	 * integer.
+	 * A hashmap with all laws. The value object is either a {@link Boolean} or
+	 * an {@link Integer}.
 	 */
 	HashMap<LawType, Object> laws = new HashMap<>();
 
@@ -52,6 +53,20 @@ public class City {
 			HashMap<Short, LobbyPlayer> players) {
 		WorldGenerator gen = new WorldGenerator(this, setup, players);
 		gen.generate();
+	}
+
+	/**
+	 * Changes all mentions of the current player id to the new one. Is used
+	 * when a saved game is loaded.
+	 * 
+	 * @param currentId
+	 * @param newId
+	 * 
+	 * @see SavedGame#clientIdentifiers
+	 */
+	public void switchPlayerId(short currentId, short newId) {
+		Player p = players.remove(currentId);
+		players.put(newId, p);
 	}
 
 	/**

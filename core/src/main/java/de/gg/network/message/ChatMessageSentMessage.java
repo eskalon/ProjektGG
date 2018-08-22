@@ -15,7 +15,7 @@ public class ChatMessageSentMessage {
 	private String message;
 
 	public ChatMessageSentMessage() {
-
+		// default public constructor
 	}
 
 	public ChatMessageSentMessage(short senderId, String message) {

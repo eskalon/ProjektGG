@@ -2,6 +2,7 @@ package de.gg.network.message;
 
 import java.util.HashMap;
 
+import de.gg.game.SavedGame;
 import de.gg.game.data.GameSessionSetup;
 import de.gg.network.LobbyPlayer;
 
@@ -20,23 +21,24 @@ public class GameSetupMessage {
 	 */
 	private short clientId;
 	/**
-	 * The game's settings.
+	 * The game session's setup.
 	 */
-	private GameSessionSetup settings;
+	private GameSessionSetup sessionSetup;
 	/**
-	 * The version of the game server.
+	 * The loaded game session. <code>Null</code> if this match isn't loaded.
 	 */
-	private String serverVersion;
+	private SavedGame savedGame;
 
 	public GameSetupMessage() {
+		// default public constructor
 	}
 
 	public GameSetupMessage(HashMap<Short, LobbyPlayer> players, short clientId,
-			GameSessionSetup settings, String serverVersion) {
+			GameSessionSetup sessionSetup, SavedGame savedGame) {
 		this.players = players;
-		this.settings = settings;
+		this.sessionSetup = sessionSetup;
 		this.clientId = clientId;
-		this.serverVersion = serverVersion;
+		this.savedGame = savedGame;
 	}
 
 	public HashMap<Short, LobbyPlayer> getPlayers() {
@@ -47,12 +49,12 @@ public class GameSetupMessage {
 		return clientId;
 	}
 
-	public GameSessionSetup getSettings() {
-		return settings;
+	public GameSessionSetup getSessionSetup() {
+		return sessionSetup;
 	}
 
-	public String getServerVersion() {
-		return serverVersion;
+	public SavedGame getSavedGame() {
+		return savedGame;
 	}
 
 }

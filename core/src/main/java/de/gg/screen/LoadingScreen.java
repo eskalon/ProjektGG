@@ -8,10 +8,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ObjectMap;
 
+import de.gg.game.factory.CharacterFactory;
+import de.gg.game.type.BuildingTypes;
 import de.gg.game.type.GameMaps;
+import de.gg.game.type.ItemTypes;
+import de.gg.game.type.LawTypes;
+import de.gg.game.type.PositionTypes;
 import de.gg.game.type.ProfessionTypes;
+import de.gg.game.type.SocialStatusS;
 import de.gg.input.ButtonClickListener;
+import de.gg.render.TestShader;
 import de.gg.util.PlayerUtils;
+import de.gg.util.json.SaveGameParser;
 
 /**
  * This screen takes care of loading the assets for all screens except the
@@ -88,6 +96,14 @@ public class LoadingScreen extends BaseLoadingScreen {
 		assetManager.load(PlayerUtils.class);
 		assetManager.load(GameMaps.class);
 		assetManager.load(ProfessionTypes.class);
+		assetManager.load(CharacterFactory.class);
+		assetManager.load(TestShader.class);
+		assetManager.load(BuildingTypes.class);
+		assetManager.load(PositionTypes.class);
+		assetManager.load(LawTypes.class);
+		assetManager.load(SocialStatusS.class);
+		assetManager.load(ItemTypes.class);
+		assetManager.load(ItemTypes.class);
 
 		assetManager.load(ButtonClickListener.class);
 
@@ -141,6 +157,14 @@ public class LoadingScreen extends BaseLoadingScreen {
 		PlayerUtils.initialize(assetManager);
 		GameMaps.initialize(assetManager);
 		ProfessionTypes.initialize(assetManager);
+		BuildingTypes.initialize(assetManager);
+		PositionTypes.initialize(assetManager);
+		LawTypes.initialize(assetManager);
+		SocialStatusS.initialize(assetManager);
+		ItemTypes.initialize(assetManager);
+		ItemTypes.initialize(assetManager);
+		CharacterFactory.initialize(assetManager);
+		SaveGameParser.initialize();
 
 		// Notify loaded screens
 		game.getScreen("mainMenu").finishLoading();

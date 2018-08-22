@@ -1,10 +1,22 @@
 package de.gg.network.message;
 
 /**
- * A child class of this message is sent if the server rejected the connection.
+ * A child class of this message is sent if the server rejects a client.
  */
-public abstract class ServerRejectionMessage {
+public class ServerRejectionMessage {
 
-	public abstract String getMessage();
+	private String message;
+
+	public ServerRejectionMessage() {
+		// default public constructor
+	}
+
+	public ServerRejectionMessage(String message) {
+		this.message = message;
+	}
+
+	public String getMessage() {
+		return message;
+	}
 
 }

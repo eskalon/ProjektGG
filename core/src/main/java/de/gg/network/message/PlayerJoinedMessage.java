@@ -17,7 +17,7 @@ public class PlayerJoinedMessage {
 	private LobbyPlayer player;
 
 	public PlayerJoinedMessage() {
-
+		// default public constructor
 	}
 
 	public PlayerJoinedMessage(short id, LobbyPlayer player) {

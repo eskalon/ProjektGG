@@ -14,11 +14,12 @@ import de.gg.game.type.PositionTypes.PositionType;
 import de.gg.game.type.ProfessionTypes.ProfessionType;
 import de.gg.game.type.Religion;
 import de.gg.network.message.ChatMessageSentMessage;
+import de.gg.network.message.ClientSetupMessage;
 import de.gg.network.message.GameSetupMessage;
 import de.gg.network.message.PlayerChangedMessage;
 import de.gg.network.message.PlayerJoinedMessage;
 import de.gg.network.message.PlayerLeftMessage;
-import de.gg.network.message.ServerFullMessage;
+import de.gg.network.message.ServerAcceptanceMessage;
 import de.gg.network.message.ServerRejectionMessage;
 import de.gg.network.rmi.AuthoritativeResultListener;
 import de.gg.network.rmi.SlaveActionListener;
@@ -58,12 +59,13 @@ public class NetworkRegisterer {
 
 		// Messages
 		kryo.register(ChatMessageSentMessage.class);
+		kryo.register(ClientSetupMessage.class);
 		kryo.register(GameSetupMessage.class);
 		kryo.register(PlayerChangedMessage.class);
 		kryo.register(PlayerJoinedMessage.class);
 		kryo.register(PlayerLeftMessage.class);
+		kryo.register(ServerAcceptanceMessage.class);
 		kryo.register(ServerRejectionMessage.class);
-		kryo.register(ServerFullMessage.class);
 
 		// Listeners
 		kryo.register(AuthoritativeResultListener.class);

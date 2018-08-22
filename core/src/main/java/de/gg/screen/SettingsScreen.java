@@ -10,11 +10,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.google.common.eventbus.Subscribe;
 
+import de.gg.event.DisconnectionEvent;
 import de.gg.event.RoundEndEvent;
 import de.gg.event.ServerReadyEvent;
 import de.gg.input.ButtonClickListener;
+import de.gg.network.GameServer;
 import de.gg.ui.KeySelectionInputField;
 import de.gg.ui.KeySelectionInputField.KeySelectionEventListener;
+import de.gg.util.Log;
+import de.gg.util.SimpleListener;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class SettingsScreen extends BaseUIScreen {
@@ -206,11 +210,13 @@ public class SettingsScreen extends BaseUIScreen {
 		// Wenn der SettingsScreen während des Spiels geöffnet ist, dieses
 		// weiter updaten
 		if (caller instanceof GameMapScreen) {
-			game.getClient().update();
+			if (game.getClient() != null) { // is not disconnecting
+				game.getClient().update();
 
-			game.getClient().updatePing(delta);
-			if (game.isHost())
-				game.getServer().update();
+				game.getClient().updatePing(delta);
+				if (game.isHost())
+					game.getServer().update();
+			}
 		}
 		super.render(delta);
 	}
@@ -225,6 +231,44 @@ public class SettingsScreen extends BaseUIScreen {
 		((GameRoundendScreen) game.getScreen("roundEnd")).setServerReady();
 	}
 
+	/**
+	 * @param event
+	 * @see BaseGameScreen#onDisconnection(DisconnectionEvent)
+	 */
+	@Subscribe
+	public void onDisconnection(DisconnectionEvent event) {
+		if (game.getClient() != null) { // unexpected disconnection
+			Log.info("Client", "Verbindung zum Server getrennt");
+
+			game.setClient(null);
+			final GameServer server = game.getServer();
+			game.setServer(null);
+
+			// Close server
+			(new Thread(new Runnable() {
+				@Override
+				public void run() {
+					if (server != null) {
+						server.stop();
+
+						Log.info("Server", "Server beendet");
+					}
+				}
+			})).start();
+
+			showInfoDialog("Fehler", "Verbindung zum Server getrennt", true,
+					new SimpleListener() {
+						@Override
+						public void listen(Object param) {
+							game.pushScreen("mainMenu");
+						}
+					});
+		}
+	}
+
+	/**
+	 * @return the previously shown screen.
+	 */
 	public BaseScreen getCaller() {
 		return caller;
 	}

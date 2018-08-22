@@ -95,24 +95,23 @@ public class LobbyCreationScreen extends BaseUIScreen {
 									"--- Neues Spiel wird erstellt ---");
 							Log.info("Server", "Server wird gestartet...");
 							game.setServer(new GameServer(serverSetup,
-									sessionSetup, new IHostCallback() {
-										@Override
-										public void onHostStarted(Exception e) {
-											if (e == null) {
-												// Connect to client
-												game.setClient(new GameClient(
-														game.getEventBus(),
-														game.getVersion(),
-														"localhost",
-														serverSetup.getPort()));
-
-											} else {
-												game.getEventBus().post(
-														new ConnectionFailedEvent(
-																e));
-											}
-										}
-									}));
+									sessionSetup, null));
+							game.getServer().start(new IHostCallback() {
+								@Override
+								public void onHostStarted(Exception e) {
+									if (e == null) {
+										// Connect client to server
+										game.setClient(new GameClient(
+												game.getEventBus()));
+										game.getClient().connect(
+												game.getVersion(), "localhost",
+												serverSetup.getPort());
+									} else {
+										game.getEventBus().post(
+												new ConnectionFailedEvent(e));
+									}
+								}
+							});
 
 							connectingDialog = new AnimationlessDialog(
 									"Starten...", skin);
