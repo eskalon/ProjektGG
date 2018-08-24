@@ -1,8 +1,10 @@
 package de.gg.game.factory;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.badlogic.gdx.assets.AssetDescriptor;
 import com.google.common.reflect.TypeToken;
 
 import de.gg.game.data.GameDifficulty;
@@ -14,8 +16,8 @@ import de.gg.game.type.Religion;
 import de.gg.game.type.SocialStatusS;
 import de.gg.game.type.SocialStatusS.SocialStatus;
 import de.gg.util.RandomUtils;
-import de.gg.util.asset.Text;
-import de.gg.util.json.SimpleJSONParser;
+import de.gg.util.asset.JSON;
+import de.gg.util.asset.JSONLoader.JSONLoaderParameter;
 import net.dermetfan.gdx.assets.AnnotationAssetManager;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
@@ -28,12 +30,27 @@ public class CharacterFactory {
 	private static ArrayList<String> MALE_NAMES;
 	private static ArrayList<String> FEMALE_NAMES;
 
-	@Asset(Text.class)
-	private static final String SURNAMES_JSON_PATH = "data/misc/surnames.json";
-	@Asset(Text.class)
-	private static final String FEMALE_NAMES_JSON_PATH = "data/misc/female_names.json";
-	@Asset(Text.class)
-	private static final String MALE_NAMES_JSON_PATH = "data/misc/male_names.json";
+	@SuppressWarnings("serial")
+	private static Type TYPE = new TypeToken<ArrayList<String>>() {
+	}.getType();
+
+	@Asset(JSON.class)
+	public static final AssetDescriptor<JSON> SURNAMES_JSON_PATH() {
+		return new AssetDescriptor<JSON>("data/misc/surnames.json", JSON.class,
+				new JSONLoaderParameter(TYPE));
+	}
+
+	@Asset(JSON.class)
+	public static final AssetDescriptor<JSON> FEMALE_NAMES_JSON_PATH() {
+		return new AssetDescriptor<JSON>("data/misc/female_names.json",
+				JSON.class, new JSONLoaderParameter(TYPE));
+	}
+
+	@Asset(JSON.class)
+	public static final AssetDescriptor<JSON> MALE_NAMES_JSON_PATH() {
+		return new AssetDescriptor<JSON>("data/misc/male_names.json", JSON.class,
+				new JSONLoaderParameter(TYPE));
+	}
 
 	private CharacterFactory() {
 	}
@@ -231,20 +248,9 @@ public class CharacterFactory {
 	}
 
 	public static void initialize(AnnotationAssetManager assetManager) {
-		FEMALE_NAMES = SimpleJSONParser
-				.parseFromJson(
-						assetManager.get(FEMALE_NAMES_JSON_PATH, Text.class)
-								.getString(),
-						new TypeToken<ArrayList<String>>() {
-						}.getType());
-		MALE_NAMES = SimpleJSONParser.parseFromJson(
-				assetManager.get(MALE_NAMES_JSON_PATH, Text.class).getString(),
-				new TypeToken<ArrayList<String>>() {
-				}.getType());
-		SURNAMES = SimpleJSONParser.parseFromJson(
-				assetManager.get(SURNAMES_JSON_PATH, Text.class).getString(),
-				new TypeToken<ArrayList<String>>() {
-				}.getType());
+		FEMALE_NAMES = assetManager.get(FEMALE_NAMES_JSON_PATH()).getData(TYPE);
+		MALE_NAMES = assetManager.get(MALE_NAMES_JSON_PATH()).getData(TYPE);
+		SURNAMES = assetManager.get(SURNAMES_JSON_PATH()).getData(TYPE);
 	}
 
 }

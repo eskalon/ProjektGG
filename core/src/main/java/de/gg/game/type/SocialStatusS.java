@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 
 import de.gg.game.type.PositionTypes.PositionType;
-import de.gg.util.asset.Text;
-import de.gg.util.json.SimpleJSONParser;
+import de.gg.util.asset.JSON;
+import de.gg.util.asset.JSONLoader.JSONLoaderParameter;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class SocialStatusS {
@@ -16,16 +17,35 @@ public class SocialStatusS {
 	public static SocialStatus NON_CITIZEN, CITIZEN, PATRICIAN, CAVALIER, BARON;
 	private static List<SocialStatus> VALUES;
 
-	@Asset(Text.class)
-	private static final String NON_CITIZEN_JSON_PATH = "data/social_status/non_citizen.json";
-	@Asset(Text.class)
-	private static final String CITIZEN_JSON_PATH = "data/social_status/citizen.json";
-	@Asset(Text.class)
-	private static final String PATRICIAN_JSON_PATH = "data/social_status/patrician.json";
-	@Asset(Text.class)
-	private static final String CAVALIER_JSON_PATH = "data/social_status/cavalier.json";
-	@Asset(Text.class)
-	private static final String BARON_JSON_PATH = "data/social_status/baron.json";
+	@Asset(JSON.class)
+	public static final AssetDescriptor<JSON> NON_CITIZEN_JSON_PATH() {
+		return new AssetDescriptor<JSON>("data/social_status/non_citizen.json",
+				JSON.class, new JSONLoaderParameter(SocialStatus.class));
+	}
+
+	@Asset(JSON.class)
+	public static final AssetDescriptor<JSON> CITIZEN_JSON_PATH() {
+		return new AssetDescriptor<JSON>("data/social_status/citizen.json",
+				JSON.class, new JSONLoaderParameter(SocialStatus.class));
+	}
+
+	@Asset(JSON.class)
+	public static final AssetDescriptor<JSON> PATRICIAN_JSON_PATH() {
+		return new AssetDescriptor<JSON>("data/social_status/patrician.json",
+				JSON.class, new JSONLoaderParameter(SocialStatus.class));
+	}
+
+	@Asset(JSON.class)
+	public static final AssetDescriptor<JSON> CAVALIER_JSON_PATH() {
+		return new AssetDescriptor<JSON>("data/social_status/cavalier.json",
+				JSON.class, new JSONLoaderParameter(SocialStatus.class));
+	}
+
+	@Asset(JSON.class)
+	public static final AssetDescriptor<JSON> BARON_JSON_PATH() {
+		return new AssetDescriptor<JSON>("data/social_status/baron.json",
+				JSON.class, new JSONLoaderParameter(SocialStatus.class));
+	}
 
 	private SocialStatusS() {
 		// shouldn't get instantiated
@@ -38,25 +58,23 @@ public class SocialStatusS {
 	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 
-		NON_CITIZEN = SimpleJSONParser.parseFromJson(
-				assetManager.get(NON_CITIZEN_JSON_PATH, Text.class).getString(),
-				SocialStatus.class);
+		NON_CITIZEN = assetManager.get(NON_CITIZEN_JSON_PATH())
+				.getData(SocialStatus.class);
 		VALUES.add(NON_CITIZEN);
-		CITIZEN = SimpleJSONParser.parseFromJson(
-				assetManager.get(CITIZEN_JSON_PATH, Text.class).getString(),
-				SocialStatus.class);
+
+		CITIZEN = assetManager.get(CITIZEN_JSON_PATH())
+				.getData(SocialStatus.class);
 		VALUES.add(CITIZEN);
-		PATRICIAN = SimpleJSONParser.parseFromJson(
-				assetManager.get(PATRICIAN_JSON_PATH, Text.class).getString(),
-				SocialStatus.class);
+
+		PATRICIAN = assetManager.get(PATRICIAN_JSON_PATH())
+				.getData(SocialStatus.class);
 		VALUES.add(PATRICIAN);
-		CAVALIER = SimpleJSONParser.parseFromJson(
-				assetManager.get(CAVALIER_JSON_PATH, Text.class).getString(),
-				SocialStatus.class);
+
+		CAVALIER = assetManager.get(CAVALIER_JSON_PATH())
+				.getData(SocialStatus.class);
 		VALUES.add(CAVALIER);
-		BARON = SimpleJSONParser.parseFromJson(
-				assetManager.get(BARON_JSON_PATH, Text.class).getString(),
-				SocialStatus.class);
+
+		BARON = assetManager.get(BARON_JSON_PATH()).getData(SocialStatus.class);
 		VALUES.add(BARON);
 	}
 

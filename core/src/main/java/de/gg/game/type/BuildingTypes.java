@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 
 import de.gg.game.type.ItemTypes.ItemType;
 import de.gg.game.type.ProfessionTypes.ProfessionType;
-import de.gg.util.asset.Text;
-import de.gg.util.json.SimpleJSONParser;
+import de.gg.util.asset.JSON;
+import de.gg.util.asset.JSONLoader.JSONLoaderParameter;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public final class BuildingTypes {
@@ -17,12 +18,23 @@ public final class BuildingTypes {
 	public static BuildingType TOWN_HALL, FORGE_1, FORGE_2;
 	private static List<BuildingType> VALUES;
 
-	@Asset(Text.class)
-	private static final String TOWN_HALL_JSON_PATH = "data/buildings/town_hall.json";
-	@Asset(Text.class)
-	private static final String FORGE_1_JSON_PATH = "data/buildings/forge_1.json";
-	@Asset(Text.class)
-	private static final String FORGE_2_JSON_PATH = "data/buildings/forge_2.json";
+	@Asset(JSON.class)
+	public static final AssetDescriptor<JSON> TOWN_HALL_JSON_PATH() {
+		return new AssetDescriptor<JSON>("data/buildings/town_hall.json",
+				JSON.class, new JSONLoaderParameter(BuildingType.class));
+	}
+
+	@Asset(JSON.class)
+	public static final AssetDescriptor<JSON> FORGE_1_JSON_PATH() {
+		return new AssetDescriptor<JSON>("data/buildings/forge_1.json",
+				JSON.class, new JSONLoaderParameter(BuildingType.class));
+	}
+
+	@Asset(JSON.class)
+	public static final AssetDescriptor<JSON> FORGE_2_JSON_PATH() {
+		return new AssetDescriptor<JSON>("data/buildings/forge_2.json",
+				JSON.class, new JSONLoaderParameter(BuildingType.class));
+	}
 
 	private BuildingTypes() {
 		// shouldn't get instantiated
@@ -35,17 +47,16 @@ public final class BuildingTypes {
 	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 
-		TOWN_HALL = SimpleJSONParser.parseFromJson(
-				assetManager.get(TOWN_HALL_JSON_PATH, Text.class).getString(),
-				BuildingType.class);
+		TOWN_HALL = assetManager.get(TOWN_HALL_JSON_PATH())
+				.getData(BuildingType.class);
 		VALUES.add(TOWN_HALL);
-		FORGE_1 = SimpleJSONParser.parseFromJson(
-				assetManager.get(FORGE_1_JSON_PATH, Text.class).getString(),
-				BuildingType.class);
+
+		FORGE_1 = assetManager.get(FORGE_1_JSON_PATH())
+				.getData(BuildingType.class);
 		VALUES.add(FORGE_1);
-		FORGE_2 = SimpleJSONParser.parseFromJson(
-				assetManager.get(FORGE_2_JSON_PATH, Text.class).getString(),
-				BuildingType.class);
+
+		FORGE_2 = assetManager.get(FORGE_2_JSON_PATH())
+				.getData(BuildingType.class);
 		VALUES.add(FORGE_2);
 	}
 

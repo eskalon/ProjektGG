@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 
 import de.gg.game.type.BuildingTypes.BuildingType;
-import de.gg.util.asset.Text;
-import de.gg.util.json.SimpleJSONParser;
+import de.gg.util.asset.JSON;
+import de.gg.util.asset.JSONLoader.JSONLoaderParameter;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class ProfessionTypes {
@@ -17,10 +18,17 @@ public class ProfessionTypes {
 	public static ProfessionType TEACHER;
 	private static List<ProfessionType> VALUES;
 
-	@Asset(Text.class)
-	private static final String SMITH_JSON_PATH = "data/professions/smith.json";
-	@Asset(Text.class)
-	private static final String TEACHER_JSON_PATH = "data/professions/teacher.json";
+	@Asset(JSON.class)
+	public static final AssetDescriptor<JSON> SMITH_JSON_PATH() {
+		return new AssetDescriptor<JSON>("data/professions/smith.json",
+				JSON.class, new JSONLoaderParameter(ProfessionType.class));
+	}
+
+	@Asset(JSON.class)
+	public static final AssetDescriptor<JSON> TEACHER_JSON_PATH() {
+		return new AssetDescriptor<JSON>("data/professions/teacher.json",
+				JSON.class, new JSONLoaderParameter(ProfessionType.class));
+	}
 
 	private ProfessionTypes() {
 		// shouldn't get instantiated
@@ -33,14 +41,12 @@ public class ProfessionTypes {
 	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 
-		SMITH = SimpleJSONParser.parseFromJson(
-				assetManager.get(SMITH_JSON_PATH, Text.class).getString(),
-				ProfessionType.class);
+		SMITH = assetManager.get(SMITH_JSON_PATH())
+				.getData(ProfessionType.class);
 		VALUES.add(SMITH);
 
-		TEACHER = SimpleJSONParser.parseFromJson(
-				assetManager.get(TEACHER_JSON_PATH, Text.class).getString(),
-				ProfessionType.class);
+		TEACHER = assetManager.get(TEACHER_JSON_PATH())
+				.getData(ProfessionType.class);
 		VALUES.add(TEACHER);
 	}
 

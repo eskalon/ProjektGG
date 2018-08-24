@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.google.common.collect.Range;
 
 import de.gg.game.type.PositionTypes.PositionType;
-import de.gg.util.asset.Text;
-import de.gg.util.json.SimpleJSONParser;
+import de.gg.util.asset.JSON;
+import de.gg.util.asset.JSONLoader.JSONLoaderParameter;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class LawTypes {
@@ -22,10 +23,17 @@ public class LawTypes {
 
 	private static List<LawType> VALUES;
 
-	@Asset(Text.class)
-	private static final String IMPORT_TARIFF_JSON_PATH = "data/laws/import_tariff.json";
-	@Asset(Text.class)
-	private static final String INHERITANCE_TAX_JSON_PATH = "data/laws/inheritance_tax.json";
+	@Asset(JSON.class)
+	public static final AssetDescriptor<JSON> IMPORT_TARIFF_JSON_PATH() {
+		return new AssetDescriptor<JSON>("data/laws/import_tariff.json",
+				JSON.class, new JSONLoaderParameter(LawType.class));
+	}
+
+	@Asset(JSON.class)
+	public static final AssetDescriptor<JSON> INHERITANCE_TAX_JSON_PATH() {
+		return new AssetDescriptor<JSON>("data/laws/inheritance_tax.json",
+				JSON.class, new JSONLoaderParameter(LawType.class));
+	}
 
 	private LawTypes() {
 		// shouldn't get instantiated
@@ -45,15 +53,13 @@ public class LawTypes {
 	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 
-		IMPORT_TARIFF = SimpleJSONParser.parseFromJson(assetManager
-				.get(IMPORT_TARIFF_JSON_PATH, Text.class).getString(),
-				LawType.class);
+		IMPORT_TARIFF = assetManager.get(IMPORT_TARIFF_JSON_PATH())
+				.getData(LawType.class);
 		IMPORT_TARIFF.setVoters(new ArrayList<>());
 		VALUES.add(IMPORT_TARIFF);
 
-		INHERITANCE_TAX = SimpleJSONParser.parseFromJson(assetManager
-				.get(INHERITANCE_TAX_JSON_PATH, Text.class).getString(),
-				LawType.class);
+		INHERITANCE_TAX = assetManager.get(INHERITANCE_TAX_JSON_PATH())
+				.getData(LawType.class);
 		INHERITANCE_TAX.setVoters(new ArrayList<>());
 		VALUES.add(INHERITANCE_TAX);
 

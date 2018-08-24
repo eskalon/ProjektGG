@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 
 import de.gg.game.type.LawTypes.LawType;
 import de.gg.game.type.SocialStatusS.SocialStatus;
-import de.gg.util.asset.Text;
-import de.gg.util.json.SimpleJSONParser;
+import de.gg.util.asset.JSON;
+import de.gg.util.asset.JSONLoader.JSONLoaderParameter;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class PositionTypes {
@@ -17,10 +18,17 @@ public class PositionTypes {
 	public static PositionType MAYOR, COUNCILMAN_1;
 	private static List<PositionType> VALUES;
 
-	@Asset(Text.class)
-	private static final String MAYOR_JSON_PATH = "data/positions/mayor.json";
-	@Asset(Text.class)
-	private static final String COUNCILMAN_1_JSON_PATH = "data/positions/councilman1.json";
+	@Asset(JSON.class)
+	public static final AssetDescriptor<JSON> MAYOR_JSON_PATH() {
+		return new AssetDescriptor<JSON>("data/positions/mayor.json",
+				JSON.class, new JSONLoaderParameter(PositionType.class));
+	}
+
+	@Asset(JSON.class)
+	public static final AssetDescriptor<JSON> COUNCILMAN_1_JSON_PATH() {
+		return new AssetDescriptor<JSON>("data/positions/councilman1.json",
+				JSON.class, new JSONLoaderParameter(PositionType.class));
+	}
 
 	private PositionTypes() {
 		// shouldn't get instantiated
@@ -29,14 +37,11 @@ public class PositionTypes {
 	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 
-		MAYOR = SimpleJSONParser.parseFromJson(
-				assetManager.get(MAYOR_JSON_PATH, Text.class).getString(),
-				PositionType.class);
+		MAYOR = assetManager.get(MAYOR_JSON_PATH()).getData(PositionType.class);
 		VALUES.add(MAYOR);
 
-		COUNCILMAN_1 = SimpleJSONParser.parseFromJson(assetManager
-				.get(COUNCILMAN_1_JSON_PATH, Text.class).getString(),
-				PositionType.class);
+		COUNCILMAN_1 = assetManager.get(COUNCILMAN_1_JSON_PATH())
+				.getData(PositionType.class);
 		VALUES.add(COUNCILMAN_1);
 	}
 

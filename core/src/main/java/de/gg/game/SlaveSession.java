@@ -2,6 +2,8 @@ package de.gg.game;
 
 import java.util.HashMap;
 
+import javax.annotation.Nullable;
+
 import com.google.common.eventbus.EventBus;
 
 import de.gg.event.AllPlayersReadyEvent;
@@ -56,7 +58,7 @@ public class SlaveSession extends GameSession
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void init(SavedGame savedGame) {
+	public void init(@Nullable SavedGame savedGame) {
 		super.init(savedGame);
 
 		// Setup the client systems

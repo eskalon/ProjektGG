@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import javax.annotation.Nullable;
+
 import com.google.common.base.Stopwatch;
 
 import de.gg.game.data.GameDifficulty;
@@ -121,7 +123,7 @@ public abstract class GameSession {
 	 * @param savedGame
 	 *            <i>Not</i> <code>null</code> if this is a loaded game state.
 	 */
-	public synchronized void init(SavedGame savedGame) {
+	public synchronized void init(@Nullable SavedGame savedGame) {
 		if (savedGame == null) {
 			this.city = new City();
 			this.city.generate(sessionSetup, players);

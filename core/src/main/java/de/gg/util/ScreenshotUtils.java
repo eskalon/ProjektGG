@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class ScreenshotUtils {
 
 	private ScreenshotUtils() {
+		// not used
 	}
 
 	/**

@@ -8,14 +8,15 @@ import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 
+import de.gg.util.asset.TextLoader.TextParameter;
+
 /**
  * A simple asset loader for {@linkplain Text text} files.
  *
  * @see <a href=
  *      "https://gamedev.stackexchange.com/a/101331">https://gamedev.stackexchange.com/a/101331</a>
  */
-public class TextLoader
-		extends AsynchronousAssetLoader<Text, TextLoader.TextParameter> {
+public class TextLoader extends AsynchronousAssetLoader<Text, TextParameter> {
 
 	public TextLoader(FileHandleResolver resolver) {
 		super(resolver);
@@ -39,6 +40,7 @@ public class TextLoader
 		return text;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Array<AssetDescriptor> getDependencies(String fileName,
 			FileHandle file, TextParameter parameter) {

@@ -5,6 +5,7 @@ import java.util.NavigableMap;
 public class MathUtils {
 
 	private MathUtils() {
+		// not used
 	}
 
 	/**

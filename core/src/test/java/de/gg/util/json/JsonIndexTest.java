@@ -30,9 +30,9 @@ public class JsonIndexTest {
 
 		Gson gson = new GsonBuilder()
 				.registerTypeAdapter(TestObject.class,
-						new JsonIndexSerializer<>(list))
+						new JSONIndexSerializer<>(list))
 				.registerTypeAdapter(TestObject.class,
-						new JsonIndexDeserializer<>(list))
+						new JSONIndexDeserializer<>(list))
 				.create();
 
 		TestObjectWrapper w = new TestObjectWrapper();

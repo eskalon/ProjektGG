@@ -1,6 +1,5 @@
 package de.gg.util;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.concurrent.TimeUnit;
@@ -16,13 +15,12 @@ import com.badlogic.gdx.Gdx;
 public class Log {
 
 	public static final TimeUnit DEFAULT_TIME_UNIT = TimeUnit.MILLISECONDS;
-	private static final SimpleDateFormat INFO_TIME_FORMAT = new SimpleDateFormat(
-			"HH:mm:ss");
-	private static final SimpleDateFormat DEBUG_TIME_FORMAT = new SimpleDateFormat(
-			"HH:mm:ss.SSS");
-	private static SimpleDateFormat USED_TIME_FORMAT = INFO_TIME_FORMAT;
+	private static final String INFO_TAG_FORMAT = "%tT - [INFO ] [%S]";
+	private static final String ERROR_TAG_FORMAT = "%tT - [ERROR] [%S]";
+	private static final String DEBUG_TAG_FORMAT = "%tT - [DEBUG] [%S]";
 
 	private Log() {
+		// not used
 	}
 
 	/**
@@ -31,7 +29,6 @@ public class Log {
 	public static void enableDebugLogging() {
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		com.esotericsoftware.minlog.Log.INFO();
-		USED_TIME_FORMAT = DEBUG_TIME_FORMAT;
 	}
 
 	/**
@@ -40,7 +37,6 @@ public class Log {
 	public static void disableDebugLogging() {
 		Gdx.app.setLogLevel(Application.LOG_INFO);
 		com.esotericsoftware.minlog.Log.ERROR();
-		USED_TIME_FORMAT = INFO_TIME_FORMAT;
 	}
 
 	/**
@@ -48,7 +44,7 @@ public class Log {
 	 * {@link String#format(String, Object...)}.
 	 *
 	 * @param tag
-	 *            The tag in front of the message. I usually used to denote the
+	 *            The tag in front of the message. Is usually used to denote the
 	 *            logging entity.
 	 * @param message
 	 *            The actual log message.
@@ -60,8 +56,9 @@ public class Log {
 	 * @see Formatter
 	 */
 	public static void info(String tag, String message, Object... args) {
-		Gdx.app.log(getCurrentTime() + tag.toUpperCase(),
-				String.format(message, args));
+		if (Gdx.app.getLogLevel() >= Application.LOG_INFO)
+			Gdx.app.log(getTag(INFO_TAG_FORMAT, tag),
+					String.format(message, args));
 	}
 
 	/**
@@ -69,7 +66,7 @@ public class Log {
 	 * {@link String#format(String, Object...)}.
 	 *
 	 * @param tag
-	 *            The tag in front of the message. I usually used to denote the
+	 *            The tag in front of the message. Is usually used to denote the
 	 *            logging entity.
 	 * @param message
 	 *            The actual error message.
@@ -81,8 +78,9 @@ public class Log {
 	 * @see Formatter
 	 */
 	public static void error(String tag, String message, Object... args) {
-		Gdx.app.error(getCurrentTime() + tag.toUpperCase(),
-				String.format(message, args));
+		if (Gdx.app.getLogLevel() >= Application.LOG_ERROR)
+			Gdx.app.error(getTag(ERROR_TAG_FORMAT, tag),
+					String.format(message, args));
 	}
 
 	/**
@@ -90,7 +88,7 @@ public class Log {
 	 * {@link String#format(String, Object...)}.
 	 *
 	 * @param tag
-	 *            The tag in front of the message. I usually used to denote the
+	 *            The tag in front of the message. Is usually used to denote the
 	 *            logging entity.
 	 * @param message
 	 *            The actual log message.
@@ -103,12 +101,13 @@ public class Log {
 	 * @see #enableDebugLogging()
 	 */
 	public static void debug(String tag, String message, Object... args) {
-		Gdx.app.debug(getCurrentTime() + tag.toUpperCase(),
-				String.format(message, args));
+		if (Gdx.app.getLogLevel() >= Application.LOG_DEBUG)
+			Gdx.app.debug(getTag(DEBUG_TAG_FORMAT, tag),
+					String.format(message, args));
 	}
 
-	private static String getCurrentTime() {
-		return USED_TIME_FORMAT.format(new Date()) + " - ";
+	private static final String getTag(String formatString, String tag) {
+		return String.format(formatString, new Date(), tag);
 	}
 
 }

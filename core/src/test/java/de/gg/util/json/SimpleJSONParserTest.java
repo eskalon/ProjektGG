@@ -19,13 +19,14 @@ public class SimpleJSONParserTest {
 		o.string = "xyz";
 		o.string2 = "abc";
 
-		String jsonText = SimpleJSONParser.parseToJson(o);
+		SimpleJSONParser parser = new SimpleJSONParser();
+
+		String jsonText = parser.parseToJson(o);
 
 		assertEquals(
 				"{\"string\":\"xyz\",\"date\":\"3918-12-30 00:00:00\",\"i\":35}",
 				jsonText);
-		assertEquals(o,
-				SimpleJSONParser.parseFromJson(jsonText, TestObject.class));
+		assertEquals(o, parser.parseFromJson(jsonText, TestObject.class));
 	}
 
 	static class TestObject {

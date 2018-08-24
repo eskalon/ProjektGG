@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.io.FileUtils;
 
 import com.google.common.base.Stopwatch;
@@ -94,7 +96,7 @@ public class AuthoritativeSession extends GameSession
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void init(SavedGame savedGame) {
+	public void init(@Nullable SavedGame savedGame) {
 		for (LobbyPlayer player : players.values()) {
 			player.setReady(false);
 		}
@@ -300,8 +302,9 @@ public class AuthoritativeSession extends GameSession
 								+ (System.currentTimeMillis() / 1000)));
 
 			// Save new one
+			SaveGameParser saveGameParser = new SaveGameParser();
 			FileUtils.writeStringToFile(savesFile,
-					SaveGameParser.parseToJson(save), CHARSET, false);
+					saveGameParser.parseToJson(save), CHARSET, false);
 		} catch (JsonSyntaxException | IOException e) {
 			Log.error("Server", "Spiel konnte nicht gespeichert werden: %s",
 					e.getMessage());

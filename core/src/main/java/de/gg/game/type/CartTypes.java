@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 
-import de.gg.util.asset.Text;
-import de.gg.util.json.SimpleJSONParser;
+import de.gg.util.asset.JSON;
+import de.gg.util.asset.JSONLoader.JSONLoaderParameter;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class CartTypes {
@@ -15,8 +16,11 @@ public class CartTypes {
 	public static CartType BASIC;
 	private static List<CartType> VALUES;
 
-	@Asset(Text.class)
-	private static final String BASIC_JSON_PATH = "data/carts/cart_1.json";
+	@Asset(JSON.class)
+	public static final AssetDescriptor<JSON> BASIC_JSON_PATH() {
+		return new AssetDescriptor<JSON>("data/carts/cart_1.json", JSON.class,
+				new JSONLoaderParameter(CartType.class));
+	}
 
 	private CartTypes() {
 		// shouldn't get instantiated
@@ -29,9 +33,7 @@ public class CartTypes {
 	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 
-		BASIC = SimpleJSONParser.parseFromJson(
-				assetManager.get(BASIC_JSON_PATH, Text.class).getString(),
-				CartType.class);
+		BASIC = assetManager.get(BASIC_JSON_PATH()).getData(CartType.class);
 		VALUES.add(BASIC);
 	}
 

@@ -22,12 +22,21 @@ public class SimpleJSONParser {
 	/**
 	 * Gson-Parser.
 	 */
-	private static final Gson gson = new GsonBuilder()
-			.excludeFieldsWithModifiers(Modifier.STATIC)
-			.setExclusionStrategies(new ExcludeAnnotationExclusionStrategy())
-			.setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+	private final Gson gson;
 
-	private SimpleJSONParser() {
+	protected SimpleJSONParser(Gson gson) {
+		this.gson = gson;
+	}
+
+	protected SimpleJSONParser(GsonBuilder gsonBuilder) {
+		this(gsonBuilder.excludeFieldsWithModifiers(Modifier.STATIC)
+				.setExclusionStrategies(
+						new ExcludeAnnotationExclusionStrategy())
+				.setDateFormat("yyyy-MM-dd HH:mm:ss").create());
+	}
+
+	public SimpleJSONParser() {
+		this(new GsonBuilder());
 	}
 
 	/**
@@ -43,7 +52,7 @@ public class SimpleJSONParser {
 	 * @throws JsonSyntaxException
 	 *             if there is a problem processing the JSON elements.
 	 */
-	public static <T> T parseFromJson(String jsonInput, Class<T> clazz)
+	public <T> T parseFromJson(String jsonInput, Class<T> clazz)
 			throws JsonSyntaxException {
 		return gson.fromJson(jsonInput, clazz);
 	}
@@ -60,7 +69,7 @@ public class SimpleJSONParser {
 	 *             if there is a problem processing the JSON elements.
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T parseFromJson(String jsonInput, Type type)
+	public <T> T parseFromJson(String jsonInput, Type type)
 			throws JsonSyntaxException {
 		return (T) gson.fromJson(jsonInput, type);
 	}
@@ -74,7 +83,7 @@ public class SimpleJSONParser {
 	 * @throws JsonSyntaxException
 	 *             if there is a problem processing the JSON elements.
 	 */
-	public static String parseToJson(Object object) throws JsonSyntaxException {
+	public String parseToJson(Object object) throws JsonSyntaxException {
 		return gson.toJson(object);
 	}
 

@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 
 import de.gg.game.entity.BuildingSlot;
 import de.gg.render.RenderData;
-import de.gg.util.asset.Text;
+import de.gg.util.asset.JSON;
+import de.gg.util.asset.JSONLoader.JSONLoaderParameter;
 import de.gg.util.json.SimpleJSONParser;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
@@ -24,8 +26,11 @@ public class GameMaps {
 	public static GameMap BAMBERG;
 	private static List<GameMap> VALUES;
 
-	@Asset(Text.class)
-	private static final String BAMBERG_JSON_PATH = "data/maps/bamberg.json";
+	@Asset(JSON.class)
+	public static final AssetDescriptor<JSON> BAMBERG_JSON_PATH() {
+		return new AssetDescriptor<JSON>("data/maps/bamberg.json", JSON.class,
+				new JSONLoaderParameter(GameMap.class));
+	}
 
 	private GameMaps() {
 		// shouldn't get instantiated
@@ -41,9 +46,7 @@ public class GameMaps {
 	public static void initialize(AssetManager assetManager) {
 		VALUES = new ArrayList<>();
 
-		BAMBERG = SimpleJSONParser.parseFromJson(
-				assetManager.get(BAMBERG_JSON_PATH, Text.class).getString(),
-				GameMap.class);
+		BAMBERG = assetManager.get(BAMBERG_JSON_PATH()).getData(GameMap.class);
 		VALUES.add(BAMBERG);
 	}
 

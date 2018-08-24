@@ -7,6 +7,8 @@ import java.nio.channels.DatagramChannel;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import javax.annotation.Nullable;
+
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener.ConnectionListener;
 import com.esotericsoftware.kryonet.Listener.TypeListener;
@@ -74,9 +76,11 @@ public class GameServer {
 	 *            The server's settings, especially containing the port.
 	 * @param sessionSetup
 	 *            The game session's setup.
+	 * @param savedGame
+	 *            The saved game session to host. Can be <code>null</code>.
 	 */
 	public GameServer(ServerSetup serverSetup, GameSessionSetup sessionSetup,
-			SavedGame savedGame) {
+			@Nullable SavedGame savedGame) {
 		this.players = new HashMap<>();
 		this.connections = new HashMap<>();
 
@@ -138,8 +142,8 @@ public class GameServer {
 					broadcastServer.start();
 					broadcastServer.getKryo()
 							.register(DiscoveryResponsePacket.class);
-					broadcastServer.setDiscoveryHandler(
-							new ServerDiscoveryHandler() {
+					broadcastServer
+							.setDiscoveryHandler(new ServerDiscoveryHandler() {
 								@Override
 								public boolean onDiscoverHost(
 										DatagramChannel datagramChannel,
@@ -148,19 +152,17 @@ public class GameServer {
 									DiscoveryResponsePacket packet = new DiscoveryResponsePacket(
 											serverSetup.getPort(),
 											serverSetup.getGameName(),
-											players.size(), serverSetup
-													.getMaxPlayerCount());
+											players.size(),
+											serverSetup.getMaxPlayerCount());
 
 									ByteBuffer buffer = ByteBuffer
 											.allocate(256);
-									broadcastServer
-											.getSerializationFactory()
+									broadcastServer.getSerializationFactory()
 											.newInstance(null)
 											.write(buffer, packet);
 									buffer.flip();
 
-									datagramChannel.send(buffer,
-											fromAddress);
+									datagramChannel.send(buffer, fromAddress);
 
 									return true;
 								}
@@ -309,7 +311,8 @@ public class GameServer {
 						oldCharacter.isMale());
 			}
 		} else {
-			p = PlayerUtils.getRandomPlayer(players.values());
+			p = PlayerUtils
+					.getRandomPlayerWithUnusedProperties(players.values());
 		}
 
 		players.put(id, p);

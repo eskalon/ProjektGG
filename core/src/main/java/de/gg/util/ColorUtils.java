@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 public class ColorUtils {
 
 	private ColorUtils() {
+		// not used
 	}
 
 	/**

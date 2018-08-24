@@ -17,6 +17,7 @@ import com.google.common.base.Preconditions;
 public class CollectionUtils {
 
 	private CollectionUtils() {
+		// not used
 	}
 
 	/**

@@ -10,6 +10,7 @@ import de.gg.game.type.Religion;
 public class LobbyPlayer {
 
 	public LobbyPlayer() {
+		// default public constructor
 	}
 
 	public LobbyPlayer(String name, String surname, PlayerIcon icon,

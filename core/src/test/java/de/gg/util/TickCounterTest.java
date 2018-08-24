@@ -50,7 +50,7 @@ public class TickCounterTest {
 		t.reset();
 		tickCount = 0;
 		while (!t.update()) {
-			//
+			// wait
 		}
 		assertEquals(tickCount, t.getTickCount());
 		assertEquals(maxTicks, t.getTickCount());

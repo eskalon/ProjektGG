@@ -10,14 +10,14 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 
 /**
- * Deserializes an json primitve by interpreting it as the index of the given
+ * Deserializes an JSON primitive by interpreting it as the index of the given
  * values list.
  */
-public class JsonIndexDeserializer<T> implements JsonDeserializer<T> {
+public class JSONIndexDeserializer<T> implements JsonDeserializer<T> {
 
 	private final List<T> values;
 
-	public JsonIndexDeserializer(List<T> values) {
+	public JSONIndexDeserializer(List<T> values) {
 		this.values = values;
 	}
 

@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.google.common.base.Preconditions;
 
 import de.gg.camera.CameraWrapper;
 import de.gg.exception.ScreenNotFoundException;
@@ -43,6 +44,8 @@ import de.gg.screen.SplashScreen;
 import de.gg.setting.GameSettings;
 import de.gg.util.EventQueueBus;
 import de.gg.util.Log;
+import de.gg.util.asset.JSON;
+import de.gg.util.asset.JSONLoader;
 import de.gg.util.asset.Text;
 import de.gg.util.asset.TextLoader;
 import net.dermetfan.gdx.assets.AnnotationAssetManager;
@@ -74,8 +77,7 @@ public class ProjektGG extends Game {
 	/**
 	 * The asset manager.
 	 */
-	private final AnnotationAssetManager assetManager = new AnnotationAssetManager(
-			new InternalFileHandleResolver());
+	private final AnnotationAssetManager assetManager;
 	/**
 	 * A map with all initialized screens.
 	 */
@@ -110,6 +112,8 @@ public class ProjektGG extends Game {
 		VERSION = IN_DEV_ENV ? "Development"
 				: getClass().getPackage().getImplementationVersion();
 
+		this.assetManager = new AnnotationAssetManager(
+				new InternalFileHandleResolver());
 		this.debug = debug;
 		this.showSplashscreen = showSplashscreen;
 		this.fpsCounter = fpsCounter;
@@ -122,7 +126,8 @@ public class ProjektGG extends Game {
 		else
 			Log.disableDebugLogging();
 
-		Log.info("Version", VERSION);
+		Log.info("Start", "Version: '%s', In Dev Environment: '%b'", VERSION,
+				debug);
 
 		// Initialize sprite batch
 		this.batch = new SpriteBatch();
@@ -135,6 +140,8 @@ public class ProjektGG extends Game {
 				new FreetypeFontLoader(resolver));
 		this.assetManager.setLoader(Text.class,
 				new TextLoader(new InternalFileHandleResolver()));
+		this.assetManager.setLoader(JSON.class,
+				new JSONLoader(new InternalFileHandleResolver()));
 
 		this.viewportWidth = Gdx.graphics.getWidth();
 		this.viewportHeight = Gdx.graphics.getHeight();
@@ -204,6 +211,7 @@ public class ProjektGG extends Game {
 	 *            the screen.
 	 */
 	public void addScreen(String name, BaseScreen screen) {
+		Preconditions.checkNotNull(screen, "screen cannot be null");
 		screen.init(this, this.getAssetManager());
 
 		this.screens.put(name, screen);
@@ -222,12 +230,12 @@ public class ProjektGG extends Game {
 	 */
 	public synchronized void pushScreen(String name) {
 		Gdx.app.postRunnable(() -> {
-			Log.debug("Screen", "Screen gepushed: %s", name);
+			Log.debug("Screen", "Screen gepushed: '%s'", name);
 			BaseScreen pushedScreen = screens.get(name);
 
 			if (pushedScreen == null) {
 				throw new ScreenNotFoundException(String.format(
-						"Es konnte kein Screen mit dem Namen \"%s\" gefunden werden. Füge den Screen zunächst über #addScreen(String, BaseScreen) hinzu.",
+						"Es konnte kein Screen mit dem Namen '%s' gefunden werden. Füge den Screen zunächst über #addScreen(String, BaseScreen) hinzu.",
 						name));
 			}
 
@@ -252,13 +260,15 @@ public class ProjektGG extends Game {
 	 * @param name
 	 *            the name of the screen.
 	 * @return the screen.
+	 * @throws ScreenNotFoundException
+	 *             when the screen isn't found
 	 */
 	public BaseScreen getScreen(String name) {
 		BaseScreen screen = this.screens.get(name);
 
 		if (screen == null) {
 			throw new ScreenNotFoundException(String.format(
-					"Es konnte kein Screen mit dem Namen \"%s\" gefunden werden. Füge den Screen zunächst über #addScreen(String, BaseScreen) hinzu.",
+					"Es konnte kein Screen mit dem Namen '%s' gefunden werden. Füge den Screen zunächst über #addScreen(String, BaseScreen) hinzu.",
 					name));
 		}
 

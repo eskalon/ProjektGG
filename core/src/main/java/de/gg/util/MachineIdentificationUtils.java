@@ -6,9 +6,10 @@ import java.util.Scanner;
 public class MachineIdentificationUtils {
 
 	private static final String HOSTNAME_COMMAND = "hostname";
-	private static final String UNKNOWN_HOST = "Unknown Machine";
+	private static final String UNKNOWN_HOST_PREFIX = "_u";
 
 	private MachineIdentificationUtils() {
+		// not used
 	}
 
 	/**
@@ -19,7 +20,8 @@ public class MachineIdentificationUtils {
 			return getHostnameCommandResult().trim().toLowerCase()
 					.replace(".home", "");
 		} catch (IOException e) {
-			return UNKNOWN_HOST;
+			return UNKNOWN_HOST_PREFIX
+					+ String.valueOf(System.currentTimeMillis());
 		}
 	}
 

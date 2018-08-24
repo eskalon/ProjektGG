@@ -19,36 +19,16 @@ public class Text {
 			: Charset.defaultCharset();
 	private String string;
 
-	public Text() {
-		this.string = new String("".getBytes());
-	}
-
-	public Text(byte[] data) {
-		this.string = new String(data, CHARSET);
-	}
-
 	public Text(String string) {
 		this.string = new String(string.getBytes(), CHARSET);
 	}
 
 	public Text(FileHandle file) {
-		this.string = new String(file.readBytes(), CHARSET);
-	}
-
-	public Text(Text text) {
-		this.string = new String(text.getString().getBytes(), CHARSET);
-	}
-
-	public void setString(String string) {
-		this.string = string;
+		this(new String(file.readBytes(), CHARSET));
 	}
 
 	public String getString() {
 		return this.string;
-	}
-
-	public void clear() {
-		this.string = new String("".getBytes());
 	}
 
 }

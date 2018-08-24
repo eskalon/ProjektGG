@@ -4,27 +4,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.google.common.reflect.TypeToken;
-
 import de.gg.game.type.PlayerIcon;
+import de.gg.game.type.PlayerStubs;
+import de.gg.game.type.PlayerStubs.PlayerStub;
 import de.gg.game.type.ProfessionTypes;
 import de.gg.network.LobbyPlayer;
-import de.gg.util.asset.Text;
-import de.gg.util.json.SimpleJSONParser;
-import net.dermetfan.gdx.assets.AnnotationAssetManager;
-import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 /**
  * This class contains utility methods for working with players.
  */
 public class PlayerUtils {
 
-	private static List<PlayerStub> VALUES;
-
-	@Asset(Text.class)
-	private static final String PLAYER_PRESETS_JSON_PATH = "data/misc/player_presets.json";
-
 	private PlayerUtils() {
+		// not used
 	}
 
 	/**
@@ -126,41 +118,25 @@ public class PlayerUtils {
 	 * @see #VALUES
 	 */
 	private static int getRandomIndex() {
-		return RandomUtils.getRandomNumber(0, VALUES.size() - 1);
+		return RandomUtils.getRandomNumber(0,
+				PlayerStubs.getValues().size() - 1);
 	}
 
 	/**
-	 * Returns a random player.
+	 * Returns a random player with an unused icon and profession.
 	 *
 	 * @param collection
 	 *            A collection of all of the already used players to specify the
 	 *            unused player icons.
 	 * @return The random player.
 	 */
-	public static LobbyPlayer getRandomPlayer(Collection<LobbyPlayer> players) {
-		PlayerStub stub = VALUES.get(getRandomIndex());
+	public static LobbyPlayer getRandomPlayerWithUnusedProperties(
+			Collection<LobbyPlayer> players) {
+		PlayerStub stub = PlayerStubs.getValues().get(getRandomIndex());
 
 		return new LobbyPlayer(stub.name, stub.surname,
 				getAvailableIcons(players).get(0),
 				getAvailableProfessionIndices(players).get(0), stub.isMale);
-	}
-
-	/**
-	 * This class represents the player data read via
-	 * {@linkplain SimpleJSONParser json} and holds a name as well as a surname.
-	 */
-	public static class PlayerStub {
-		public String name, surname;
-		public boolean isMale;
-	}
-
-	public static void initialize(AnnotationAssetManager assetManager) {
-		VALUES = SimpleJSONParser
-				.parseFromJson(
-						assetManager.get(PLAYER_PRESETS_JSON_PATH, Text.class)
-								.getString(),
-						new TypeToken<ArrayList<PlayerStub>>() {
-						}.getType());
 	}
 
 }

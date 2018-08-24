@@ -1,12 +1,10 @@
 package de.gg.desktop;
 
 import com.badlogic.gdx.Files;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 import de.gg.core.ProjektGG;
-import de.gg.util.CrashLogUtils;
 import de.gg.util.MicroOptions;
 
 /**
@@ -15,14 +13,14 @@ import de.gg.util.MicroOptions;
 public class DesktopLauncher {
 
 	/**
-	 * The start-method for the whole application. Currently supported start
-	 * arguments:
+	 * The entry point for the whole application on desktop systems. Currently
+	 * supported start arguments are:
 	 * <ul>
-	 * <li>--debug: sets the game to debug mode.
-	 * <li>--novid: skips the splash screen.
-	 * <li>--fps: shows a fps counter in-game.
-	 * <li>--width [width]: sets the window width
-	 * <li>--height [height]: sets the window height
+	 * <li><code>--debug</code>: sets the game to debug mode.
+	 * <li><code>--novid</code>: skips the splash screen.
+	 * <li><code>--fps</code>: shows a fps counter in-game.
+	 * <li><code>--width [width]</code>: sets the window's width
+	 * <li><code>--height [height]</code>: sets the window's height
 	 * </ul>
 	 *
 	 * @param args
@@ -68,10 +66,9 @@ public class DesktopLauncher {
 			new LwjglApplication(new ProjektGG(options.has("debug"),
 					!options.has("novid"), options.has("fps")), config);
 		} catch (Exception e) {
-			Gdx.app.error(ProjektGG.NAME,
-					"An unexpected error occurred while starting the game", e);
-
-			CrashLogUtils.writeCrashLogToFile(e, true);
+			exitWithError(String.format(
+					"An unexpected error occurred while starting the game: %s",
+					e));
 		}
 	}
 

@@ -13,13 +13,12 @@ import de.gg.game.type.BuildingTypes;
 import de.gg.game.type.GameMaps;
 import de.gg.game.type.ItemTypes;
 import de.gg.game.type.LawTypes;
+import de.gg.game.type.PlayerStubs;
 import de.gg.game.type.PositionTypes;
 import de.gg.game.type.ProfessionTypes;
 import de.gg.game.type.SocialStatusS;
 import de.gg.input.ButtonClickListener;
 import de.gg.render.TestShader;
-import de.gg.util.PlayerUtils;
-import de.gg.util.json.SaveGameParser;
 
 /**
  * This screen takes care of loading the assets for all screens except the
@@ -93,7 +92,7 @@ public class LoadingScreen extends BaseLoadingScreen {
 	@Override
 	protected synchronized void initAssets() {
 		// Add assets to loading queue
-		assetManager.load(PlayerUtils.class);
+		assetManager.load(PlayerStubs.class);
 		assetManager.load(GameMaps.class);
 		assetManager.load(ProfessionTypes.class);
 		assetManager.load(CharacterFactory.class);
@@ -154,7 +153,7 @@ public class LoadingScreen extends BaseLoadingScreen {
 		// VisUI.load();
 		// game.setUISkin(VisUI.getSkin());
 
-		PlayerUtils.initialize(assetManager);
+		PlayerStubs.initialize(assetManager);
 		GameMaps.initialize(assetManager);
 		ProfessionTypes.initialize(assetManager);
 		BuildingTypes.initialize(assetManager);
@@ -164,7 +163,6 @@ public class LoadingScreen extends BaseLoadingScreen {
 		ItemTypes.initialize(assetManager);
 		ItemTypes.initialize(assetManager);
 		CharacterFactory.initialize(assetManager);
-		SaveGameParser.initialize();
 
 		// Notify loaded screens
 		game.getScreen("mainMenu").finishLoading();
