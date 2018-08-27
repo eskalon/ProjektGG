@@ -13,7 +13,7 @@ public class ConfigHandler {
 
 	/**
 	 * @param name
-	 *            the name of the settings; has to be useable as a file name.
+	 *            the name of the settings; has to be usable as a file name.
 	 */
 	public ConfigHandler(String name) {
 		prefs = Gdx.app.getPreferences(name);
@@ -94,11 +94,11 @@ public class ConfigHandler {
 	}
 
 	/**
-	 * Looks up an integer value and sets it to 0 if it's not existing.
+	 * Looks up an integer value and sets it to <code>0</code> if it's not existing.
 	 *
 	 * @param key
 	 *            The preference key.
-	 * @return The value. If not existing 0.
+	 * @return The value. If not existing <code>0</code>.
 	 */
 	public int getInt(String key) {
 		return getInt(key, 0);
@@ -150,11 +150,11 @@ public class ConfigHandler {
 	}
 
 	/**
-	 * Looks up a float value and sets it to 0 if it's not existing.
+	 * Looks up a float value and sets it to <code>0</code> if it's not existing.
 	 *
 	 * @param key
 	 *            The preference key.
-	 * @return The value. If not existing 0.
+	 * @return The value. If not existing <code>0</code>.
 	 */
 	public float getFloat(String key) {
 		return getFloat(key, 0);

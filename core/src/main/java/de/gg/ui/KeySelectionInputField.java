@@ -1,7 +1,7 @@
 package de.gg.ui;
 
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -24,19 +24,19 @@ public class KeySelectionInputField extends ImageTextButton {
 	 *            The ui skin.
 	 * @param stage
 	 *            The stage this input field gets added to.
-	 * @param assetManager
-	 *            The game's asset manager.
+	 * @param buttonClickSound
+	 *            The click sound for the button.
 	 * @param settings
 	 *            The game's settings.
 	 * @param listener
 	 *            The listener for the key selection event.
 	 */
 	public KeySelectionInputField(String text, Skin skin, Stage stage,
-			AssetManager assetManager, GameSettings settings,
+			Sound buttonClickSound, GameSettings settings,
 			KeySelectionEventListener listener) {
 		super(text, skin, "small");
 
-		addListener(new ButtonClickListener(assetManager, settings) {
+		addListener(new ButtonClickListener(buttonClickSound, settings) {
 			@Override
 			protected void onClick() {
 				AnimationlessDialog dialog = new AnimationlessDialog(

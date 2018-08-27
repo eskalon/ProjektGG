@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
 
+import net.dermetfan.gdx.assets.AnnotationAssetManager;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 /**
@@ -33,7 +34,7 @@ public abstract class BaseLoadingScreen extends BaseScreen {
 	}
 
 	@Override
-	protected void onInit() {
+	protected void onInit(AnnotationAssetManager assetManager) {
 		// since parent classes aren't automatically loaded, this screen has to
 		// take care of loading its own assets itself.
 		assetManager.load(BACKGROUND_TEXTURE_PATH, Texture.class);
@@ -44,15 +45,18 @@ public abstract class BaseLoadingScreen extends BaseScreen {
 		topBarTexture = assetManager.get(BAR_TOP_TEXTURE_PATH);
 		bottomBarTexture = assetManager.get(BAR_BOTTOM_TEXTURE_PATH);
 
-		initAssets();
+		initAssets(assetManager);
 	}
 
 	/**
 	 * Add the assets, that the loading screen should load, to the
 	 * {@linkplain AssetManager#load(AssetDescriptor) loading queue} in this
 	 * method.
+	 * 
+	 * @param assetManager
+	 *            the asset manger to use.
 	 */
-	protected abstract void initAssets();
+	protected abstract void initAssets(AnnotationAssetManager assetManager);
 
 	@Override
 	public void render(float delta) {
@@ -73,7 +77,7 @@ public abstract class BaseLoadingScreen extends BaseScreen {
 
 		// Check if the asset manager is done
 		if (game.getAssetManager().update()) {
-			onFinishedLoading();
+			onFinishedLoading(game.getAssetManager());
 		}
 
 		progress = Interpolation.linear.apply(progress,
@@ -92,10 +96,15 @@ public abstract class BaseLoadingScreen extends BaseScreen {
 	}
 
 	/**
-	 * This method should {@linkplain BaseScreen#finishLoading() notify} the
+	 * This method should
+	 * {@linkplain BaseScreen#finishLoading(AnnotationAssetManager) notify} the
 	 * loaded assets and push the next screen.
+	 * 
+	 * @param assetManager
+	 *            the asset manager to retrieve the loaded assets.
 	 */
-	protected abstract void onFinishedLoading();
+	protected abstract void onFinishedLoading(
+			AnnotationAssetManager assetManager);
 
 	@Override
 	public void dispose() {

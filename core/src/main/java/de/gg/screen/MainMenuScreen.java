@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import de.gg.input.ButtonClickListener;
+import net.dermetfan.gdx.assets.AnnotationAssetManager;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 /**
@@ -31,14 +32,23 @@ public class MainMenuScreen extends BaseUIScreen {
 	@Asset(Sound.class)
 	private final String BUTTON_SOUND = "audio/button-tick.mp3";
 
+	private Texture logoTexture, githubLogoTexture;
+
+	@Override
+	protected void onInit(AnnotationAssetManager assetManager) {
+		super.onInit(assetManager);
+
+		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
+		logoTexture = assetManager.get(LOGO_IMAGE_PATH);
+		githubLogoTexture = assetManager.get(GITHUB_ICON_PATH);
+	}
+
 	@Override
 	protected void initUI() {
-		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
-
 		ImageTextButton multiplayerButton = new ImageTextButton("Multiplayer",
 				skin);
 		multiplayerButton.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						game.pushScreen("serverBrowser");
@@ -48,7 +58,7 @@ public class MainMenuScreen extends BaseUIScreen {
 		ImageTextButton settingsButton = new ImageTextButton("Einstellungen",
 				skin);
 		settingsButton.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						((SettingsScreen) game.getScreen("settings"))
@@ -59,7 +69,7 @@ public class MainMenuScreen extends BaseUIScreen {
 
 		ImageTextButton creditsButton = new ImageTextButton("Credits", skin);
 		creditsButton.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						if (!game.IN_DEV_ENV)
@@ -69,19 +79,18 @@ public class MainMenuScreen extends BaseUIScreen {
 
 		ImageTextButton exitButton = new ImageTextButton("Beenden", skin);
 		exitButton.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						Gdx.app.exit();
 					}
 				});
 
-		Image logoImage = new Image(
-				(Texture) assetManager.get(LOGO_IMAGE_PATH));
+		Image logoImage = new Image(logoTexture);
 
 		ImageButton githubRepoButton = new ImageButton(
-				new TextureRegionDrawable(new TextureRegion(
-						assetManager.get(GITHUB_ICON_PATH, Texture.class))));
+				new TextureRegionDrawable(
+						new TextureRegion(githubLogoTexture)));
 		githubRepoButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,

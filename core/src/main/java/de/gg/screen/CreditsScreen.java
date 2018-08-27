@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import de.gg.input.BackInputProcessor;
 import de.gg.util.asset.Text;
+import net.dermetfan.gdx.assets.AnnotationAssetManager;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class CreditsScreen extends BaseScreen {
@@ -22,7 +23,7 @@ public class CreditsScreen extends BaseScreen {
 	private float posY = 0;
 
 	@Override
-	protected void onInit() {
+	protected void onInit(AnnotationAssetManager assetManager) {
 		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
 		String markdownText = assetManager.get(CREDITS_TEXT_PATH, Text.class)
 				.getString();

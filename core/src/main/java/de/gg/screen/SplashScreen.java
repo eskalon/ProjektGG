@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 
+import net.dermetfan.gdx.assets.AnnotationAssetManager;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 /**
@@ -24,7 +25,7 @@ public class SplashScreen extends BaseScreen {
 	// Animation<TextureRegion> animation;
 
 	@Override
-	protected void onInit() {
+	protected void onInit(AnnotationAssetManager assetManager) {
 		titleImage = assetManager.get(TITLE_IMAGE_PATH);
 
 		// animation = GifDecoder.loadGIFAnimation(Animation.PlayMode.NORMAL,

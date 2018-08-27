@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -36,7 +36,7 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 	private ImageTextButton sexButton;
 	private ImageTextButton religionButton;
 
-	public PlayerLobbyConfigDialog(ProjektGG game, AssetManager assetManager,
+	public PlayerLobbyConfigDialog(ProjektGG game, Sound buttonClickSound,
 			Skin skin, HashMap<Short, LobbyPlayer> players,
 			short localPlayerId) {
 		super("Spielerkonfiguration", skin, "window");
@@ -78,7 +78,7 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 
 		// Listener for configuration buttons
 		sexButton.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						if (selectedSex) {
@@ -92,7 +92,7 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 				});
 
 		religionButton.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						if (selectedReligion.equals(Religion.values()[1])) {
@@ -107,7 +107,7 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 
 		Table iconTable = new Table();
 		iconButton.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						iconTable.clear();
@@ -126,7 +126,7 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 											.getIconFileName()));
 							final int index = i;
 							iconIButton.addListener(new ButtonClickListener(
-									assetManager, game.getSettings()) {
+									buttonClickSound, game.getSettings()) {
 								@Override
 								protected void onClick() {
 									selectedIcon = availableIcons.get(index);
@@ -143,7 +143,7 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 
 		Table professionTable = new Table();
 		professionButton.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						professionTable.clear();
@@ -164,7 +164,7 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 									skin.getDrawable(prof.getIconFileName()));
 							final int index = i;
 							profButton.addListener(new ButtonClickListener(
-									assetManager, game.getSettings()) {
+									buttonClickSound, game.getSettings()) {
 								@Override
 								protected void onClick() {
 									selectedProfessionIndex = index;
@@ -181,7 +181,7 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 
 		// Apply button
 		applyButton.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						players.get(localPlayerId)
@@ -209,7 +209,7 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 
 		// Discard button
 		discardButton.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						PlayerLobbyConfigDialog.this.hide();

@@ -15,6 +15,7 @@ import com.google.common.eventbus.Subscribe;
 import de.gg.event.AllPlayersReadyEvent;
 import de.gg.event.ServerReadyEvent;
 import de.gg.util.Log;
+import net.dermetfan.gdx.assets.AnnotationAssetManager;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 /**
@@ -46,8 +47,8 @@ public class GameRoundendScreen extends BaseGameScreen {
 	}
 
 	@Override
-	protected void onInit() {
-		super.onInit();
+	protected void onInit(AnnotationAssetManager assetManager) {
+		super.onInit(assetManager);
 		this.backgroundColor = Color.DARK_GRAY;
 		this.backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
 		this.flipSound = assetManager.get(FLIP_SOUND);

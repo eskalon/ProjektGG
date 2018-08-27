@@ -39,6 +39,7 @@ import de.gg.ui.AnimationlessDialog;
 import de.gg.util.Log;
 import de.gg.util.SimpleCallback;
 import de.gg.util.asset.Text;
+import net.dermetfan.gdx.assets.AnnotationAssetManager;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 /**
@@ -74,8 +75,8 @@ public class GameMapScreen extends BaseGameScreen {
 	private RenderContext renderContext;
 
 	@Override
-	protected void onInit() {
-		super.onInit();
+	protected void onInit(AnnotationAssetManager assetManager) {
+		super.onInit(assetManager);
 
 		clockTickSound = assetManager.get(CLOCK_TICK_SOUND);
 
@@ -129,7 +130,7 @@ public class GameMapScreen extends BaseGameScreen {
 		ImageTextButton closeCharacterMenuButton = new ImageTextButton(
 				"Schließen", skin, "small");
 		closeCharacterMenuButton.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						characterMenuDialog.hide();
@@ -143,7 +144,7 @@ public class GameMapScreen extends BaseGameScreen {
 		ImageTextButton characterMenuTab2Button = new ImageTextButton(
 				"Privilegien", skin, "small");
 		characterMenuTab1Button.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						// CHARACTER & FAMILY
@@ -158,7 +159,7 @@ public class GameMapScreen extends BaseGameScreen {
 					}
 				});
 		characterMenuTab2Button.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						// PRIVILEGES
@@ -176,7 +177,7 @@ public class GameMapScreen extends BaseGameScreen {
 									"[Test] Bürgermeister herauswerfen", skin,
 									"small");
 							kickButton.addListener(new ButtonClickListener(
-									assetManager, game.getSettings()) {
+									buttonClickSound, game.getSettings()) {
 								@Override
 								protected void onClick() {
 									short mayor = city
@@ -224,7 +225,7 @@ public class GameMapScreen extends BaseGameScreen {
 		// PLAYER ICON
 		ImageButton iconButton = new ImageButton(skin, "icon_1");
 		iconButton.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						characterMenuDialog.show(stage);

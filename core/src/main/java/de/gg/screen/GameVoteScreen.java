@@ -94,7 +94,7 @@ public class GameVoteScreen extends BaseGameScreen {
 
 				ImageTextButton button = new OffsetableImageTextButton(
 						option.getText(), skin, 5);
-				button.addListener(new ButtonClickListener(assetManager,
+				button.addListener(new ButtonClickListener(buttonClickSound,
 						game.getSettings()) {
 					@Override
 					protected void onClick() {

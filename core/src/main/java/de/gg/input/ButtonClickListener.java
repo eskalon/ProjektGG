@@ -1,33 +1,27 @@
 package de.gg.input;
 
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 
 import de.gg.setting.GameSettings;
-import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 /**
  * This class takes care of a button click. It especially plays the click sound.
  */
 public abstract class ButtonClickListener extends InputListener {
 
-	@Asset(Sound.class)
-	private static final String CLICK_SOUND = "audio/button-tick.mp3";
-
 	private Sound clickSound;
 	private GameSettings settings;
 
 	/**
-	 * @param assetManager
-	 *            The game's asset manager. Is used to retrieve the click sound.
+	 * @param clickSound
+	 *            The used click sound.
 	 * @param settings
 	 *            The game's settings.
 	 */
-	public ButtonClickListener(AssetManager assetManager,
-			GameSettings settings) {
-		clickSound = assetManager.get(CLICK_SOUND);
+	public ButtonClickListener(Sound clickSound, GameSettings settings) {
+		this.clickSound = clickSound;
 		this.settings = settings;
 	}
 

@@ -8,6 +8,7 @@ import de.gg.game.type.SocialStatusS;
 import de.gg.game.world.City;
 import de.gg.input.BackInputProcessor;
 import de.gg.input.ButtonClickListener;
+import net.dermetfan.gdx.assets.AnnotationAssetManager;
 
 /**
  * This screen is rendered, when the player is inside of a house.
@@ -17,8 +18,8 @@ public class GameInHouseScreen extends BaseGameScreen {
 	private short selectedHouseId;
 
 	@Override
-	protected void onInit() {
-		super.onInit();
+	protected void onInit(AnnotationAssetManager assetManager) {
+		super.onInit(assetManager);
 
 		addInputProcessor(new BackInputProcessor() {
 			@Override
@@ -45,8 +46,8 @@ public class GameInHouseScreen extends BaseGameScreen {
 								.getFortuneRequirement()) {
 					ImageTextButton applyForCitizenshipButton = new ImageTextButton(
 							"Bürgerrecht erwerben", skin, "small");
-					applyForCitizenshipButton
-							.addListener(new ButtonClickListener(assetManager,
+					applyForCitizenshipButton.addListener(
+							new ButtonClickListener(buttonClickSound,
 									game.getSettings()) {
 								@Override
 								protected void onClick() {
@@ -65,7 +66,7 @@ public class GameInHouseScreen extends BaseGameScreen {
 				ImageTextButton applyForPositionButton = new ImageTextButton(
 						"Auf Amt bewerben", skin, "small");
 				applyForPositionButton.addListener(new ButtonClickListener(
-						assetManager, game.getSettings()) {
+						buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						// TODO Dialog mit allen verfügbaren Positionen anzeigen

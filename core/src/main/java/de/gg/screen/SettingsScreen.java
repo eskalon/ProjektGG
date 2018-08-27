@@ -19,6 +19,7 @@ import de.gg.ui.KeySelectionInputField;
 import de.gg.ui.KeySelectionInputField.KeySelectionEventListener;
 import de.gg.util.Log;
 import de.gg.util.SimpleListener;
+import net.dermetfan.gdx.assets.AnnotationAssetManager;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class SettingsScreen extends BaseUIScreen {
@@ -29,9 +30,14 @@ public class SettingsScreen extends BaseUIScreen {
 	private BaseScreen caller;
 
 	@Override
-	protected void initUI() {
-		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
+	protected void onInit(AnnotationAssetManager assetManager) {
+		super.onInit(assetManager);
 
+		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
+	}
+
+	@Override
+	protected void initUI() {
 		// VOLUME
 		Label masterVolume = new Label("Gesamt-Lautstärke: ", skin);
 		Slider masterSlider = new Slider(0, 1, 0.05F, false, skin);
@@ -88,7 +94,7 @@ public class SettingsScreen extends BaseUIScreen {
 		Label forwardLabel = new Label("Vorwärts: ", skin);
 		KeySelectionInputField forwardButton = new KeySelectionInputField(
 				Keys.toString(game.getSettings().getForwardKey()), skin, stage,
-				assetManager, game.getSettings(),
+				buttonClickSound, game.getSettings(),
 				new KeySelectionEventListener() {
 					@Override
 					public void onKeySelection(int key) {
@@ -98,7 +104,7 @@ public class SettingsScreen extends BaseUIScreen {
 		Label leftLabel = new Label("Links: ", skin);
 		KeySelectionInputField leftButton = new KeySelectionInputField(
 				Keys.toString(game.getSettings().getLeftKey()), skin, stage,
-				assetManager, game.getSettings(),
+				buttonClickSound, game.getSettings(),
 				new KeySelectionEventListener() {
 					@Override
 					public void onKeySelection(int key) {
@@ -108,7 +114,7 @@ public class SettingsScreen extends BaseUIScreen {
 		Label backwardLabel = new Label("Rückwärts: ", skin);
 		KeySelectionInputField backwardButton = new KeySelectionInputField(
 				Keys.toString(game.getSettings().getBackwardKey()), skin, stage,
-				assetManager, game.getSettings(),
+				buttonClickSound, game.getSettings(),
 				new KeySelectionEventListener() {
 					@Override
 					public void onKeySelection(int key) {
@@ -118,7 +124,7 @@ public class SettingsScreen extends BaseUIScreen {
 		Label rightLabel = new Label("Rechts: ", skin);
 		KeySelectionInputField rightButton = new KeySelectionInputField(
 				Keys.toString(game.getSettings().getRightKey()), skin, stage,
-				assetManager, game.getSettings(),
+				buttonClickSound, game.getSettings(),
 				new KeySelectionEventListener() {
 					@Override
 					public void onKeySelection(int key) {
@@ -128,7 +134,7 @@ public class SettingsScreen extends BaseUIScreen {
 		Label speedUpLabel = new Label("Geschwindigkeit (+): ", skin);
 		KeySelectionInputField speedUpButton = new KeySelectionInputField(
 				Keys.toString(game.getSettings().getSpeedUpKey()), skin, stage,
-				assetManager, game.getSettings(),
+				buttonClickSound, game.getSettings(),
 				new KeySelectionEventListener() {
 					@Override
 					public void onKeySelection(int key) {
@@ -138,7 +144,7 @@ public class SettingsScreen extends BaseUIScreen {
 		Label speedDownLabel = new Label("Geschwindigkeit (-): ", skin);
 		KeySelectionInputField speedDownButton = new KeySelectionInputField(
 				Keys.toString(game.getSettings().getSpeedDownKey()), skin,
-				stage, assetManager, game.getSettings(),
+				stage, buttonClickSound, game.getSettings(),
 				new KeySelectionEventListener() {
 					@Override
 					public void onKeySelection(int key) {
@@ -149,7 +155,7 @@ public class SettingsScreen extends BaseUIScreen {
 		ImageTextButton backButton = new ImageTextButton("Fertig", skin,
 				"small");
 		backButton.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						if (caller instanceof GameMapScreen)

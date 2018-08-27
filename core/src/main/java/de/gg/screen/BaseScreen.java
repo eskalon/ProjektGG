@@ -1,35 +1,24 @@
 package de.gg.screen;
 
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 
 import de.gg.core.ProjektGG;
 import de.gg.input.SettableKeysProcessor;
 import net.dermetfan.gdx.assets.AnnotationAssetManager;
-import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 /**
- * A basic screen that automatically takes care of asset loading when used in
- * conjunction with {@link ProjektGG}.
- * <p>
- * Assets have to be marked via the {@link Asset}-Annotation and then the game
- * loads these the first time the screen is {@link Screen#show() shown}. The
- * {@link #onInit()}-method is called after the loading process to allow
- * initializing the screen. To manually load the assets i.e. when implementing a
- * loading screen, one has to call {@link #finishLoading()} after finishing to
- * load the assets.
- * <p>
- * The screen is automatically registered in the game's
- * {@linkplain ProjektGG#getEventBus() event bus} while {@linkplain #show()
- * shown}.
+ * A basic screen that takes care of registering input and event listeners when
+ * used in conjunction with {@link ProjektGG}.
+ * 
+ * @see #addInputProcessor(InputProcessor)
+ * @see ProjektGG#getEventBus()
  */
-public abstract class BaseScreen implements Screen {
+public abstract class BaseScreen extends LoadableScreen {
 
-	protected Color backgroundColor = Color.BLACK;
 	protected ProjektGG game;
-	protected AnnotationAssetManager assetManager;
+	protected Color backgroundColor = Color.BLACK;
 	/**
 	 * Input processors added to this list get automatically registered when the
 	 * screen is {@linkplain #show() shown} and unregistered when the screen is
@@ -38,10 +27,6 @@ public abstract class BaseScreen implements Screen {
 	 * @see #addInputProcessor(InputProcessor)
 	 */
 	private Array<InputProcessor> inputProcessors = new Array<>(4);
-	/**
-	 * Indicates whether the assets already got loaded.
-	 */
-	private boolean loaded = false;
 
 	/**
 	 * Initializes the screen. Is automatically called by {@link ProjectGG}.
@@ -49,32 +34,8 @@ public abstract class BaseScreen implements Screen {
 	 * @param game
 	 * @param assetManager
 	 */
-	public final void init(ProjektGG game,
-			AnnotationAssetManager assetManager) {
+	public final void init(ProjektGG game) {
 		this.game = game;
-		this.assetManager = assetManager;
-	}
-
-	/**
-	 * Is called after the assets got loaded. Normally the game takes care of
-	 * this but when an external loading screen is used this method has to be
-	 * called afterwards.
-	 */
-	public void finishLoading() {
-		loaded = true;
-		onInit();
-	}
-
-	/**
-	 * Is called after all assets annotated with {@link Asset} are loaded.
-	 */
-	protected abstract void onInit();
-
-	/**
-	 * @return Whether the screens assets already got loaded.
-	 */
-	public boolean isLoaded() {
-		return loaded;
 	}
 
 	/**
@@ -116,10 +77,10 @@ public abstract class BaseScreen implements Screen {
 	}
 
 	/**
-	 * Adds an input processors that is automatically registered and
-	 * unregistered with the screen. If the processor implements
-	 * {@link SettableKeysProcessor} the key binds are set automatically as
-	 * well.
+	 * Adds an input processor that is automatically registered and unregistered
+	 * whenever the screen is {@linkplain #show() shown}/{@linkplain #hide()
+	 * hidden}. If the processor implements {@link SettableKeysProcessor} the
+	 * key binds are set automatically as well.
 	 *
 	 * @param processor
 	 *            The processor to add.

@@ -2,7 +2,6 @@ package de.gg.screen;
 
 import java.util.HashMap;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
@@ -30,6 +29,7 @@ import de.gg.screen.dialog.PlayerLobbyConfigDialog;
 import de.gg.ui.OffsetableTextField;
 import de.gg.util.Log;
 import de.gg.util.PlayerUtils;
+import net.dermetfan.gdx.assets.AnnotationAssetManager;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class LobbyScreen extends BaseUIScreen {
@@ -42,8 +42,6 @@ public class LobbyScreen extends BaseUIScreen {
 	private final String NOT_READY_IMAGE_PATH = "ui/icons/not_ready.png";
 	@Asset(Texture.class)
 	private final String KICK_IMAGE_PATH = "ui/icons/kick.png";
-	@Asset(Sound.class)
-	private static final String CLICK_SOUND = "audio/button-tick.mp3";
 
 	private Label messagesArea, settingsArea;
 	private Table[] playerSlots;
@@ -55,17 +53,21 @@ public class LobbyScreen extends BaseUIScreen {
 	private short localNetworkId;
 
 	@Override
-	protected void initUI() {
-		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
-		Sound clickSound = assetManager.get(CLICK_SOUND);
+	protected void onInit(AnnotationAssetManager assetManager) {
+		super.onInit(assetManager);
 
+		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
+	}
+
+	@Override
+	protected void initUI() {
 		PlayerLobbyConfigDialog playerConfigDialog = new PlayerLobbyConfigDialog(
-				game, assetManager, skin, players, localNetworkId);
+				game, buttonClickSound, skin, players, localNetworkId);
 
 		ImageTextButton playerSettingsButton = new ImageTextButton("Anpassen",
 				skin, "small");
 		playerSettingsButton.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						playerConfigDialog
@@ -77,7 +79,7 @@ public class LobbyScreen extends BaseUIScreen {
 		ImageTextButton leaveButton = new ImageTextButton("Verlassen", skin,
 				"small");
 		leaveButton.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						final GameClient client = game.getClient();
@@ -108,7 +110,7 @@ public class LobbyScreen extends BaseUIScreen {
 			readyUpLobbyButton.setText("Spiel starten");
 		}
 		readyUpLobbyButton.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						getLocalPlayer().toggleReady();
@@ -142,7 +144,7 @@ public class LobbyScreen extends BaseUIScreen {
 			@Override
 			public void keyTyped(TextField textField, char key) {
 				if (!textField.getText().isEmpty() && (key == (char) 13)) { // Enter
-					clickSound.play(1F);
+					buttonClickSound.play(1F);
 
 					game.getClient().sendChatMessage(chatInputField.getText());
 					onNewChatMessage(new NewChatMessagEvent(localNetworkId,
@@ -152,7 +154,7 @@ public class LobbyScreen extends BaseUIScreen {
 			}
 		});
 		sendButton.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						game.getClient()

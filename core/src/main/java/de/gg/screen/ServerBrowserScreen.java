@@ -24,6 +24,7 @@ import de.gg.network.ServerDiscoveryHandler.HostDiscoveryListener;
 import de.gg.network.message.DiscoveryResponsePacket;
 import de.gg.ui.AnimationlessDialog;
 import de.gg.ui.OffsetableTextField;
+import net.dermetfan.gdx.assets.AnnotationAssetManager;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class ServerBrowserScreen extends BaseUIScreen {
@@ -32,6 +33,7 @@ public class ServerBrowserScreen extends BaseUIScreen {
 	private final String BACKGROUND_IMAGE_PATH = "ui/backgrounds/town.jpg";
 	@Asset(Texture.class)
 	private final String TICK_IMAGE_PATH = "ui/icons/ready.png";
+	private Texture tickTexture;
 	private Dialog connectingDialog;
 	private Table serverTable;
 	/**
@@ -41,9 +43,15 @@ public class ServerBrowserScreen extends BaseUIScreen {
 	private Runnable discoveryThread;
 
 	@Override
-	protected void initUI() {
-		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
+	protected void onInit(AnnotationAssetManager assetManager) {
+		super.onInit(assetManager);
 
+		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
+		tickTexture = assetManager.get(TICK_IMAGE_PATH);
+	}
+
+	@Override
+	protected void initUI() {
 		serverTable = new Table();
 
 		ScrollPane pane = new ScrollPane(serverTable);
@@ -51,7 +59,7 @@ public class ServerBrowserScreen extends BaseUIScreen {
 		ImageTextButton backButton = new ImageTextButton("Zurück", skin,
 				"small");
 		backButton.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						game.pushScreen("mainMenu");
@@ -61,7 +69,7 @@ public class ServerBrowserScreen extends BaseUIScreen {
 		ImageTextButton createLobbyButton = new ImageTextButton(
 				"Spiel erstellen", skin, "small");
 		createLobbyButton.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						game.pushScreen("lobbyCreation");
@@ -71,7 +79,7 @@ public class ServerBrowserScreen extends BaseUIScreen {
 		ImageTextButton directConnectButton = new ImageTextButton(
 				"Direkt verbinden", skin, "small");
 		directConnectButton.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						OffsetableTextField portInputField = new OffsetableTextField(
@@ -167,7 +175,7 @@ public class ServerBrowserScreen extends BaseUIScreen {
 		ImageTextButton joinButton = new ImageTextButton("Beitreten", skin,
 				"small");
 		joinButton.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						game.setClient(new GameClient(game.getEventBus()));
@@ -178,9 +186,8 @@ public class ServerBrowserScreen extends BaseUIScreen {
 					}
 				});
 
-		serverTable.left().top()
-				.add(new Image((Texture) assetManager.get(TICK_IMAGE_PATH)))
-				.padRight(15).padLeft(12);
+		serverTable.left().top().add(new Image(tickTexture)).padRight(15)
+				.padLeft(12);
 		String serverTitle = String.format("%s (%d/%d)", packet.getGameName(),
 				packet.getPlayerCount(), packet.getMaxPlayerCount());
 		serverTable.add(new Label(serverTitle, skin)).expandX();

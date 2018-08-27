@@ -3,6 +3,7 @@ package de.gg.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -13,6 +14,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import de.gg.ui.AnimationlessDialog;
 import de.gg.util.SimpleListener;
+import net.dermetfan.gdx.assets.AnnotationAssetManager;
+import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 /**
  * The base class of all UI screens. It automatically loads the
@@ -21,6 +24,10 @@ import de.gg.util.SimpleListener;
  * the {@link #mainTable}.
  */
 public abstract class BaseUIScreen extends BaseScreen {
+
+	@Asset(Sound.class)
+	protected static final String BUTTON_CLICK_SOUND = "audio/button-tick.mp3";
+	protected Sound buttonClickSound;
 
 	/**
 	 * Contains a {@linkplain #mainTable table} by default. The stage is cleared
@@ -44,8 +51,9 @@ public abstract class BaseUIScreen extends BaseScreen {
 	protected Texture backgroundTexture;
 
 	@Override
-	protected void onInit() {
+	protected void onInit(AnnotationAssetManager assetManager) {
 		skin = game.getUISkin();
+		buttonClickSound = assetManager.get(BUTTON_CLICK_SOUND);
 		stage = new Stage(new ScreenViewport(), game.getSpriteBatch());
 		addInputProcessor(stage);
 	}

@@ -13,6 +13,7 @@ import de.gg.event.ServerReadyEvent;
 import de.gg.network.GameServer;
 import de.gg.util.Log;
 import de.gg.util.SimpleListener;
+import net.dermetfan.gdx.assets.AnnotationAssetManager;
 
 public abstract class BaseGameScreen extends BaseUIScreen {
 
@@ -32,8 +33,8 @@ public abstract class BaseGameScreen extends BaseUIScreen {
 	}
 
 	@Override
-	protected void onInit() {
-		super.onInit();
+	protected void onInit(AnnotationAssetManager assetManager) {
+		super.onInit(assetManager);
 
 		font = skin.getFont("main-19");
 	}

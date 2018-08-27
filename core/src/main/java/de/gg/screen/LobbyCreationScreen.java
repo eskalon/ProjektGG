@@ -22,6 +22,7 @@ import de.gg.network.ServerSetup;
 import de.gg.ui.AnimationlessDialog;
 import de.gg.ui.OffsetableTextField;
 import de.gg.util.Log;
+import net.dermetfan.gdx.assets.AnnotationAssetManager;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public class LobbyCreationScreen extends BaseUIScreen {
@@ -31,9 +32,14 @@ public class LobbyCreationScreen extends BaseUIScreen {
 	private AnimationlessDialog connectingDialog;
 
 	@Override
-	protected void initUI() {
-		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
+	protected void onInit(AnnotationAssetManager assetManager) {
+		super.onInit(assetManager);
 
+		backgroundTexture = assetManager.get(BACKGROUND_IMAGE_PATH);
+	}
+
+	@Override
+	protected void initUI() {
 		Label nameLabel = new Label("Name: ", skin);
 		Label portLabel = new Label("Port: ", skin);
 
@@ -56,7 +62,7 @@ public class LobbyCreationScreen extends BaseUIScreen {
 		ImageTextButton backButton = new ImageTextButton("Zurück", skin,
 				"small");
 		backButton.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						game.pushScreen("serverBrowser");
@@ -66,7 +72,7 @@ public class LobbyCreationScreen extends BaseUIScreen {
 		ImageTextButton createButton = new ImageTextButton("Erstellen", skin,
 				"small");
 		createButton.addListener(
-				new ButtonClickListener(assetManager, game.getSettings()) {
+				new ButtonClickListener(buttonClickSound, game.getSettings()) {
 					@Override
 					protected void onClick() {
 						if (!nameField.getText().isEmpty()

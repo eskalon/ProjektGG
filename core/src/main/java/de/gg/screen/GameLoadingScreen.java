@@ -9,6 +9,7 @@ import de.gg.event.ServerReadyEvent;
 import de.gg.game.entity.BuildingSlot;
 import de.gg.render.RenderData;
 import de.gg.util.Log;
+import net.dermetfan.gdx.assets.AnnotationAssetManager;
 
 /**
  * This screen takes care of loading the assets for all ingame screens.
@@ -24,7 +25,7 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 	}
 
 	@Override
-	protected void initAssets() {
+	protected void initAssets(AnnotationAssetManager assetManager) {
 		assetManager.load(game.getScreen("map"));
 		assetManager.load(game.getScreen("house"));
 		assetManager.load(game.getScreen("roundEnd"));
@@ -37,11 +38,12 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 	}
 
 	@Override
-	protected synchronized void onFinishedLoading() {
-		game.getScreen("map").finishLoading();
-		game.getScreen("house").finishLoading();
-		game.getScreen("roundEnd").finishLoading();
-		game.getScreen("vote").finishLoading();
+	protected synchronized void onFinishedLoading(
+			AnnotationAssetManager assetManager) {
+		game.getScreen("map").finishLoading(assetManager);
+		game.getScreen("house").finishLoading(assetManager);
+		game.getScreen("roundEnd").finishLoading(assetManager);
+		game.getScreen("vote").finishLoading(assetManager);
 
 		// TODO folgendes als Worker, der in eigenen Loading-Screen integriert
 		// ist, umsetzen, sodass sich für den Nutzer sichtbar ein Balken bewegt

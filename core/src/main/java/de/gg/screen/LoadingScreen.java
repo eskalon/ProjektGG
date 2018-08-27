@@ -17,8 +17,8 @@ import de.gg.game.type.PlayerStubs;
 import de.gg.game.type.PositionTypes;
 import de.gg.game.type.ProfessionTypes;
 import de.gg.game.type.SocialStatusS;
-import de.gg.input.ButtonClickListener;
 import de.gg.render.TestShader;
+import net.dermetfan.gdx.assets.AnnotationAssetManager;
 
 /**
  * This screen takes care of loading the assets for all screens except the
@@ -90,7 +90,8 @@ public class LoadingScreen extends BaseLoadingScreen {
 	}
 
 	@Override
-	protected synchronized void initAssets() {
+	protected synchronized void initAssets(
+			AnnotationAssetManager assetManager) {
 		// Add assets to loading queue
 		assetManager.load(PlayerStubs.class);
 		assetManager.load(GameMaps.class);
@@ -104,7 +105,7 @@ public class LoadingScreen extends BaseLoadingScreen {
 		assetManager.load(ItemTypes.class);
 		assetManager.load(ItemTypes.class);
 
-		assetManager.load(ButtonClickListener.class);
+		assetManager.load(BaseUIScreen.class);
 
 		assetManager.load(MAIN_FONT_18_PATH());
 		assetManager.load(MAIN_FONT_19_PATH());
@@ -123,7 +124,7 @@ public class LoadingScreen extends BaseLoadingScreen {
 	}
 
 	@Override
-	protected void onFinishedLoading() {
+	protected void onFinishedLoading(AnnotationAssetManager assetManager) {
 		BitmapFont main18Font = assetManager.get(MAIN_FONT_18_PATH());
 		BitmapFont main19Font = assetManager.get(MAIN_FONT_19_PATH());
 		main19Font.getData().markupEnabled = true;
@@ -165,10 +166,10 @@ public class LoadingScreen extends BaseLoadingScreen {
 		CharacterFactory.initialize(assetManager);
 
 		// Notify loaded screens
-		game.getScreen("mainMenu").finishLoading();
-		game.getScreen("serverBrowser").finishLoading();
-		game.getScreen("lobby").finishLoading();
-		game.getScreen("lobbyCreation").finishLoading();
+		game.getScreen("mainMenu").finishLoading(assetManager);
+		game.getScreen("serverBrowser").finishLoading(assetManager);
+		game.getScreen("lobby").finishLoading(assetManager);
+		game.getScreen("lobbyCreation").finishLoading(assetManager);
 
 		game.pushScreen("mainMenu");
 	}

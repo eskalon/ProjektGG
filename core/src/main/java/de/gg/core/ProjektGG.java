@@ -1,13 +1,8 @@
 package de.gg.core;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Camera;
@@ -19,10 +14,8 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.google.common.base.Preconditions;
 
 import de.gg.camera.CameraWrapper;
-import de.gg.exception.ScreenNotFoundException;
 import de.gg.input.GameInputMultiplexer;
 import de.gg.network.GameClient;
 import de.gg.network.GameServer;
@@ -52,13 +45,14 @@ import net.dermetfan.gdx.assets.AnnotationAssetManager;
 
 /**
  * This class starts the game by creating all the necessary screens and then
- * displaying the menu. The assets of the screens are loaded automatically when
- * the screens are first shown, but can also be loaded by the
- * {@link LoadingScreen LoadingScreen}.
+ * displaying the {@link SplashScreen} or the {@link LoadingScreen} depending on
+ * the {@link #showSplashscreen}-flag.
+ * <p>
+ * The assets of the screens are loaded when the {@link LoadingScreen} is shown.
  * <p>
  * Only {@link BaseScreen}s are supported.
  */
-public class ProjektGG extends Game {
+public class ProjektGG extends ScreenGame<BaseScreen> {
 
 	public static final String NAME = "ProjektGG";
 	/**
@@ -69,22 +63,11 @@ public class ProjektGG extends Game {
 	public final String VERSION;
 	/**
 	 * Whether the application is running in a development environment. Checks
-	 * if a version is set in the jar manifest.
+	 * if a {@linkplain #VERSION version} is set in the jar manifest.
 	 */
 	public final boolean IN_DEV_ENV;
 
 	private SpriteBatch batch;
-	/**
-	 * The asset manager.
-	 */
-	private final AnnotationAssetManager assetManager;
-	/**
-	 * A map with all initialized screens.
-	 */
-	private Map<String, BaseScreen> screens = new ConcurrentHashMap<>();
-
-	private int viewportWidth;
-	private int viewportHeight;
 
 	private OrthographicCamera uiCamera;
 	private CameraWrapper gameCamera;
@@ -112,8 +95,6 @@ public class ProjektGG extends Game {
 		VERSION = IN_DEV_ENV ? "Development"
 				: getClass().getPackage().getImplementationVersion();
 
-		this.assetManager = new AnnotationAssetManager(
-				new InternalFileHandleResolver());
 		this.debug = debug;
 		this.showSplashscreen = showSplashscreen;
 		this.fpsCounter = fpsCounter;
@@ -121,13 +102,15 @@ public class ProjektGG extends Game {
 
 	@Override
 	public final void create() {
+		super.create();
+
 		if (debug)
 			Log.enableDebugLogging();
 		else
 			Log.disableDebugLogging();
 
 		Log.info("Start", "Version: '%s', In Dev Environment: '%b'", VERSION,
-				debug);
+				IN_DEV_ENV);
 
 		// Initialize sprite batch
 		this.batch = new SpriteBatch();
@@ -159,7 +142,8 @@ public class ProjektGG extends Game {
 		this.batch.setProjectionMatrix(this.gameCamera.getCamera().combined);
 
 		// Load game settings
-		this.settings = new GameSettings("projekt-gg");
+		this.settings = new GameSettings(
+				NAME.trim().replace(" ", "-").toLowerCase());
 
 		// Create the input multiplexer
 		this.inputProcessor = new GameInputMultiplexer(this);
@@ -200,90 +184,18 @@ public class ProjektGG extends Game {
 		super.render();
 	}
 
-	/**
-	 * Adds a screen to the game and
-	 * {@linkplain BaseScreen#init(ProjektGG, AnnotationAssetManager)
-	 * initializes} it.
-	 *
-	 * @param name
-	 *            the name of the screen.
-	 * @param screen
-	 *            the screen.
-	 */
-	public void addScreen(String name, BaseScreen screen) {
-		Preconditions.checkNotNull(screen, "screen cannot be null");
-		screen.init(this, this.getAssetManager());
-
-		this.screens.put(name, screen);
-	}
-
-	/**
-	 * Pushes a screen to be the active screen. The screen has to be added to
-	 * the game beforehand via {@link #addScreen(String, BaseScreen)}.
-	 * <p>
-	 * {@link Screen#hide()} is called on the previously {@linkplain Game#screen
-	 * active screen} and {@link Screen#show()} is called on the new active
-	 * screen.
-	 *
-	 * @param name
-	 *            the name of the pushed screen.
-	 */
-	public synchronized void pushScreen(String name) {
-		Gdx.app.postRunnable(() -> {
-			Log.debug("Screen", "Screen gepushed: '%s'", name);
-			BaseScreen pushedScreen = screens.get(name);
-
-			if (pushedScreen == null) {
-				throw new ScreenNotFoundException(String.format(
-						"Es konnte kein Screen mit dem Namen '%s' gefunden werden. Füge den Screen zunächst über #addScreen(String, BaseScreen) hinzu.",
-						name));
-			}
-
-			if (screen != null) {
-				screen.hide();
-			}
-
-			if (!pushedScreen.isLoaded()) {
-				assetManager.load(pushedScreen);
-				assetManager.finishLoading();
-				pushedScreen.finishLoading();
-			}
-
-			pushedScreen.show();
-			screen = pushedScreen;
-		});
-	}
-
-	/**
-	 * Returns a screen in the game.
-	 *
-	 * @param name
-	 *            the name of the screen.
-	 * @return the screen.
-	 * @throws ScreenNotFoundException
-	 *             when the screen isn't found
-	 */
-	public BaseScreen getScreen(String name) {
-		BaseScreen screen = this.screens.get(name);
-
-		if (screen == null) {
-			throw new ScreenNotFoundException(String.format(
-					"Es konnte kein Screen mit dem Namen '%s' gefunden werden. Füge den Screen zunächst über #addScreen(String, BaseScreen) hinzu.",
-					name));
-		}
-
-		return screen;
+	@Override
+	protected void onScreenInitialization(BaseScreen screen) {
+		screen.init(this);
 	}
 
 	@Override
 	public final void dispose() {
-		this.screen = null;
-		for (Screen s : screens.values()) {
-			s.pause();
-			s.dispose();
-		}
+		super.dispose();
 
 		this.batch.dispose();
+		if (uiSkin != null)
+			this.uiSkin.dispose();
 	}
 
 	/**
@@ -346,20 +258,6 @@ public class ProjektGG extends Game {
 	 */
 	public SpriteBatch getSpriteBatch() {
 		return batch;
-	}
-
-	/**
-	 * @return the initial viewport width.
-	 */
-	public int getViewportWidth() {
-		return this.viewportWidth;
-	}
-
-	/**
-	 * @return the initial viewport height.
-	 */
-	public int getViewportHeight() {
-		return this.viewportHeight;
 	}
 
 	/**

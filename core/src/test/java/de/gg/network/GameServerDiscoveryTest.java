@@ -17,13 +17,14 @@ public class GameServerDiscoveryTest extends ProjektGGUnitTest {
 	protected GameServer server;
 	private int port = 55554;
 	private String gameName = "Test Game";
+	private int maxPlayerCount = 2;
 
 	@Test
 	public void testServer() throws TimeoutException {
 		final Waiter waiter = new Waiter();
 
-		ServerSetup serverSetup = new ServerSetup(gameName, 2, port, true,
-				"1.0.0", true);
+		ServerSetup serverSetup = new ServerSetup(gameName, maxPlayerCount,
+				port, true, "1.0.0", true);
 		GameSessionSetup sessionSetup = new GameSessionSetup(
 				GameDifficulty.EASY, 1, 25);
 
@@ -52,8 +53,12 @@ public class GameServerDiscoveryTest extends ProjektGGUnitTest {
 					@Override
 					public void onHostDiscovered(String address,
 							DiscoveryResponsePacket datagramPacket) {
+						waiter.assertEquals(port, datagramPacket.getPort());
 						waiter.assertEquals(gameName,
 								datagramPacket.getGameName());
+						waiter.assertEquals(maxPlayerCount,
+								datagramPacket.getMaxPlayerCount());
+						waiter.assertEquals(0, datagramPacket.getPlayerCount());
 						waiter.resume();
 					}
 				});
