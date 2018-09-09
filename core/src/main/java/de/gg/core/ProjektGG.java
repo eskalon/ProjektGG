@@ -15,32 +15,32 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-import de.gg.camera.CameraWrapper;
 import de.gg.input.GameInputMultiplexer;
 import de.gg.network.GameClient;
 import de.gg.network.GameServer;
-import de.gg.screen.BaseScreen;
-import de.gg.screen.BaseUIScreen;
-import de.gg.screen.CreditsScreen;
-import de.gg.screen.GameInHouseScreen;
-import de.gg.screen.GameLoadingScreen;
-import de.gg.screen.GameMapScreen;
-import de.gg.screen.GameRoundendScreen;
-import de.gg.screen.GameVoteScreen;
-import de.gg.screen.LoadingScreen;
-import de.gg.screen.LobbyCreationScreen;
-import de.gg.screen.LobbyScreen;
-import de.gg.screen.MainMenuScreen;
-import de.gg.screen.ServerBrowserScreen;
-import de.gg.screen.SettingsScreen;
-import de.gg.screen.SplashScreen;
+import de.gg.screens.BaseScreen;
+import de.gg.screens.BaseUIScreen;
+import de.gg.screens.CreditsScreen;
+import de.gg.screens.GameInHouseScreen;
+import de.gg.screens.GameLoadingScreen;
+import de.gg.screens.GameMapScreen;
+import de.gg.screens.GameRoundendScreen;
+import de.gg.screens.GameVoteScreen;
+import de.gg.screens.LoadingScreen;
+import de.gg.screens.LobbyCreationScreen;
+import de.gg.screens.LobbyScreen;
+import de.gg.screens.MainMenuScreen;
+import de.gg.screens.ServerBrowserScreen;
+import de.gg.screens.SettingsScreen;
+import de.gg.screens.SplashScreen;
 import de.gg.setting.GameSettings;
-import de.gg.util.EventQueueBus;
-import de.gg.util.Log;
-import de.gg.util.asset.JSON;
-import de.gg.util.asset.JSONLoader;
-import de.gg.util.asset.Text;
-import de.gg.util.asset.TextLoader;
+import de.gg.ui.rendering.CameraWrapper;
+import de.gg.utils.EventQueueBus;
+import de.gg.utils.Log;
+import de.gg.utils.asset.JSON;
+import de.gg.utils.asset.JSONLoader;
+import de.gg.utils.asset.Text;
+import de.gg.utils.asset.TextLoader;
 import net.dermetfan.gdx.assets.AnnotationAssetManager;
 
 /**
@@ -109,7 +109,7 @@ public class ProjektGG extends ScreenGame<BaseScreen> {
 		else
 			Log.disableDebugLogging();
 
-		Log.info("Start", "Version: '%s', In Dev Environment: '%b'", VERSION,
+		Log.info("Start ", "Version: '%s', In Dev Environment: '%b'", VERSION,
 				IN_DEV_ENV);
 
 		// Initialize sprite batch
@@ -201,6 +201,7 @@ public class ProjektGG extends ScreenGame<BaseScreen> {
 	/**
 	 * @return the asset manager used by the game.
 	 */
+	@Override
 	public AnnotationAssetManager getAssetManager() {
 		return this.assetManager;
 	}

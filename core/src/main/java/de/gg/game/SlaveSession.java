@@ -6,23 +6,22 @@ import javax.annotation.Nullable;
 
 import com.google.common.eventbus.EventBus;
 
-import de.gg.event.AllPlayersReadyEvent;
-import de.gg.event.ChangedGameSpeedEvent;
-import de.gg.event.NewVoteEvent;
-import de.gg.event.ServerReadyEvent;
-import de.gg.event.VoteFinishedEvent;
-import de.gg.game.data.GameSessionSetup;
-import de.gg.game.data.GameSpeed;
+import de.gg.events.AllPlayersReadyEvent;
+import de.gg.events.ChangedGameSpeedEvent;
+import de.gg.events.NewVoteEvent;
+import de.gg.events.ServerReadyEvent;
+import de.gg.events.VoteFinishedEvent;
 import de.gg.game.data.vote.VoteResults;
-import de.gg.game.entity.Player;
-import de.gg.game.system.ProcessingSystem;
-import de.gg.game.system.client.FirstEventWaveClientSystem;
-import de.gg.game.type.PositionTypes.PositionType;
-import de.gg.game.vote.ImpeachmentVote;
-import de.gg.game.vote.VoteableMatter;
+import de.gg.game.entities.Player;
+import de.gg.game.systems.ProcessingSystem;
+import de.gg.game.systems.client.FirstEventWaveClientSystem;
+import de.gg.game.types.GameSpeed;
+import de.gg.game.types.PositionType;
+import de.gg.game.votes.ImpeachmentVote;
+import de.gg.game.votes.VoteableMatter;
 import de.gg.network.LobbyPlayer;
 import de.gg.network.rmi.AuthoritativeResultListener;
-import de.gg.util.Log;
+import de.gg.utils.Log;
 
 /**
  * This class simulates a game session on the client of a multiplayer game. It

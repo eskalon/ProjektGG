@@ -1,5 +1,4 @@
 {
-	"name": "Erbschaftssteuer",
 	"defaultValue": 10,
 	"lowerBound": 0,
 	"upperBound": 30

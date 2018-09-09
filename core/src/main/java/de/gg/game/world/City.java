@@ -7,20 +7,19 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 
-import de.gg.game.SavedGame;
-import de.gg.game.data.GameSessionSetup;
-import de.gg.game.entity.BuildingSlot;
-import de.gg.game.entity.Cart;
-import de.gg.game.entity.Character;
-import de.gg.game.entity.ItemPrice;
-import de.gg.game.entity.Player;
-import de.gg.game.entity.Position;
-import de.gg.game.type.ItemTypes.ItemType;
-import de.gg.game.type.LawTypes.LawType;
-import de.gg.game.type.PositionTypes.PositionType;
-import de.gg.game.vote.VoteableMatter;
+import de.gg.game.GameSessionSetup;
+import de.gg.game.entities.BuildingSlot;
+import de.gg.game.entities.Cart;
+import de.gg.game.entities.Character;
+import de.gg.game.entities.ItemPrice;
+import de.gg.game.entities.Player;
+import de.gg.game.entities.Position;
+import de.gg.game.types.ItemType;
+import de.gg.game.types.LawType;
+import de.gg.game.types.PositionType;
+import de.gg.game.votes.VoteableMatter;
 import de.gg.network.LobbyPlayer;
-import de.gg.render.RenderData;
+import de.gg.ui.rendering.RenderData;
 
 public class City {
 
@@ -32,6 +31,9 @@ public class City {
 	HashMap<Short, Player> players = new HashMap<>();
 	List<Short> prisonPopulation = new ArrayList<>();
 
+	/**
+	 * The currently highest used character index.
+	 */
 	short characterIndex = 1;
 
 	HashMap<PositionType, Position> positions = new HashMap<>();
@@ -56,20 +58,6 @@ public class City {
 	}
 
 	/**
-	 * Changes all mentions of the current player id to the new one. Is used
-	 * when a saved game is loaded.
-	 *
-	 * @param currentId
-	 * @param newId
-	 *
-	 * @see SavedGame#clientIdentifiers
-	 */
-	public void switchPlayerId(short currentId, short newId) {
-		Player p = players.remove(currentId);
-		players.put(newId, p);
-	}
-
-	/**
 	 * @param characterId
 	 *            The id of the character.
 	 * @return the player this character is played by. <code>Null</code> if no
@@ -83,11 +71,6 @@ public class City {
 		}
 
 		return null;
-	}
-
-	public String getFullCharacterName(short id) {
-		return characters.get(id).getName() + " "
-				+ characters.get(id).getSurname();
 	}
 
 	/**

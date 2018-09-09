@@ -16,35 +16,35 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 import de.gg.core.ProjektGG;
-import de.gg.event.ConnectionEstablishedEvent;
-import de.gg.event.ConnectionFailedEvent;
-import de.gg.event.DisconnectionEvent;
-import de.gg.event.NewChatMessagEvent;
-import de.gg.event.NewNotificationEvent;
-import de.gg.event.PlayerChangedEvent;
-import de.gg.event.PlayerConnectedEvent;
-import de.gg.event.PlayerDisconnectedEvent;
-import de.gg.event.RoundEndEvent;
-import de.gg.game.CharacterBehaviour;
+import de.gg.events.ConnectionEstablishedEvent;
+import de.gg.events.ConnectionFailedEvent;
+import de.gg.events.DisconnectionEvent;
+import de.gg.events.NewChatMessagEvent;
+import de.gg.events.NewNotificationEvent;
+import de.gg.events.PlayerChangedEvent;
+import de.gg.events.PlayerConnectedEvent;
+import de.gg.events.PlayerDisconnectedEvent;
+import de.gg.events.RoundEndEvent;
 import de.gg.game.GameClock;
 import de.gg.game.GameSession;
+import de.gg.game.GameSessionSetup;
 import de.gg.game.SlaveSession;
-import de.gg.game.data.GameSessionSetup;
+import de.gg.game.ai.CharacterBehaviour;
 import de.gg.game.data.NotificationData;
-import de.gg.game.entity.Player;
+import de.gg.game.entities.Player;
 import de.gg.game.world.City;
-import de.gg.network.message.ChatMessageSentMessage;
-import de.gg.network.message.ClientSetupMessage;
-import de.gg.network.message.GameSetupMessage;
-import de.gg.network.message.PlayerChangedMessage;
-import de.gg.network.message.PlayerJoinedMessage;
-import de.gg.network.message.PlayerLeftMessage;
-import de.gg.network.message.ServerAcceptanceMessage;
-import de.gg.network.message.ServerRejectionMessage;
+import de.gg.network.messages.ChatMessageSentMessage;
+import de.gg.network.messages.ClientSetupMessage;
+import de.gg.network.messages.GameSetupMessage;
+import de.gg.network.messages.PlayerChangedMessage;
+import de.gg.network.messages.PlayerJoinedMessage;
+import de.gg.network.messages.PlayerLeftMessage;
+import de.gg.network.messages.ServerAcceptanceMessage;
+import de.gg.network.messages.ServerRejectionMessage;
 import de.gg.network.rmi.ClientActionHandler;
 import de.gg.network.rmi.SlaveActionListener;
-import de.gg.util.Log;
-import de.gg.util.MachineIdentificationUtils;
+import de.gg.utils.Log;
+import de.gg.utils.MachineIdentificationUtils;
 
 /**
  * This class takes care of handling the networking part for the client. It
@@ -323,7 +323,7 @@ public class GameClient {
 	}
 
 	/**
-	 * Initializes the session. The {@linkplain de.gg.game.type game assets}
+	 * Initializes the session. The {@linkplain de.gg.game.types game assets}
 	 * have to get loaded first.
 	 */
 	public void initGameSession() {

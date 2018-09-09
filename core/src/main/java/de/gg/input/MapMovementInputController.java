@@ -4,8 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 
-import de.gg.camera.CameraWrapper;
 import de.gg.setting.GameSettings;
+import de.gg.ui.rendering.CameraWrapper;
 
 /**
  * @see CameraInputController The libgdx class this is based on.

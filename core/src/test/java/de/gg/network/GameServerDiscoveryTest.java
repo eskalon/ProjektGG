@@ -1,54 +1,82 @@
 package de.gg.network;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.Arrays;
 import java.util.concurrent.TimeoutException;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import de.gg.ProjektGGUnitTest;
-import de.gg.game.data.GameDifficulty;
-import de.gg.game.data.GameSessionSetup;
+import de.gg.game.GameSessionSetup;
+import de.gg.game.types.GameDifficulty;
+import de.gg.game.types.GameMap;
 import de.gg.network.GameServer.IHostCallback;
 import de.gg.network.ServerDiscoveryHandler.HostDiscoveryListener;
-import de.gg.network.message.DiscoveryResponsePacket;
+import de.gg.network.messages.DiscoveryResponsePacket;
+import de.gg.utils.PlayerUtils.PlayerStub;
 import net.jodah.concurrentunit.Waiter;
 
 public class GameServerDiscoveryTest extends ProjektGGUnitTest {
 
+	protected ServerDiscoveryHandler sdh;
 	protected GameServer server;
-	private int port = 55554;
-	private String gameName = "Test Game";
-	private int maxPlayerCount = 2;
+	private Waiter waiter;
+
+	private final int port = 55554;
+	private final String serverVersion = "1.2.3";
+	private final String gameName = "Test Game - ABC";
+	private final int maxPlayerCount = 2;
+	@Mock
+	private PlayerStub stub;
 
 	@Test
 	public void testServer() throws TimeoutException {
-		final Waiter waiter = new Waiter();
+		com.esotericsoftware.minlog.Log.INFO();
+		waiter = new Waiter();
+		sdh = new ServerDiscoveryHandler(2500);
+
+		assertThrows(IllegalArgumentException.class, () -> {
+			sdh.discoverHosts(-563, new HostDiscoveryListener() {
+				@Override
+				public void onHostDiscovered(String address,
+						DiscoveryResponsePacket datagramPacket) {
+				}
+			});
+		});
+
+		assertThrows(NullPointerException.class, () -> {
+			sdh.discoverHosts(123, null);
+		});
 
 		ServerSetup serverSetup = new ServerSetup(gameName, maxPlayerCount,
-				port, true, "1.0.0", true);
+				port, true, serverVersion, true);
 		GameSessionSetup sessionSetup = new GameSessionSetup(
-				GameDifficulty.EASY, 1, 25);
+				GameDifficulty.EASY, GameMap.BAMBERG, 25);
 
-		server = new GameServer(serverSetup, sessionSetup, null);
+		server = new GameServer(serverSetup, sessionSetup, null,
+				Arrays.asList(stub, stub, stub));
 		server.start(new IHostCallback() {
 			@Override
 			public void onHostStarted(Exception e) {
 				if (e != null)
 					waiter.fail(e);
 				else {
-					testServerDiscovery(waiter);
+					waiter.resume();
 				}
 			}
 		});
 
 		// Wait for resume() to be called
-		waiter.await(3000);
+		waiter.await(8000);
+		testServerDiscovery(waiter);
 
 		server.stop();
 	}
 
-	public void testServerDiscovery(Waiter waiter) {
-		ServerDiscoveryHandler s = new ServerDiscoveryHandler();
-		s.discoverHosts(GameServer.UDP_DISCOVER_PORT,
+	public void testServerDiscovery(Waiter waiter) throws TimeoutException {
+		sdh.discoverHosts(GameServer.UDP_DISCOVER_PORT,
 				new HostDiscoveryListener() {
 					@Override
 					public void onHostDiscovered(String address,
@@ -62,6 +90,8 @@ public class GameServerDiscoveryTest extends ProjektGGUnitTest {
 						waiter.resume();
 					}
 				});
+
+		waiter.await(2500);
 	}
 
 }

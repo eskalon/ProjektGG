@@ -8,24 +8,24 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Stopwatch;
 
-import de.gg.game.data.GameDifficulty;
-import de.gg.game.data.GameSessionSetup;
-import de.gg.game.data.GameSpeed;
 import de.gg.game.data.vote.VoteResults;
-import de.gg.game.entity.Character;
-import de.gg.game.entity.Player;
-import de.gg.game.entity.Position;
-import de.gg.game.system.ProcessingSystem;
-import de.gg.game.system.smp.RoundEndSystem;
-import de.gg.game.type.PositionTypes.PositionType;
-import de.gg.game.vote.VoteableMatter;
+import de.gg.game.entities.Character;
+import de.gg.game.entities.Player;
+import de.gg.game.entities.Position;
+import de.gg.game.systems.ProcessingSystem;
+import de.gg.game.systems.smp.RoundEndSystem;
+import de.gg.game.types.GameDifficulty;
+import de.gg.game.types.GameMap;
+import de.gg.game.types.GameSpeed;
+import de.gg.game.types.PositionType;
+import de.gg.game.votes.VoteableMatter;
 import de.gg.game.world.City;
 import de.gg.network.LobbyPlayer;
-import de.gg.screen.GameVoteScreen;
-import de.gg.util.CountdownTimer;
-import de.gg.util.Log;
-import de.gg.util.TickCounter;
-import de.gg.util.TickCounter.TickHandler;
+import de.gg.screens.GameVoteScreen;
+import de.gg.utils.CountdownTimer;
+import de.gg.utils.Log;
+import de.gg.utils.TickCounter;
+import de.gg.utils.TickCounter.TickHandler;
 
 /**
  * This class holds the game data and takes care of processing the rounds
@@ -139,15 +139,18 @@ public abstract class GameSession {
 							.entrySet()) {
 						if (newE.getValue().getHostname()
 								.equals(oldE.getValue())) {
+							// Change all mentions of the saved player id to the
+							// new one
 							// Use negative numbers so there are no collisions
-							city.switchPlayerId(oldE.getKey(),
-									(short) -newE.getKey());
+							Player p = city.getPlayers().remove(oldE.getKey());
+							city.getPlayers().put((short) -newE.getKey(), p);
 						}
 					}
 				}
 				// Revert the IDs back to positive numbers
 				for (short s : savedGame.city.getPlayers().keySet()) {
-					city.switchPlayerId(s, (short) -s);
+					Player p = city.getPlayers().remove(s);
+					city.getPlayers().put((short) -s, p);
 				}
 			}
 
@@ -403,6 +406,13 @@ public abstract class GameSession {
 	 */
 	public GameDifficulty getDifficulty() {
 		return sessionSetup.getDifficulty();
+	}
+
+	/**
+	 * @return the game's difficulty.
+	 */
+	protected GameMap getMap() {
+		return sessionSetup.getMap();
 	}
 
 	public City getCity() {

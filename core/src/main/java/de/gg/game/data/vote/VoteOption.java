@@ -1,8 +1,10 @@
 package de.gg.game.data.vote;
 
-public class VoteOption {
+import de.gg.lang.Localizable;
 
-	private String text;
+public class VoteOption implements Localizable {
+
+	private String unlocalizedName;
 	/**
 	 * The value of this option. Is oftentimes an index or id.
 	 */
@@ -16,8 +18,8 @@ public class VoteOption {
 		this(text, value, false);
 	}
 
-	public VoteOption(String text, int value, boolean character) {
-		this.text = text;
+	public VoteOption(String unlocalizedName, int value, boolean character) {
+		this.unlocalizedName = unlocalizedName;
 		this.value = value;
 		this.character = character;
 	}
@@ -29,8 +31,9 @@ public class VoteOption {
 		return character;
 	}
 
-	public String getText() {
-		return text;
+	@Override
+	public String getUnlocalizedName() {
+		return unlocalizedName;
 	}
 
 	public int getValue() {

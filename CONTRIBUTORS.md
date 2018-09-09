@@ -9,17 +9,12 @@ Eine Liste aller Contributor und der genutzten externen Assets:
 ## External assets and code
 ### Code
 - **uopt4j**\
-  Path: dev.gg.util.MicroOptions\
+  Path: de.gg.desktop.MicroOptions\
   Author: [Andrew Hayden](https://github.com/andrewhayden/uopt4j)\
   License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 - **TextLoader**\
-  Path: dev.gg.util.asset.Text, dev.gg.util.asset.TextLoader \
+  Path: de.gg.utils.asset.Text, de.gg.utils.asset.TextLoader \
   Author: [RegisteredUser](https://gamedev.stackexchange.com/a/101331)
-- **GifDecoder**\
-  Path: dev.gg.util.asset.GifDecoder\
-  Author: Johannes Borchardt\
-  Converted to LibGDX by: Anton Persson\
-  License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
   
 ### UI
 - **The check button textures, the scroll bar and slider, the textfield and the dialog window background**\

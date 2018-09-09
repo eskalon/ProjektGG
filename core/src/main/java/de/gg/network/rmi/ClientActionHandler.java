@@ -3,9 +3,9 @@ package de.gg.network.rmi;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import de.gg.game.type.PositionTypes.PositionType;
-import de.gg.util.Log;
-import de.gg.util.SimpleCallback;
+import de.gg.game.types.PositionType;
+import de.gg.utils.Log;
+import de.gg.utils.SimpleCallback;
 
 /**
  * This class is an convenience wrapper for {@link SlaveActionListener}. It is
@@ -47,14 +47,14 @@ public class ClientActionHandler {
 	}
 
 	public void applyForPosition(PositionType t, SimpleCallback callback) {
-		executor.submit(() -> callback.call(
-				actionListener.onAppliedForPosition(t, networkId)));
+		executor.submit(() -> callback
+				.call(actionListener.onAppliedForPosition(t, networkId)));
 	}
 
 	public void arrangeImpeachmentVote(short targetCharacterId,
 			SimpleCallback callback) {
-		executor.submit(() -> callback.call(actionListener.onImpeachmentVoteArranged(
-				targetCharacterId, networkId)));
+		executor.submit(() -> callback.call(actionListener
+				.onImpeachmentVoteArranged(targetCharacterId, networkId)));
 	}
 
 }

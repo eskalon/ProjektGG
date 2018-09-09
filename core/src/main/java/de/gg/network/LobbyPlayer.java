@@ -1,7 +1,7 @@
 package de.gg.network;
 
-import de.gg.game.type.PlayerIcon;
-import de.gg.game.type.Religion;
+import de.gg.game.types.PlayerIcon;
+import de.gg.game.types.Religion;
 
 /**
  * This class describes a client in the lobby. It is also used by the server to

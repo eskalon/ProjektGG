@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.collision.Ray;
 import com.google.common.eventbus.EventBus;
 
-import de.gg.event.HouseEnterEvent;
-import de.gg.event.HouseSelectionEvent;
+import de.gg.events.HouseEnterEvent;
+import de.gg.events.HouseSelectionEvent;
 import de.gg.game.world.City;
 import de.gg.setting.GameSettings;
 

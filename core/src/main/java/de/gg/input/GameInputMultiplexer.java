@@ -6,8 +6,8 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.Array;
 
 import de.gg.core.ProjektGG;
-import de.gg.util.Log;
-import de.gg.util.ScreenshotUtils;
+import de.gg.utils.Log;
+import de.gg.utils.ScreenshotUtils;
 
 /**
  * This input multiplexer allows the game to use application wide key binds

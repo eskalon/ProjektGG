@@ -2,7 +2,7 @@ package de.gg.game;
 
 import com.google.common.eventbus.EventBus;
 
-import de.gg.event.FullHourEvent;
+import de.gg.events.FullHourEvent;
 
 /**
  * This class takes care of translating the update ticks to the in-game time.

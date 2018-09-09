@@ -9,8 +9,8 @@ import java.util.concurrent.TimeoutException;
 import org.junit.jupiter.api.Test;
 
 import de.gg.ProjektGGUnitTest;
-import de.gg.exception.ScreenNotFoundException;
-import de.gg.screen.LoadableScreen;
+import de.gg.screens.LoadableScreen;
+import de.gg.screens.exception.ScreenNotFoundException;
 import net.dermetfan.gdx.assets.AnnotationAssetManager;
 import net.jodah.concurrentunit.Waiter;
 
@@ -22,7 +22,8 @@ public class ScreenGameTest extends ProjektGGUnitTest {
 
 	@Test
 	public void test() throws TimeoutException {
-		ScreenGame<LoadableScreen> app = new ScreenGame<LoadableScreen>() {
+		ScreenGame<LoadableScreen> app = new ScreenGame<>() {
+			@Override
 			protected void onScreenInitialization(LoadableScreen screen) {
 				i++;
 
@@ -86,7 +87,7 @@ public class ScreenGameTest extends ProjektGGUnitTest {
 
 			@Override
 			public boolean equals(Object obj) {
-				return Objects.equals(this, obj);
+				return this == obj;
 			}
 		};
 
@@ -139,7 +140,7 @@ public class ScreenGameTest extends ProjektGGUnitTest {
 
 			@Override
 			public boolean equals(Object obj) {
-				return Objects.equals(this, obj);
+				return this == obj;
 			}
 		};
 

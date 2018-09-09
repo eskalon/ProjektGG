@@ -1,10 +1,4 @@
 {
-	"nameLevel1": "Schreiber1",
-	"nameLevel1": "Schreiber2",
-	"nameLevel2": "Lehrer3",
-	"nameLevel4": "Lehrer4",
-	"nameLevel5": "Rektor5",
-	"nameLevel6": "Rektor6",
 	"startingGold": 100,
 	"startingBuildingIndex": 1,
 	"iconFileName": "gold_coin"

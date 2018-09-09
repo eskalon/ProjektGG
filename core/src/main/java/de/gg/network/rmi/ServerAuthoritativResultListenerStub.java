@@ -5,7 +5,7 @@ import java.util.concurrent.Executors;
 
 import de.gg.game.AuthoritativeSession;
 import de.gg.game.data.vote.VoteResults;
-import de.gg.game.type.PositionTypes.PositionType;
+import de.gg.game.types.PositionType;
 
 /**
  * A result listener stub for the server to conveniently distribute an event to

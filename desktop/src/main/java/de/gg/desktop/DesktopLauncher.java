@@ -5,7 +5,6 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 import de.gg.core.ProjektGG;
-import de.gg.util.MicroOptions;
 
 /**
  * Starts the application for the desktop-based builds.

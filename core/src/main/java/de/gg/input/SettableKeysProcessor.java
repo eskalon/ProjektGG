@@ -2,7 +2,7 @@ package de.gg.input;
 
 import com.badlogic.gdx.InputProcessor;
 
-import de.gg.screen.BaseScreen;
+import de.gg.screens.BaseScreen;
 import de.gg.setting.GameSettings;
 
 /**

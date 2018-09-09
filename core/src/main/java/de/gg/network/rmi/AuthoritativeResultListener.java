@@ -1,7 +1,7 @@
 package de.gg.network.rmi;
 
 import de.gg.game.data.vote.VoteResults;
-import de.gg.game.type.PositionTypes.PositionType;
+import de.gg.game.types.PositionType;
 
 /**
  * Classes that implement this interface take care of the
@@ -12,6 +12,7 @@ import de.gg.game.type.PositionTypes.PositionType;
  */
 public interface AuthoritativeResultListener {
 
+	// ROUND SETUP
 	/**
 	 * Called after all players readied up.
 	 */
@@ -23,18 +24,17 @@ public interface AuthoritativeResultListener {
 	 */
 	public void onServerReady();
 
+	// ENTITY SYNC
 	public void onCharacterDeath(short characterId);
 
 	public void onCharacterDamage(short characterId, short damage);
 
 	public void onPlayerIllnessChange(short playerId, boolean isIll);
 
-	public void setGameSpeed(int index);
-
+	// VOTES
 	/**
 	 * Called when a certain vote is finished i.e. every member cast his vote.
-	 */
-	/**
+	 * 
 	 * @param results
 	 *            The results of the vote.
 	 */
@@ -44,5 +44,8 @@ public interface AuthoritativeResultListener {
 
 	public void onImpeachmentVoteArranged(short targetCharacterId,
 			short callerCharacterId);
+
+	// MISC PLAYER ACTIONS
+	public void setGameSpeed(int index);
 
 }

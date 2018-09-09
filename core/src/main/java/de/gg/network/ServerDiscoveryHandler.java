@@ -5,13 +5,20 @@ import java.net.DatagramPacket;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.ClientDiscoveryHandler;
+import com.google.common.base.Preconditions;
 
-import de.gg.network.message.DiscoveryResponsePacket;
+import de.gg.network.messages.DiscoveryResponsePacket;
 
 /**
  * This class takes care of discovering available game servers.
  */
 public class ServerDiscoveryHandler {
+
+	private final int TIMEOUT;
+
+	public ServerDiscoveryHandler(int timeout) {
+		this.TIMEOUT = timeout;
+	}
 
 	/**
 	 * @param port
@@ -20,6 +27,9 @@ public class ServerDiscoveryHandler {
 	 *            The listener that is informed when a server is found.
 	 */
 	public void discoverHosts(int port, HostDiscoveryListener listener) {
+		Preconditions.checkArgument(port > 0, "the port must be valid");
+		Preconditions.checkNotNull(listener, "the listener cannot be null");
+
 		Client c = new Client();
 		c.getKryo().register(DiscoveryResponsePacket.class);
 		c.setDiscoveryHandler(new ClientDiscoveryHandler() {
@@ -32,18 +42,19 @@ public class ServerDiscoveryHandler {
 
 			@Override
 			public void onDiscoveredHost(DatagramPacket datagramPacket) {
-				DiscoveryResponsePacket packet = (DiscoveryResponsePacket) c
-						.getKryo().readClassAndObject(
-								new Input(datagramPacket.getData()));
-				listener.onHostDiscovered(
-						datagramPacket.getAddress().getHostAddress(), packet);
+				Object obj = c.getKryo().readClassAndObject(
+						new Input(datagramPacket.getData()));
+				if (obj instanceof DiscoveryResponsePacket)
+					listener.onHostDiscovered(
+							datagramPacket.getAddress().getHostAddress(),
+							(DiscoveryResponsePacket) obj);
 			}
 
 			@Override
 			public void onFinally() {
 			}
 		});
-		c.discoverHosts(port, 4500);
+		c.discoverHosts(port, TIMEOUT);
 		c.close();
 	}
 

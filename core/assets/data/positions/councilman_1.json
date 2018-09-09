@@ -1,0 +1,9 @@
+{
+	"cabinet": 4,
+	"level": 4,
+	"statusRequirementIndex": 2,
+	"salary": 750,
+	"lawsToVoteForIndices": [
+		1
+	]
+}

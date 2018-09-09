@@ -2,7 +2,6 @@ package de.gg.game;
 
 import java.util.HashMap;
 
-import de.gg.game.data.GameSessionSetup;
 import de.gg.game.world.City;
 import de.gg.network.ServerSetup;
 

@@ -9,9 +9,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.google.common.base.Preconditions;
 
-import de.gg.exception.ScreenNotFoundException;
-import de.gg.screen.LoadableScreen;
-import de.gg.util.Log;
+import de.gg.screens.LoadableScreen;
+import de.gg.screens.exception.ScreenNotFoundException;
+import de.gg.utils.Log;
 import net.dermetfan.gdx.assets.AnnotationAssetManager;
 
 /**

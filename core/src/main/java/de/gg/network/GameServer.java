@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import javax.annotation.Nullable;
@@ -20,22 +21,23 @@ import com.google.common.base.Preconditions;
 
 import de.gg.game.AuthoritativeSession;
 import de.gg.game.GameSession;
+import de.gg.game.GameSessionSetup;
 import de.gg.game.SavedGame;
-import de.gg.game.data.GameSessionSetup;
-import de.gg.game.entity.Character;
-import de.gg.game.entity.Player;
-import de.gg.network.message.ChatMessageSentMessage;
-import de.gg.network.message.ClientSetupMessage;
-import de.gg.network.message.DiscoveryResponsePacket;
-import de.gg.network.message.GameSetupMessage;
-import de.gg.network.message.PlayerChangedMessage;
-import de.gg.network.message.PlayerJoinedMessage;
-import de.gg.network.message.PlayerLeftMessage;
-import de.gg.network.message.ServerAcceptanceMessage;
-import de.gg.network.message.ServerRejectionMessage;
+import de.gg.game.entities.Character;
+import de.gg.game.entities.Player;
+import de.gg.network.messages.ChatMessageSentMessage;
+import de.gg.network.messages.ClientSetupMessage;
+import de.gg.network.messages.DiscoveryResponsePacket;
+import de.gg.network.messages.GameSetupMessage;
+import de.gg.network.messages.PlayerChangedMessage;
+import de.gg.network.messages.PlayerJoinedMessage;
+import de.gg.network.messages.PlayerLeftMessage;
+import de.gg.network.messages.ServerAcceptanceMessage;
+import de.gg.network.messages.ServerRejectionMessage;
 import de.gg.network.rmi.AuthoritativeResultListener;
-import de.gg.util.Log;
-import de.gg.util.PlayerUtils;
+import de.gg.utils.Log;
+import de.gg.utils.PlayerUtils;
+import de.gg.utils.PlayerUtils.PlayerStub;
 
 public class GameServer {
 
@@ -50,6 +52,9 @@ public class GameServer {
 	private GameSessionSetup sessionSetup;
 	private AuthoritativeSession session;
 	private ServerSetup serverSetup;
+
+	private List<PlayerStub> playerStubs;
+
 	/**
 	 * A count of all joined players. Used to generate the player IDs.
 	 */
@@ -80,13 +85,21 @@ public class GameServer {
 	 *            The saved game session to host. Can be <code>null</code>.
 	 */
 	public GameServer(ServerSetup serverSetup, GameSessionSetup sessionSetup,
-			@Nullable SavedGame savedGame) {
+			@Nullable SavedGame savedGame, List<PlayerStub> playerStubs) {
+		Preconditions.checkNotNull(serverSetup, "server setup cannot be null");
+		Preconditions.checkNotNull(sessionSetup,
+				"session setup cannot be null");
+		Preconditions.checkArgument(
+				playerStubs.size() >= serverSetup.getMaxPlayerCount(),
+				"there have to be enough player stubs for the max player size");
+
 		this.players = new HashMap<>();
 		this.connections = new HashMap<>();
 
 		this.sessionSetup = sessionSetup;
 		this.serverSetup = serverSetup;
 		this.savedGame = savedGame;
+		this.playerStubs = playerStubs;
 	}
 
 	/**
@@ -194,7 +207,7 @@ public class GameServer {
 	}
 
 	/**
-	 * Initializes the game session. The {@linkplain de.gg.game.type game
+	 * Initializes the game session. The {@linkplain de.gg.game.types game
 	 * assets} have to get loaded first.
 	 *
 	 * @see GameSession#init(SavedGame)
@@ -311,8 +324,8 @@ public class GameServer {
 						oldCharacter.isMale());
 			}
 		} else {
-			p = PlayerUtils
-					.getRandomPlayerWithUnusedProperties(players.values());
+			p = PlayerUtils.getRandomPlayerWithUnusedProperties(playerStubs,
+					players.values());
 		}
 
 		players.put(id, p);

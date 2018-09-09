@@ -2,7 +2,7 @@ package de.gg.setting;
 
 import com.badlogic.gdx.Input.Keys;
 
-import de.gg.util.MathUtils;
+import de.gg.utils.MathUtils;
 
 /**
  * Manages the actual game settings. Encapsulates {@link ConfigHandler}.

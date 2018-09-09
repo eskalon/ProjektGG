@@ -17,33 +17,33 @@ import org.apache.commons.io.FileUtils;
 import com.google.common.base.Stopwatch;
 import com.google.gson.JsonSyntaxException;
 
-import de.gg.game.data.GameSessionSetup;
-import de.gg.game.data.GameSpeed;
+import de.gg.game.ai.CharacterBehaviour;
 import de.gg.game.data.vote.VoteResults;
-import de.gg.game.entity.Character;
-import de.gg.game.entity.Player;
-import de.gg.game.entity.Position;
-import de.gg.game.system.ProcessingSystem;
-import de.gg.game.system.server.FirstCharacterEventWaveServerSystem;
-import de.gg.game.system.server.FirstPlayerEventWaveServerSystem;
-import de.gg.game.system.server.IllnessDamageSystem;
-import de.gg.game.system.server.NpcActionSystem;
-import de.gg.game.system.server.NpcActionSystem2;
-import de.gg.game.system.server.ServerProcessingSystem;
-import de.gg.game.type.PositionTypes.PositionType;
-import de.gg.game.vote.ElectionVote;
-import de.gg.game.vote.ImpeachmentVote;
-import de.gg.game.vote.VoteableMatter;
+import de.gg.game.entities.Character;
+import de.gg.game.entities.Player;
+import de.gg.game.entities.Position;
+import de.gg.game.systems.ProcessingSystem;
+import de.gg.game.systems.server.FirstCharacterEventWaveServerSystem;
+import de.gg.game.systems.server.FirstPlayerEventWaveServerSystem;
+import de.gg.game.systems.server.IllnessDamageSystem;
+import de.gg.game.systems.server.NpcActionSystem;
+import de.gg.game.systems.server.NpcActionSystem2;
+import de.gg.game.systems.server.ServerProcessingSystem;
+import de.gg.game.types.GameSpeed;
+import de.gg.game.types.PositionType;
+import de.gg.game.votes.ElectionVote;
+import de.gg.game.votes.ImpeachmentVote;
+import de.gg.game.votes.VoteableMatter;
 import de.gg.network.GameServer;
 import de.gg.network.LobbyPlayer;
 import de.gg.network.ServerSetup;
 import de.gg.network.rmi.AuthoritativeResultListener;
 import de.gg.network.rmi.ServerAuthoritativResultListenerStub;
 import de.gg.network.rmi.SlaveActionListener;
-import de.gg.util.CollectionUtils;
-import de.gg.util.Log;
-import de.gg.util.PlayerUtils;
-import de.gg.util.json.SaveGameParser;
+import de.gg.utils.CollectionUtils;
+import de.gg.utils.Log;
+import de.gg.utils.PlayerUtils;
+import de.gg.utils.json.SimpleJSONParser;
 
 /**
  * This class takes care of simulating the game session on the server side and
@@ -104,18 +104,10 @@ public class AuthoritativeSession extends GameSession
 		super.init(savedGame);
 
 		// Setup the server processing systems
-		ServerProcessingSystem s;
+		ServerProcessingSystem<Character> s;
 		s = new FirstCharacterEventWaveServerSystem(resultListenerStub);
 		s.init(city, getGameSeed());
 		this.characterSystems.add(s);
-
-		s = new FirstPlayerEventWaveServerSystem(resultListenerStub);
-		s.init(city, getGameSeed());
-		this.playerSystems.add(s);
-
-		s = new IllnessDamageSystem(resultListenerStub);
-		s.init(city, getGameSeed());
-		this.playerSystems.add(s);
 
 		s = new NpcActionSystem(resultListenerStub);
 		s.init(city, getGameSeed());
@@ -124,6 +116,16 @@ public class AuthoritativeSession extends GameSession
 		s = new NpcActionSystem2(resultListenerStub);
 		s.init(city, getGameSeed());
 		this.characterSystems.add(s);
+
+		ServerProcessingSystem<Player> s2;
+
+		s2 = new FirstPlayerEventWaveServerSystem(resultListenerStub);
+		s2.init(city, getGameSeed());
+		this.playerSystems.add(s2);
+
+		s2 = new IllnessDamageSystem(resultListenerStub);
+		s2.init(city, getGameSeed());
+		this.playerSystems.add(s2);
 
 		// Load the systems states
 		if (savedGame != null) {
@@ -183,8 +185,8 @@ public class AuthoritativeSession extends GameSession
 
 				if (!isPlayer) {
 					voteResults.getIndividualVotes().put(charId,
-							CharacterBehaviour.getVote(charId, matterToVoteOn,
-									this));
+							CharacterBehaviour.getVoteOption(charId,
+									matterToVoteOn, this));
 				}
 			}
 
@@ -215,7 +217,7 @@ public class AuthoritativeSession extends GameSession
 	private void sendVoteResult() {
 		try {
 			// Find the most common vote option
-			Map<Integer, Integer> resultMap = new HashMap<Integer, Integer>();
+			Map<Integer, Integer> resultMap = new HashMap<>();
 			for (int i : voteResults.getIndividualVotes().values()) {
 				Integer count = resultMap.get(i);
 				resultMap.put(i, count != null ? count + 1 : 1);
@@ -223,6 +225,7 @@ public class AuthoritativeSession extends GameSession
 
 			resultMap = CollectionUtils.sortByValue(resultMap);
 
+			@SuppressWarnings("unchecked")
 			Entry<Integer, Integer>[] entries = resultMap.entrySet()
 					.toArray(new Entry[0]);
 			// A tie
@@ -271,7 +274,7 @@ public class AuthoritativeSession extends GameSession
 		save.city = this.city;
 		save.serverSetup = this.serverSetup;
 		GameSessionSetup sessionSetup = new GameSessionSetup(getDifficulty(),
-				-1, getGameSeed());
+				getMap(), getGameSeed());
 		save.gameSessionSetup = sessionSetup;
 		save.currentRound = getCurrentRound();
 		save.lastProcessedTick = getTickCount();
@@ -302,7 +305,7 @@ public class AuthoritativeSession extends GameSession
 								+ (System.currentTimeMillis() / 1000)));
 
 			// Save new one
-			SaveGameParser saveGameParser = new SaveGameParser();
+			SimpleJSONParser saveGameParser = new SimpleJSONParser();
 			FileUtils.writeStringToFile(savesFile,
 					saveGameParser.parseToJson(save), CHARSET, false);
 		} catch (JsonSyntaxException | IOException e) {

@@ -1,10 +1,4 @@
 {
-	"nameLevel1": "Schmied",
-	"nameLevel2": "Schmied2",
-	"nameLevel3": "Schmied3",
-	"nameLevel4": "Schmied4",
-	"nameLevel5": "Schmied5",
-	"nameLevel6": "Schmied6",
 	"startingGold": 100,
 	"startingBuildingIndex": 1,
 	"iconFileName": "gold_coin"
