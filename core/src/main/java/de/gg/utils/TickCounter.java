@@ -53,7 +53,7 @@ public class TickCounter {
 	 * Updates the tick counter. Whenever a tick is over,
 	 * {@link TickHandler#onTick()} is called on the tick handler.
 	 *
-	 * @return Returns <code>true</code> <i>once<i>, when the max tick count is
+	 * @return Returns <code>true</code> <i>once</i>, when the max tick count is
 	 *         reached. After that {@link #reset()} has to be called.
 	 */
 	public boolean update() {

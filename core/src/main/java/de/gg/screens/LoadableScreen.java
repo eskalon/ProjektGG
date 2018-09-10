@@ -28,9 +28,9 @@ public abstract class LoadableScreen implements Screen {
 	private boolean loaded = false;
 
 	/**
-	 * Is called after the assets got loaded. Normally the game takes care of
-	 * this, but when an external loading screen is used this method has to get
-	 * called afterwards.
+	 * Has to get called after the assets got loaded. Normally the game takes
+	 * care of this, but when an external loading screen is used this method has
+	 * to get called afterwards.
 	 * 
 	 * @param assetManager
 	 *            the used asset manager.

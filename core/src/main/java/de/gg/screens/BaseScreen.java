@@ -6,7 +6,6 @@ import com.badlogic.gdx.utils.Array;
 
 import de.gg.core.ProjektGG;
 import de.gg.input.SettableKeysProcessor;
-import net.dermetfan.gdx.assets.AnnotationAssetManager;
 
 /**
  * A basic screen that takes care of registering input and event listeners when
@@ -32,7 +31,7 @@ public abstract class BaseScreen extends LoadableScreen {
 	 * Initializes the screen. Is automatically called by {@link ProjectGG}.
 	 *
 	 * @param game
-	 * @param assetManager
+	 *            the game this screen is a part of.
 	 */
 	public final void init(ProjektGG game) {
 		this.game = game;

@@ -1,11 +1,11 @@
 package de.gg.screens.exception;
 
-import de.gg.core.ProjektGG;
+import de.gg.core.ScreenGame;
 
 /**
  * Thrown when a pushed screen is not found.
  *
- * @see ProjektGG#pushScreen(String)
+ * @see ScreenGame#pushScreen(String)
  */
 public class ScreenNotFoundException extends RuntimeException {
 

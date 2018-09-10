@@ -52,11 +52,11 @@ project(":core") {
         compile "net.dermetfan.libgdx-utils:libgdx-utils:0.13.4"
 		compile "com.github.crykn:kryonet:2.22.2"
 		compile "commons-io:commons-io:2.6"
-		compile "com.google.guava:guava:24.1-jre"
-		compile "com.google.code.gson:gson:2.8.2"
+		compile "com.google.guava:guava:26.0-jre"
+		compile "com.google.code.gson:gson:2.8.5"
         //compile fileTree(dir: 'libs', include: '*.jar')
         
-        testCompile "org.junit.platform:junit-platform-launcher:1.2.0"
+        testCompile "org.junit.platform:junit-platform-launcher:1.2.0" // needed for a bug in eclipse
         
         testCompile "org.junit.jupiter:junit-jupiter-engine:5.2.0"
         testCompile "com.github.jhalterman:concurrentunit:concurrentunit-0.4.3"

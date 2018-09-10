@@ -199,14 +199,6 @@ public class ProjektGG extends ScreenGame<BaseScreen> {
 	}
 
 	/**
-	 * @return the asset manager used by the game.
-	 */
-	@Override
-	public AnnotationAssetManager getAssetManager() {
-		return this.assetManager;
-	}
-
-	/**
 	 * @return the camera used in the actual game.
 	 */
 	public CameraWrapper getGameCamera() {

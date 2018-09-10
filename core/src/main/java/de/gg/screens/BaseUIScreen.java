@@ -102,7 +102,7 @@ public abstract class BaseUIScreen extends BaseScreen {
 		initUI();
 
 		stage.mouseMoved(1, 1); // verhindert einen kleinen Anzeige-Bug bei
-								// erneuten Anzeigen eines Screens
+								// erneutem Anzeigen eines Screens
 	}
 
 	@Override

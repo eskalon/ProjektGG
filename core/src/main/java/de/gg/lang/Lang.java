@@ -2,8 +2,6 @@ package de.gg.lang;
 
 import com.badlogic.gdx.utils.I18NBundle;
 
-import de.gg.game.entities.Character;
-
 /**
  * This utility class takes care of the localization.
  * 
@@ -69,9 +67,8 @@ public class Lang {
 				} else if (args[i] instanceof Localizable) {
 					// Localize the given object
 					args[i] = get((Localizable) args[i]);
-				} else if (args[i] instanceof Character) {
-					// Parse character object to its names, including its
-					// position
+				} else if (args[i] instanceof Localized) {
+					// If the object is already localized use its name
 					args[i] = get(((Localized) args[i]));
 				}
 			}

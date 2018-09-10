@@ -2,12 +2,13 @@ package de.gg.network;
 
 import de.gg.game.types.PlayerIcon;
 import de.gg.game.types.Religion;
+import de.gg.lang.Localized;
 
 /**
  * This class describes a client in the lobby. It is also used by the server to
  * save the ready state of its clients.
  */
-public class LobbyPlayer {
+public class LobbyPlayer implements Localized {
 
 	public LobbyPlayer() {
 		// default public constructor
@@ -107,6 +108,11 @@ public class LobbyPlayer {
 
 	public String getHostname() {
 		return hostname;
+	}
+
+	@Override
+	public String getLocalizedName() {
+		return name + " " + surname;
 	}
 
 }

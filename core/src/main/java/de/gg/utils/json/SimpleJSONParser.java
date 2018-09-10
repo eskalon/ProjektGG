@@ -14,13 +14,12 @@ import de.gg.utils.json.ExcludeAnnotationExclusionStrategy.ExcludeFromJSON;
  * <p>
  * Use the {@link ExcludeFromJSON} annotation to exclude classes and fields from
  * serialization.
- *
- * @see #parseJson(String, Class)
  */
 public class SimpleJSONParser {
 
+	public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	/**
-	 * Gson-Parser.
+	 * {@linkplain Gson Gson}-Parser.
 	 */
 	private final Gson gson;
 
@@ -32,7 +31,7 @@ public class SimpleJSONParser {
 		this(gsonBuilder.excludeFieldsWithModifiers(Modifier.STATIC)
 				.setExclusionStrategies(
 						new ExcludeAnnotationExclusionStrategy())
-				.setDateFormat("yyyy-MM-dd HH:mm:ss").create());
+				.setDateFormat(DATE_FORMAT).create());
 	}
 
 	public SimpleJSONParser() {
@@ -60,9 +59,11 @@ public class SimpleJSONParser {
 	/**
 	 * Parses the JSON input to the given Java type.
 	 *
+	 * @param <T>
+	 *            Return Type.
 	 * @param jsonInput
 	 *            The JSON input as string.
-	 * @param clazz
+	 * @param type
 	 *            The return type.
 	 * @return The parsed object.
 	 * @throws JsonSyntaxException

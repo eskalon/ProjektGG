@@ -246,10 +246,11 @@ public class LobbyScreen extends BaseUIScreen {
 			t.add().width(50);
 		} else {
 			t.add().width(25); // Icon
-			t.add(new Label(p.getName() + "  " // Der Lesbarkeit halber zwei
-												// Leerzeichen verwenden
-					+ p.getSurname().replace(" ", "  ") + " ", skin))
-					.width(350);
+			t.add(new Label(Lang.get(p).replace(" ", "  "), // Der Lesbarkeit
+															// halber zwei
+															// Leerzeichen
+															// verwenden
+					skin)).width(350);
 			t.add().width(25); // Bereit
 			t.add().width(25); // Kicken
 		}
@@ -269,8 +270,7 @@ public class LobbyScreen extends BaseUIScreen {
 		messagesArea.setText(messagesArea.getText()
 				+ (sender == null ? "[#EFE22DFF]"
 						: ("[#" + sender.getIcon().getColor() + "]"
-								+ sender.getName() + " " + sender.getSurname()
-								+ ": []"))
+								+ Lang.get(sender) + ": []"))
 				+ message + (sender == null ? "[]" : "") + " \n");
 		messagesPane.layout();
 		messagesPane.scrollTo(0, 0, 0, 0);
@@ -306,7 +306,7 @@ public class LobbyScreen extends BaseUIScreen {
 	@Subscribe
 	public void onPlayerDisconnect(PlayerDisconnectedEvent event) {
 		addChatMessageToUI(null, Lang.get("screen.lobby.player_left",
-				players.get(event.getId()).getName()));
+				players.get(event.getId())));
 		players.remove(event.getId());
 		updateLobbyUI();
 	}
@@ -314,8 +314,8 @@ public class LobbyScreen extends BaseUIScreen {
 	@Subscribe
 	public void onPlayerConnect(PlayerConnectedEvent event) {
 		players.put(event.getNetworkId(), event.getPlayer());
-		addChatMessageToUI(null, Lang.get("screen.lobby.player_joined",
-				event.getPlayer().getName()));
+		addChatMessageToUI(null,
+				Lang.get("screen.lobby.player_joined", event.getPlayer()));
 		updateLobbyUI();
 	}
 
