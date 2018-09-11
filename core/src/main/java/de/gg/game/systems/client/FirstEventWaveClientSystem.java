@@ -12,7 +12,7 @@ import de.gg.game.entities.Position;
 import de.gg.game.systems.ProcessingSystem;
 import de.gg.game.types.PositionType;
 import de.gg.game.types.SocialStatus;
-import de.gg.game.world.City;
+import de.gg.game.world.World;
 import de.gg.lang.Lang;
 
 /**
@@ -21,7 +21,7 @@ import de.gg.lang.Lang;
  */
 public class FirstEventWaveClientSystem extends ProcessingSystem<Player> {
 
-	private City city;
+	private World world;
 	private EventBus eventBus;
 	private short localPlayerId;
 
@@ -31,17 +31,17 @@ public class FirstEventWaveClientSystem extends ProcessingSystem<Player> {
 	}
 
 	@Override
-	public void init(City city, long seed) {
-		this.city = city;
+	public void init(World world, long seed) {
+		this.world = world;
 	}
 
 	@Override
 	public void process(short id, Player p) {
 		if (id == localPlayerId) {
-			Character c = p.getCurrentlyPlayedCharacter(city);
+			Character c = p.getCurrentlyPlayedCharacter(world);
 
 			// Inform about open positions
-			for (Entry<PositionType, Position> e : city.getPositions()
+			for (Entry<PositionType, Position> e : world.getPositions()
 					.entrySet()) {
 				if (!e.getValue().isHeld()) {
 					if (e.getKey().getData().getLevel() - 1 <= c
@@ -65,7 +65,7 @@ public class FirstEventWaveClientSystem extends ProcessingSystem<Player> {
 			}
 
 			if (c.getStatus() == SocialStatus.NON_CITIZEN) {
-				if (p.getFortune(city) >= SocialStatus.NON_CITIZEN.getData()
+				if (p.getFortune(world) >= SocialStatus.NON_CITIZEN.getData()
 						.getFortuneRequirement()) {
 					// TODO inform about possibility to buy citizen status
 				}

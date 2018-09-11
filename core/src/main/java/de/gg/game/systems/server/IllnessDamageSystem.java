@@ -1,27 +1,27 @@
 package de.gg.game.systems.server;
 
 import de.gg.game.entities.Player;
-import de.gg.game.world.City;
+import de.gg.game.world.World;
 import de.gg.network.rmi.AuthoritativeResultListener;
 
 public class IllnessDamageSystem extends ServerProcessingSystem<Player> {
 
-	private City city;
+	private World world;
 
 	public IllnessDamageSystem(AuthoritativeResultListener resultListener) {
 		super(resultListener);
 	}
 
 	@Override
-	public void init(City city, long seed) {
-		this.city = city;
+	public void init(World world, long seed) {
+		this.world = world;
 	}
 
 	@Override
 	public void process(short id, Player p) {
 		if (p.isIll()) {
-			p.getCurrentlyPlayedCharacter(city)
-					.setHp(p.getCurrentlyPlayedCharacter(city).getHp() - 1);
+			p.getCurrentlyPlayedCharacter(world)
+					.setHp(p.getCurrentlyPlayedCharacter(world).getHp() - 1);
 
 			resultListener.onCharacterDamage(id, (short) 1);
 		}

@@ -5,7 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import de.gg.game.entities.Building;
 import de.gg.game.types.BuildingType;
 import de.gg.game.types.SocialStatus;
-import de.gg.game.world.City;
+import de.gg.game.world.World;
 import de.gg.input.BackInputProcessor;
 import de.gg.input.ButtonClickListener;
 import de.gg.lang.Lang;
@@ -34,16 +34,16 @@ public class GameInHouseScreen extends BaseGameScreen {
 	protected void initUI() {
 		short playerCharId = game.getClient().getLocalPlayer()
 				.getCurrentlyPlayedCharacterId();
-		City city = game.getClient().getCity();
-		Building b = city.getBuildingSlots()[selectedHouseId].getBuilding();
+		World world = game.getClient().getWorld();
+		Building b = world.getBuildingSlots()[selectedHouseId].getBuilding();
 
 		if (b.getType() == BuildingType.TOWN_HALL) {
 			// TOWNHALL
 			// Buy citizenship
-			if (city.getCharacter(playerCharId)
+			if (world.getCharacter(playerCharId)
 					.getStatus() == SocialStatus.NON_CITIZEN) {
 				if (game.getClient().getLocalPlayer()
-						.getFortune(city) >= SocialStatus.NON_CITIZEN.getData()
+						.getFortune(world) >= SocialStatus.NON_CITIZEN.getData()
 								.getFortuneRequirement()) {
 					ImageTextButton applyForCitizenshipButton = new ImageTextButton(
 							Lang.get(

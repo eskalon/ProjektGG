@@ -179,7 +179,7 @@ public class LoadingScreen extends BaseLoadingScreen {
 		// Set the localization
 		I18NBundle langBundle = assetManager.get(Lang.LANG_BUNDLE_PATH,
 				I18NBundle.class);
-		langBundle.setExceptionOnMissingKey(false);
+		I18NBundle.setExceptionOnMissingKey(false);
 		Lang.setBundle(langBundle);
 
 		// Set the type data

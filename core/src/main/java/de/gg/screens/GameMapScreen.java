@@ -26,7 +26,7 @@ import de.gg.events.HouseSelectionEvent;
 import de.gg.events.NewNotificationEvent;
 import de.gg.game.GameClock;
 import de.gg.game.types.PositionType;
-import de.gg.game.world.City;
+import de.gg.game.world.World;
 import de.gg.input.ButtonClickListener;
 import de.gg.input.GameSpeedInputProcessor;
 import de.gg.input.MapMovementInputController;
@@ -119,9 +119,9 @@ public class GameMapScreen extends BaseGameScreen {
 	protected void initUI() {
 		short playerCharId = game.getClient().getLocalPlayer()
 				.getCurrentlyPlayedCharacterId();
-		City city = game.getClient().getCity();
+		World world = game.getClient().getWorld();
 
-		selectionInputController.setCity(city);
+		selectionInputController.setWorld(world);
 		gameSpeedInputProcessor
 				.setClientActionHandler(game.getClient().getActionHandler());
 
@@ -173,7 +173,7 @@ public class GameMapScreen extends BaseGameScreen {
 								"screen.map.character_config.privileges_list"),
 								skin, "dark")).row();
 
-						if (city.getCharacter(playerCharId)
+						if (world.getCharacter(playerCharId)
 								.getPosition() != null) {
 							// TODO Amts-Privilegien
 
@@ -187,7 +187,7 @@ public class GameMapScreen extends BaseGameScreen {
 									buttonClickSound, game.getSettings()) {
 								@Override
 								protected void onClick() {
-									short mayor = city
+									short mayor = world
 											.getPosition(PositionType.MAYOR)
 											.getCurrentHolder();
 
@@ -371,7 +371,7 @@ public class GameMapScreen extends BaseGameScreen {
 
 		// Render city
 		if (game.getClient() != null) // Fürs disconnecten
-			sceneRenderer.render(game.getClient().getCity());
+			sceneRenderer.render(game.getClient().getWorld());
 
 		// Render sphere with shader (temp)
 		renderContext.begin();

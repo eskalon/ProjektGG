@@ -9,7 +9,7 @@ import de.gg.game.data.vote.VoteResults;
 import de.gg.game.entities.Character;
 import de.gg.game.entities.Position;
 import de.gg.game.types.PositionType;
-import de.gg.game.world.City;
+import de.gg.game.world.World;
 import de.gg.lang.Lang;
 
 /**
@@ -19,7 +19,7 @@ import de.gg.lang.Lang;
 public class ImpeachmentVote extends VoteableMatter {
 
 	public static final short DONT_IMPEACH_OPTION_INDEX = -1;
-	private City city;
+	private World world;
 	private PositionType type;
 	private Position pos;
 	/**
@@ -28,19 +28,19 @@ public class ImpeachmentVote extends VoteableMatter {
 	private short voteCaller;
 	private short currentHolder;
 
-	public ImpeachmentVote(City city, PositionType type, short voteCaller) {
-		this.city = city;
+	public ImpeachmentVote(World world, PositionType type, short voteCaller) {
+		this.world = world;
 		this.type = type;
 		this.voteCaller = voteCaller;
 
-		this.pos = city.getPositions().get(type);
+		this.pos = world.getPositions().get(type);
 		this.currentHolder = pos.getCurrentHolder();
 	}
 
 	@Override
 	public String getInfoText() {
-		Character voteCallerC = city.getCharacter(voteCaller);
-		Character currentHolderC = city.getCharacter(currentHolder);
+		Character voteCallerC = world.getCharacter(voteCaller);
+		Character currentHolderC = world.getCharacter(currentHolder);
 		return Lang.get("vote.impeachment.info", voteCallerC.getPosition(),
 				voteCallerC, voteCallerC.isMale(), currentHolderC.getPosition(),
 				currentHolderC, currentHolderC.isMale());
@@ -51,7 +51,7 @@ public class ImpeachmentVote extends VoteableMatter {
 		List<Short> list = new ArrayList<>();
 
 		for (PositionType t : PositionType.getEntitledImpeachmentVoters(type)) {
-			short s = city.getPosition(t).getCurrentHolder();
+			short s = world.getPosition(t).getCurrentHolder();
 
 			if (s != -1) {
 				list.add(s);
@@ -74,11 +74,11 @@ public class ImpeachmentVote extends VoteableMatter {
 	@Override
 	public String getResultText(VoteResults results) {
 		if (results.getOverallResult() == DONT_IMPEACH_OPTION_INDEX) {
-			Character currentHolderC = city.getCharacter(currentHolder);
+			Character currentHolderC = world.getCharacter(currentHolder);
 			return Lang.get("vote.impeachment.result1", currentHolderC,
 					currentHolderC.isMale());
 		} else {
-			Character currentHolderC = city.getCharacter(currentHolder);
+			Character currentHolderC = world.getCharacter(currentHolder);
 			return Lang.get("vote.impeachment.result2", currentHolderC,
 					currentHolderC.isMale(), type);
 		}
@@ -93,10 +93,10 @@ public class ImpeachmentVote extends VoteableMatter {
 	}
 
 	@Override
-	public void processVoteResult(VoteResults result, City city) {
+	public void processVoteResult(VoteResults result, World world) {
 		// Reputation & opinion effects
 		for (Entry<Short, Integer> e : result.getIndividualVotes().entrySet()) {
-			Character voter = city.getCharacter(e.getKey());
+			Character voter = world.getCharacter(e.getKey());
 
 			if (e.getKey() == voteCaller) {
 				voter.addOpinionModifier(currentHolder, -18);
@@ -106,7 +106,7 @@ public class ImpeachmentVote extends VoteableMatter {
 				voter.addOpinionModifier(currentHolder, 7);
 			} else {
 				voter.addOpinionModifier(currentHolder, -12);
-				if (city.getCharacter(currentHolder).getReputation() > 0)
+				if (world.getCharacter(currentHolder).getReputation() > 0)
 					voter.setReputationModifiers(
 							voter.getReputationModifiers() - 1);
 			}

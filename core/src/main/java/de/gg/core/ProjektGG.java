@@ -41,7 +41,6 @@ import de.gg.utils.asset.JSON;
 import de.gg.utils.asset.JSONLoader;
 import de.gg.utils.asset.Text;
 import de.gg.utils.asset.TextLoader;
-import net.dermetfan.gdx.assets.AnnotationAssetManager;
 
 /**
  * This class starts the game by creating all the necessary screens and then

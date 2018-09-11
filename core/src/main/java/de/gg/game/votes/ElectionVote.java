@@ -9,7 +9,7 @@ import de.gg.game.data.vote.VoteResults;
 import de.gg.game.entities.Character;
 import de.gg.game.entities.Position;
 import de.gg.game.types.PositionType;
-import de.gg.game.world.City;
+import de.gg.game.world.World;
 import de.gg.lang.Lang;
 
 /**
@@ -18,15 +18,15 @@ import de.gg.lang.Lang;
  */
 public class ElectionVote extends VoteableMatter {
 
-	private City city;
+	private World world;
 	private PositionType type;
 	private Position pos;
 
-	public ElectionVote(City city, PositionType type) {
-		this.city = city;
+	public ElectionVote(World world, PositionType type) {
+		this.world = world;
 		this.type = type;
 
-		this.pos = city.getPositions().get(type);
+		this.pos = world.getPositions().get(type);
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class ElectionVote extends VoteableMatter {
 		List<Short> list = new ArrayList<>();
 
 		for (PositionType t : PositionType.getEntitledElectionVoters(type)) {
-			short s = city.getPosition(t).getCurrentHolder();
+			short s = world.getPosition(t).getCurrentHolder();
 
 			if (s != -1) {
 				list.add(s);
@@ -63,7 +63,7 @@ public class ElectionVote extends VoteableMatter {
 	@Override
 	public String getResultText(VoteResults results) {
 		return Lang.get("vote.election.result",
-				city.getCharacter((short) results.getOverallResult()), type);
+				world.getCharacter((short) results.getOverallResult()), type);
 	}
 
 	public PositionType getType() {
@@ -75,10 +75,10 @@ public class ElectionVote extends VoteableMatter {
 	}
 
 	@Override
-	public void processVoteResult(VoteResults result, City city) {
+	public void processVoteResult(VoteResults result, World world) {
 		// Reputation & opinion effects
 		for (Entry<Short, Integer> e : result.getIndividualVotes().entrySet()) {
-			Character voter = city.getCharacter(e.getKey());
+			Character voter = world.getCharacter(e.getKey());
 			for (VoteOption option : this.getOptions()) {
 				if (option.getValue() == e.getValue()) {
 					voter.addOpinionModifier((short) option.getValue(), 12);
