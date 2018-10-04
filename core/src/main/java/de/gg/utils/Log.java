@@ -54,7 +54,10 @@ public class Log {
 	 * @see Formatter
 	 */
 	public static void info(String tag, String message, Object... args) {
-		Gdx.app.log(tag, String.format(message, args));
+		if (Gdx.app.getLogLevel() >= Application.LOG_INFO) // so the message
+															// isn't formatted
+															// unnecessarily
+			Gdx.app.log(tag, String.format(message, args));
 	}
 
 	/**
@@ -74,7 +77,10 @@ public class Log {
 	 * @see Formatter
 	 */
 	public static void error(String tag, String message, Object... args) {
-		Gdx.app.error(tag, String.format(message, args));
+		if (Gdx.app.getLogLevel() >= Application.LOG_ERROR) // so the message
+															// isn't formatted
+															// unnecessarily
+			Gdx.app.error(tag, String.format(message, args));
 	}
 
 	/**
@@ -95,7 +101,10 @@ public class Log {
 	 * @see #enableDebugLogging()
 	 */
 	public static void debug(String tag, String message, Object... args) {
-		Gdx.app.debug(tag, String.format(message, args));
+		if (Gdx.app.getLogLevel() >= Application.LOG_DEBUG) // so the message
+															// isn't formatted
+															// unnecessarily
+			Gdx.app.debug(tag, String.format(message, args));
 	}
 
 }
