@@ -4,8 +4,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import de.gg.game.types.PositionType;
-import de.gg.utils.Log;
 import de.gg.utils.SimpleCallback;
+import de.gg.utils.log.Log;
 
 /**
  * This class is an convenience wrapper for {@link SlaveActionListener}. It is

@@ -26,6 +26,7 @@ public class FirstEventWaveClientSystem extends ProcessingSystem<Player> {
 	private short localPlayerId;
 
 	public FirstEventWaveClientSystem(EventBus eventBus, short localPlayerId) {
+		super(600, false);
 		this.eventBus = eventBus;
 		this.localPlayerId = localPlayerId;
 	}
@@ -71,16 +72,6 @@ public class FirstEventWaveClientSystem extends ProcessingSystem<Player> {
 				}
 			}
 		}
-	}
-
-	@Override
-	public boolean isProcessedContinuously() {
-		return false;
-	}
-
-	@Override
-	public int getTickRate() {
-		return 600;
 	}
 
 }

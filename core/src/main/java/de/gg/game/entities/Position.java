@@ -8,9 +8,6 @@ import java.util.List;
  */
 public class Position {
 
-	/**
-	 * The id of the character this position is held by.
-	 */
 	private short currentHolder;
 	private List<Short> applicants = new ArrayList<>();
 
@@ -29,6 +26,9 @@ public class Position {
 		return currentHolder != -1;
 	}
 
+	/**
+	 * @return the id of the character this position is held by.
+	 */
 	public short getCurrentHolder() {
 		return currentHolder;
 	}

@@ -23,9 +23,9 @@ import de.gg.game.world.World;
 import de.gg.network.LobbyPlayer;
 import de.gg.screens.GameVoteScreen;
 import de.gg.utils.CountdownTimer;
-import de.gg.utils.Log;
 import de.gg.utils.TickCounter;
 import de.gg.utils.TickCounter.TickHandler;
+import de.gg.utils.log.Log;
 
 /**
  * This class holds the game data and takes care of processing the rounds
@@ -253,7 +253,7 @@ public abstract class GameSession {
 	 * the game is running on {@linkplain GameSpeed#NORMAL normal speed}.
 	 */
 	protected synchronized void fixedUpdate() {
-		if (isRightTick(TICKS_PER_SECOND)) {
+		if (isRightTick(5)) {
 			// PROCESSING SYSTEMS
 			// Character
 			for (ProcessingSystem<Character> sys : characterSystems) {

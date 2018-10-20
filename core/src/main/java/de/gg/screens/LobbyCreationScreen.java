@@ -27,9 +27,9 @@ import de.gg.network.GameServer.IHostCallback;
 import de.gg.network.ServerSetup;
 import de.gg.ui.components.AnimationlessDialog;
 import de.gg.ui.components.OffsetableTextField;
-import de.gg.utils.Log;
 import de.gg.utils.PlayerUtils;
 import de.gg.utils.PlayerUtils.PlayerStub;
+import de.gg.utils.log.Log;
 import net.dermetfan.gdx.assets.AnnotationAssetManager;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 

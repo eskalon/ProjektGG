@@ -115,16 +115,25 @@ public class Character implements Localized {
 		this.status = status;
 	}
 
+	/**
+	 * @return The reputation modifiers. A positive value is denoting a loyal,
+	 *         trustful and law-abiding citizen.
+	 */
 	public int getReputationModifiers() {
 		return reputationModifiers;
 	}
 
+	/**
+	 * @param reputationModifiers
+	 *            Should be between <code>-20</code> and <code>+15</code>.
+	 *            Slowly shifts back to <code>0</code>.
+	 */
 	public void setReputationModifiers(int reputationModifiers) {
 		this.reputationModifiers = reputationModifiers;
 	}
 
 	/**
-	 * @return the character's health. Is 100 at the birth.
+	 * @return the character's health. Is <code>100</code> at the birth.
 	 */
 	public int getHp() {
 		return hp;
@@ -142,6 +151,14 @@ public class Character implements Localized {
 		this.age = age;
 	}
 
+	/**
+	 * Contains all temporary opinion modifiers other characters have of this
+	 * character. I.e. if this character does something good/bad for someone
+	 * else that changes their opinion, the respective opinion modifier is saved
+	 * in this list.
+	 * 
+	 * @return A list of all opinion modifiers for this character.
+	 */
 	public HashMap<Short, Integer> getOpinionModifiers() {
 		return opinionModifiers;
 	}
@@ -163,7 +180,9 @@ public class Character implements Localized {
 
 		// A character with a strong opinion isn't swayed easily in either a
 		// positive nor negative direction
-		if (Math.abs(currentMod) > 40)
+		if (Math.abs(currentMod) > 50)
+			modifier = (int) Math.round(modifier * 0.6);
+		else if (Math.abs(currentMod) > 40)
 			modifier = (int) Math.round(modifier * 0.7);
 		else if (Math.abs(currentMod) > 20)
 			modifier = (int) Math.round(modifier * 0.9);

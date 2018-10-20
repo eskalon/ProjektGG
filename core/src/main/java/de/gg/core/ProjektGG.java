@@ -36,11 +36,11 @@ import de.gg.screens.SplashScreen;
 import de.gg.setting.GameSettings;
 import de.gg.ui.rendering.CameraWrapper;
 import de.gg.utils.EventQueueBus;
-import de.gg.utils.Log;
 import de.gg.utils.asset.JSON;
 import de.gg.utils.asset.JSONLoader;
 import de.gg.utils.asset.Text;
 import de.gg.utils.asset.TextLoader;
+import de.gg.utils.log.Log;
 
 /**
  * This class starts the game by creating all the necessary screens and then

@@ -1,4 +1,4 @@
-package de.gg.utils;
+package de.gg.utils.log;
 
 import java.util.Formatter;
 import java.util.concurrent.TimeUnit;

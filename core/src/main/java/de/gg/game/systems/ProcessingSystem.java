@@ -11,6 +11,17 @@ import de.gg.game.world.World;
 public abstract class ProcessingSystem<E> {
 
 	private boolean wasProcessed = false;
+	private int tickRate;
+	private boolean isProcessedContinuously;
+
+	public ProcessingSystem(int tickRate, boolean isProcessedContinuously) {
+		this.tickRate = tickRate;
+		this.isProcessedContinuously = isProcessedContinuously;
+	}
+
+	public ProcessingSystem() {
+		this(150, true);
+	}
 
 	/**
 	 * Is called to initialize the system.
@@ -46,7 +57,7 @@ public abstract class ProcessingSystem<E> {
 	 *         passed.
 	 */
 	public boolean isProcessedContinuously() {
-		return true;
+		return isProcessedContinuously;
 	}
 
 	/**
@@ -54,10 +65,10 @@ public abstract class ProcessingSystem<E> {
 	 *         {@link #process(Object)}-method is called. If this system is not
 	 *         {@linkplain #isProcessedContinuously() processed continuously} it
 	 *         is processed once after this tick rate passed. Only multiples of
-	 *         ten are applied correctly.
+	 *         five are applied correctly.
 	 */
 	public int getTickRate() {
-		return 150;
+		return tickRate;
 	}
 
 }

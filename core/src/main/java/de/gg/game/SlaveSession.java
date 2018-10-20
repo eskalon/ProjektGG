@@ -21,7 +21,7 @@ import de.gg.game.votes.ImpeachmentVote;
 import de.gg.game.votes.VoteableMatter;
 import de.gg.network.LobbyPlayer;
 import de.gg.network.rmi.AuthoritativeResultListener;
-import de.gg.utils.Log;
+import de.gg.utils.log.Log;
 
 /**
  * This class simulates a game session on the client of a multiplayer game. It

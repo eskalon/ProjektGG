@@ -18,8 +18,8 @@ import de.gg.lang.Lang;
 import de.gg.network.GameServer;
 import de.gg.ui.components.KeySelectionInputField;
 import de.gg.ui.components.KeySelectionInputField.KeySelectionEventListener;
-import de.gg.utils.Log;
 import de.gg.utils.SimpleListener;
+import de.gg.utils.log.Log;
 import net.dermetfan.gdx.assets.AnnotationAssetManager;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 

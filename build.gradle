@@ -6,7 +6,6 @@ buildscript {
         jcenter()
     }
     dependencies {
-        
     }
 }
 
@@ -50,10 +49,10 @@ project(":core") {
         //compile "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "net.dermetfan.libgdx-utils:libgdx-utils:0.13.4"
-		compile "com.github.crykn:kryonet:2.22.4"
-		compile "commons-io:commons-io:2.6"
-		compile "com.google.guava:guava:27.0-jre"
-		compile "com.google.code.gson:gson:2.8.5"
+        compile "com.github.crykn:kryonet:2.22.4"
+        compile "commons-io:commons-io:2.6"
+        compile "com.google.guava:guava:27.0-jre"
+        compile "com.google.code.gson:gson:2.8.5"
         //compile fileTree(dir: 'libs', include: '*.jar')
         
         testCompile "org.junit.platform:junit-platform-launcher:1.2.0" // needed for a bug in eclipse

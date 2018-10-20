@@ -8,7 +8,7 @@ import com.google.common.eventbus.Subscribe;
 import de.gg.events.ServerReadyEvent;
 import de.gg.game.entities.BuildingSlot;
 import de.gg.ui.rendering.RenderData;
-import de.gg.utils.Log;
+import de.gg.utils.log.Log;
 import net.dermetfan.gdx.assets.AnnotationAssetManager;
 
 /**

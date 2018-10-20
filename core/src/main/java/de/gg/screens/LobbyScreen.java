@@ -27,8 +27,8 @@ import de.gg.network.GameServer;
 import de.gg.network.LobbyPlayer;
 import de.gg.screens.dialogs.PlayerLobbyConfigDialog;
 import de.gg.ui.components.OffsetableTextField;
-import de.gg.utils.Log;
 import de.gg.utils.PlayerUtils;
+import de.gg.utils.log.Log;
 import net.dermetfan.gdx.assets.AnnotationAssetManager;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 

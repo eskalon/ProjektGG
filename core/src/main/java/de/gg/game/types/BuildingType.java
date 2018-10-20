@@ -2,6 +2,7 @@ package de.gg.game.types;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
 
+import de.gg.game.entities.Building;
 import de.gg.lang.Localizable;
 import de.gg.utils.asset.JSON;
 import de.gg.utils.asset.JSONLoader.JSONLoaderParameter;
@@ -130,6 +131,7 @@ public enum BuildingType implements Localizable {
 
 		/**
 		 * @return the cost/monetary value of this building type.
+		 * @see Building#getValue()
 		 */
 		public float getValue() {
 			return value;

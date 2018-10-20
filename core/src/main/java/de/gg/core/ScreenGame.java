@@ -11,7 +11,7 @@ import com.google.common.base.Preconditions;
 
 import de.gg.screens.LoadableScreen;
 import de.gg.screens.exception.ScreenNotFoundException;
-import de.gg.utils.Log;
+import de.gg.utils.log.Log;
 import net.dermetfan.gdx.assets.AnnotationAssetManager;
 
 /**

@@ -19,7 +19,7 @@ public class FirstCharacterEventWaveServerSystem
 
 	public FirstCharacterEventWaveServerSystem(
 			AuthoritativeResultListener resultListener) {
-		super(resultListener);
+		super(resultListener, 600, false);
 	}
 
 	@Override
@@ -51,16 +51,6 @@ public class FirstCharacterEventWaveServerSystem
 
 			return;
 		}
-	}
-
-	@Override
-	public boolean isProcessedContinuously() {
-		return false;
-	}
-
-	@Override
-	public int getTickRate() {
-		return 600;
 	}
 
 }

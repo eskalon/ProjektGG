@@ -11,6 +11,7 @@ import de.gg.utils.RandomUtils;
 public class EmployeeFactory {
 
 	private EmployeeFactory() {
+		// not used
 	}
 
 	public static Employee createRandomEmployee(Random r) {

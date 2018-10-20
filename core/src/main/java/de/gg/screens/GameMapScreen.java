@@ -37,9 +37,9 @@ import de.gg.network.GameServer;
 import de.gg.ui.components.AnimationlessDialog;
 import de.gg.ui.rendering.SceneRenderer;
 import de.gg.ui.rendering.TestShader;
-import de.gg.utils.Log;
 import de.gg.utils.SimpleCallback;
 import de.gg.utils.asset.Text;
+import de.gg.utils.log.Log;
 import net.dermetfan.gdx.assets.AnnotationAssetManager;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 

@@ -28,12 +28,14 @@ public class VoteResults {
 		this.individualVotes = individualVotes;
 	}
 
+	/**
+	 * A hashmap containing each individual vote. The characters's ID is the key
+	 * and the vote option is the value.
+	 * 
+	 * @return the individual votes.
+	 */
 	public HashMap<Short, Integer> getIndividualVotes() {
 		return individualVotes;
-	}
-
-	public void setIndividualVotes(HashMap<Short, Integer> individualVotes) {
-		this.individualVotes = individualVotes;
 	}
 
 	public int getOverallResult() {

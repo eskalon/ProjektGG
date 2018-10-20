@@ -14,7 +14,7 @@ public class Evidence {
 	 */
 	private boolean isStaged;
 	private CrimeType crime;
-	
+
 	public Evidence() {
 		// default public constructor
 	}
@@ -27,6 +27,10 @@ public class Evidence {
 		this.offender = offender;
 	}
 
+	/**
+	 * @return the victim of the crime this evidence is for. Can either be a
+	 *         character or a building.
+	 */
 	public Object getVictim() {
 		return victim;
 	}
@@ -35,6 +39,9 @@ public class Evidence {
 		this.victim = victim;
 	}
 
+	/**
+	 * @return Whether the evidence is fabricated.
+	 */
 	public boolean isStaged() {
 		return isStaged;
 	}

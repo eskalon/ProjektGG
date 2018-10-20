@@ -14,20 +14,10 @@ public class Player {
 	private List<Profession> learnedProfessions = new ArrayList<>();
 	private PlayerIcon icon;
 
-	/**
-	 * A list of the ids of all building slots this player owns.
-	 */
 	private List<Short> ownedBuidings = new ArrayList<>();
-	/**
-	 * The monetary value of stuff inherited in this round. Is reseted after the
-	 * end round calculations.
-	 */
 	private int previouslyInheritedValue = 0;
 
-	/**
-	 * Whether this character is currently ill.
-	 */
-	private boolean ill = false;
+	private boolean isIll = false;
 
 	private PlayerSkillSet skills = new PlayerSkillSet();
 
@@ -95,10 +85,17 @@ public class Player {
 		return evidence;
 	}
 
+	/**
+	 * @return a list of the IDs of all building slots this player owns.
+	 */
 	public List<Short> getOwnedBuidings() {
 		return ownedBuidings;
 	}
 
+	/**
+	 * @return the monetary value of stuff inherited in this round. Is reseted
+	 *         after the end round tax calculations.
+	 */
 	public int getPreviouslyInheritedValue() {
 		return previouslyInheritedValue;
 	}
@@ -107,12 +104,15 @@ public class Player {
 		this.previouslyInheritedValue = previouslyInheritedValue;
 	}
 
+	/**
+	 * @return whether this character is currently ill.
+	 */
 	public boolean isIll() {
-		return ill;
+		return isIll;
 	}
 
 	public void setIll(boolean ill) {
-		this.ill = ill;
+		this.isIll = ill;
 	}
 
 	public FamilyTree getFamily() {

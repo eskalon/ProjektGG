@@ -37,10 +37,7 @@ public class World {
 	short characterIndex = 1;
 
 	HashMap<PositionType, Position> positions = new HashMap<>();
-	/**
-	 * A hashmap with all laws. The value object is either a {@link Boolean} or
-	 * an {@link Integer}.
-	 */
+
 	HashMap<LawType, Object> laws = new HashMap<>();
 
 	HashMap<ItemType, ItemPrice> prices = new HashMap<>();
@@ -124,6 +121,10 @@ public class World {
 		return positions.get(type);
 	}
 
+	/**
+	 * @return a hashmap with all laws. The value object is either a
+	 *         {@link Boolean} or an {@link Integer}.
+	 */
 	public HashMap<LawType, Object> getLaws() {
 		return laws;
 	}

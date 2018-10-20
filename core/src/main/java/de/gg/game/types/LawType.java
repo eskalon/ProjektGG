@@ -44,7 +44,7 @@ public enum LawType implements Localizable {
 		}
 
 		/**
-		 * @return THe default value of this law. Can either be a boolean or an
+		 * @return The default value of this law. Can either be a boolean or an
 		 *         integer.
 		 */
 		public Object getDefaultValue() {
@@ -53,9 +53,12 @@ public enum LawType implements Localizable {
 
 		/**
 		 * @return If this is an integer law, the range whithin which the value
-		 *         can be.
+		 *         can be. Else <code>null</code>.
 		 */
 		public Range<Integer> getRange() {
+			if (!(defaultValue instanceof Integer))
+				return null;
+
 			return Range.closed(lowerBound, upperBound);
 		}
 

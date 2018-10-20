@@ -2,6 +2,8 @@ package de.gg.game.systems.server;
 
 import java.util.HashMap;
 
+import javax.annotation.Nullable;
+
 import de.gg.game.systems.ProcessingSystem;
 import de.gg.network.rmi.AuthoritativeResultListener;
 
@@ -21,7 +23,14 @@ public abstract class ServerProcessingSystem<E> extends ProcessingSystem<E> {
 	 */
 	protected AuthoritativeResultListener resultListener;
 
+	public ServerProcessingSystem(AuthoritativeResultListener resultListener,
+			int tickRate, boolean isProcessedContinuously) {
+		super(tickRate, isProcessedContinuously);
+		this.resultListener = resultListener;
+	}
+
 	public ServerProcessingSystem(AuthoritativeResultListener resultListener) {
+		super();
 		this.resultListener = resultListener;
 	}
 
@@ -31,7 +40,7 @@ public abstract class ServerProcessingSystem<E> extends ProcessingSystem<E> {
 	 *         nothing has to get saved.
 	 * @see #loadSavedState(HashMap)
 	 */
-	public HashMap<String, Object> getSaveState() {
+	public @Nullable HashMap<String, Object> getSaveState() {
 		return null;
 	}
 
@@ -42,7 +51,7 @@ public abstract class ServerProcessingSystem<E> extends ProcessingSystem<E> {
 	 *            The saved state. <code>null</code> if no state was saved.
 	 * @see #getSaveState()
 	 */
-	public void loadSavedState(HashMap<String, Object> savedState) {
+	public void loadSavedState(@Nullable HashMap<String, Object> savedState) {
 		// do nothing by default
 	}
 

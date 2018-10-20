@@ -35,9 +35,9 @@ import de.gg.network.messages.PlayerLeftMessage;
 import de.gg.network.messages.ServerAcceptanceMessage;
 import de.gg.network.messages.ServerRejectionMessage;
 import de.gg.network.rmi.AuthoritativeResultListener;
-import de.gg.utils.Log;
 import de.gg.utils.PlayerUtils;
 import de.gg.utils.PlayerUtils.PlayerStub;
+import de.gg.utils.log.Log;
 
 public class GameServer {
 

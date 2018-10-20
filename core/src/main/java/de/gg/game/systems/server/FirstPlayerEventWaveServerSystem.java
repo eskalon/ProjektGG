@@ -18,7 +18,7 @@ public class FirstPlayerEventWaveServerSystem
 
 	public FirstPlayerEventWaveServerSystem(
 			AuthoritativeResultListener resultListener) {
-		super(resultListener);
+		super(resultListener, 602, false);
 	}
 
 	@Override
@@ -46,16 +46,6 @@ public class FirstPlayerEventWaveServerSystem
 		// AP
 		// if(p.getAvailableAp() > 17)
 		// TODO remove some aps
-	}
-
-	@Override
-	public boolean isProcessedContinuously() {
-		return false;
-	}
-
-	@Override
-	public int getTickRate() {
-		return 602;
 	}
 
 }

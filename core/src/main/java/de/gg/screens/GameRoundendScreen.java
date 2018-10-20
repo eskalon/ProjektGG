@@ -15,7 +15,7 @@ import com.google.common.eventbus.Subscribe;
 import de.gg.events.AllPlayersReadyEvent;
 import de.gg.events.ServerReadyEvent;
 import de.gg.lang.Lang;
-import de.gg.utils.Log;
+import de.gg.utils.log.Log;
 import net.dermetfan.gdx.assets.AnnotationAssetManager;
 import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 

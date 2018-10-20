@@ -41,9 +41,9 @@ import de.gg.network.rmi.AuthoritativeResultListener;
 import de.gg.network.rmi.ServerAuthoritativResultListenerStub;
 import de.gg.network.rmi.SlaveActionListener;
 import de.gg.utils.CollectionUtils;
-import de.gg.utils.Log;
 import de.gg.utils.PlayerUtils;
 import de.gg.utils.json.SimpleJSONParser;
+import de.gg.utils.log.Log;
 
 /**
  * This class takes care of simulating the game session on the server side and

@@ -10,6 +10,7 @@ import de.gg.game.types.PlayerIcon;
 public class PlayerFactory {
 
 	private PlayerFactory() {
+		// not used
 	}
 
 	/**

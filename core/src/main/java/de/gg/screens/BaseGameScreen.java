@@ -11,8 +11,8 @@ import de.gg.events.PlayerDisconnectedEvent;
 import de.gg.events.RoundEndEvent;
 import de.gg.events.ServerReadyEvent;
 import de.gg.network.GameServer;
-import de.gg.utils.Log;
 import de.gg.utils.SimpleListener;
+import de.gg.utils.log.Log;
 import net.dermetfan.gdx.assets.AnnotationAssetManager;
 
 public abstract class BaseGameScreen extends BaseUIScreen {

@@ -9,7 +9,8 @@ public class IllnessDamageSystem extends ServerProcessingSystem<Player> {
 	private World world;
 
 	public IllnessDamageSystem(AuthoritativeResultListener resultListener) {
-		super(resultListener);
+		super(resultListener, 1800, true); // this system is called two times
+											// per round
 	}
 
 	@Override
@@ -26,10 +27,4 @@ public class IllnessDamageSystem extends ServerProcessingSystem<Player> {
 			resultListener.onCharacterDamage(id, (short) 1);
 		}
 	}
-
-	@Override
-	public int getTickRate() {
-		return 1800; // this system is called two times per round
-	}
-
 }

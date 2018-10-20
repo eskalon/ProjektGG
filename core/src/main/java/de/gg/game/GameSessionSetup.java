@@ -12,16 +12,16 @@ import de.gg.game.types.GameMap;
 public class GameSessionSetup {
 
 	/**
-	 * The random seed used by the game. Needed to synchronize the random events
-	 * of all clients. Should not change after it is set.
+	 * The random seed used by the game. Is needed to synchronize the random
+	 * events of all clients. Should not change after it is set.
 	 */
 	private long seed;
 	/**
-	 * The game difficulty. Should not change after it is set.
+	 * The game's difficulty. Should not change after it is set.
 	 */
 	private GameDifficulty difficulty;
 	/**
-	 * The map id. Should not change after it is set.
+	 * The used map. Should not change after it is set.
 	 */
 	private GameMap map;
 
@@ -34,10 +34,17 @@ public class GameSessionSetup {
 		this.seed = seed;
 	}
 
+	/**
+	 * @return the random seed used by the game. Is needed to synchronize the
+	 *         random events of all clients.
+	 */
 	public long getSeed() {
 		return seed;
 	}
 
+	/**
+	 * @return the game's difficulty.
+	 */
 	public GameDifficulty getDifficulty() {
 		return difficulty;
 	}

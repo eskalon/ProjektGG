@@ -51,6 +51,7 @@ public class CharacterFactory {
 	}
 
 	private CharacterFactory() {
+		// not used
 	}
 
 	/**

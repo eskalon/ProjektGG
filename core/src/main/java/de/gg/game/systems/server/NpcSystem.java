@@ -10,8 +10,9 @@ import de.gg.network.rmi.AuthoritativeResultListener;
  */
 public abstract class NpcSystem extends ServerProcessingSystem<Character> {
 
-	public NpcSystem(AuthoritativeResultListener resultListener) {
-		super(resultListener);
+	public NpcSystem(AuthoritativeResultListener resultListener, int tickRate,
+			boolean isProcessedContinuously) {
+		super(resultListener, tickRate, isProcessedContinuously);
 	}
 
 	@Override

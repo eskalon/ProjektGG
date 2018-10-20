@@ -43,8 +43,8 @@ import de.gg.network.messages.ServerAcceptanceMessage;
 import de.gg.network.messages.ServerRejectionMessage;
 import de.gg.network.rmi.ClientActionHandler;
 import de.gg.network.rmi.SlaveActionListener;
-import de.gg.utils.Log;
 import de.gg.utils.MachineIdentificationUtils;
+import de.gg.utils.log.Log;
 
 /**
  * This class takes care of handling the networking part for the client. It
@@ -55,9 +55,9 @@ import de.gg.utils.MachineIdentificationUtils;
  * <p>
  * Following are the relevant states the client can be in:
  * <ul>
- * <li>{@link #connect(String, String, int)}: Connects the client to the server.
- * After it is finished a {@link ConnectionEstablishedEvent} is posted to the
- * event bus.</li>
+ * <li>{@link #connect(String, String, int)}: Connects the client to the server
+ * asynchronously. After it is finished a {@link ConnectionEstablishedEvent} is
+ * posted to the event bus.</li>
  * <li>{@link #establishRMIConnection(HashMap, GameSessionSetup)}: Establishes
  * the client's RMI connection. Has to get called after the client is
  * connected.</li>
@@ -107,9 +107,10 @@ public class GameClient {
 	}
 
 	/**
-	 * Tries to connect the client to the server. After it is finished either a
-	 * {@link ConnectionEstablishedEvent} or a {@link ConnectionFailedEvent} is
-	 * posted on the {@linkplain ProjektGG#getEventBus() event bus}.
+	 * Tries to connect the client to the server asynchronously. After it is
+	 * finished either a {@link ConnectionEstablishedEvent} or a
+	 * {@link ConnectionFailedEvent} is posted on the
+	 * {@linkplain ProjektGG#getEventBus() event bus}.
 	 *
 	 * @param gameVersion
 	 *            the client's game version.
