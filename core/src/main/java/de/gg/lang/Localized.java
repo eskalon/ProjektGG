@@ -1,8 +1,7 @@
 package de.gg.lang;
 
 /**
- * This interface is used to mark an already localized entities, i.e. a named
- * entity.
+ * This interface is used to mark an already localized entity, i.e. a named one.
  */
 public interface Localized {
 	/**

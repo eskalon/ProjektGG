@@ -5,7 +5,7 @@ import java.util.List;
 
 import de.gg.game.types.PlayerIcon;
 import de.gg.game.types.PlayerTaskType;
-import de.gg.game.world.City;
+import de.gg.game.world.World;
 
 public class Player {
 
@@ -54,8 +54,8 @@ public class Player {
 		return learnedProfessions;
 	}
 
-	public Character getCurrentlyPlayedCharacter(City city) {
-		return city.getCharacters().get(currentlyPlayedCharacterId);
+	public Character getCurrentlyPlayedCharacter(World world) {
+		return world.getCharacters().get(currentlyPlayedCharacterId);
 	}
 
 	public short getCurrentlyPlayedCharacterId() {
@@ -124,21 +124,21 @@ public class Player {
 	}
 
 	/**
-	 * @param city
-	 *            The city this player lives in.
+	 * @param world
+	 *            The world this player lives in.
 	 * @return the overall fortune this player has.
 	 */
-	public int getFortune(City city) {
+	public int getFortune(World world) {
 		int buildingValue = 0;
 
 		for (short s : ownedBuidings) {
-			if (city.getBuildingSlots()[s].isBuiltOn()) {
-				buildingValue += city.getBuildingSlots()[s].getBuilding()
+			if (world.getBuildingSlots()[s].isBuiltOn()) {
+				buildingValue += world.getBuildingSlots()[s].getBuilding()
 						.getValue();
 			}
 		}
 
-		return city.getCharacters().get(currentlyPlayedCharacterId).getGold()
+		return world.getCharacters().get(currentlyPlayedCharacterId).getGold()
 				+ buildingValue;
 	}
 

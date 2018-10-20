@@ -19,7 +19,7 @@ import de.gg.game.types.GameMap;
 import de.gg.game.types.GameSpeed;
 import de.gg.game.types.PositionType;
 import de.gg.game.votes.VoteableMatter;
-import de.gg.game.world.City;
+import de.gg.game.world.World;
 import de.gg.network.LobbyPlayer;
 import de.gg.screens.GameVoteScreen;
 import de.gg.utils.CountdownTimer;
@@ -83,7 +83,7 @@ public abstract class GameSession {
 	 */
 	private CountdownTimer voteTimer = new CountdownTimer();
 
-	protected City city;
+	protected World world;
 	protected HashMap<Short, LobbyPlayer> players;
 	private GameSessionSetup sessionSetup;
 
@@ -113,7 +113,7 @@ public abstract class GameSession {
 	}
 
 	/**
-	 * Sets the game up by initializing the city, the game entities and the
+	 * Sets the game up by initializing the world, the game entities and the
 	 * processing systems.
 	 * <p>
 	 * After the initialization the session can be updated via calling
@@ -125,10 +125,10 @@ public abstract class GameSession {
 	 */
 	public synchronized void init(@Nullable SavedGame savedGame) {
 		if (savedGame == null) {
-			this.city = new City();
-			this.city.generate(sessionSetup, players);
+			this.world = new World();
+			this.world.generate(sessionSetup, players);
 		} else {
-			this.city = savedGame.city;
+			this.world = savedGame.world;
 			this.currentRound = savedGame.currentRound;
 			// Session- & server setup get set in the constructors
 
@@ -142,15 +142,15 @@ public abstract class GameSession {
 							// Change all mentions of the saved player id to the
 							// new one
 							// Use negative numbers so there are no collisions
-							Player p = city.getPlayers().remove(oldE.getKey());
-							city.getPlayers().put((short) -newE.getKey(), p);
+							Player p = world.getPlayers().remove(oldE.getKey());
+							world.getPlayers().put((short) -newE.getKey(), p);
 						}
 					}
 				}
 				// Revert the IDs back to positive numbers
-				for (short s : savedGame.city.getPlayers().keySet()) {
-					Player p = city.getPlayers().remove(s);
-					city.getPlayers().put((short) -s, p);
+				for (short s : savedGame.world.getPlayers().keySet()) {
+					Player p = world.getPlayers().remove(s);
+					world.getPlayers().put((short) -s, p);
 				}
 			}
 
@@ -160,7 +160,7 @@ public abstract class GameSession {
 
 		// Add and initialize the smp system(s)
 		this.roundEndSystem = new RoundEndSystem(localNetworkId);
-		this.roundEndSystem.init(city);
+		this.roundEndSystem.init(world);
 
 		// Init the tick counter
 		this.tickCounter = new TickCounter(new TickHandler() {
@@ -204,7 +204,7 @@ public abstract class GameSession {
 		} else {
 			// PROCESS VOTES
 			if (matterToVoteOn == null) {
-				matterToVoteOn = city.getMattersToHoldVoteOn().pollFirst();
+				matterToVoteOn = world.getMattersToHoldVoteOn().pollFirst();
 
 				onNewVote(matterToVoteOn);
 
@@ -228,17 +228,18 @@ public abstract class GameSession {
 	private void processRoundEnd() {
 		logTimer.reset().start();
 		// Character
-		for (Entry<Short, Character> e : city.getCharacters().entrySet()) {
+		for (Entry<Short, Character> e : world.getCharacters().entrySet()) {
 			roundEndSystem.processCharacter(e.getKey(), e.getValue());
 		}
 
 		// Player
-		for (Entry<Short, Player> e : city.getPlayers().entrySet()) {
+		for (Entry<Short, Player> e : world.getPlayers().entrySet()) {
 			roundEndSystem.processPlayer(e.getKey(), e.getValue());
 		}
 
 		// Position
-		for (Entry<PositionType, Position> e : city.getPositions().entrySet()) {
+		for (Entry<PositionType, Position> e : world.getPositions()
+				.entrySet()) {
 			roundEndSystem.processPosition(e.getKey(), e.getValue());
 		}
 
@@ -259,7 +260,7 @@ public abstract class GameSession {
 				if (sys.isProcessedContinuously() || (!sys.wasProcessed())) {
 					if (isRightTick(sys.getTickRate())) {
 						logTimer.reset().start();
-						for (Entry<Short, Character> e : city.getCharacters()
+						for (Entry<Short, Character> e : world.getCharacters()
 								.entrySet()) {
 							sys.process(e.getKey(), e.getValue());
 						}
@@ -277,7 +278,7 @@ public abstract class GameSession {
 				if (sys.isProcessedContinuously() || (!sys.wasProcessed())) {
 					if (isRightTick(sys.getTickRate())) {
 						logTimer.reset().start();
-						for (Entry<Short, Player> e : city.getPlayers()
+						for (Entry<Short, Player> e : world.getPlayers()
 								.entrySet()) {
 							sys.process(e.getKey(), e.getValue());
 						}
@@ -295,7 +296,7 @@ public abstract class GameSession {
 
 	/**
 	 * Called after a round ended to start the next round. If there are any
-	 * {@linkplain City#getMattersToHoldVoteOn() matters to hold a vote on}
+	 * {@linkplain World#getMattersToHoldVoteOn() matters to hold a vote on}
 	 * those are done first.
 	 */
 	protected synchronized void startNextRound() {
@@ -321,8 +322,8 @@ public abstract class GameSession {
 		// Take care of votes
 		Log.info(localNetworkId == -1 ? "Server" : "Client",
 				"Es stehen %d Tagesordnunspunkte an",
-				city.getMattersToHoldVoteOn().size());
-		holdVote = !city.getMattersToHoldVoteOn().isEmpty();
+				world.getMattersToHoldVoteOn().size());
+		holdVote = !world.getMattersToHoldVoteOn().isEmpty();
 	}
 
 	/**
@@ -334,7 +335,7 @@ public abstract class GameSession {
 	protected void finishCurrentVote(VoteResults result) {
 		voteTimer.start(7000);
 
-		matterToVoteOn.processVoteResult(result, city);
+		matterToVoteOn.processVoteResult(result, world);
 	}
 
 	/**
@@ -415,8 +416,8 @@ public abstract class GameSession {
 		return sessionSetup.getMap();
 	}
 
-	public City getCity() {
-		return city;
+	public World getWorld() {
+		return world;
 	}
 
 }

@@ -32,7 +32,7 @@ import de.gg.game.SlaveSession;
 import de.gg.game.ai.CharacterBehaviour;
 import de.gg.game.data.NotificationData;
 import de.gg.game.entities.Player;
-import de.gg.game.world.City;
+import de.gg.game.world.World;
 import de.gg.network.messages.ChatMessageSentMessage;
 import de.gg.network.messages.ClientSetupMessage;
 import de.gg.network.messages.GameSetupMessage;
@@ -330,8 +330,8 @@ public class GameClient {
 		session.init(null);
 	}
 
-	public City getCity() {
-		return session.getCity();
+	public World getWorld() {
+		return session.getWorld();
 	}
 
 	/**
@@ -348,7 +348,7 @@ public class GameClient {
 	 * @return the local player.
 	 */
 	public Player getLocalPlayer() {
-		return session.getCity().getPlayers().get(localClientId);
+		return session.getWorld().getPlayers().get(localClientId);
 	}
 
 	/**

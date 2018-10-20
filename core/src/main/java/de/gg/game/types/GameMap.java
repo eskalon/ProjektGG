@@ -48,14 +48,14 @@ public enum GameMap implements Localizable {
 		}
 
 		/**
-		 * @return all buildings slots in the city.
+		 * @return all buildings slots in the world.
 		 */
 		public List<BuildingSlot> getBuildingSlots() {
 			return buildingSlots;
 		}
 
 		/**
-		 * @return all static props in the city.
+		 * @return all static props in the world.
 		 */
 		public List<RenderData> getCityProps() {
 			return cityProps;

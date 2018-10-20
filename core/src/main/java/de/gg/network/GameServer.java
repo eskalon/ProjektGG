@@ -315,8 +315,8 @@ public class GameServer {
 				}
 				Log.info("Server",
 						"Client als Teil der geladenen Partie erkannt");
-				Player oldPlayer = savedGame.city.getPlayer(foundId);
-				Character oldCharacter = savedGame.city.getCharacter(
+				Player oldPlayer = savedGame.world.getPlayer(foundId);
+				Character oldCharacter = savedGame.world.getCharacter(
 						oldPlayer.getCurrentlyPlayedCharacterId());
 				p = new LobbyPlayer(oldCharacter.getName(),
 						oldCharacter.getSurname(), oldPlayer.getIcon(), -1,

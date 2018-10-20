@@ -4,7 +4,7 @@ import java.util.Random;
 
 import de.gg.game.entities.Character;
 import de.gg.game.entities.Player;
-import de.gg.game.world.City;
+import de.gg.game.world.World;
 import de.gg.network.rmi.AuthoritativeResultListener;
 
 /**
@@ -15,7 +15,7 @@ public class FirstCharacterEventWaveServerSystem
 		extends ServerProcessingSystem<Character> {
 
 	private Random random;
-	private City city;
+	private World world;
 
 	public FirstCharacterEventWaveServerSystem(
 			AuthoritativeResultListener resultListener) {
@@ -23,9 +23,9 @@ public class FirstCharacterEventWaveServerSystem
 	}
 
 	@Override
-	public void init(City city, long seed) {
+	public void init(World world, long seed) {
 		this.random = new Random(seed);
-		this.city = city;
+		this.world = world;
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class FirstCharacterEventWaveServerSystem
 		// DEATH
 		if (c.getHp() <= 0) {
 			// a) Player characters:
-			Player p = city.getPlayerByCharacterId(id);
+			Player p = world.getPlayerByCharacterId(id);
 			if (p != null) {
 				// TODO Charakter tauschen, Erbe, Illness-Reset, Family-Reset
 			}

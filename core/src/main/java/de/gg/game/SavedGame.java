@@ -2,7 +2,7 @@ package de.gg.game;
 
 import java.util.HashMap;
 
-import de.gg.game.world.City;
+import de.gg.game.world.World;
 import de.gg.network.ServerSetup;
 
 /**
@@ -14,7 +14,7 @@ public class SavedGame {
 	public ServerSetup serverSetup;
 	public HashMap<Short, String> clientIdentifiers = new HashMap<>();
 
-	public City city;
+	public World world;
 
 	public int currentRound;
 	public int lastProcessedTick;

@@ -106,25 +106,25 @@ public class AuthoritativeSession extends GameSession
 		// Setup the server processing systems
 		ServerProcessingSystem<Character> s;
 		s = new FirstCharacterEventWaveServerSystem(resultListenerStub);
-		s.init(city, getGameSeed());
+		s.init(world, getGameSeed());
 		this.characterSystems.add(s);
 
 		s = new NpcActionSystem(resultListenerStub);
-		s.init(city, getGameSeed());
+		s.init(world, getGameSeed());
 		this.characterSystems.add(s);
 
 		s = new NpcActionSystem2(resultListenerStub);
-		s.init(city, getGameSeed());
+		s.init(world, getGameSeed());
 		this.characterSystems.add(s);
 
 		ServerProcessingSystem<Player> s2;
 
 		s2 = new FirstPlayerEventWaveServerSystem(resultListenerStub);
-		s2.init(city, getGameSeed());
+		s2.init(world, getGameSeed());
 		this.playerSystems.add(s2);
 
 		s2 = new IllnessDamageSystem(resultListenerStub);
-		s2.init(city, getGameSeed());
+		s2.init(world, getGameSeed());
 		this.playerSystems.add(s2);
 
 		// Load the systems states
@@ -176,7 +176,7 @@ public class AuthoritativeSession extends GameSession
 			for (short charId : matterToVoteOn.getVoters()) {
 				boolean isPlayer = false;
 
-				for (Player p : city.getPlayers().values()) {
+				for (Player p : world.getPlayers().values()) {
 					if (p.getCurrentlyPlayedCharacterId() == charId) {
 						isPlayer = true;
 						break;
@@ -201,7 +201,7 @@ public class AuthoritativeSession extends GameSession
 	@Override
 	public void onVoteCast(int chosenOption, short clientId) {
 		voteResults.getIndividualVotes().put(
-				city.getPlayer(clientId).getCurrentlyPlayedCharacterId(),
+				world.getPlayer(clientId).getCurrentlyPlayedCharacterId(),
 				chosenOption);
 
 		// Check if all votes were made
@@ -271,7 +271,7 @@ public class AuthoritativeSession extends GameSession
 		Stopwatch timer = Stopwatch.createStarted();
 
 		SavedGame save = new SavedGame();
-		save.city = this.city;
+		save.world = this.world;
 		save.serverSetup = this.serverSetup;
 		GameSessionSetup sessionSetup = new GameSessionSetup(getDifficulty(),
 				getMap(), getGameSeed());
@@ -390,18 +390,18 @@ public class AuthoritativeSession extends GameSession
 	@Override
 	public boolean onImpeachmentVoteArranged(short targetCharacterId,
 			short clientId) {
-		PositionType t = city.getCharacters().get(targetCharacterId)
+		PositionType t = world.getCharacters().get(targetCharacterId)
 				.getPosition();
 
 		if (t != null) {
 			// TODO überprüfen, ob nicht bereits ein anderer einen Vote
 			// initiiert hat
 
-			city.getMattersToHoldVoteOn().add(new ImpeachmentVote(city, t,
-					city.getPlayer(clientId).getCurrentlyPlayedCharacterId()));
+			world.getMattersToHoldVoteOn().add(new ImpeachmentVote(world, t,
+					world.getPlayer(clientId).getCurrentlyPlayedCharacterId()));
 
 			resultListenerStub.onImpeachmentVoteArranged(targetCharacterId,
-					city.getPlayer(clientId).getCurrentlyPlayedCharacterId());
+					world.getPlayer(clientId).getCurrentlyPlayedCharacterId());
 			return true;
 		}
 
@@ -410,12 +410,12 @@ public class AuthoritativeSession extends GameSession
 
 	@Override
 	public boolean onAppliedForPosition(PositionType t, short clientId) {
-		Position pos = city.getPositions().get(t);
+		Position pos = world.getPositions().get(t);
 
 		if (pos.getCurrentHolder() == (short) -1
 				&& pos.getApplicants().size() < 4) {
 			pos.getApplicants().add(
-					city.getPlayer(clientId).getCurrentlyPlayedCharacterId());
+					world.getPlayer(clientId).getCurrentlyPlayedCharacterId());
 
 			resultListenerStub.onAppliedForPosition(clientId, t);
 

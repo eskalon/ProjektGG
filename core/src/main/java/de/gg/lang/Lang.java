@@ -1,5 +1,7 @@
 package de.gg.lang;
 
+import java.text.ChoiceFormat;
+
 import com.badlogic.gdx.utils.I18NBundle;
 
 /**
@@ -29,6 +31,7 @@ public class Lang {
 	/**
 	 * @param key
 	 * @return the localization for a given key.
+	 * @see I18NBundle#get(String)
 	 */
 	public static String get(String key) {
 		return bundle.get(key);
@@ -51,12 +54,20 @@ public class Lang {
 	}
 
 	/**
+	 * Returns the localization for the given key formatted with the given
+	 * arguments. The arguments are localized as well, if they implement either
+	 * {@link Localizable} or {@link Localized}. <code>Boolean</code> arguments
+	 * are cast to integers (<code>0</code> denoting <code>false</code> and
+	 * <code>1</code> denoting <code>true</code>) so they can be used for
+	 * {@link ChoiceFormat}.
+	 * 
 	 * @param key
 	 *            the localization key (= unlocalized name).
 	 * @param args
 	 *            the used parameters. Each one of these will be localized as
 	 *            well, if possible.
-	 * @return
+	 * @return the localization for the key formatted with the given arguments
+	 * @see I18NBundle#format(String, Object...)
 	 */
 	public static String get(String key, Object... args) {
 		if (args != null) {

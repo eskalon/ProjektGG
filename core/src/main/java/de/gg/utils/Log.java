@@ -1,6 +1,5 @@
 package de.gg.utils;
 
-import java.util.Date;
 import java.util.Formatter;
 import java.util.concurrent.TimeUnit;
 
@@ -15,10 +14,6 @@ import com.badlogic.gdx.Gdx;
 public class Log {
 
 	public static final TimeUnit DEFAULT_TIME_UNIT = TimeUnit.MILLISECONDS;
-	private static final String INFO_TAG_FORMAT = "%tT - [INFO ] [%S]";
-	private static final String ERROR_TAG_FORMAT = "%tT - [ERROR] [%S]";
-	private static final String DEBUG_TAG_FORMAT = "%tT - [DEBUG] [%S]";
-	private static final String SPACE = " ";
 
 	private Log() {
 		// not used
@@ -28,6 +23,7 @@ public class Log {
 	 * Enables debug log messages.
 	 */
 	public static void enableDebugLogging() {
+		Gdx.app.setApplicationLogger(new AppLogger());
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		com.esotericsoftware.minlog.Log.INFO();
 	}
@@ -36,6 +32,7 @@ public class Log {
 	 * Disabled debug logging. Only normal informational messages are shown.
 	 */
 	public static void disableDebugLogging() {
+		Gdx.app.setApplicationLogger(new AppLogger());
 		Gdx.app.setLogLevel(Application.LOG_INFO);
 		com.esotericsoftware.minlog.Log.ERROR();
 	}
@@ -57,9 +54,10 @@ public class Log {
 	 * @see Formatter
 	 */
 	public static void info(String tag, String message, Object... args) {
-		if (Gdx.app.getLogLevel() >= Application.LOG_INFO)
-			Gdx.app.log(getTag(INFO_TAG_FORMAT, tag),
-					String.format(SPACE + message, args));
+		if (Gdx.app.getLogLevel() >= Application.LOG_INFO) // so the message
+															// isn't formatted
+															// unnecessarily
+			Gdx.app.log(tag, String.format(message, args));
 	}
 
 	/**
@@ -79,9 +77,10 @@ public class Log {
 	 * @see Formatter
 	 */
 	public static void error(String tag, String message, Object... args) {
-		if (Gdx.app.getLogLevel() >= Application.LOG_ERROR)
-			Gdx.app.error(getTag(ERROR_TAG_FORMAT, tag),
-					String.format(SPACE + message, args));
+		if (Gdx.app.getLogLevel() >= Application.LOG_ERROR) // so the message
+															// isn't formatted
+															// unnecessarily
+			Gdx.app.error(tag, String.format(message, args));
 	}
 
 	/**
@@ -102,13 +101,10 @@ public class Log {
 	 * @see #enableDebugLogging()
 	 */
 	public static void debug(String tag, String message, Object... args) {
-		if (Gdx.app.getLogLevel() >= Application.LOG_DEBUG)
-			Gdx.app.debug(getTag(DEBUG_TAG_FORMAT, tag),
-					String.format(SPACE + message, args));
-	}
-
-	private static final String getTag(String formatString, String tag) {
-		return String.format(formatString, new Date(), tag);
+		if (Gdx.app.getLogLevel() >= Application.LOG_DEBUG) // so the message
+															// isn't formatted
+															// unnecessarily
+			Gdx.app.debug(tag, String.format(message, args));
 	}
 
 }

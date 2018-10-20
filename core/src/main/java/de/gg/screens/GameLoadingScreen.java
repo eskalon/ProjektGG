@@ -54,7 +54,7 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 		game.getClient().initGameSession();
 
 		// Create the ModelInstances
-		for (BuildingSlot s : game.getClient().getCity().getBuildingSlots()) {
+		for (BuildingSlot s : game.getClient().getWorld().getBuildingSlots()) {
 			if (s.isBuiltOn()) {
 				s.getBuilding().setRenderData(new RenderData(
 						assetManager.get(HOUSE1_MODEL_PATH, Model.class)));
@@ -69,7 +69,7 @@ public class GameLoadingScreen extends BaseLoadingScreen {
 
 			}
 		}
-		game.getClient().getCity().setSkybox(new ModelInstance(
+		game.getClient().getWorld().setSkybox(new ModelInstance(
 				assetManager.get(SKYBOX_MODEL_PATH, Model.class)));
 
 		Log.info("Client", "Spiel geladen");

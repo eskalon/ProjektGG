@@ -151,7 +151,7 @@ public class GameRoundendScreen extends BaseGameScreen {
 		this.serverReady = false;
 
 		if (event.isNextRound()) {
-			if (!game.getClient().getCity().getMattersToHoldVoteOn().isEmpty())
+			if (!game.getClient().getWorld().getMattersToHoldVoteOn().isEmpty())
 				game.pushScreen("vote");
 			else
 				game.pushScreen("map");

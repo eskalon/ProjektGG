@@ -7,7 +7,7 @@ import com.google.common.eventbus.EventBus;
 
 import de.gg.events.HouseEnterEvent;
 import de.gg.events.HouseSelectionEvent;
-import de.gg.game.world.City;
+import de.gg.game.world.World;
 import de.gg.setting.GameSettings;
 
 public class MapSelectionInputController
@@ -25,7 +25,7 @@ public class MapSelectionInputController
 	private long lastClickTime = -1;
 	private static final long DOUBLE_CLICK_TIME = 300;
 
-	private City city;
+	private World world;
 
 	private int clickX, clickY;
 
@@ -105,13 +105,13 @@ public class MapSelectionInputController
 	private void onSingleSelection(short value) {
 		// Altes Objekt reseten
 		if (selectedObjectID >= 0) {
-			city.getBuildingSlots()[selectedObjectID].getBuilding()
+			world.getBuildingSlots()[selectedObjectID].getBuilding()
 					.getRenderData().isSelected = false;
 		}
 		// Neues Objekt markieren
 		selectedObjectID = value;
 		if (selectedObjectID >= 0) {
-			city.getBuildingSlots()[selectedObjectID].getBuilding()
+			world.getBuildingSlots()[selectedObjectID].getBuilding()
 					.getRenderData().isSelected = true;
 		}
 
@@ -123,8 +123,8 @@ public class MapSelectionInputController
 		Ray ray = camera.getPickRay(screenX, screenY);
 		short result = -1;
 		float distance = -1;
-		for (short i = 0; i < city.getBuildingSlots().length; ++i) {
-			final float dist2 = city.getBuildingSlots()[i].getBuilding()
+		for (short i = 0; i < world.getBuildingSlots().length; ++i) {
+			final float dist2 = world.getBuildingSlots()[i].getBuilding()
 					.getRenderData().intersects(ray);
 			if (dist2 >= 0f && (distance < 0f || dist2 <= distance)) {
 				result = i;
@@ -139,8 +139,8 @@ public class MapSelectionInputController
 		resetSelection();
 	}
 
-	public void setCity(City city) {
-		this.city = city;
+	public void setWorld(World world) {
+		this.world = world;
 	}
 
 }

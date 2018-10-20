@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.Disposable;
 
 import de.gg.game.entities.Building;
 import de.gg.game.entities.BuildingSlot;
-import de.gg.game.world.City;
+import de.gg.game.world.World;
 
 /**
  * This class is responsible for rendering the city.
@@ -47,14 +47,14 @@ public class SceneRenderer implements Disposable {
 		this.camera.update();
 	}
 
-	public void render(City city) {
+	public void render(World world) {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT
 				| GL20.GL_STENCIL_BUFFER_BIT);
 
-		if (city.getSkybox() != null)
-			modelBatch.render(city.getSkybox());
+		if (world.getSkybox() != null)
+			modelBatch.render(world.getSkybox());
 
 		// Drawing to set stencil
 		Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
@@ -65,7 +65,7 @@ public class SceneRenderer implements Disposable {
 		Gdx.gl.glClear(GL20.GL_STENCIL_BUFFER_BIT);
 
 		modelBatch.begin(camera);
-		renderModels(city.getBuildingSlots());
+		renderModels(world.getBuildingSlots());
 		modelBatch.end();
 
 		// Now only draw, where previously not drawn
@@ -74,7 +74,7 @@ public class SceneRenderer implements Disposable {
 		Gdx.gl.glStencilMask(0x00);
 
 		outlineModelBatch.begin(camera);
-		renderOutlines(city.getBuildingSlots());
+		renderOutlines(world.getBuildingSlots());
 		outlineModelBatch.end();
 
 		Gdx.gl.glDisable(GL20.GL_STENCIL_TEST);

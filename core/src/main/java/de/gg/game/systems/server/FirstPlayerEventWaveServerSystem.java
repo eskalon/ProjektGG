@@ -3,7 +3,7 @@ package de.gg.game.systems.server;
 import java.util.Random;
 
 import de.gg.game.entities.Player;
-import de.gg.game.world.City;
+import de.gg.game.world.World;
 import de.gg.network.rmi.AuthoritativeResultListener;
 import de.gg.utils.RandomUtils;
 
@@ -22,7 +22,7 @@ public class FirstPlayerEventWaveServerSystem
 	}
 
 	@Override
-	public void init(City city, long seed) {
+	public void init(World world, long seed) {
 		this.random = new Random(seed);
 	}
 

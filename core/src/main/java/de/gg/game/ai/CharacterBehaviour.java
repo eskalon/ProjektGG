@@ -44,9 +44,9 @@ public class CharacterBehaviour {
 	 */
 	public static int getOpinionOfAnotherCharacter(short thisCharacterId,
 			short otherCharacterId, GameSession session) {
-		Character thisCharacter = session.getCity()
+		Character thisCharacter = session.getWorld()
 				.getCharacter(thisCharacterId);
-		Character otherCharacter = session.getCity()
+		Character otherCharacter = session.getWorld()
 				.getCharacter(otherCharacterId);
 
 		int opinion = 0;
@@ -126,7 +126,7 @@ public class CharacterBehaviour {
 			ImpeachmentVote matter, GameSession session) {
 		int tmp = -20;
 		short characterToImpeachId = matter.getPos().getCurrentHolder();
-		Character character = session.getCity().getCharacter(characterId);
+		Character character = session.getWorld().getCharacter(characterId);
 		NPCCharacterTrait trait = character.getNPCTrait();
 
 		if (characterId == characterToImpeachId) {

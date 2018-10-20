@@ -16,7 +16,7 @@ import de.gg.events.VoteFinishedEvent;
 import de.gg.game.data.vote.VoteOption;
 import de.gg.game.entities.Player;
 import de.gg.game.types.PositionType;
-import de.gg.game.world.City;
+import de.gg.game.world.World;
 import de.gg.input.ButtonClickListener;
 import de.gg.lang.Lang;
 import de.gg.ui.components.CharacterComponent;
@@ -31,12 +31,12 @@ public class GameVoteScreen extends BaseGameScreen {
 	private Table optionTable, voterTable, labelTable, buttonTable;
 	private List<Button> buttons = new ArrayList<>();
 
-	private City city;
+	private World world;
 	private Player localPlayer;
 
 	@Override
 	protected void initUI() {
-		city = game.getClient().getCity();
+		world = game.getClient().getWorld();
 		localPlayer = game.getClient().getLocalPlayer();
 
 		labelTable = new Table();
@@ -75,12 +75,12 @@ public class GameVoteScreen extends BaseGameScreen {
 		voterTable.add(new Label(Lang.get("screen.vote.voters"), skin))
 				.padBottom(30).row();
 		for (short s : ev.getMatterToVoteOn().getVoters()) {
-			PositionType posT = city.getCharacter(s).getPosition();
+			PositionType posT = world.getCharacter(s).getPosition();
 			boolean isLocalPlayer = s == game.getClient().getLocalPlayer()
 					.getCurrentlyPlayedCharacterId();
 
 			voterTable
-					.add(new CharacterComponent(skin, city.getCharacter(s),
+					.add(new CharacterComponent(skin, world.getCharacter(s),
 							isLocalPlayer ? -1
 									: game.getClient()
 											.getOpinionOfOtherCharacter(s)))
@@ -110,11 +110,11 @@ public class GameVoteScreen extends BaseGameScreen {
 				if (option.isCharacter() && option.getValue() != game
 						.getClient().getLocalPlayer()
 						.getCurrentlyPlayedCharacterId()) {
-					PositionType posT = city.getCharacters()
+					PositionType posT = world.getCharacters()
 							.get((short) option.getValue()).getPosition();
 
 					optionTable.add(new CharacterComponent(skin,
-							city.getCharacter((short) option.getValue()),
+							world.getCharacter((short) option.getValue()),
 							game.getClient().getOpinionOfOtherCharacter(
 									(short) option.getValue())))
 							.right().padBottom(8).row();
@@ -135,7 +135,7 @@ public class GameVoteScreen extends BaseGameScreen {
 		for (Entry<Short, Integer> e : ev.getResults().getIndividualVotes()
 				.entrySet()) {
 			System.out.println(String.format(" - %s: %d",
-					Lang.get(city.getCharacter(e.getKey())), e.getValue()));
+					Lang.get(world.getCharacter(e.getKey())), e.getValue()));
 		}
 	}
 

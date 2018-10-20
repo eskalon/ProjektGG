@@ -9,11 +9,11 @@ import de.gg.game.types.LawType;
 import de.gg.game.types.PositionType;
 import de.gg.game.types.SocialStatus;
 import de.gg.game.votes.ElectionVote;
-import de.gg.game.world.City;
+import de.gg.game.world.World;
 
 public class RoundEndSystem {
 
-	private City city;
+	private World world;
 	private short localPlayerId;
 
 	/**
@@ -25,8 +25,8 @@ public class RoundEndSystem {
 		this.localPlayerId = localPlayerId;
 	}
 
-	public void init(City city) {
-		this.city = city;
+	public void init(World world) {
+		this.world = world;
 	}
 
 	public void processCharacter(short id, Character c) {
@@ -79,12 +79,12 @@ public class RoundEndSystem {
 	}
 
 	public void processPlayer(short id, Player p) {
-		Character c = p.getCurrentlyPlayedCharacter(city);
+		Character c = p.getCurrentlyPlayedCharacter(world);
 
 		// INHERITANCE TAX
 		if (p.getPreviouslyInheritedValue() > 0) {
 			c.setGold(c.getGold() - Math.round(p.getPreviouslyInheritedValue()
-					* ((Integer) city.getLaws().get(LawType.INHERITANCE_TAX)
+					* ((Integer) world.getLaws().get(LawType.INHERITANCE_TAX)
 							/ 100F)));
 			p.setPreviouslyInheritedValue(0);
 		}
@@ -94,7 +94,7 @@ public class RoundEndSystem {
 			// Patrician & Cavalier
 			SocialStatus superiorStatus = SocialStatus
 					.values()[c.getStatus().getData().getLevel() + 1];
-			if (p.getFortune(city) >= superiorStatus.getData()
+			if (p.getFortune(world) >= superiorStatus.getData()
 					.getFortuneRequirement()
 					&& c.getHighestPositionLevel() >= superiorStatus.getData()
 							.getPositionLevelRequirement()) {
@@ -114,7 +114,7 @@ public class RoundEndSystem {
 	public void processPosition(PositionType type, Position p) {
 		// Add the election to the matters to vote on
 		if (p.hasApplicants())
-			city.getMattersToHoldVoteOn().add(new ElectionVote(city, type));
+			world.getMattersToHoldVoteOn().add(new ElectionVote(world, type));
 	}
 
 }

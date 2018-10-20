@@ -1,6 +1,6 @@
 package de.gg.game.systems;
 
-import de.gg.game.world.City;
+import de.gg.game.world.World;
 
 /**
  * The child classes of this class are used to process the game.
@@ -15,10 +15,10 @@ public abstract class ProcessingSystem<E> {
 	/**
 	 * Is called to initialize the system.
 	 *
-	 * @param city
+	 * @param world
 	 * @param seed
 	 */
-	public void init(City city, long seed) {
+	public void init(World world, long seed) {
 	}
 
 	public boolean wasProcessed() {

@@ -1,16 +1,10 @@
 package de.gg.game.types;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 import com.badlogic.gdx.assets.AssetDescriptor;
-import com.badlogic.gdx.assets.AssetManager;
 
 import de.gg.lang.Localizable;
 import de.gg.utils.asset.JSON;
 import de.gg.utils.asset.JSONLoader.JSONLoaderParameter;
-import net.dermetfan.gdx.assets.AnnotationAssetManager.Asset;
 
 public enum CartType implements Localizable {
 	BASIC;

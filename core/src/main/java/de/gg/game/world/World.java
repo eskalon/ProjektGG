@@ -21,7 +21,7 @@ import de.gg.game.votes.VoteableMatter;
 import de.gg.network.LobbyPlayer;
 import de.gg.ui.rendering.RenderData;
 
-public class City {
+public class World {
 
 	private ModelInstance skyBox;
 	List<RenderData> staticProps = new ArrayList<>();
@@ -48,7 +48,7 @@ public class City {
 
 	LinkedList<VoteableMatter> mattersToVoteOn = new LinkedList<>();
 
-	public City() {
+	public World() {
 	}
 
 	public synchronized void generate(GameSessionSetup setup,

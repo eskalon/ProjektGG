@@ -4,7 +4,7 @@ import java.util.List;
 
 import de.gg.game.data.vote.VoteOption;
 import de.gg.game.data.vote.VoteResults;
-import de.gg.game.world.City;
+import de.gg.game.world.World;
 
 /**
  * This class represents a matter on which a vote is held on.
@@ -38,9 +38,9 @@ public abstract class VoteableMatter {
 	 *
 	 * @param result
 	 *            The result of the vote.
-	 * @param city
-	 *            The city this vote took place in.
+	 * @param world
+	 *            The world this vote took place in.
 	 */
-	public abstract void processVoteResult(VoteResults result, City city);
+	public abstract void processVoteResult(VoteResults result, World world);
 
 }

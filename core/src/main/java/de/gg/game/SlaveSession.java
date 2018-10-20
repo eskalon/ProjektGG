@@ -63,7 +63,7 @@ public class SlaveSession extends GameSession
 		// Setup the client systems
 		ProcessingSystem<Player> s;
 		s = new FirstEventWaveClientSystem(eventBus, localNetworkId);
-		s.init(city, getGameSeed());
+		s.init(world, getGameSeed());
 		this.playerSystems.add(s);
 	}
 
@@ -134,14 +134,14 @@ public class SlaveSession extends GameSession
 
 	@Override
 	public void onCharacterDamage(short characterId, short damage) {
-		city.getCharacters().get(characterId)
-				.setHp(city.getCharacters().get(characterId).getHp() - damage);
+		world.getCharacters().get(characterId)
+				.setHp(world.getCharacters().get(characterId).getHp() - damage);
 
 	}
 
 	@Override
 	public void onPlayerIllnessChange(short playerId, boolean isIll) {
-		city.getPlayers().get(playerId).setIll(isIll);
+		world.getPlayers().get(playerId).setIll(isIll);
 	}
 
 	@Override
@@ -160,14 +160,14 @@ public class SlaveSession extends GameSession
 
 	@Override
 	public void onAppliedForPosition(short characterId, PositionType type) {
-		city.getPositions().get(type).getApplicants().add(characterId);
+		world.getPositions().get(type).getApplicants().add(characterId);
 	}
 
 	@Override
 	public void onImpeachmentVoteArranged(short targetCharacterId,
 			short callerCharacterId) {
-		city.getMattersToHoldVoteOn()
-				.add(new ImpeachmentVote(city, city.getCharacters()
+		world.getMattersToHoldVoteOn()
+				.add(new ImpeachmentVote(world, world.getCharacters()
 						.get(targetCharacterId).getPosition(),
 						callerCharacterId));
 	}
