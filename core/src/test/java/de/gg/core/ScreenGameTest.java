@@ -157,7 +157,7 @@ public class ScreenGameTest extends ProjektGGUnitTest {
 		// Screen pushen
 		waiter.assertEquals(testScreen.isLoaded(), false);
 		app.pushScreen(new String(screenName));
-		waiter.await(500);
+		waiter.await(750);
 		waiter.assertEquals(testScreen.isLoaded(), true);
 		waiter.assertEquals(testScreen, app.getScreen());
 

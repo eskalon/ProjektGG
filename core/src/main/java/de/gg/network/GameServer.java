@@ -170,9 +170,8 @@ public class GameServer {
 
 									ByteBuffer buffer = ByteBuffer
 											.allocate(256);
-									broadcastServer.getSerializationFactory()
-											.newInstance(null)
-											.write(buffer, packet);
+									broadcastServer.getSerialization()
+											.write(null, buffer, packet);
 									buffer.flip();
 
 									datagramChannel.send(buffer, fromAddress);

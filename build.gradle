@@ -50,17 +50,17 @@ project(":core") {
         //compile "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "net.dermetfan.libgdx-utils:libgdx-utils:0.13.4"
-		compile "com.github.crykn:kryonet:2.22.2"
+		compile "com.github.crykn:kryonet:2.22.4"
 		compile "commons-io:commons-io:2.6"
-		compile "com.google.guava:guava:26.0-jre"
+		compile "com.google.guava:guava:27.0-jre"
 		compile "com.google.code.gson:gson:2.8.5"
         //compile fileTree(dir: 'libs', include: '*.jar')
         
         testCompile "org.junit.platform:junit-platform-launcher:1.2.0" // needed for a bug in eclipse
         
-        testCompile "org.junit.jupiter:junit-jupiter-engine:5.2.0"
-        testCompile "com.github.jhalterman:concurrentunit:concurrentunit-0.4.3"
-   		testCompile "org.mockito:mockito-core:2.21.0"
+        testCompile "org.junit.jupiter:junit-jupiter-engine:5.3.1"
+        testCompile "net.jodah:concurrentunit:0.4.3"
+   		testCompile "org.mockito:mockito-core:2.23.0"
         testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
