@@ -13,11 +13,14 @@ import de.gg.utils.asset.JSONLoader.JSONLoaderParameter;
  * Represents a position/post a character can take in the city or state.
  */
 public enum PositionType implements Localizable {
+	/* Citizen */
 	CITY_SERVANT_1, CITY_SERVANT_2, TOWN_CLERK_1, TOWN_CLERK_2, COUNCIL_ASSISTANT,
 	SPY_1, SPY_2, INFORMER, COUNCIL_INFORMANT,
 	GUARDSMAN_1, GUARDSMAN_2, GUARDSMAN_3, ENSIGN, CAPTAIN,
+	/* Partician */
 	COUNCILMAN_1, COUNCILMAN_2, COUNCILMAN_3, TREASURER, MAYOR,
-	JAILER_1, JAILER_2, JUDGE_1, JUDGE_2, CHAIRMAN_JUDGE,
+	JAILER, JUROR, JUDGE_1, JUDGE_2, CHAIRMAN_JUDGE,
+	/* Cavalier */
 	MARSHAL, GREY_EMINENCE, CHANCELLOR, RULER;
 
 	public final static String POSITION_JSON_DIR = "data/positions";
