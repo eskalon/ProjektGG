@@ -13,7 +13,20 @@ import de.gg.engine.lang.Localizable;
  * Represents a position/post a character can take in the city or state.
  */
 public enum PositionType implements Localizable {
-	MAYOR, COUNCILMAN_1;
+	/* CITIZEN LEVEL */
+	/* City Servants */
+	CITY_SERVANT_1, CITY_SERVANT_2, TOWN_CLERK_1, TOWN_CLERK_2, COUNCIL_ASSISTANT,
+	/* Informants */
+	SPY_1, SPY_2, INFORMER, COUNCIL_INFORMANT,
+	/* Guards */
+	GUARDSMAN_1, GUARDSMAN_2, GUARDSMAN_3, ENSIGN, CAPTAIN,
+	/* PATRICIAN LEVEL */
+	/* Council */
+	COUNCILMAN_1, COUNCILMAN_2, COUNCILMAN_3, TREASURER, MAYOR,
+	/* Court */
+	JAILER, JUROR, JUDGE_1, JUDGE_2, CHAIRMAN_JUDGE,
+	/* CAVALIER LEVEL */
+	MARSHAL, GREY_EMINENCE, CHANCELLOR, RULER;
 
 	public final static String POSITION_JSON_DIR = "data/positions";
 
