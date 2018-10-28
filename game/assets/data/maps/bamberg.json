@@ -1,0 +1,17 @@
+{
+	"name": "Bamberg",
+	"buildingSlots": [
+		{
+			"posX": 15,
+			"posZ": 25,
+			"rotationToStreet": 70,
+			"type": "CITY_NORMAL"
+		},
+		{
+			"posX": -15,
+			"posZ": 10,
+			"rotationToStreet": 190,
+			"type": "CITY_NORMAL"
+		}
+	]
+}

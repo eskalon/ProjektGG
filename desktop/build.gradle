@@ -3,7 +3,7 @@ apply plugin: "java"
 sourceCompatibility = 1.9
 
 project.ext.mainClassName = "de.gg.desktop.DesktopLauncher"
-project.ext.assetsDir = new File("../core/assets");
+project.ext.assetsDir = new File("../game/assets");
 
 task run(dependsOn: classes, type: JavaExec) {
     main = project.mainClassName
@@ -50,7 +50,7 @@ dist.dependsOn jar
 eclipse {
     project {
         name = appName + "-desktop"
-        linkedResource name: 'assets', type: '2', location: 'PARENT-1-PROJECT_LOC/core/assets'
+        linkedResource name: 'assets', type: '2', location: 'PARENT-1-PROJECT_LOC/game/assets'
     }
 }
 

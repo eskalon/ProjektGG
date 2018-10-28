@@ -33,36 +33,58 @@ project(":desktop") {
     apply plugin: "java"
 
     dependencies {
-        compile project(":core")
+        compile project(":game")
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        //compile "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
     }
 }
-project(":core") {
+project(":engine") {
     apply plugin: "java"
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        //compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
-        //compile "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        compile "net.dermetfan.libgdx-utils:libgdx-utils:0.13.4"
         compile "com.github.crykn:kryonet:2.22.4"
-        compile "commons-io:commons-io:2.6"
         compile "com.google.guava:guava:27.0-jre"
         compile "com.google.code.gson:gson:2.8.5"
         //compile fileTree(dir: 'libs', include: '*.jar')
-        
+
         testCompile "org.junit.platform:junit-platform-launcher:1.2.0" // needed for a bug in eclipse
-        
+
         testCompile "org.junit.jupiter:junit-jupiter-engine:5.3.1"
         testCompile "net.jodah:concurrentunit:0.4.3"
-   		testCompile "org.mockito:mockito-core:2.23.0"
+        testCompile "org.mockito:mockito-core:2.23.0"
         testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        testCompile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        testCompile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+    }
+    
+    sourceSets.test {
+   		resources.srcDirs = ["src/test/assets"]
+	}
+}
+
+project(":game") {
+    apply plugin: "java"
+
+    dependencies {
+        compile project(":engine")
+        compile "commons-io:commons-io:2.6"
+        
+        testCompile "org.junit.platform:junit-platform-launcher:1.2.0" // needed for a bug in eclipse
+        
+        testCompile project(":engine")
+        testCompile "org.junit.jupiter:junit-jupiter-engine:5.3.1"
+        testCompile "net.jodah:concurrentunit:0.4.3"
+        testCompile "org.mockito:mockito-core:2.23.0"
+        testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        //testCompile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        //testCompile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
     }
 }
 
