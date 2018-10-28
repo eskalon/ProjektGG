@@ -35,7 +35,8 @@ com_crashlytics_export_strings.xml
 .project
 .metadata/
 /android/bin/
-/core/bin/
+/engine/bin/
+/game/bin/
 /desktop/bin/
 /html/bin/
 /ios/bin/
@@ -52,7 +53,8 @@ com_crashlytics_export_strings.xml
 ## NetBeans
 /nbproject/private/
 /android/nbproject/private/
-/core/nbproject/private/
+/engine/nbproject/private/
+/game/nbproject/private/
 /desktop/nbproject/private/
 /html/nbproject/private/
 /ios/nbproject/private/
@@ -60,7 +62,8 @@ com_crashlytics_export_strings.xml
 
 /build/
 /android/build/
-/core/build/
+/engine/build/
+/game/build/
 /desktop/build/
 /html/build/
 /ios/build/
@@ -68,7 +71,8 @@ com_crashlytics_export_strings.xml
 
 /nbbuild/
 /android/nbbuild/
-/core/nbbuild/
+/game/nbbuild/
+/engine/nbbuild/
 /desktop/nbbuild/
 /html/nbbuild/
 /ios/nbbuild/
@@ -76,7 +80,8 @@ com_crashlytics_export_strings.xml
 
 /dist/
 /android/dist/
-/core/dist/
+/engine/dist/
+/game/dist/
 /desktop/dist/
 /html/dist/
 /ios/dist/
@@ -84,7 +89,8 @@ com_crashlytics_export_strings.xml
 
 /nbdist/
 /android/nbdist/
-/core/nbdist/
+/engine/nbdist/
+/game/nbdist/
 /desktop/nbdist/
 /html/nbdist/
 /ios/nbdist/
@@ -99,7 +105,8 @@ nb-configuration.xml
 gradle-app.setting
 /build/
 /android/build/
-/core/build/
+/engine/build/
+/game/build/
 /desktop/build/
 /html/build/
 /ios/build/
