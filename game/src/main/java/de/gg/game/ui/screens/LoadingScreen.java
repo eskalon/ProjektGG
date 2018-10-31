@@ -7,12 +7,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ObjectMap;
 
 import de.gg.engine.asset.AnnotationAssetManager;
 import de.gg.engine.asset.AnnotationAssetManager.InjectAsset;
-import de.gg.engine.lang.Lang;
 import de.gg.game.factories.CharacterFactory;
 import de.gg.game.types.BuildingType;
 import de.gg.game.types.GameMap;
@@ -152,9 +150,6 @@ public class LoadingScreen extends BaseLoadingScreen {
 		// Shader
 		assetManager.load(TestShader.class);
 
-		// Language bundle
-		assetManager.load(Lang.LANG_BUNDLE_PATH, I18NBundle.class);
-
 		// Basic UI Stuff
 		assetManager.load(BaseUIScreen.class);
 
@@ -203,12 +198,6 @@ public class LoadingScreen extends BaseLoadingScreen {
 		game.setUISkin(assetManager.get(SKIN_PATH));
 		game.getUISkin().get("with-background", LabelStyle.class).background
 				.setLeftWidth(9);
-
-		// Set the localization
-		I18NBundle langBundle = assetManager.get(Lang.LANG_BUNDLE_PATH,
-				I18NBundle.class);
-		I18NBundle.setExceptionOnMissingKey(false);
-		Lang.setBundle(langBundle);
 
 		// Set the type data
 		TypeRegistry.getInstance().initialize(assetManager);

@@ -41,6 +41,7 @@ import de.gg.game.types.PositionType;
 import de.gg.game.ui.components.BasicDialog;
 import de.gg.game.ui.rendering.SceneRenderer;
 import de.gg.game.ui.rendering.TestShader;
+import de.gg.game.utils.DiscordGGHandler;
 import de.gg.game.world.World;
 
 /**
@@ -345,6 +346,7 @@ public class GameMapScreen extends BaseGameScreen {
 						}
 					})).start();
 
+					DiscordGGHandler.getInstance().setMenuPresence();
 					game.pushScreen("mainMenu");
 				}
 			};

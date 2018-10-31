@@ -26,6 +26,7 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
         maven { url "https://jitpack.io" }
+        jcenter()
     }
 }
 
@@ -48,6 +49,7 @@ project(":engine") {
         compile "com.github.crykn:kryonet:2.22.4"
         compile "com.google.guava:guava:27.0-jre"
         compile "com.google.code.gson:gson:2.8.5"
+        compile "com.jagrosh:DiscordIPC:0.4"
         //compile fileTree(dir: 'libs', include: '*.jar')
 
         testCompile "org.junit.platform:junit-platform-launcher:1.2.0" // needed for a bug in eclipse

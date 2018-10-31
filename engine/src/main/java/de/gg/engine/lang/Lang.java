@@ -13,7 +13,6 @@ import com.badlogic.gdx.utils.I18NBundle;
  */
 public class Lang {
 
-	public static final String LANG_BUNDLE_PATH = "lang/lang";
 	private static I18NBundle bundle;
 
 	private Lang() {

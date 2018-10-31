@@ -17,6 +17,8 @@ import de.gg.engine.lang.Lang;
 import de.gg.engine.log.Log;
 import de.gg.game.events.AllPlayersReadyEvent;
 import de.gg.game.events.ServerReadyEvent;
+import de.gg.game.session.GameClock;
+import de.gg.game.utils.DiscordGGHandler;
 
 /**
  * This screen is rendered after a round ends. When the server is
@@ -148,6 +150,12 @@ public class GameRoundendScreen extends BaseGameScreen {
 		this.serverReady = false;
 
 		if (event.isNextRound()) {
+			DiscordGGHandler.getInstance().setGamePresence(
+					game.getClient().getSession().getSessionSetup().getMap(),
+					GameClock.getYear(
+							game.getClient().getSession().getCurrentRound()),
+					1, 6);
+
 			if (!game.getClient().getSession().getWorld()
 					.getMattersToHoldVoteOn().isEmpty())
 				game.pushScreen("vote");

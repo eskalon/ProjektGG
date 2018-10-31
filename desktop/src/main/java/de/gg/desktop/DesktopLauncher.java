@@ -16,8 +16,9 @@ public class DesktopLauncher {
 	 * supported start arguments are:
 	 * <ul>
 	 * <li><code>--debug</code>: sets the game to debug mode.
-	 * <li><code>--novid</code>: skips the splash screen.
+	 * <li><code>--discord</code>: enables the discord integration.
 	 * <li><code>--fps</code>: shows a fps counter in-game.
+	 * <li><code>--novid</code>: skips the splash screen.
 	 * <li><code>--width [width]</code>: sets the window's width
 	 * <li><code>--height [height]</code>: sets the window's height
 	 * </ul>
@@ -28,6 +29,8 @@ public class DesktopLauncher {
 	public static void main(String[] args) {
 		MicroOptions options = new MicroOptions();
 		options.option("debug").describedAs("enables debugmode").isUnary();
+		options.option("discord").describedAs("enables the discord integration")
+				.isUnary();
 		options.option("fps").describedAs("enables a fps counter").isUnary();
 		options.option("novid").describedAs("no splashscreen").isUnary();
 		options.option("width").describedAs("the width of the game's window");
@@ -63,7 +66,7 @@ public class DesktopLauncher {
 		try {
 			// Start the game
 			new LwjglApplication(new ProjektGG(options.has("debug"),
-					!options.has("novid"), options.has("fps")), config);
+					!options.has("novid"), options.has("fps"), options.has("discord")), config);
 		} catch (Exception e) {
 			exitWithError(String.format(
 					"An unexpected error occurred while starting the game: %s",

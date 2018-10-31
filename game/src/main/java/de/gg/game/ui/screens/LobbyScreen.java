@@ -60,6 +60,8 @@ public class LobbyScreen extends BaseUIScreen {
 	private HashMap<Short, LobbyPlayer> players;
 	private @Nullable SavedGame savedGame;
 
+	private boolean gameStarted = false;
+
 	@Override
 	protected void onInit() {
 		super.onInit();
@@ -293,8 +295,9 @@ public class LobbyScreen extends BaseUIScreen {
 	 * Starts the game if all players are ready.
 	 */
 	private void startGameIfReady() {
-		if (PlayerUtils.areAllPlayersReady(players.values())) {
-			addChatMessageToUI(null, "Spiel startet...");
+		if (PlayerUtils.areAllPlayersReady(players.values()) && !gameStarted) {
+			gameStarted = true;
+			addChatMessageToUI(null, Lang.get("screen.lobby.game_starting"));
 			game.getInputMultiplexer().removeInputProcessors();
 
 			// Set up the game on the client side
@@ -302,6 +305,8 @@ public class LobbyScreen extends BaseUIScreen {
 
 			Log.info("Client", "Assets werden geladen...");
 			game.pushScreen("gameLoading");
+		} else {
+			gameStarted = false;
 		}
 	}
 

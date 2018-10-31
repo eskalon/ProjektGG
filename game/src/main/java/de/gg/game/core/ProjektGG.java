@@ -63,7 +63,7 @@ public class ProjektGG extends BaseGame {
 	private OrthographicCamera uiCamera;
 	private CameraWrapper gameCamera;
 
-	private boolean showSplashscreen, fpsCounter;
+	private boolean showSplashscreen, fpsCounter, discordIntegration;
 
 	private Skin uiSkin;
 
@@ -71,11 +71,12 @@ public class ProjektGG extends BaseGame {
 	private GameClient client;
 
 	public ProjektGG(boolean debug, boolean showSplashscreen,
-			boolean fpsCounter) {
+			boolean fpsCounter, boolean discordIntegration) {
 		super(NAME.trim().replace(" ", "-").toLowerCase(), debug);
 
 		this.showSplashscreen = showSplashscreen;
 		this.fpsCounter = fpsCounter;
+		this.discordIntegration = discordIntegration;
 	}
 
 	@Override
@@ -197,6 +198,10 @@ public class ProjektGG extends BaseGame {
 	 */
 	public SpriteBatch getSpriteBatch() {
 		return batch;
+	}
+
+	public boolean isDiscordIntegrationEnabled() {
+		return discordIntegration;
 	}
 
 	/**
