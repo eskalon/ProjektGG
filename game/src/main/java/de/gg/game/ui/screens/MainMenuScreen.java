@@ -26,7 +26,7 @@ import de.gg.game.input.ButtonClickListener;
  */
 public class MainMenuScreen extends AbstractGGUIScreen {
 
-	@Asset("ui/backgrounds/main_menu_screen.jpg")
+	@Asset("ui/backgrounds/main_menu_screen.png")
 	private Texture backgroundImage;
 	@Asset("ui/images/logo.png")
 	private Texture logoTexture;
@@ -45,7 +45,7 @@ public class MainMenuScreen extends AbstractGGUIScreen {
 
 		SequenceAction sequence = new SequenceAction();
 		sequence.addAction(Actions.alpha(0F));
-		sequence.addAction(Actions.delay(0.8F));
+		sequence.addAction(Actions.delay(0.87F));
 		sequence.addAction(Actions.alpha(1F, 1.6F, Interpolation.pow2In));
 		stage.addAction(sequence);
 

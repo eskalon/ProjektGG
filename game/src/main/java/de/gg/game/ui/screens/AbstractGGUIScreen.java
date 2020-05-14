@@ -64,7 +64,7 @@ public abstract class AbstractGGUIScreen extends AbstractImageScreen {
 				.setProjectionMatrix(application.getUICamera().combined);
 		stage.act(delta);
 		stage.draw();
-		
+
 		stage.getBatch().setColor(Color.WHITE);
 	}
 
@@ -75,8 +75,11 @@ public abstract class AbstractGGUIScreen extends AbstractImageScreen {
 	@Override
 	public void show() {
 		super.show();
-		// stage.mouseMoved(1, 1); // fixes a bug when a screen is shown the
+
+		// Fixes ui elements still being selected when the stage is shown a
 		// second time
+		stage.mouseMoved(1, 1);
+		stage.touchUp(1, 1, 0, 0);
 
 		setUIValues();
 	}

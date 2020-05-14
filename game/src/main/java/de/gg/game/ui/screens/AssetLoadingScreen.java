@@ -40,9 +40,11 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 
 	// Assets of the loading screen itself
 	private static final String BACKGROUND_PATH = "ui/backgrounds/loading_screen.jpg";
+	private static final String TITLE_PATH = "ui/images/title.png";
 	private static final String BAR_TOP_PATH = "ui/images/loading_bar_top.png";
 	private static final String BAR_BOTTOM_PATH = "ui/images/loading_bar_bottom.png";
 	private Texture backgroundTexture;
+	private Texture titleTexture;
 	private Texture topBarTexture;
 	private Texture bottomBarTexture;
 
@@ -96,10 +98,12 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 		// don't use injection for the own assets so the skin, the lang bundle,
 		// etc. can be loaded normally
 		application.getAssetManager().load(BACKGROUND_PATH, Texture.class);
+		application.getAssetManager().load(TITLE_PATH, Texture.class);
 		application.getAssetManager().load(BAR_TOP_PATH, Texture.class);
 		application.getAssetManager().load(BAR_BOTTOM_PATH, Texture.class);
 		application.getAssetManager().finishLoading();
 		backgroundTexture = application.getAssetManager().get(BACKGROUND_PATH);
+		titleTexture = application.getAssetManager().get(TITLE_PATH);
 		topBarTexture = application.getAssetManager().get(BAR_TOP_PATH);
 		bottomBarTexture = application.getAssetManager().get(BAR_BOTTOM_PATH);
 	}
@@ -137,7 +141,7 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 	@Override
 	protected void onFinishedLoading() {
 		application.getAssetManager().injectAssets(this);
-		
+
 		// Load the localization
 		I18NBundle.setExceptionOnMissingKey(false);
 		Lang.setBundle(langBundle);
@@ -151,7 +155,7 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 		fontMap.put("text-20", textFont20);
 		fontMap.put("title-24", titleFont24);
 		fontMap.put("handwritten-20", handwrittenFont20);
-		
+
 		application.getAssetManager().load(SKIN_PATH, Skin.class,
 				new SkinLoader.SkinParameter(SKIN_TEXTURE_ATLAS_PATH, fontMap));
 		application.getAssetManager().finishLoadingAsset(SKIN_PATH);
@@ -160,7 +164,7 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 				.setUISkin(application.getAssetManager().get(SKIN_PATH));
 		((ProjektGGApplication) application).getUISkin().get("with-background",
 				LabelStyle.class).background.setLeftWidth(9);
-		
+
 		// Set the type data
 		TypeRegistry.getInstance().initialize(application.getAssetManager());
 
@@ -235,20 +239,24 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 		application.getSpriteBatch().draw(this.backgroundTexture, 0, 0,
 				application.getWidth(), application.getHeight());
 
+		application.getSpriteBatch().draw(titleTexture,
+				(application.getWidth() / 2)
+						- (titleTexture.getWidth() / 2 * 1.35F) + 1,
+				150, titleTexture.getWidth() * 1.35F,
+				titleTexture.getHeight() * 1.35F);
+
 		// Get useful values
-		float viewPortWidth = application.getWidth();
-		float viewPortHeight = application.getHeight();
-		float imageWidth = this.topBarTexture.getWidth();
-		float imageHeight = this.topBarTexture.getHeight();
+		float imageWidth = topBarTexture.getWidth();
+		float imageHeight = topBarTexture.getHeight();
 
 		// The actual drawing
-		application.getSpriteBatch().draw(this.bottomBarTexture,
-				(viewPortWidth / 2) - (imageWidth / 2) + 1,
-				(viewPortHeight / 4) - imageHeight / 2);
-		application.getSpriteBatch().draw(this.topBarTexture,
-				(viewPortWidth / 2) - (imageWidth / 2),
-				(viewPortHeight / 4) - imageHeight / 2, imageWidth * progress,
-				imageHeight);
+		application.getSpriteBatch().draw(bottomBarTexture,
+				(application.getWidth() / 2) - (imageWidth / 2) + 1,
+				(application.getHeight() / 4) - imageHeight / 2 + 95);
+		application.getSpriteBatch().draw(topBarTexture,
+				(application.getWidth() / 2) - (imageWidth / 2),
+				(application.getHeight() / 4) - imageHeight / 2 + 95, 0, 0,
+				Math.round(imageWidth * progress), (int) imageHeight);
 
 		application.getSpriteBatch().end();
 	}

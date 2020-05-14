@@ -128,7 +128,7 @@ public class ProjektGGApplication extends EskalonApplication {
 
 		// Other transitions
 		BlendingTransition assetLoadingTransition = new BlendingTransition(
-				batch, 0.41F, Interpolation.pow2In);
+				batch, 0.51F, Interpolation.pow2In);
 		screenManager.addScreenTransition("assetLoadingTransition",
 				assetLoadingTransition);
 

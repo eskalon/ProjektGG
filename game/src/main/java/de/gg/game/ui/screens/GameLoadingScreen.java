@@ -108,19 +108,17 @@ public class GameLoadingScreen extends AbstractAssetLoadingScreen {
 				application.getWidth(), application.getHeight());
 
 		// Get useful values
-		float viewPortWidth = application.getWidth();
-		float viewPortHeight = application.getHeight();
-		float imageWidth = this.topBarTexture.getWidth();
-		float imageHeight = this.topBarTexture.getHeight();
+		float imageWidth = topBarTexture.getWidth();
+		float imageHeight = topBarTexture.getHeight();
 
 		// The actual drawing
-		application.getSpriteBatch().draw(this.bottomBarTexture,
-				(viewPortWidth / 2) - (imageWidth / 2) + 1,
-				(viewPortHeight / 4) - imageHeight / 2);
-		application.getSpriteBatch().draw(this.topBarTexture,
-				(viewPortWidth / 2) - (imageWidth / 2),
-				(viewPortHeight / 4) - imageHeight / 2, imageWidth * progress,
-				imageHeight);
+		application.getSpriteBatch().draw(bottomBarTexture,
+				(application.getWidth() / 2) - (imageWidth / 2) + 1,
+				(application.getHeight() / 4) - imageHeight / 2);
+		application.getSpriteBatch().draw(topBarTexture,
+				(application.getWidth() / 2) - (imageWidth / 2),
+				(application.getHeight() / 4) - imageHeight / 2, 0, 0,
+				Math.round(imageWidth * progress), (int) imageHeight);
 
 		application.getSpriteBatch().end();
 	}

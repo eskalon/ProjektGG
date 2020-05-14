@@ -52,13 +52,15 @@ public class BasicDialog extends Dialog {
 	@Override
 	public Dialog show(Stage stage) {
 		show(stage, sequence(Actions.alpha(0),
-				Actions.fadeIn(0.2f, Interpolation.fade)));
+				Actions.fadeIn(0.3F, Interpolation.fade)));
+		setPosition(Math.round((stage.getWidth() - getWidth()) / 2),
+				Math.round((stage.getHeight() - getHeight()) / 2));
 		return this;
 	}
 
 	@Override
 	public void hide() {
-		hide(fadeOut(0.2f, Interpolation.fade));
+		hide(fadeOut(0.25F, Interpolation.fade));
 	}
 
 	/**
