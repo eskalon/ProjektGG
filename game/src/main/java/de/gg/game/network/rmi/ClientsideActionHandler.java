@@ -3,10 +3,10 @@ package de.gg.game.network.rmi;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import de.gg.engine.log.Log;
-import de.gg.engine.utils.SimpleCallback;
+import de.eskalon.commons.log.Log;
+import de.eskalon.commons.utils.ISimpleCallback;
+import de.gg.game.model.types.PositionType;
 import de.gg.game.network.LobbyPlayer;
-import de.gg.game.types.PositionType;
 
 /**
  * This class is a convenience wrapper for {@link SlaveActionListener}. It is
@@ -60,13 +60,13 @@ public class ClientsideActionHandler {
 		executor.submit(() -> actionListener.onVoteCast(vote, networkId));
 	}
 
-	public void applyForPosition(PositionType t, SimpleCallback callback) {
+	public void applyForPosition(PositionType t, ISimpleCallback callback) {
 		executor.submit(() -> callback
 				.call(actionListener.onAppliedForPosition(t, networkId)));
 	}
 
 	public void arrangeImpeachmentVote(short targetCharacterId,
-			SimpleCallback callback) {
+			ISimpleCallback callback) {
 		executor.submit(() -> callback.call(actionListener
 				.onImpeachmentVoteArranged(targetCharacterId, networkId)));
 	}

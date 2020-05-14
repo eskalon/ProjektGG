@@ -73,5 +73,25 @@
 		"name": "Walter",
 		"surname": "Faber",
 		"isMale": true
+	},
+	{
+		"name": "Marie",
+		"surname": "Zickwolf",
+		"isMale": false
+	},
+	{
+		"name": "Luise",
+		"surname": "von Briest",
+		"isMale": false
+	},
+	{
+		"name": "Alfons",
+		"surname": "Ammetsberger",
+		"isMale": true
+	},
+	{
+		"name": "Marie",
+		"surname": "Stahlbaum",
+		"isMale": false
 	}
 ]

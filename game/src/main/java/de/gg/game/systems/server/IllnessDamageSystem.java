@@ -1,8 +1,8 @@
 package de.gg.game.systems.server;
 
-import de.gg.game.entities.Player;
+import de.gg.game.model.World;
+import de.gg.game.model.entities.Player;
 import de.gg.game.network.rmi.AuthoritativeResultListener;
-import de.gg.game.world.World;
 
 public class IllnessDamageSystem extends ServerProcessingSystem<Player> {
 

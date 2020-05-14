@@ -1,40 +1,33 @@
 package de.gg.game.input;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.google.common.base.Preconditions;
 
-import de.gg.engine.setting.ConfigHandler;
-import de.gg.engine.utils.MathUtils;
+import de.eskalon.commons.audio.ISoundManager;
 
 /**
  * This class takes care of a button click. It especially plays the click sound.
  */
 public abstract class ButtonClickListener extends InputListener {
 
-	private Sound clickSound;
-	private ConfigHandler settings;
+	private ISoundManager soundManager;
 
 	/**
-	 * @param clickSound
-	 *            The used click sound.
-	 * @param settings
-	 *            The game's settings.
+	 * @param soundManager
+	 *            the used click sound
 	 */
-	public ButtonClickListener(Sound clickSound, ConfigHandler settings) {
-		Preconditions.checkNotNull(clickSound);
-		Preconditions.checkNotNull(settings);
+	public ButtonClickListener(ISoundManager soundManager) {
+		Preconditions.checkNotNull(soundManager);
 
-		this.clickSound = clickSound;
-		this.settings = settings;
+		this.soundManager = soundManager;
 	}
 
 	@Override
 	public boolean touchDown(InputEvent event, float x, float y, int pointer,
 			int button) {
 		if (arePreconditionsMet()) {
-			clickSound.play(getUIVolumeLevel());
+			soundManager.playSoundEffect("button_click");
 			onClick();
 
 			return true;
@@ -42,24 +35,18 @@ public abstract class ButtonClickListener extends InputListener {
 		return false;
 	}
 
-	private float getUIVolumeLevel() {
-		return (float) MathUtils.linToExp(settings.getFloat("effectVolume", 1F)
-				* settings.getFloat("masterVolume", 1F), 2);
-	}
-
 	/**
 	 * If the button click should only trigger in certain circumstances this can
-	 * be handled by overriding this method.
+	 * be taken care of by overriding this method.
 	 *
-	 * @return Whether the preconditions for this button click are met. Per
-	 *         default this is always <code>true</code>.
+	 * @return whether the preconditions for this button click are met
 	 */
 	protected boolean arePreconditionsMet() {
 		return true;
 	}
 
 	/**
-	 * This method is responsible for taking care of the input event.
+	 * This method is responsible for handling the input event.
 	 */
 	protected abstract void onClick();
 

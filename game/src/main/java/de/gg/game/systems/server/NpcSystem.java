@@ -1,6 +1,6 @@
 package de.gg.game.systems.server;
 
-import de.gg.game.entities.Character;
+import de.gg.game.model.entities.Character;
 import de.gg.game.network.rmi.AuthoritativeResultListener;
 
 /**

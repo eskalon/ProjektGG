@@ -5,17 +5,14 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.collision.Ray;
 import com.google.common.eventbus.EventBus;
 
-import de.gg.engine.input.DefaultInputProcessor;
-import de.gg.engine.input.SettableKeysProcessor;
-import de.gg.engine.setting.ConfigHandler;
+import de.eskalon.commons.input.DefaultInputProcessor;
 import de.gg.game.events.HouseEnterEvent;
 import de.gg.game.events.HouseSelectionEvent;
-import de.gg.game.world.World;
+import de.gg.game.model.World;
 
-public class MapSelectionInputController
-		implements DefaultInputProcessor, SettableKeysProcessor {
+public class MapSelectionInputController implements DefaultInputProcessor {
 
-	private int SELECTION_BUTTON = Buttons.LEFT;
+	private int selectionButton = Buttons.LEFT;
 
 	private EventBus eventBus;
 	private PerspectiveCamera camera;
@@ -47,13 +44,12 @@ public class MapSelectionInputController
 				newSelectionId = -1;
 			}
 		}
-
 	}
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer,
 			int button) {
-		if (button == SELECTION_BUTTON) {
+		if (button == selectionButton) {
 			clickedObjectId = getObjectAtPositon(screenX, screenY);
 			this.clickX = screenX;
 			this.clickY = screenY;
@@ -70,7 +66,7 @@ public class MapSelectionInputController
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		if (button == SELECTION_BUTTON) {
+		if (button == selectionButton) {
 			if (clickedObjectId >= 0) { // Wenn auf Objekt geklickt
 				if (clickedObjectId == getObjectAtPositon(screenX, screenY)) {
 					if (System.currentTimeMillis()
@@ -134,11 +130,6 @@ public class MapSelectionInputController
 			}
 		}
 		return result;
-	}
-
-	@Override
-	public void loadKeybinds(ConfigHandler settings) {
-		resetSelection();
 	}
 
 	public void setWorld(World world) {

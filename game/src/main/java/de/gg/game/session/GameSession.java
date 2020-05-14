@@ -8,22 +8,22 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Stopwatch;
 
-import de.gg.engine.log.Log;
+import de.eskalon.commons.log.Log;
+import de.gg.engine.misc.TickCounter;
+import de.gg.engine.misc.TickCounter.TickHandler;
 import de.gg.engine.utils.CountdownTimer;
-import de.gg.engine.utils.TickCounter;
-import de.gg.engine.utils.TickCounter.TickHandler;
-import de.gg.game.data.vote.VoteResults;
-import de.gg.game.entities.Character;
-import de.gg.game.entities.Player;
-import de.gg.game.entities.Position;
+import de.gg.game.model.World;
+import de.gg.game.model.entities.Character;
+import de.gg.game.model.entities.Player;
+import de.gg.game.model.entities.Position;
+import de.gg.game.model.types.GameSpeed;
+import de.gg.game.model.types.PositionType;
+import de.gg.game.model.votes.Ballot;
+import de.gg.game.model.votes.BallotResults;
 import de.gg.game.network.LobbyPlayer;
 import de.gg.game.systems.ProcessingSystem;
 import de.gg.game.systems.smp.RoundEndSystem;
-import de.gg.game.types.GameSpeed;
-import de.gg.game.types.PositionType;
-import de.gg.game.ui.screens.GameVoteScreen;
-import de.gg.game.votes.VoteableMatter;
-import de.gg.game.world.World;
+import de.gg.game.ui.screens.GameBallotScreen;
 
 /**
  * This class holds the game data and takes care of processing the rounds
@@ -38,14 +38,14 @@ import de.gg.game.world.World;
  * over</li>
  * <li>{@link #startNextRound()}: Has to get called (internally) to start the
  * next round</li>
- * <li>{@link #finishCurrentVote(VoteResults)}: If there are any votes to hold
+ * <li>{@link #finishCurrentVote(BallotResults)}: If there are any votes to hold
  * after {@link #startNextRound()} has been called, this method has to get
  * called to inform the session about its results</li>
  * </ul>
  *
  */
 public abstract class GameSession {
-	static final int ROUND_DURATION_IN_SECONDS = 35; // 8*60
+	public static final int ROUND_DURATION_IN_SECONDS = 35; // 8*60
 	protected static final int TICKS_PER_SECOND = 10;
 
 	public static final int TICKS_PER_ROUND = ROUND_DURATION_IN_SECONDS
@@ -67,14 +67,14 @@ public abstract class GameSession {
 	 * Is set to <code>true</code> when the game is in the voting mode before
 	 * the next round begins.
 	 *
-	 * @see GameVoteScreen the screen responsible for rendering the voting
+	 * @see GameBallotScreen the screen responsible for rendering the voting
 	 *      process.
 	 */
 	private boolean holdVote = false;
 	/**
 	 * The matter a vote is currently held on.
 	 */
-	protected VoteableMatter matterToVoteOn = null;
+	protected Ballot matterToVoteOn = null;
 	/**
 	 * This countdown is used to time the end of a vote a few seconds after the
 	 * data arrived. This allows the player to actually read the displayed data.
@@ -204,8 +204,6 @@ public abstract class GameSession {
 			if (matterToVoteOn == null) {
 				matterToVoteOn = world.getMattersToHoldVoteOn().pollFirst();
 
-				onNewVote(matterToVoteOn);
-
 				if (matterToVoteOn == null) {
 					holdVote = false;
 				}
@@ -330,20 +328,20 @@ public abstract class GameSession {
 	 * @param result
 	 *            the result of the vote.
 	 */
-	public void finishCurrentVote(VoteResults result) {
+	public void finishCurrentVote(BallotResults result) {
 		voteTimer.start(7000);
 
 		matterToVoteOn.processVoteResult(result, world);
 	}
 
 	/**
-	 * Is called by the session when a new vote is started.
+	 * Is called by the session when a new ballot is started.
 	 *
-	 * @param matterToVoteOn
-	 *            The new matter to vote on. Is <code>null</code> when the
-	 *            voting process is over.
+	 * @param ballot
+	 *            the new ballot to vote on; is {@code null} when the voting
+	 *            process is over
 	 */
-	protected abstract void onNewVote(VoteableMatter matterToVoteOn);
+	protected abstract void onNewBallot(@Nullable Ballot ballot);
 
 	/**
 	 * @return the current tick count. <code>-1</code> if the session didn't get
@@ -380,7 +378,7 @@ public abstract class GameSession {
 		return sessionSetup.getSeed() + currentRound;
 	}
 
-	public VoteableMatter getMatterToVoteOn() {
+	public Ballot getMatterToVoteOn() {
 		return matterToVoteOn;
 	}
 

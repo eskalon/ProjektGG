@@ -12,9 +12,9 @@ import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.utils.Disposable;
 
 import de.gg.engine.ui.rendering.CullingModelBatch;
-import de.gg.game.entities.Building;
-import de.gg.game.entities.BuildingSlot;
-import de.gg.game.world.World;
+import de.gg.game.model.World;
+import de.gg.game.model.entities.Building;
+import de.gg.game.model.entities.BuildingSlot;
 
 /**
  * This class is responsible for rendering the city.

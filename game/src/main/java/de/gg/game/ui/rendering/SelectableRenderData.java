@@ -3,7 +3,7 @@ package de.gg.game.ui.rendering;
 import com.badlogic.gdx.graphics.g3d.Model;
 
 import de.gg.engine.ui.rendering.BaseRenderData;
-import de.gg.game.entities.BuildingSlot;
+import de.gg.game.model.entities.BuildingSlot;
 
 public class SelectableRenderData extends BaseRenderData {
 

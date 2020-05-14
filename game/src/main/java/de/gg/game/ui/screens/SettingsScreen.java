@@ -10,46 +10,45 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.google.common.eventbus.Subscribe;
 
-import de.gg.engine.asset.AnnotationAssetManager.InjectAsset;
-import de.gg.engine.lang.Lang;
-import de.gg.engine.log.Log;
-import de.gg.engine.ui.screens.BaseScreen;
-import de.gg.engine.utils.SimpleListener;
-import de.gg.game.core.ProjektGG;
-import de.gg.game.events.DisconnectionEvent;
+import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
+import de.eskalon.commons.lang.Lang;
+import de.gg.game.core.GameSettings;
+import de.gg.game.core.ProjektGGApplication;
+import de.gg.game.events.ConnectionLostEvent;
 import de.gg.game.events.RoundEndEvent;
 import de.gg.game.events.ServerReadyEvent;
 import de.gg.game.input.ButtonClickListener;
-import de.gg.game.network.GameServer;
 import de.gg.game.ui.components.KeySelectionInputField;
-import de.gg.game.ui.components.KeySelectionInputField.KeySelectionEventListener;
 
-public class SettingsScreen extends BaseUIScreen {
+public class SettingsScreen extends AbstractGGUIScreen {
 
-	@InjectAsset("ui/backgrounds/town3.jpg")
+	@Asset("ui/backgrounds/settings_screen.jpg")
 	private Texture backgroundImage;
 
-	private BaseScreen<ProjektGG> caller;
-
-	@Override
-	protected void onInit() {
-		super.onInit();
-		super.backgroundTexture = backgroundImage;
+	public SettingsScreen(ProjektGGApplication application) {
+		super(application);
 	}
 
 	@Override
-	protected void initUI() {
+	protected void create() {
+		super.create();
+		setImage(backgroundImage);
+
+		GameSettings settings = ((ProjektGGApplication) application)
+				.getSettings();
+
 		// VOLUME
 		Label masterVolume = new Label(
 				Lang.get("screen.settings.master_volume"), skin);
 		Slider masterSlider = new Slider(0, 1, 0.05F, false, skin);
-		masterSlider.setValue(game.getSettings().getFloat("masterVolume", 1F));
+		masterSlider.setValue(settings.getMasterVolume());
 		masterSlider.addListener(new InputListener() {
 			@Override
 			public void touchUp(InputEvent event, float x, float y, int pointer,
 					int button) {
-				game.getSettings().setFloat("masterVolume",
-						masterSlider.getValue());
+				settings.setMasterVolume(masterSlider.getValue());
+				application.getSoundManager()
+						.setMasterVolume(masterSlider.getValue());
 			}
 
 			@Override
@@ -62,13 +61,14 @@ public class SettingsScreen extends BaseUIScreen {
 		Label effectVolume = new Label(
 				Lang.get("screen.settings.effect_volume"), skin);
 		Slider effectSlider = new Slider(0, 1, 0.05F, false, skin);
-		effectSlider.setValue(game.getSettings().getFloat("effectVolume", 1F));
+		effectSlider.setValue(settings.getEffectVolume());
 		effectSlider.addListener(new InputListener() {
 			@Override
 			public void touchUp(InputEvent event, float x, float y, int pointer,
 					int button) {
-				game.getSettings().setFloat("effectVolume",
-						effectSlider.getValue());
+				settings.setEffectVolume(effectSlider.getValue());
+				application.getSoundManager()
+						.setEffectVolume(effectSlider.getValue());
 			}
 
 			@Override
@@ -81,13 +81,14 @@ public class SettingsScreen extends BaseUIScreen {
 		Label musicVolume = new Label(Lang.get("screen.settings.music_volume"),
 				skin);
 		Slider musicSlider = new Slider(0, 1, 0.05F, false, skin);
-		musicSlider.setValue(game.getSettings().getFloat("musicVolume", 1F));
+		musicSlider.setValue(settings.getMusicVolume());
 		musicSlider.addListener(new InputListener() {
 			@Override
 			public void touchUp(InputEvent event, float x, float y, int pointer,
 					int button) {
-				game.getSettings().setFloat("musicVolume",
-						musicSlider.getValue());
+				settings.setMusicVolume(musicSlider.getValue());
+				application.getSoundManager()
+						.setMusicVolume(musicSlider.getValue());
 			}
 
 			@Override
@@ -101,81 +102,46 @@ public class SettingsScreen extends BaseUIScreen {
 		Label forwardLabel = new Label(Lang.get("screen.settings.forward_key"),
 				skin);
 		KeySelectionInputField forwardButton = new KeySelectionInputField(
-				Keys.toString(game.getSettings().getInt("forwardKey", Keys.W)),
-				skin, stage, buttonClickSound, game.getSettings(),
-				new KeySelectionEventListener() {
-					@Override
-					public void onKeySelection(int key) {
-						game.getSettings().setInt("forwardKey", key);
-					}
-				});
+				settings.getKeybind("cameraForward", Keys.W), skin, stage,
+				application.getSoundManager());
 		Label leftLabel = new Label(Lang.get("screen.settings.left_key"), skin);
 		KeySelectionInputField leftButton = new KeySelectionInputField(
-				Keys.toString(game.getSettings().getInt("leftKey", Keys.A)),
-				skin, stage, buttonClickSound, game.getSettings(),
-				new KeySelectionEventListener() {
-					@Override
-					public void onKeySelection(int key) {
-						game.getSettings().setInt("leftKey", key);
-					}
-				});
+				settings.getKeybind("cameraLeft", Keys.A), skin, stage,
+				application.getSoundManager());
 		Label backwardLabel = new Label(
 				Lang.get("screen.settings.backwards_key"), skin);
 		KeySelectionInputField backwardButton = new KeySelectionInputField(
-				Keys.toString(game.getSettings().getInt("backwardKey", Keys.S)),
-				skin, stage, buttonClickSound, game.getSettings(),
-				new KeySelectionEventListener() {
-					@Override
-					public void onKeySelection(int key) {
-						game.getSettings().setInt("backwardKey", key);
-					}
-				});
+				settings.getKeybind("cameraBackward", Keys.S), skin, stage,
+				application.getSoundManager());
 		Label rightLabel = new Label(Lang.get("screen.settings.right_key"),
 				skin);
 		KeySelectionInputField rightButton = new KeySelectionInputField(
-				Keys.toString(game.getSettings().getInt("rightKey", Keys.D)),
-				skin, stage, buttonClickSound, game.getSettings(),
-				new KeySelectionEventListener() {
-					@Override
-					public void onKeySelection(int key) {
-						game.getSettings().setInt("rightKey", key);
-					}
-				});
+				settings.getKeybind("cameraRight", Keys.D), skin, stage,
+				application.getSoundManager());
 		Label speedUpLabel = new Label(Lang.get("screen.settings.speed_up_key"),
 				skin);
 		KeySelectionInputField speedUpButton = new KeySelectionInputField(
-				Keys.toString(
-						game.getSettings().getInt("speedUpKey", Keys.PLUS)),
-				skin, stage, buttonClickSound, game.getSettings(),
-				new KeySelectionEventListener() {
-					@Override
-					public void onKeySelection(int key) {
-						game.getSettings().setInt("speedUpKey", key);
-					}
-				});
+				settings.getKeybind("speedUpTime", Keys.PLUS), skin, stage,
+				application.getSoundManager());
 		Label speedDownLabel = new Label(
 				Lang.get("screen.settings.speed_down_key"), skin);
 		KeySelectionInputField speedDownButton = new KeySelectionInputField(
-				Keys.toString(
-						game.getSettings().getInt("speedDownKey", Keys.MINUS)),
-				skin, stage, buttonClickSound, game.getSettings(),
-				new KeySelectionEventListener() {
-					@Override
-					public void onKeySelection(int key) {
-						game.getSettings().setInt("speedDownKey", key);
-					}
-				});
+				settings.getKeybind("speedDownTime", Keys.MINUS), skin, stage,
+				application.getSoundManager());
 
 		ImageTextButton backButton = new ImageTextButton(
 				Lang.get("ui.generic.done"), skin, "small");
 		backButton.addListener(
-				new ButtonClickListener(buttonClickSound, game.getSettings()) {
+				new ButtonClickListener(application.getSoundManager()) {
 					@Override
 					protected void onClick() {
-						if (caller instanceof GameMapScreen)
-							game.pushScreen("map");
+						if (application.getScreenManager()
+								.getLastScreen() instanceof GameMapScreen)
+							application.getScreenManager().pushScreen("map",
+									null);
 						else
-							game.pushScreen("mainMenu");
+							application.getScreenManager()
+									.pushScreen("main_menu", null);
 					}
 				});
 
@@ -226,72 +192,36 @@ public class SettingsScreen extends BaseUIScreen {
 	}
 
 	@Override
-	public void render(float delta) {
-		// Wenn der SettingsScreen während des Spiels geöffnet ist, dieses
-		// weiter updaten
-		if (caller instanceof GameMapScreen) {
-			if (game.getClient() != null) { // is not disconnecting
-				game.getClient().update();
-				game.getClient().updatePing(delta);
+	protected void setUIValues() {
+		// no values to set
+	}
 
-				if (game.isHost())
-					game.getServer().update();
-			}
+	@Override
+	public void render(float delta) {
+		// If the settings are open while a game is running keep on updating it
+		if (application.getScreenManager()
+				.getLastScreen() instanceof GameMapScreen) {
+			((GameMapScreen) application.getScreenManager().getLastScreen())
+					.updateGame(delta);
 		}
 		super.render(delta);
 	}
 
 	@Subscribe
 	public void onRoundEnd(RoundEndEvent event) {
-		game.pushScreen("roundEnd");
+		application.getScreenManager().pushScreen("round_end", "circle_crop");
 	}
 
 	@Subscribe
 	public void onRoundEndDataArrived(ServerReadyEvent event) {
-		((GameRoundendScreen) game.getScreen("roundEnd")).setServerReady();
+		((GameRoundendScreen) application.getScreenManager()
+				.getScreen("round_end")).setServerReady();
 	}
 
-	/**
-	 * @param event
-	 * @see BaseGameScreen#onDisconnection(DisconnectionEvent)
-	 */
 	@Subscribe
-	public void onDisconnection(DisconnectionEvent event) {
-		if (game.getClient() != null) { // unexpected disconnection
-			Log.info("Client", "Verbindung zum Server getrennt");
-
-			game.setClient(null);
-			final GameServer server = game.getServer();
-			game.setServer(null);
-
-			// Close server
-			(new Thread(() -> {
-				if (server != null) {
-					server.stop();
-
-					Log.info("Server", "Server beendet");
-				}
-			})).start();
-
-			showInfoDialog(Lang.get("ui.generic.error"),
-					Lang.get("ui.generic.disconnected"), true,
-					new SimpleListener() {
-						@Override
-						public void listen(Object param) {
-							game.pushScreen("mainMenu");
-						}
-					});
-		}
+	public void onConnectionLost(ConnectionLostEvent ev) {
+		((GameMapScreen) application.getScreenManager().getLastScreen())
+				.onConnectionLost(ev);
 	}
 
-	/**
-	 * @return the previously shown screen.
-	 */
-	public BaseScreen<ProjektGG> getCaller() {
-		return caller;
-	}
-
-	public void setCaller(BaseScreen<ProjektGG> caller) {
-		this.caller = caller;
-	}
 }

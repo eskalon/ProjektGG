@@ -4,29 +4,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import com.esotericsoftware.kryonet.rmi.ObjectSpace;
-import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
-import de.gg.engine.log.Log;
+import de.eskalon.commons.log.Log;
 import de.gg.engine.network.BaseGameClient;
 import de.gg.game.ai.CharacterBehaviour;
-import de.gg.game.entities.Player;
-import de.gg.game.events.DisconnectionEvent;
-import de.gg.game.events.GameDataReceivedEvent;
-import de.gg.game.events.NewNotificationEvent;
+import de.gg.game.events.ConnectionLostEvent;
+import de.gg.game.events.LobbyDataReceivedEvent;
 import de.gg.game.events.NotificationCreationEvent;
 import de.gg.game.events.RoundEndEvent;
+import de.gg.game.events.UIRefreshEvent;
+import de.gg.game.model.entities.Character;
+import de.gg.game.model.entities.Player;
 import de.gg.game.network.rmi.ClientsideActionHandler;
-import de.gg.game.network.rmi.ClientsideResultListener;
 import de.gg.game.network.rmi.SlaveActionListener;
 import de.gg.game.session.GameSession;
-import de.gg.game.session.GameSessionSetup;
-import de.gg.game.session.SavedGame;
 import de.gg.game.session.SlaveSession;
+import de.gg.game.ui.data.ChatMessage;
 import de.gg.game.ui.data.NotificationData;
 
 /**
@@ -42,7 +38,7 @@ import de.gg.game.ui.data.NotificationData;
  * {@link #connect(de.gg.engine.network.IClientConnectCallback, String, String, int)}:
  * Connects the client to the server asynchronously. After it is finished the
  * given listener is called. After that the client requests the lobby data. When
- * he receives it a {@link GameDataReceivedEvent} is posted.</li>
+ * he receives it a {@link LobbyDataReceivedEvent} is posted.</li>
  * <li>{@link #initGameSession()}: Initializes the client's game session. Has to
  * get called after the client is connected and before the session is
  * {@linkplain GameSession#update() updated}.</li>
@@ -52,29 +48,29 @@ import de.gg.game.ui.data.NotificationData;
  * </ul>
  */
 public class GameClient extends BaseGameClient {
+
 	private EventBus eventBus;
 
 	private ClientsideActionHandler actionHandler;
 	private ClientsideResultListener resultListener;
 	private ObjectSpace objectSpace;
 
+	private boolean inLobby = true;
+	private boolean orderlyDisconnect = false;
+
+	/* --- The networked data --- */
 	private List<NotificationData> notifications = new ArrayList<>();
-
 	private SlaveSession session;
+	List<ChatMessage> chatMessages = new ArrayList<>();
 
-	/**
-	 * Creates a game client.
-	 *
-	 * @param eventBus
-	 *            the event bus used by the client.
-	 */
+	HashMap<Short, LobbyPlayer> lobbyPlayers;
+	LobbyData lobbyData;
+
 	public GameClient(EventBus eventBus) {
-		Preconditions.checkNotNull(eventBus, "eventBus cannot be null.");
-
 		this.eventBus = eventBus;
 		this.eventBus.register(this);
 
-		this.resultListener = new ClientsideResultListener(eventBus);
+		this.resultListener = new ClientsideResultListener(eventBus, this);
 	}
 
 	@Override
@@ -84,7 +80,10 @@ public class GameClient extends BaseGameClient {
 
 	@Override
 	protected void onDisconnection() {
-		eventBus.post(new DisconnectionEvent());
+		Log.info("Client", "Connection to server closed");
+
+		if (!orderlyDisconnect)
+			eventBus.post(new ConnectionLostEvent());
 	}
 
 	@Override
@@ -99,7 +98,7 @@ public class GameClient extends BaseGameClient {
 				254, SlaveActionListener.class);
 
 		if (actionListener == null)
-			Log.error("Client", "Der actionListener des Spielers %d ist null",
+			Log.error("Client", "actionListener of player %d is null",
 					localClientId);
 
 		this.actionHandler = new ClientsideActionHandler(localClientId,
@@ -107,33 +106,34 @@ public class GameClient extends BaseGameClient {
 
 		actionHandler.requestGameData();
 
-		Log.info("Client", "RMI-Netzwerkverbindung zum Server eingerichtet");
+		Log.info("Client", "RMI connection to server established");
 	}
 
 	@Override
 	public void disconnect() {
+		orderlyDisconnect = true;
 		eventBus.unregister(this);
 		objectSpace.close();
 		super.disconnect();
 	}
 
 	/**
-	 * Initializes the session. The {@linkplain de.gg.game.types game assets}
-	 * have to get loaded first.
+	 * Initializes the session. The {@linkplain de.gg.game.model.types game
+	 * assets} have to get loaded first.
 	 *
 	 * @param sessionSetup
 	 * @param players
 	 * @param savedGame
 	 */
-	public void initGameSession(GameSessionSetup sessionSetup,
-			HashMap<Short, LobbyPlayer> players,
-			@Nullable SavedGame savedGame) {
-		session = new SlaveSession(eventBus, sessionSetup, localClientId);
-		session.init(players, savedGame);
+	public void initGameSession() {
+		inLobby = false;
+		session = new SlaveSession(eventBus, lobbyData.getSessionSetup(),
+				localClientId);
+		session.init(lobbyPlayers, lobbyData.getSavedGame());
 
 		resultListener.setSession(session);
 
-		Log.info("Client", "Match initialisiert");
+		Log.info("Client", "Match initialized");
 	}
 
 	/**
@@ -155,7 +155,15 @@ public class GameClient extends BaseGameClient {
 	@Subscribe
 	public void onNotificationCreation(NotificationCreationEvent ev) {
 		notifications.add(ev.getData());
-		eventBus.post(new NewNotificationEvent(ev.getData()));
+		eventBus.post(new UIRefreshEvent());
+	}
+
+	public boolean isInLobby() {
+		return inLobby;
+	}
+
+	public LobbyData getLobbyData() {
+		return lobbyData;
 	}
 
 	/**
@@ -165,6 +173,18 @@ public class GameClient extends BaseGameClient {
 	 */
 	public List<NotificationData> getNotifications() {
 		return notifications;
+	}
+
+	public List<ChatMessage> getChatMessages() {
+		return chatMessages;
+	}
+
+	public HashMap<Short, LobbyPlayer> getLobbyPlayers() {
+		return lobbyPlayers;
+	}
+
+	public LobbyPlayer getLocalLobbyPlayer() {
+		return lobbyPlayers.get(localClientId);
 	}
 
 	/**
@@ -177,11 +197,13 @@ public class GameClient extends BaseGameClient {
 				otherCharacterId, session);
 	}
 
-	/**
-	 * @return the local player.
-	 */
 	public Player getLocalPlayer() {
 		return session.getWorld().getPlayers().get(localClientId);
+	}
+
+	public Character getLocalPlayerCharacter() {
+		return session.getWorld().getPlayers().get(localClientId)
+				.getCurrentlyPlayedCharacter(session.getWorld());
 	}
 
 	/**

@@ -3,7 +3,7 @@ package de.gg.game.session;
 import java.util.HashMap;
 
 import de.gg.engine.network.ServerSetup;
-import de.gg.game.world.World;
+import de.gg.game.model.World;
 
 /**
  * This class represents a saved game session.

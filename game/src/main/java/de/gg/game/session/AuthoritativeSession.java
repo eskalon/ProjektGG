@@ -4,11 +4,13 @@ import java.util.HashMap;
 
 import javax.annotation.Nullable;
 
-import de.gg.engine.log.Log;
+import de.eskalon.commons.log.Log;
 import de.gg.game.ai.CharacterBehaviour;
-import de.gg.game.data.vote.VoteResults;
-import de.gg.game.entities.Character;
-import de.gg.game.entities.Player;
+import de.gg.game.model.entities.Character;
+import de.gg.game.model.entities.Player;
+import de.gg.game.model.votes.Ballot;
+import de.gg.game.model.votes.BallotResults;
+import de.gg.game.model.votes.BallotUtils;
 import de.gg.game.network.LobbyPlayer;
 import de.gg.game.network.rmi.AuthoritativeResultListener;
 import de.gg.game.network.rmi.ServersideResultListenerStub;
@@ -19,8 +21,6 @@ import de.gg.game.systems.server.IllnessDamageSystem;
 import de.gg.game.systems.server.NpcActionSystem;
 import de.gg.game.systems.server.NpcActionSystem2;
 import de.gg.game.systems.server.ServerProcessingSystem;
-import de.gg.game.votes.VoteUtils;
-import de.gg.game.votes.VoteableMatter;
 
 /**
  * This class takes care of simulating the game session on the server side.
@@ -102,7 +102,7 @@ public class AuthoritativeSession extends GameSession {
 	}
 
 	@Override
-	protected void onNewVote(VoteableMatter matterToVoteOn) {
+	protected void onNewBallot(@Nullable Ballot matterToVoteOn) {
 		individualVotes.clear();
 
 		if (matterToVoteOn != null) {
@@ -125,9 +125,9 @@ public class AuthoritativeSession extends GameSession {
 
 			// Check if all votes were made
 			if (individualVotes.size() == matterToVoteOn.getVoters().size()) {
-				VoteResults result = new VoteResults(
-						VoteUtils.getVoteResult(matterToVoteOn, individualVotes,
-								sessionSetup.getSeed()),
+				BallotResults result = new BallotResults(
+						BallotUtils.getBallotResult(matterToVoteOn,
+								individualVotes, sessionSetup.getSeed()),
 						individualVotes);
 				finishCurrentVote(result);
 				clientResultListeners.onVoteFinished(result);

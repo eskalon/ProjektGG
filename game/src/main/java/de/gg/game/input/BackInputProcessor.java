@@ -3,7 +3,7 @@ package de.gg.game.input;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 
-import de.gg.engine.input.DefaultInputProcessor;
+import de.eskalon.commons.input.DefaultInputProcessor;
 
 /**
  * This input processor takes care of a back action (right click or escape).

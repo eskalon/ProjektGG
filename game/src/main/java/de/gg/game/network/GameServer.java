@@ -17,14 +17,19 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.gson.JsonSyntaxException;
 
-import de.gg.engine.log.Log;
+import de.eskalon.commons.asset.SimpleJSONParser;
+import de.eskalon.commons.lang.Lang;
+import de.eskalon.commons.log.Log;
+import de.gg.engine.misc.ThreadHandler;
 import de.gg.engine.network.BaseGameServer;
 import de.gg.engine.network.ServerSetup;
-import de.gg.engine.network.message.ClientHandshakeMessage;
-import de.gg.engine.network.message.ServerHandshakeMessage;
-import de.gg.engine.utils.json.SimpleJSONParser;
-import de.gg.game.entities.Character;
-import de.gg.game.entities.Player;
+import de.gg.engine.network.message.ClientHandshakeRequest;
+import de.gg.engine.network.message.FailedHandshakeResponse;
+import de.gg.engine.network.message.SuccessfulHandshakeResponse;
+import de.gg.game.misc.PlayerUtils;
+import de.gg.game.misc.PlayerUtils.PlayerStub;
+import de.gg.game.model.entities.Character;
+import de.gg.game.model.entities.Player;
 import de.gg.game.network.rmi.AuthoritativeResultListener;
 import de.gg.game.network.rmi.ServersideActionHandler;
 import de.gg.game.network.rmi.ServersideResultListenerStub;
@@ -32,8 +37,6 @@ import de.gg.game.session.AuthoritativeSession;
 import de.gg.game.session.GameSession;
 import de.gg.game.session.GameSessionSetup;
 import de.gg.game.session.SavedGame;
-import de.gg.game.utils.PlayerUtils;
-import de.gg.game.utils.PlayerUtils.PlayerStub;
 
 public class GameServer extends BaseGameServer<LobbyPlayer> {
 
@@ -96,7 +99,7 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 
 	public void update() {
 		if (session.update()) {
-			Log.debug("Server", "Runde zu Ende");
+			Log.info("Server", "Round is over");
 
 			// Inform the clients
 			resultListener.onServerReady();
@@ -112,7 +115,7 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 
 	/**
 	 * Initializes the game session when all players are ready. The
-	 * {@linkplain de.gg.game.types type assets} have to get loaded first.
+	 * {@linkplain de.gg.game.model.types type assets} have to get loaded first.
 	 *
 	 * @see GameSession#init(HashMap, SavedGame)
 	 */
@@ -124,12 +127,12 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 		actionListener.setSession(session);
 
 		// Close Broadcast-Server
-		(new Thread(() -> {
+		ThreadHandler.getInstance().executeRunnable(() -> {
 			stopBroadcastServer();
-			Log.info("Server", "Broadcast-Server geschlossen");
-		})).start();
+			Log.info("Server", "Broadcast server closed");
+		});
 
-		Log.info("Server", "Match initialisiert");
+		Log.info("Server", "Match initialized");
 	}
 
 	/**
@@ -179,11 +182,10 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 			FileUtils.writeStringToFile(savesFile,
 					saveGameParser.parseToJson(save), CHARSET, false);
 		} catch (JsonSyntaxException | IOException e) {
-			Log.error("Server", "Spiel konnte nicht gespeichert werden: %s",
-					e.getMessage());
+			Log.error("Server", "Game couldn't be saved: %s", e.getMessage());
 		}
 
-		Log.info("Server", "Spiel gespeichert als '%s' in %d miliseconds!",
+		Log.info("Server", "Game was saved at '%s' (took %d ms)!",
 				savesFile.getAbsolutePath(),
 				timer.elapsed(Log.DEFAULT_TIME_UNIT));
 	}
@@ -198,10 +200,18 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 
 	@Override
 	protected synchronized void onClientHandshake(Connection con,
-			ClientHandshakeMessage msg) {
+			ClientHandshakeRequest msg) {
 		Short id = connections.get(con);
 
 		LobbyPlayer p;
+
+		if (!serverSetup.getVersion().equals(msg.getVersion())) {
+			Log.info("Server", "Kick: Version mismatch (%s)", msg.getVersion());
+			con.sendTCP(new FailedHandshakeResponse(
+					Lang.get("dialog.connecting_failed.version_mismatch")));
+			con.close();
+			return;
+		}
 
 		if (savedGame != null) {
 			short foundId = -1;
@@ -215,9 +225,9 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 
 			if (foundId == -1) {
 				Log.info("Server",
-						"Kick: Client ist kein Teil dieser geladenen Partie");
-				con.sendTCP(new ServerHandshakeMessage(
-						"Der Spieler ist kein Teil dieser geladenen Partie!"));
+						"Kick: Client isn't part of this loaded save game");
+				con.sendTCP(new FailedHandshakeResponse(
+						Lang.get("dialog.connecting_failed.not_in_save")));
 				con.close();
 				return;
 			} else {
@@ -227,15 +237,15 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 								&& id != HOST_PLAYER_NETWORK_ID)) {
 					// Host has hanged changed
 					Log.info("Server",
-							"Kick: Der Host einer geladenen Partie kann nicht verändert werden");
-					con.sendTCP(new ServerHandshakeMessage(
-							"Der Host einer geladenen Partie kann nicht verändert werden!"));
+							"Kick: The host of a loaded save game cannot be changed");
+					con.sendTCP(new FailedHandshakeResponse(Lang.get(
+							"dialog.connecting_failed.cannot_change_host")));
 					con.close();
 					// Server gets closed if need be
 					return;
 				}
 				Log.info("Server",
-						"Client als Teil der geladenen Partie erkannt");
+						"Client was recognized as part of this loaded save game");
 				Player oldPlayer = savedGame.world.getPlayer(foundId);
 				Character oldCharacter = savedGame.world.getCharacter(
 						oldPlayer.getCurrentlyPlayedCharacterId());
@@ -244,7 +254,7 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 						oldCharacter.isMale());
 			}
 		} else {
-			Log.info("Server", "Client %d als neuen Spieler registriert", id);
+			Log.info("Server", "Client %d was registered as new player", id);
 
 			p = PlayerUtils.getRandomPlayerWithUnusedProperties(playerStubs,
 					players.values());
@@ -257,10 +267,10 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 
 		// Establish RMI connection (part 1)
 		objectSpace.addConnection(con);
-		Log.info("Server", "RMI-Netzwerkverbindung zu Client eingerichtet");
+		Log.info("Server", "RMI connection to client established");
 
 		// Perform the handshake
-		con.sendTCP(new ServerHandshakeMessage(id));
+		con.sendTCP(new SuccessfulHandshakeResponse(id));
 	}
 
 	/**

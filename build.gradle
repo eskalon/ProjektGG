@@ -16,8 +16,19 @@ allprojects {
     version = "0.1.0"
     ext {
         appName = "Projekt GG"
-        gdxVersion = "1.9.8"
         aiVersion = "1.8.1"
+        concurrentUnitVersion = "0.4.6"
+        commonsIOVersion = "2.6"
+        discordIPCVersion = "0.4"
+        gdxVersion = "1.9.10"
+        guavaVersion = "28.2-jre"
+        gsonVersion = "2.8.6"
+        junitVersion = "5.6.0"
+        kryonetVersion = "2.22.6"
+        mockitoVersion = "3.2.4"
+        quakemonkeyVersion = "master"
+        reflectionsVersion = "0.9.11" //0.9.12 doesn't work, see https://github.com/ronmamo/reflections/issues/273
+        screenmanagerVersion = "push_params-SNAPSHOT" //0.5.2
     }
 
     repositories {
@@ -35,33 +46,32 @@ project(":desktop") {
 
     dependencies {
         compile project(":game")
-        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
     }
+    
+    sourceSets.main {
+   		resources.srcDirs = ["src/main/assets"]
+	}
 }
+
 project(":engine") {
     apply plugin: "java"
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        compile "com.github.crykn:kryonet:2.22.4"
-        compile "com.google.guava:guava:27.0-jre"
-        compile "com.google.code.gson:gson:2.8.5"
-        compile "com.jagrosh:DiscordIPC:0.4"
-        //compile fileTree(dir: 'libs', include: '*.jar')
+        compile "com.github.crykn:kryonet:$kryonetVersion"
+        compile "com.google.guava:guava:$guavaVersion"
+        compile "com.google.code.gson:gson:$gsonVersion"
+        compile "com.jagrosh:DiscordIPC:$discordIPCVersion"
+        compile "org.reflections:reflections:$reflectionsVersion"
+        compile "com.github.crykn:libgdx-screenmanager:$screenmanagerVersion"
 
         testCompile "org.junit.platform:junit-platform-launcher:1.2.0" // needed for a bug in eclipse
 
-        testCompile "org.junit.jupiter:junit-jupiter-engine:5.3.1"
-        testCompile "net.jodah:concurrentunit:0.4.3"
-        testCompile "org.mockito:mockito-core:2.23.0"
-        testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
-        testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        testCompile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        testCompile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+        testCompile "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
     }
     
     sourceSets.test {
@@ -74,20 +84,20 @@ project(":game") {
 
     dependencies {
         compile project(":engine")
-        compile "commons-io:commons-io:2.6"
+        compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+        // compile "com.github.crykn:quakemonkey:$quakemonkeyVersion"
+        compile "commons-io:commons-io:$commonsIOVersion"
         
         testCompile "org.junit.platform:junit-platform-launcher:1.2.0" // needed for a bug in eclipse
         
-        testCompile project(':engine').sourceSets.test.output
-        testCompile "org.junit.jupiter:junit-jupiter-engine:5.3.1"
-        testCompile "net.jodah:concurrentunit:0.4.3"
-        testCompile "org.mockito:mockito-core:2.23.0"
+        //testCompile project(':engine').sourceSets.test.output
+        testCompile "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+        testCompile "net.jodah:concurrentunit:$concurrentUnitVersion"
+        testCompile "org.mockito:mockito-core:$mockitoVersion"
         testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        //testCompile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        //testCompile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-    }
+        }
 }
 
 tasks.eclipse.doLast {

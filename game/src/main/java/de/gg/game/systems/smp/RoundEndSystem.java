@@ -2,14 +2,14 @@ package de.gg.game.systems.smp;
 
 import java.util.Map.Entry;
 
-import de.gg.game.entities.Character;
-import de.gg.game.entities.Player;
-import de.gg.game.entities.Position;
-import de.gg.game.types.LawType;
-import de.gg.game.types.PositionType;
-import de.gg.game.types.SocialStatus;
-import de.gg.game.votes.ElectionVote;
-import de.gg.game.world.World;
+import de.gg.game.model.World;
+import de.gg.game.model.entities.Character;
+import de.gg.game.model.entities.Player;
+import de.gg.game.model.entities.Position;
+import de.gg.game.model.types.LawType;
+import de.gg.game.model.types.PositionType;
+import de.gg.game.model.types.SocialStatus;
+import de.gg.game.model.votes.ElectionBallot;
 
 public class RoundEndSystem {
 
@@ -53,7 +53,7 @@ public class RoundEndSystem {
 		// TODO statt am Rundenende am Rundenstart berechnen
 		PositionType position = c.getPosition();
 		if (position != null) {
-			c.setGold(c.getGold() + position.getData().getSalary());
+			c.setGold(c.getGold() + position.getSalary());
 		}
 
 		// TEMPORARY OPINION MODIFIERS
@@ -90,13 +90,12 @@ public class RoundEndSystem {
 		}
 
 		// SOCIAL STATUS
-		if (c.getStatus().getData().getLevel() < 3) {
+		if (c.getStatus().getLevel() < 3) {
 			// Patrician & Cavalier
 			SocialStatus superiorStatus = SocialStatus
-					.values()[c.getStatus().getData().getLevel() + 1];
-			if (p.getFortune(world) >= superiorStatus.getData()
-					.getFortuneRequirement()
-					&& c.getHighestPositionLevel() >= superiorStatus.getData()
+					.values()[c.getStatus().getLevel() + 1];
+			if (p.getFortune(world) >= superiorStatus.getFortuneRequirement()
+					&& c.getHighestPositionLevel() >= superiorStatus
 							.getPositionLevelRequirement()) {
 				c.setStatus(superiorStatus);//
 
@@ -114,7 +113,7 @@ public class RoundEndSystem {
 	public void processPosition(PositionType type, Position p) {
 		// Add the election to the matters to vote on
 		if (p.hasApplicants())
-			world.getMattersToHoldVoteOn().add(new ElectionVote(world, type));
+			world.getMattersToHoldVoteOn().add(new ElectionBallot(world, type));
 	}
 
 }

@@ -1,6 +1,6 @@
 package de.gg.game.systems;
 
-import de.gg.game.world.World;
+import de.gg.game.model.World;
 
 /**
  * The child classes of this class are used to process the game.

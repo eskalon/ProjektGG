@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -12,19 +11,22 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
-import de.gg.engine.lang.Lang;
-import de.gg.engine.ui.components.AnimationlessDialog;
-import de.gg.engine.ui.components.OffsetableTextField;
-import de.gg.game.core.ProjektGG;
-import de.gg.game.events.PlayerChangedEvent;
+import de.eskalon.commons.lang.Lang;
+import de.gg.engine.ui.components.OffsettableTextField;
+import de.gg.game.core.ProjektGGApplication;
+import de.gg.game.events.UIRefreshEvent;
 import de.gg.game.input.ButtonClickListener;
+import de.gg.game.misc.PlayerUtils;
+import de.gg.game.model.types.PlayerIcon;
+import de.gg.game.model.types.ProfessionType;
+import de.gg.game.model.types.Religion;
 import de.gg.game.network.LobbyPlayer;
-import de.gg.game.types.PlayerIcon;
-import de.gg.game.types.ProfessionType;
-import de.gg.game.types.Religion;
-import de.gg.game.utils.PlayerUtils;
+import de.gg.game.ui.components.BasicDialog;
 
-public class PlayerLobbyConfigDialog extends AnimationlessDialog {
+public class PlayerLobbyConfigDialog extends BasicDialog {
+
+	private HashMap<Short, LobbyPlayer> players;
+	private LobbyPlayer localPlayer;
 
 	private boolean selectedSex;
 	private Religion selectedReligion;
@@ -36,20 +38,16 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 	private ImageTextButton sexButton;
 	private ImageTextButton religionButton;
 
-	public PlayerLobbyConfigDialog(ProjektGG game, Sound buttonClickSound,
-			Skin skin, HashMap<Short, LobbyPlayer> players) {
+	public PlayerLobbyConfigDialog(ProjektGGApplication game, Skin skin) {
 		super("Spielerkonfiguration", skin, "window");
 
-		short localPlayerId = game.getClient().getLocalNetworkID();
-
 		// Create UI elements for player configuration dialog
-		AnimationlessDialog iconDialog = new AnimationlessDialog("Wappen", skin,
+		BasicDialog iconDialog = new BasicDialog("Wappen", skin, "window");
+		BasicDialog professionDialog = new BasicDialog("Profession", skin,
 				"window");
-		AnimationlessDialog professionDialog = new AnimationlessDialog(
-				"Profession", skin, "window");
 
-		surnameTextField = new OffsetableTextField(" - ", skin, 8);
-		nameTextField = new OffsetableTextField(" - ", skin, 8);
+		surnameTextField = new OffsettableTextField(" - ", skin, 8);
+		nameTextField = new OffsettableTextField(" - ", skin, 8);
 
 		Label surnameLabel = new Label(Lang.get("dialog.player_config.surname"),
 				skin);
@@ -84,24 +82,23 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 				Lang.get("ui.generic.cancel"), skin, "small");
 
 		// Listener for configuration buttons
-		sexButton.addListener(
-				new ButtonClickListener(buttonClickSound, game.getSettings()) {
-					@Override
-					protected void onClick() {
-						if (selectedSex) {
-							selectedSex = false;
-							sexButton.setText(Lang
-									.get("dialog.player_config.gender.female"));
-						} else {
-							selectedSex = true;
-							sexButton.setText(Lang
-									.get("dialog.player_config.gender.male"));
-						}
-					}
-				});
+		sexButton.addListener(new ButtonClickListener(game.getSoundManager()) {
+			@Override
+			protected void onClick() {
+				if (selectedSex) {
+					selectedSex = false;
+					sexButton.setText(
+							Lang.get("dialog.player_config.gender.female"));
+				} else {
+					selectedSex = true;
+					sexButton.setText(
+							Lang.get("dialog.player_config.gender.male"));
+				}
+			}
+		});
 
-		religionButton.addListener(
-				new ButtonClickListener(buttonClickSound, game.getSettings()) {
+		religionButton
+				.addListener(new ButtonClickListener(game.getSoundManager()) {
 					@Override
 					protected void onClick() {
 						if (selectedReligion.equals(Religion.values()[1])) {
@@ -117,44 +114,41 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 				});
 
 		Table iconTable = new Table();
-		iconButton.addListener(
-				new ButtonClickListener(buttonClickSound, game.getSettings()) {
-					@Override
-					protected void onClick() {
-						iconTable.clear();
+		iconButton.addListener(new ButtonClickListener(game.getSoundManager()) {
+			@Override
+			protected void onClick() {
+				iconTable.clear();
 
-						// Only currently unused icons can be selected
-						List<LobbyPlayer> tmpPlayers = new ArrayList<>(
-								players.values());
-						tmpPlayers.remove(players.get(localPlayerId));
+				// Only currently unused icons can be selected
+				List<LobbyPlayer> tmpPlayers = new ArrayList<>(
+						players.values());
+				tmpPlayers.remove(localPlayer);
 
-						List<PlayerIcon> availableIcons = PlayerUtils
-								.getAvailableIcons(tmpPlayers);
+				List<PlayerIcon> availableIcons = PlayerUtils
+						.getAvailableIcons(tmpPlayers);
 
-						for (int i = 0; i < availableIcons.size(); i++) {
-							ImageButton iconIButton = new ImageButton(
-									skin.getDrawable(availableIcons.get(i)
-											.getIconFileName()));
-							final int index = i;
-							iconIButton.addListener(new ButtonClickListener(
-									buttonClickSound, game.getSettings()) {
+				for (int i = 0; i < availableIcons.size(); i++) {
+					ImageButton iconIButton = new ImageButton(skin.getDrawable(
+							availableIcons.get(i).getIconFileName()));
+					final int index = i;
+					iconIButton.addListener(
+							new ButtonClickListener(game.getSoundManager()) {
 								@Override
 								protected void onClick() {
 									selectedIcon = availableIcons.get(index);
 									iconDialog.hide();
 								}
 							});
-							iconTable.add(iconIButton).pad(25);
-						}
+					iconTable.add(iconIButton).pad(25);
+				}
 
-						iconDialog
-								.show(PlayerLobbyConfigDialog.this.getStage());
-					}
-				});
+				iconDialog.show(PlayerLobbyConfigDialog.this.getStage());
+			}
+		});
 
 		Table professionTable = new Table();
-		professionButton.addListener(
-				new ButtonClickListener(buttonClickSound, game.getSettings()) {
+		professionButton
+				.addListener(new ButtonClickListener(game.getSoundManager()) {
 					@Override
 					protected void onClick() {
 						professionTable.clear();
@@ -162,7 +156,7 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 						// Only currently unused professions can be selected
 						List<LobbyPlayer> tmpPlayers = new ArrayList<>(
 								players.values());
-						tmpPlayers.remove(players.get(localPlayerId));
+						tmpPlayers.remove(localPlayer);
 
 						List<Integer> availableProfessions = PlayerUtils
 								.getAvailableProfessionIndices(tmpPlayers);
@@ -172,11 +166,10 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 									.values()[availableProfessions.get(i)];
 
 							ImageButton profButton = new ImageButton(
-									skin.getDrawable(
-											prof.getData().getIconFileName()));
+									skin.getDrawable(prof.getIconFileName()));
 							final int index = i;
 							profButton.addListener(new ButtonClickListener(
-									buttonClickSound, game.getSettings()) {
+									game.getSoundManager()) {
 								@Override
 								protected void onClick() {
 									selectedProfessionIndex = index;
@@ -192,36 +185,32 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 				});
 
 		// Apply button
-		applyButton.addListener(
-				new ButtonClickListener(buttonClickSound, game.getSettings()) {
+		applyButton
+				.addListener(new ButtonClickListener(game.getSoundManager()) {
 					@Override
 					protected void onClick() {
-						players.get(localPlayerId)
-								.setName(nameTextField.getText());
-						players.get(localPlayerId)
-								.setSurname(surnameTextField.getText());
-						players.get(localPlayerId).setMale(selectedSex);
-						players.get(localPlayerId)
-								.setReligion(selectedReligion);
-						players.get(localPlayerId).setIcon(selectedIcon);
-						players.get(localPlayerId).setProfessionTypeIndex(
+						localPlayer.setName(nameTextField.getText());
+						localPlayer.setSurname(surnameTextField.getText());
+						localPlayer.setMale(selectedSex);
+						localPlayer.setReligion(selectedReligion);
+						localPlayer.setIcon(selectedIcon);
+						localPlayer.setProfessionTypeIndex(
 								selectedProfessionIndex);
 
 						// To update the ui
-						game.getEventBus().post(new PlayerChangedEvent(
-								localPlayerId, players.get(localPlayerId)));
+						game.getEventBus().post(new UIRefreshEvent());
 
 						// Inform the server
 						game.getClient().getActionHandler()
-								.changeLocalPlayer(players.get(localPlayerId));
+								.changeLocalPlayer(localPlayer);
 
 						PlayerLobbyConfigDialog.this.hide();
 					}
 				});
 
 		// Discard button
-		discardButton.addListener(
-				new ButtonClickListener(buttonClickSound, game.getSettings()) {
+		discardButton
+				.addListener(new ButtonClickListener(game.getSoundManager()) {
 					@Override
 					protected void onClick() {
 						PlayerLobbyConfigDialog.this.hide();
@@ -258,9 +247,14 @@ public class PlayerLobbyConfigDialog extends AnimationlessDialog {
 	 * Sets up the text for all buttons and textfields in the player
 	 * configuration dialog.
 	 *
+	 * @param players
 	 * @param localPlayer
 	 */
-	public void setLocalPlayerValues(LobbyPlayer localPlayer) {
+	public void initUIValues(HashMap<Short, LobbyPlayer> players,
+			LobbyPlayer localPlayer) {
+		this.players = players;
+		this.localPlayer = localPlayer;
+
 		selectedSex = localPlayer.isMale();
 		selectedReligion = localPlayer.getReligion();
 		selectedIcon = localPlayer.getIcon();

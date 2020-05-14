@@ -4,21 +4,20 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import de.gg.game.data.vote.VoteResults;
+import de.gg.game.model.types.PositionType;
+import de.gg.game.model.votes.BallotResults;
 import de.gg.game.network.GameServer;
 import de.gg.game.network.LobbyPlayer;
 import de.gg.game.session.AuthoritativeSession;
 import de.gg.game.session.GameSessionSetup;
 import de.gg.game.session.SavedGame;
-import de.gg.game.types.PositionType;
 
 /**
  * A result listener stub for the server to conveniently distribute an event to
  * all connected clients.
  * <p>
  * Takes care of calling the appropriate listener methods of every
- * {@linkplain GameServer#getResultListeners() registered result
- * listener}.
+ * {@linkplain GameServer#getResultListeners() registered result listener}.
  */
 public class ServersideResultListenerStub
 		implements AuthoritativeResultListener {
@@ -101,7 +100,7 @@ public class ServersideResultListenerStub
 	}
 
 	@Override
-	public void onVoteFinished(VoteResults results) {
+	public void onVoteFinished(BallotResults results) {
 		informClients(new ResultTask() {
 			@Override
 			protected void informClient(
@@ -175,12 +174,12 @@ public class ServersideResultListenerStub
 	}
 
 	@Override
-	public void onChatMessageSent(short senderId, String message) {
+	public void onChatMessage(short senderId, String message) {
 		informClients(new ResultTask() {
 			@Override
 			protected void informClient(
 					AuthoritativeResultListener resultListener) {
-				resultListener.onChatMessageSent(senderId, message);
+				resultListener.onChatMessage(senderId, message);
 			}
 		});
 	}

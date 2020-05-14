@@ -2,6 +2,7 @@ package de.gg.game.ui.screens;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Future;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,42 +15,65 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.google.common.eventbus.Subscribe;
 
-import de.gg.engine.asset.AnnotationAssetManager.InjectAsset;
-import de.gg.engine.lang.Lang;
+import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
+import de.eskalon.commons.lang.Lang;
+import de.eskalon.commons.utils.ISuccessCallback;
+import de.gg.engine.misc.ThreadHandler;
 import de.gg.engine.network.BaseGameServer;
-import de.gg.engine.network.IClientConnectCallback;
 import de.gg.engine.network.ServerDiscoveryHandler;
-import de.gg.engine.network.ServerDiscoveryHandler.HostDiscoveryListener;
 import de.gg.engine.network.message.DiscoveryResponsePacket;
-import de.gg.engine.ui.components.OffsetableTextField;
-import de.gg.game.events.GameDataReceivedEvent;
+import de.gg.engine.ui.components.OffsettableTextField;
+import de.gg.game.core.ProjektGGApplication;
+import de.gg.game.events.LobbyDataReceivedEvent;
 import de.gg.game.input.ButtonClickListener;
 import de.gg.game.network.GameClient;
 import de.gg.game.ui.components.BasicDialog;
 
-public class ServerBrowserScreen extends BaseUIScreen {
+public class ServerBrowserScreen extends AbstractGGUIScreen {
 
-	@InjectAsset("ui/backgrounds/town.jpg")
-	private Texture backgroundImage;
-	@InjectAsset("ui/icons/ready.png")
+	@Asset("ui/backgrounds/server_browser_screen.jpg")
+	private Texture backgroundTexture;
+	@Asset("ui/icons/ready.png")
 	private Texture tickTexture;
+
+	private ISuccessCallback connectionCallback;
+
 	private Dialog connectingDialog;
 	private Table serverTable;
 	/**
 	 * This list holds all local LAN servers that were discovered.
 	 */
 	private List<String> dicoveredServers = new ArrayList<>();
-	private Runnable discoveryThread;
+	private Future<Void> discoveryFuture;
 
-	@Override
-	protected void onInit() {
-		super.onInit();
-
-		super.backgroundTexture = backgroundImage;
+	public ServerBrowserScreen(ProjektGGApplication application) {
+		super(application);
 	}
 
 	@Override
-	protected void initUI() {
+	protected void create() {
+		super.create();
+		setImage(backgroundTexture);
+
+		this.connectionCallback = new ISuccessCallback() {
+			@Override
+			public void onSuccess(Object param) {
+				connectingDialog.setVisible(false);
+				BasicDialog.createAndShow(stage, skin,
+						Lang.get("ui.generic.connecting"),
+						Lang.get("screen.server_browser.receiving"));
+			}
+
+			@Override
+			public void onFailure(Object param) {
+				connectingDialog.setVisible(false);
+				application.setClient(null);
+
+				BasicDialog.createAndShow(stage, skin,
+						Lang.get("ui.generic.error"), (String) param);
+			}
+		};
+
 		serverTable = new Table();
 
 		ScrollPane pane = new ScrollPane(serverTable);
@@ -57,20 +81,22 @@ public class ServerBrowserScreen extends BaseUIScreen {
 		ImageTextButton backButton = new ImageTextButton(
 				Lang.get("ui.generic.back"), skin, "small");
 		backButton.addListener(
-				new ButtonClickListener(buttonClickSound, game.getSettings()) {
+				new ButtonClickListener(application.getSoundManager()) {
 					@Override
 					protected void onClick() {
-						game.pushScreen("mainMenu");
+						application.getScreenManager().pushScreen("main_menu",
+								null);
 					}
 				});
 
 		ImageTextButton createLobbyButton = new ImageTextButton(
 				Lang.get("screen.server_browser.create_game"), skin, "small");
 		createLobbyButton.addListener(
-				new ButtonClickListener(buttonClickSound, game.getSettings()) {
+				new ButtonClickListener(application.getSoundManager()) {
 					@Override
 					protected void onClick() {
-						game.pushScreen("lobbyCreation");
+						application.getScreenManager()
+								.pushScreen("lobby_creation", null);
 					}
 				});
 
@@ -78,15 +104,15 @@ public class ServerBrowserScreen extends BaseUIScreen {
 				Lang.get("screen.server_browser.connect_directly"), skin,
 				"small");
 		directConnectButton.addListener(
-				new ButtonClickListener(buttonClickSound, game.getSettings()) {
+				new ButtonClickListener(application.getSoundManager()) {
 					@Override
 					protected void onClick() {
-						OffsetableTextField portInputField = new OffsetableTextField(
+						OffsettableTextField portInputField = new OffsettableTextField(
 								String.valueOf(BaseGameServer.DEFAULT_PORT),
 								skin, 5);
 						portInputField.setTextFieldFilter(
 								new TextField.TextFieldFilter.DigitsOnlyFilter());
-						OffsetableTextField ipInputField = new OffsetableTextField(
+						OffsettableTextField ipInputField = new OffsettableTextField(
 								"127.0.0.1", skin, 5);
 
 						BasicDialog dialog = new BasicDialog(Lang
@@ -96,27 +122,20 @@ public class ServerBrowserScreen extends BaseUIScreen {
 							public void result(Object obj) {
 								if ((Boolean) obj) {
 									// Connect to client
-									game.setClient(
-											new GameClient(game.getEventBus()));
-									game.getClient().connect(
-											new IClientConnectCallback() {
-												@Override
-												public void onClientConnected(
-														String errorMessage) {
-													ServerBrowserScreen.this
-															.onClientConnected(
-																	errorMessage);
-												}
-											}, game.VERSION,
+									application.setClient(new GameClient(
+											application.getEventBus()));
+									application.getClient().connect(
+											connectionCallback,
+											application.VERSION,
 											ipInputField.getText(),
 											Integer.valueOf(
 													portInputField.getText()));
-
-									connectingDialog = showInfoDialog(
-											Lang.get("ui.generic.connecting"),
-											Lang.get(
-													"screen.server_browser.joining"),
-											false);
+									connectingDialog = BasicDialog
+											.createAndShow(stage, skin, Lang
+													.get("ui.generic.connecting"),
+													Lang.get(
+															"screen.server_browser.joining"),
+													false, null);
 								}
 							}
 						};
@@ -139,8 +158,6 @@ public class ServerBrowserScreen extends BaseUIScreen {
 		buttonTable.add(createLobbyButton).width(132).padLeft(47);
 		buttonTable.add(directConnectButton).width(152).padLeft(47);
 
-		discoverLanServers();
-
 		Table mTable = new Table();
 		mTable.setWidth(615);
 		mTable.setHeight(475);
@@ -151,37 +168,36 @@ public class ServerBrowserScreen extends BaseUIScreen {
 		mainTable.add(mTable);
 	}
 
-	/**
-	 * Discovers available servers in the local network and adds them to the ui.
-	 */
-	private void discoverLanServers() {
+	@Override
+	protected void setUIValues() {
+		if (pushParams != null) {
+			// Client was disconnected from a game
+			BasicDialog.createAndShow(stage, skin, Lang.get("ui.generic.error"),
+					Lang.get("ui.generic.disconnected"));
+		}
+
+		/*
+		 * Discover servers in the local network.
+		 */
 		serverTable.clear();
 		dicoveredServers.clear();
-		discoveryThread = new Runnable() {
-			@Override
-			public void run() {
-				ServerDiscoveryHandler<DiscoveryResponsePacket> serverDiscoveryHandler = new ServerDiscoveryHandler<>(
-						DiscoveryResponsePacket.class, 4500);
-				serverDiscoveryHandler.discoverHosts(
-						BaseGameServer.UDP_DISCOVER_PORT,
-						new HostDiscoveryListener<>() {
-							@Override
-							public void onHostDiscovered(String address,
-									DiscoveryResponsePacket datagramPacket) {
-								if (!dicoveredServers
-										.contains(datagramPacket.getGameName()
-												+ datagramPacket.getPort())) {
-									dicoveredServers
-											.add(datagramPacket.getGameName()
-													+ datagramPacket.getPort());
-									addServerToUI(serverTable, address,
-											datagramPacket);
-								}
-							}
-						});
-			}
-		};
-		(new Thread(discoveryThread)).start();
+		if (discoveryFuture != null)
+			discoveryFuture.cancel(true);
+		discoveryFuture = ThreadHandler.getInstance().executeRunnable(() -> {
+			ServerDiscoveryHandler<DiscoveryResponsePacket> serverDiscoveryHandler = new ServerDiscoveryHandler<>(
+					DiscoveryResponsePacket.class, 4500);
+			serverDiscoveryHandler.discoverHosts(
+					BaseGameServer.UDP_DISCOVER_PORT,
+					(address, datagramPacket) -> {
+						if (!dicoveredServers
+								.contains(datagramPacket.getGameName()
+										+ datagramPacket.getPort())) {
+							dicoveredServers.add(datagramPacket.getGameName()
+									+ datagramPacket.getPort());
+							addServerToUI(serverTable, address, datagramPacket);
+						}
+					});
+		});
 	}
 
 	private void addServerToUI(Table serverTable, String address,
@@ -189,21 +205,17 @@ public class ServerBrowserScreen extends BaseUIScreen {
 		ImageTextButton joinButton = new ImageTextButton(
 				Lang.get("screen.server_browser.join"), skin, "small");
 		joinButton.addListener(
-				new ButtonClickListener(buttonClickSound, game.getSettings()) {
+				new ButtonClickListener(application.getSoundManager()) {
 					@Override
 					protected void onClick() {
-						game.setClient(new GameClient(game.getEventBus()));
-						game.getClient().connect(new IClientConnectCallback() {
-							@Override
-							public void onClientConnected(String errorMessage) {
-								ServerBrowserScreen.this
-										.onClientConnected(errorMessage);
-							}
-						}, game.VERSION, address, packet.getPort());
-						connectingDialog = showInfoDialog(
-								Lang.get("ui.generic.connecting"),
+						application.setClient(
+								new GameClient(application.getEventBus()));
+						application.getClient().connect(connectionCallback,
+								application.VERSION, address, packet.getPort());
+						connectingDialog = BasicDialog.createAndShow(stage,
+								skin, Lang.get("ui.generic.connecting"),
 								Lang.get("screen.server_browser.joining"),
-								false);
+								false, null);
 					}
 				});
 
@@ -217,22 +229,8 @@ public class ServerBrowserScreen extends BaseUIScreen {
 	}
 
 	@Subscribe
-	public void onGameDataReceived(GameDataReceivedEvent event) {
-		((LobbyScreen) game.getScreen("lobby")).setupLobby(event);
-		game.pushScreen("lobby");
-	}
-
-	private void onClientConnected(String errorMessage) {
-		if (errorMessage != null) {
-			connectingDialog.setVisible(false);
-			game.setClient(null);
-
-			showInfoDialog(Lang.get("ui.generic.error"), errorMessage, true);
-		} else {
-			connectingDialog.setVisible(false);
-			showInfoDialog(Lang.get("ui.generic.connecting"),
-					Lang.get("screen.server_browser.receiving"), true);
-		}
+	public void onGameDataReceived(LobbyDataReceivedEvent event) {
+		application.getScreenManager().pushScreen("lobby", null);
 	}
 
 }

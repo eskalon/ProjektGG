@@ -1,7 +1,6 @@
 package de.gg.game.ui.screens;
 
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -12,13 +11,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.google.common.eventbus.Subscribe;
 
-import de.gg.engine.asset.AnnotationAssetManager.InjectAsset;
-import de.gg.engine.lang.Lang;
-import de.gg.engine.log.Log;
+import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
+import de.eskalon.commons.lang.Lang;
+import de.eskalon.commons.log.Log;
+import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.AllPlayersReadyEvent;
 import de.gg.game.events.ServerReadyEvent;
-import de.gg.game.session.GameClock;
-import de.gg.game.utils.DiscordGGHandler;
+import de.gg.game.misc.DiscordGGHandler;
+import de.gg.game.misc.GameClock;
 
 /**
  * This screen is rendered after a round ends. When the server is
@@ -26,11 +26,11 @@ import de.gg.game.utils.DiscordGGHandler;
  * {@linkplain #onAllPlayersReady(AllPlayersReadyEvent) ready up} and after that
  * this screen switches either to the voting or the map screen.
  */
-public class GameRoundendScreen extends BaseGameScreen {
+public class GameRoundendScreen extends AbstractGameScreen {
 
-	@InjectAsset("ui/backgrounds/table.jpg")
-	private Texture backgroundImage;
-	@InjectAsset("audio/flip-page.mp3")
+	@Asset("ui/backgrounds/round_end_screen.jpg")
+	private Texture backgroundTexture;
+	@Asset("audio/page_flip.mp3")
 	private Sound flipSound;
 
 	/**
@@ -43,19 +43,15 @@ public class GameRoundendScreen extends BaseGameScreen {
 	private ImageTextButton nextButton;
 	private Label lastYearTitle, comingYearTitle, lastYearData, comingYearData;
 
-	public GameRoundendScreen() {
-		super(false);
+	public GameRoundendScreen(ProjektGGApplication application) {
+		super(application, false);
 	}
 
 	@Override
-	protected void onInit() {
-		super.onInit();
-		this.backgroundColor = Color.DARK_GRAY;
-		super.backgroundTexture = backgroundImage;
-	}
+	protected void create() {
+		super.create();
+		setImage(backgroundTexture);
 
-	@Override
-	protected void initUI() {
 		lastYearTitle = new Label("", skin, "big");
 		lastYearTitle.setAlignment(Align.topLeft);
 		comingYearTitle = new Label("", skin, "big");
@@ -68,25 +64,22 @@ public class GameRoundendScreen extends BaseGameScreen {
 		comingYearData.setAlignment(Align.topLeft);
 		comingYearData.setWrap(true);
 
-		nextButton = new ImageTextButton(Lang.get("ui.generic.continue"), skin,
-				"normal");
+		nextButton = new ImageTextButton("", skin, "normal");
 
 		nextButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
-				flipSound.play(getUIVolumeLevel());
+				application.getSoundManager().playSoundEffect("page_flip");
 				nextButton.setText(Lang.get("ui.generic.waiting"));
 
-				Log.debug("Client", "Client ist bereit");
+				Log.debug("Client", "Client ist ready for next round");
 
-				game.getClient().getActionHandler().readyUp();
+				application.getClient().getActionHandler().readyUp();
 
 				return true;
 			}
 		});
-
-		updateUI();
 
 		Table dataTable = new Table();
 		// ScrollPane pane = new ScrollPane(dataTable);
@@ -108,8 +101,8 @@ public class GameRoundendScreen extends BaseGameScreen {
 		mainTable.add(mTable);
 	}
 
-	private synchronized void updateUI() {
-		// Informationen zu Rundenende anzeigen
+	@Override
+	protected void setUIValues() {
 		if (serverReady) {
 			lastYearTitle.setText(Lang.get("screen.round_end.last_year"));
 			comingYearTitle.setText(Lang.get("screen.round_end.next_year"));
@@ -118,7 +111,7 @@ public class GameRoundendScreen extends BaseGameScreen {
 			comingYearData.setText(Lang.get("screen.round_end.test2"));
 		}
 
-		nextButton.setText("Weiter");
+		nextButton.setText(Lang.get("ui.generic.continue"));
 		nextButton.setDisabled(!serverReady);
 		nextButton.setTouchable(
 				!serverReady ? Touchable.disabled : Touchable.enabled);
@@ -126,6 +119,8 @@ public class GameRoundendScreen extends BaseGameScreen {
 
 	@Override
 	public void renderGame(float delta) {
+		ProjektGGApplication game = (ProjektGGApplication) this.application;
+
 		if (game.getClient() != null)
 			game.getClient().updatePing(delta);
 
@@ -138,7 +133,7 @@ public class GameRoundendScreen extends BaseGameScreen {
 	public synchronized void onServerReady(ServerReadyEvent event) {
 		this.serverReady = true;
 
-		updateUI();
+		setUIValues();
 	}
 
 	public void setServerReady() {
@@ -151,25 +146,20 @@ public class GameRoundendScreen extends BaseGameScreen {
 
 		if (event.isNextRound()) {
 			DiscordGGHandler.getInstance().setGamePresence(
-					game.getClient().getSession().getSessionSetup().getMap(),
-					GameClock.getYear(
-							game.getClient().getSession().getCurrentRound()),
+					application.getClient().getSession().getSessionSetup()
+							.getMap(),
+					GameClock.getYear(application.getClient().getSession()
+							.getCurrentRound()),
 					1, 6);
 
-			if (!game.getClient().getSession().getWorld()
-					.getMattersToHoldVoteOn().isEmpty())
-				game.pushScreen("vote");
-			else
-				game.pushScreen("map");
+			if (!application.getClient().getSession().getWorld()
+					.getMattersToHoldVoteOn().isEmpty()) {
+				// TODO ersten ballot pollen und übergeben; timer etc. aus
+				// Session in BallotScreen!
+				application.getScreenManager().pushScreen("vote", null);
+			} else
+				application.getScreenManager().pushScreen("map", null);
 		}
-	}
-
-	@Override
-	public void dispose() {
-		super.dispose();
-
-		// if(isLoaded())
-		// dispose loaded stuff
 	}
 
 }

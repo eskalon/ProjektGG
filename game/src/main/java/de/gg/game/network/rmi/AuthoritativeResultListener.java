@@ -4,11 +4,11 @@ import java.util.HashMap;
 
 import javax.annotation.Nullable;
 
-import de.gg.game.data.vote.VoteResults;
+import de.gg.game.model.types.PositionType;
+import de.gg.game.model.votes.BallotResults;
 import de.gg.game.network.LobbyPlayer;
 import de.gg.game.session.GameSessionSetup;
 import de.gg.game.session.SavedGame;
-import de.gg.game.types.PositionType;
 
 /**
  * Classes that implement this interface take care of the
@@ -42,13 +42,7 @@ public interface AuthoritativeResultListener {
 
 	public void onLobbyPlayerChanged(short senderId, LobbyPlayer lobbyPlayer);
 
-	/**
-	 * @param senderId
-	 *            The sending player's ID.
-	 * @param message
-	 *            The actual message.
-	 */
-	public void onChatMessageSent(short senderId, String message);
+	public void onChatMessage(short senderId, String message);
 
 	/* --- ROUND SETUP --- */
 	/**
@@ -76,7 +70,7 @@ public interface AuthoritativeResultListener {
 	 * @param voteResult
 	 *            The vote result.
 	 */
-	public void onVoteFinished(VoteResults voteResult);
+	public void onVoteFinished(BallotResults voteResult);
 
 	public void onAppliedForPosition(short clientId, PositionType type);
 

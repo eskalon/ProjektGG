@@ -13,54 +13,57 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.reflect.TypeToken;
 
-import de.gg.engine.asset.AnnotationAssetManager.InjectAsset;
-import de.gg.engine.asset.JSON;
-import de.gg.engine.lang.Lang;
+import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
+import de.eskalon.commons.asset.JSON;
+import de.eskalon.commons.lang.Lang;
+import de.eskalon.commons.utils.ISuccessCallback;
 import de.gg.engine.network.BaseGameServer;
-import de.gg.engine.network.IClientConnectCallback;
-import de.gg.engine.network.IHostCallback;
 import de.gg.engine.network.ServerSetup;
-import de.gg.engine.ui.components.OffsetableTextField;
-import de.gg.game.events.GameDataReceivedEvent;
+import de.gg.engine.ui.components.OffsettableTextField;
+import de.gg.game.core.ProjektGGApplication;
+import de.gg.game.events.LobbyDataReceivedEvent;
 import de.gg.game.input.ButtonClickListener;
+import de.gg.game.misc.PlayerUtils.PlayerStub;
+import de.gg.game.model.types.GameDifficulty;
+import de.gg.game.model.types.GameMap;
 import de.gg.game.network.GameClient;
 import de.gg.game.network.GameServer;
 import de.gg.game.session.GameSessionSetup;
-import de.gg.game.types.GameDifficulty;
-import de.gg.game.types.GameMap;
 import de.gg.game.ui.components.BasicDialog;
-import de.gg.game.utils.PlayerUtils.PlayerStub;
 
-public class LobbyCreationScreen extends BaseUIScreen {
+public class LobbyCreationScreen extends AbstractGGUIScreen {
 
-	@InjectAsset("ui/backgrounds/town.jpg")
-	private Texture backgroundImage;
-
-	@InjectAsset(value = "data/misc/player_presets.json", params = "array_list_player_stub")
+	@Asset("ui/backgrounds/server_browser_screen.jpg")
+	private Texture backgroundTexture;
+	@Asset(value = "data/misc/player_presets.json", params = "array_list_player_stub")
 	private JSON playerStubsJson;
+
+	private OffsettableTextField nameField, portField;
+	private CheckBox normalDifficultyCheckbox;
 
 	private BasicDialog connectingDialog;
 	private List<PlayerStub> playerStubs;
 
-	@Override
-	protected void onInit() {
-		super.onInit();
-
-		super.backgroundTexture = backgroundImage;
-		this.playerStubs = playerStubsJson
-				.getData(new TypeToken<ArrayList<PlayerStub>>() {
-				}.getType());
+	public LobbyCreationScreen(ProjektGGApplication application) {
+		super(application);
 	}
 
 	@Override
-	protected void initUI() {
+	protected void create() {
+		super.create();
+		
+		setImage(backgroundTexture);
+		this.playerStubs = playerStubsJson
+				.getData(new TypeToken<ArrayList<PlayerStub>>() {
+				}.getType());
+
 		Label nameLabel = new Label(Lang.get("screen.lobby_creation.name"),
 				skin);
 		Label portLabel = new Label(Lang.get("screen.lobby_creation.port"),
 				skin);
 
-		OffsetableTextField nameField = new OffsetableTextField("", skin, 6);
-		OffsetableTextField portField = new OffsetableTextField(
+		nameField = new OffsettableTextField("", skin, 6);
+		portField = new OffsettableTextField(
 				String.valueOf(BaseGameServer.DEFAULT_PORT), skin, 6);
 		portField.setTextFieldFilter(
 				new TextField.TextFieldFilter.DigitsOnlyFilter());
@@ -69,30 +72,30 @@ public class LobbyCreationScreen extends BaseUIScreen {
 				Lang.get("screen.lobby_creation.difficulty"), skin);
 		CheckBox easyDifficultyCheckbox = new CheckBox(
 				Lang.get(GameDifficulty.EASY), skin);
-		CheckBox normalDifficultyCheckbox = new CheckBox(
-				Lang.get(GameDifficulty.NORMAL), skin);
+		normalDifficultyCheckbox = new CheckBox(Lang.get(GameDifficulty.NORMAL),
+				skin);
 		CheckBox hardDifficultyCheckbox = new CheckBox(
 				Lang.get(GameDifficulty.HARD), skin);
 		ButtonGroup<CheckBox> speedGroup = new ButtonGroup<>();
 		speedGroup.add(easyDifficultyCheckbox);
 		speedGroup.add(normalDifficultyCheckbox);
 		speedGroup.add(hardDifficultyCheckbox);
-		normalDifficultyCheckbox.setChecked(true);
 
 		ImageTextButton backButton = new ImageTextButton(
 				Lang.get("ui.generic.back"), skin, "small");
 		backButton.addListener(
-				new ButtonClickListener(buttonClickSound, game.getSettings()) {
+				new ButtonClickListener(application.getSoundManager()) {
 					@Override
 					protected void onClick() {
-						game.pushScreen("serverBrowser");
+						application.getScreenManager()
+								.pushScreen("serverBrowser", null);
 					}
 				});
 
 		ImageTextButton createButton = new ImageTextButton(
 				Lang.get("screen.lobby_creation.create"), skin, "small");
 		createButton.addListener(
-				new ButtonClickListener(buttonClickSound, game.getSettings()) {
+				new ButtonClickListener(application.getSoundManager()) {
 					@Override
 					protected void onClick() {
 						if (!nameField.getText().isEmpty()
@@ -114,44 +117,54 @@ public class LobbyCreationScreen extends BaseUIScreen {
 							ServerSetup serverSetup = new ServerSetup(
 									nameField.getText(), 8,
 									Integer.valueOf(portField.getText()), true,
-									game.VERSION, true);
+									application.VERSION, true);
 							GameSessionSetup sessionSetup = new GameSessionSetup(
 									difficulty, GameMap.BAMBERG,
 									System.currentTimeMillis());
-							game.setServer(new GameServer(serverSetup,
+							application.setServer(new GameServer(serverSetup,
 									sessionSetup, null, playerStubs));
-							game.getServer().start(new IHostCallback() {
-								@Override
-								public void onHostStarted(Exception e) {
-									if (e == null) {
-										// Connect client to server
-										game.setClient(new GameClient(
-												game.getEventBus()));
-										game.getClient().connect(
-												new IClientConnectCallback() {
-													@Override
-													public void onClientConnected(
-															String errorMessage) {
-														if (errorMessage == null) {
+							application.getServer()
+									.start(new ISuccessCallback() {
+										@Override
+										public void onSuccess(Object param) {
+											// Connect client to server
+											application.setClient(
+													new GameClient(application
+															.getEventBus()));
+											application.getClient().connect(
+													new ISuccessCallback() {
+														public void onSuccess(
+																Object param) {
 															connectingDialog
 																	.setVisible(
 																			false);
-															showInfoDialog(Lang
-																	.get("ui.generic.connecting"),
-																	Lang.get(
-																			"screen.server_browser.receiving"),
-																	true);
-														} else
+															BasicDialog
+																	.createAndShow(
+																			stage,
+																			skin,
+																			Lang.get(
+																					"ui.generic.connecting"),
+																			Lang.get(
+																					"screen.server_browser.receiving"));
+														};
+
+														public void onFailure(
+																Object param) {
 															onHostStartingFailed(
-																	errorMessage);
-													}
-												}, game.VERSION, "localhost",
-												serverSetup.getPort());
-									} else {
-										onHostStartingFailed(e.getMessage());
-									}
-								}
-							});
+																	((Exception) param)
+																			.getMessage());
+														};
+													}, application.VERSION,
+													"localhost",
+													serverSetup.getPort());
+										}
+
+										public void onFailure(Object param) {
+											onHostStartingFailed(
+													((Exception) param)
+															.getMessage());
+										};
+									});
 
 							connectingDialog = new BasicDialog(Lang.get(
 									"screen.lobby_creation.starting_server.title"),
@@ -160,7 +173,7 @@ public class LobbyCreationScreen extends BaseUIScreen {
 									"screen.lobby_creation.starting_server.text"));
 							connectingDialog.show(stage);
 						} else {
-							showInfoDialog(Lang.get(
+							BasicDialog.createAndShow(stage, skin, Lang.get(
 									"screen.lobby_creation.fields_empty.title"),
 									Lang.get(
 											"screen.lobby_creation.fields_empty.title"));
@@ -199,24 +212,27 @@ public class LobbyCreationScreen extends BaseUIScreen {
 		mainTable.add(mTable);
 	}
 
-	@Subscribe
-	public void onGameDataReceived(GameDataReceivedEvent ev) {
-		connectingDialog.setVisible(false);
-		((LobbyScreen) game.getScreen("lobby")).setupLobby(ev);
-		game.pushScreen("lobby");
+	@Override
+	protected void setUIValues() {
+		nameField.setText("");
+		portField.setText("");
+		normalDifficultyCheckbox.setChecked(true);
 	}
 
-	private void onHostStartingFailed(String errorMsg) {
+	public void onHostStartingFailed(String msg) {
+		application.getServer().stop();
+		application.setServer(null);
+		application.setClient(null);
+
 		connectingDialog.setVisible(false);
+		BasicDialog.createAndShow(stage, skin, Lang.get("ui.generic.error"),
+				msg);
+	}
 
-		if (game.getServer() != null) {
-			game.getServer().stop();
-			game.setServer(null);
-		}
-
-		game.setClient(null);
-
-		showInfoDialog(Lang.get("ui.generic.error"), errorMsg);
+	@Subscribe
+	public void onGameDataReceived(LobbyDataReceivedEvent ev) {
+		connectingDialog.setVisible(false);
+		application.getScreenManager().pushScreen("lobby", null);
 	}
 
 }
