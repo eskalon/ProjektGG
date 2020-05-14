@@ -56,7 +56,7 @@ public class MainMenuScreen extends AbstractGGUIScreen {
 					@Override
 					protected void onClick() {
 						application.getScreenManager()
-								.pushScreen("serverBrowser", null);
+								.pushScreen("server_browser", null);
 					}
 				});
 

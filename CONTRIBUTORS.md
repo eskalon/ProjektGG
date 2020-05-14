@@ -47,7 +47,7 @@ Eine Liste aller Contributor und der genutzten externen Assets:
   Path: ui/skin/skin.png\
   A modified render of the 3D model by: [yd](https://opengameart.org/content/bag-of-coins)\
   License: [CC0](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
-- **Curser Image**\
+- **Cursor Image**\
   Path: ui/cursor.png\
   Based on the "Pointers part 5" by [yd](https://opengameart.org/content/pointers-part-5)\
   License: [CC0](https://creativecommons.org/publicdomain/zero/1.0/legalcode)

@@ -51,7 +51,7 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 	@Override
 	protected void create() {
 		super.create();
-		
+
 		setImage(backgroundTexture);
 		this.playerStubs = playerStubsJson
 				.getData(new TypeToken<ArrayList<PlayerStub>>() {

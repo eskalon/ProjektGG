@@ -219,7 +219,6 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 
 		// Cursor
 		Gdx.graphics.setCursor(Gdx.graphics.newCursor(cursorPixmap, 0, 0));
-		cursorPixmap.dispose();
 
 		// Discord integration
 		DiscordGGHandler.getInstance().setMenuPresence();
