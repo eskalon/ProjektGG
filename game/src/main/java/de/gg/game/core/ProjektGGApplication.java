@@ -89,7 +89,8 @@ public class ProjektGGApplication extends EskalonApplication {
 		screenManager.addScreen("server_browser",
 				new ServerBrowserScreen(this));
 		screenManager.addScreen("lobby", new LobbyScreen(this));
-		screenManager.addScreen("lobbyCreation", new LobbyCreationScreen(this));
+		screenManager.addScreen("lobby_creation",
+				new LobbyCreationScreen(this));
 		screenManager.addScreen("map", new GameMapScreen(this));
 		screenManager.addScreen("house_town_hall",
 				new GameTownHallInteriorScreen(this));
@@ -100,8 +101,12 @@ public class ProjektGGApplication extends EskalonApplication {
 		// Transitions
 		BlendingTransition assetLoadingTransition = new BlendingTransition(
 				batch, 0.51F, Interpolation.pow2In);
-		screenManager.addScreenTransition("assetLoadingTransition",
+		screenManager.addScreenTransition("longBlendingTransition",
 				assetLoadingTransition);
+		BlendingTransition assetLoadingTransition2 = new BlendingTransition(
+				batch, 0.39F, Interpolation.sine);
+		screenManager.addScreenTransition("blendingTransition",
+				assetLoadingTransition2);
 
 		return "loading";
 	}

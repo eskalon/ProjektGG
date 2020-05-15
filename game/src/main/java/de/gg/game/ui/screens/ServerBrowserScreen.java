@@ -85,7 +85,7 @@ public class ServerBrowserScreen extends AbstractGGUIScreen {
 					@Override
 					protected void onClick() {
 						application.getScreenManager().pushScreen("main_menu",
-								null);
+								"blendingTransition");
 					}
 				});
 
@@ -96,7 +96,7 @@ public class ServerBrowserScreen extends AbstractGGUIScreen {
 					@Override
 					protected void onClick() {
 						application.getScreenManager()
-								.pushScreen("lobby_creation", null);
+								.pushScreen("lobby_creation", "blendingTransition");
 					}
 				});
 

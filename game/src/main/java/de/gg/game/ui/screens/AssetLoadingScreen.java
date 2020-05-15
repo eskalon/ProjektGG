@@ -225,7 +225,7 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 
 		// Change screen
 		application.getScreenManager().pushScreen("main_menu",
-				"assetLoadingTransition");
+				"longBlendingTransition");
 	}
 
 	@Override
@@ -241,7 +241,7 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 		application.getSpriteBatch().draw(titleTexture,
 				(application.getWidth() / 2) - (titleTexture.getWidth() / 2)
 						- 18,
-				185, titleTexture.getWidth(), titleTexture.getHeight());
+				187, titleTexture.getWidth(), titleTexture.getHeight());
 
 		// Get useful values
 		float imageWidth = topBarTexture.getWidth();

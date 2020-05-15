@@ -40,20 +40,22 @@ public class MainMenuScreen extends AbstractGGUIScreen {
 
 		setImage(backgroundImage);
 
-		SequenceAction sequence = new SequenceAction();
-		sequence.addAction(Actions.alpha(0F));
-		sequence.addAction(Actions.delay(0.87F));
-		sequence.addAction(Actions.alpha(1F, 1.6F, Interpolation.pow2In));
-		stage.addAction(sequence);
-
 		ImageTextButton multiplayerButton = new ImageTextButton(
 				Lang.get("screen.main_menu.multiplayer"), skin);
 		multiplayerButton.addListener(
 				new ButtonClickListener(application.getSoundManager()) {
 					@Override
 					protected void onClick() {
-						application.getScreenManager()
-								.pushScreen("server_browser", null);
+						SequenceAction sequence2 = new SequenceAction();
+						sequence2.addAction(Actions.delay(0.35F));
+						sequence2.addAction(Actions.run(() -> application
+								.getScreenManager().pushScreen("server_browser",
+										"blendingTransition")));
+
+						stage.addAction(Actions.alpha(1F));
+						stage.addAction(Actions.parallel(
+								Actions.alpha(0F, 0.45F, Interpolation.pow2In),
+								sequence2));
 					}
 				});
 
@@ -63,8 +65,16 @@ public class MainMenuScreen extends AbstractGGUIScreen {
 				new ButtonClickListener(application.getSoundManager()) {
 					@Override
 					protected void onClick() {
-						application.getScreenManager().pushScreen("settings",
-								null);
+						SequenceAction sequence2 = new SequenceAction();
+						sequence2.addAction(Actions.delay(0.35F));
+						sequence2.addAction(Actions.run(
+								() -> application.getScreenManager().pushScreen(
+										"settings", "blendingTransition")));
+
+						stage.addAction(Actions.alpha(1F));
+						stage.addAction(Actions.parallel(
+								Actions.alpha(0F, 0.45F, Interpolation.pow2In),
+								sequence2));
 					}
 				});
 
@@ -74,8 +84,16 @@ public class MainMenuScreen extends AbstractGGUIScreen {
 				new ButtonClickListener(application.getSoundManager()) {
 					@Override
 					protected void onClick() {
-						application.getScreenManager().pushScreen("credits",
-								null);
+						SequenceAction sequence2 = new SequenceAction();
+						sequence2.addAction(Actions.delay(0.35F));
+						sequence2.addAction(Actions.run(
+								() -> application.getScreenManager().pushScreen(
+										"credits", "longBlendingTransition")));
+
+						stage.addAction(Actions.alpha(1F));
+						stage.addAction(Actions.parallel(
+								Actions.alpha(0F, 0.45F, Interpolation.pow2In),
+								sequence2));
 					}
 				});
 
@@ -119,6 +137,11 @@ public class MainMenuScreen extends AbstractGGUIScreen {
 	@Override
 	protected void setUIValues() {
 		// not needed as there are no changeable values
+		SequenceAction sequence = new SequenceAction();
+		sequence.addAction(Actions.alpha(0F));
+		sequence.addAction(Actions.delay(0.87F));
+		sequence.addAction(Actions.alpha(1F, 1.6F, Interpolation.pow2In));
+		stage.addAction(sequence);
 	}
 
 }

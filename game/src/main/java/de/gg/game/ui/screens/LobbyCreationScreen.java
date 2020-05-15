@@ -88,7 +88,7 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 					@Override
 					protected void onClick() {
 						application.getScreenManager()
-								.pushScreen("serverBrowser", null);
+								.pushScreen("server_browser", null);
 					}
 				});
 
@@ -176,7 +176,7 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 							BasicDialog.createAndShow(stage, skin, Lang.get(
 									"screen.lobby_creation.fields_empty.title"),
 									Lang.get(
-											"screen.lobby_creation.fields_empty.title"));
+											"screen.lobby_creation.fields_empty.text"));
 						}
 					}
 				});

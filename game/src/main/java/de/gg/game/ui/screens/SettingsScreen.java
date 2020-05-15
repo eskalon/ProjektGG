@@ -140,8 +140,8 @@ public class SettingsScreen extends AbstractGGUIScreen {
 							application.getScreenManager().pushScreen("map",
 									null);
 						else
-							application.getScreenManager()
-									.pushScreen("main_menu", null);
+							application.getScreenManager().pushScreen(
+									"main_menu", "blendingTransition");
 					}
 				});
 

@@ -1,5 +1,6 @@
 package de.gg.game.ui.screens;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
@@ -34,7 +35,7 @@ public class CreditsScreen extends AbstractImageScreen {
 		super.create();
 		creditsTextSplitted = creditsText.getString().replaceAll("\\\\", "")
 				.replace(")", "").replace("[", "").replace("](", ", ")
-				.split("\n");
+				.replace("**", "").replace(" ", "  ").split("\n");
 
 		h2Font = app.getUISkin().getFont("title-24");
 		h3Font = app.getUISkin().getFont("main-22");
@@ -43,7 +44,8 @@ public class CreditsScreen extends AbstractImageScreen {
 		addInputProcessor(new BackInputProcessor() {
 			@Override
 			public void onBackAction() {
-				app.getScreenManager().pushScreen("main_menu", null);
+				app.getScreenManager().pushScreen("main_menu",
+						"longBlendingTransition");
 			}
 		});
 	}
@@ -52,7 +54,7 @@ public class CreditsScreen extends AbstractImageScreen {
 	public void show() {
 		super.show();
 
-		posY = 0;
+		posY = -25;
 	}
 
 	@Override
@@ -64,7 +66,10 @@ public class CreditsScreen extends AbstractImageScreen {
 				app.getHeight());
 
 		for (int i = 0; i < this.creditsTextSplitted.length; i++) {
-			renderMarkdownText(this.creditsTextSplitted[i], posY - i * 30);
+			renderMarkdownText(this.creditsTextSplitted[i], 48,
+					posY - i * 30 - 2, Color.BLACK);
+			renderMarkdownText(this.creditsTextSplitted[i], 50, posY - i * 30,
+					Color.WHITE);
 		}
 
 		app.getSpriteBatch().end();
@@ -72,13 +77,17 @@ public class CreditsScreen extends AbstractImageScreen {
 		this.posY += delta * 25;
 	}
 
-	private void renderMarkdownText(String line, float yPos) {
+	private void renderMarkdownText(String line, float xPos, float yPos,
+			Color color) {
 		if (line.startsWith("###")) {
-			h3Font.draw(app.getSpriteBatch(), line.substring(4), 50, yPos);
+			h3Font.setColor(color);
+			h3Font.draw(app.getSpriteBatch(), line.substring(4), xPos, yPos);
 		} else if (line.startsWith("##")) {
-			h2Font.draw(app.getSpriteBatch(), line.substring(3), 50, yPos);
+			h2Font.setColor(color);
+			h2Font.draw(app.getSpriteBatch(), line.substring(3), xPos, yPos);
 		} else {
-			textFont.draw(app.getSpriteBatch(), line, 50, yPos);
+			textFont.setColor(color);
+			textFont.draw(app.getSpriteBatch(), line, xPos, yPos);
 		}
 	}
 
