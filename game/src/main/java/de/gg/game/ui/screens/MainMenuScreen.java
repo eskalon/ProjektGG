@@ -2,7 +2,6 @@ package de.gg.game.ui.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -12,8 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
@@ -106,10 +103,6 @@ public class MainMenuScreen extends AbstractGGUIScreen {
 			}
 		});
 
-		Label versionLabel = new Label(application.VERSION, skin);
-		Table versionTable = new Table();
-		versionTable.add(versionLabel);
-
 		// githubRepoButton.addListener(
 		// new TextTooltip("Zu unserem Gihtub-Repository", skin));
 
@@ -120,14 +113,7 @@ public class MainMenuScreen extends AbstractGGUIScreen {
 		mainTable.add(exitButton).row();
 
 		githubRepoButton.padLeft(3).padBottom(3).bottom().left();
-
-		GlyphLayout layout = new GlyphLayout(skin.getFont("main-19"),
-				application.VERSION);
-		versionTable.padBottom(28)
-				.padLeft(application.getWidth() * 2 - layout.width - 8);
-
 		stage.addActor(githubRepoButton);
-		stage.addActor(versionTable);
 	}
 
 	@Override

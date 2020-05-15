@@ -239,10 +239,9 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 				application.getWidth(), application.getHeight());
 
 		application.getSpriteBatch().draw(titleTexture,
-				(application.getWidth() / 2)
-						- (titleTexture.getWidth() / 2 * 1.35F) + 1,
-				150, titleTexture.getWidth() * 1.35F,
-				titleTexture.getHeight() * 1.35F);
+				(application.getWidth() / 2) - (titleTexture.getWidth() / 2)
+						- 18,
+				185, titleTexture.getWidth(), titleTexture.getHeight());
 
 		// Get useful values
 		float imageWidth = topBarTexture.getWidth();

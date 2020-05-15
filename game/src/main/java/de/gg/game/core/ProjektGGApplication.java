@@ -14,11 +14,9 @@ import de.eskalon.commons.asset.AnnotationAssetManager.AssetLoaderParametersFact
 import de.eskalon.commons.asset.JSON;
 import de.eskalon.commons.asset.JSONLoader.JSONLoaderParameter;
 import de.eskalon.commons.core.EskalonApplication;
-import de.eskalon.commons.core.EskalonSplashScreen;
-import de.eskalon.commons.screen.transition.impl.BlankTimedTransition;
 import de.eskalon.commons.screen.transition.impl.BlendingTransition;
 import de.eskalon.commons.screens.AbstractAssetLoadingScreen;
-import de.eskalon.commons.screens.BlankEskalonScreen;
+import de.eskalon.commons.screens.EskalonSplashScreen;
 import de.gg.game.misc.PlayerUtils.PlayerStub;
 import de.gg.game.network.GameClient;
 import de.gg.game.network.GameServer;
@@ -55,9 +53,7 @@ public class ProjektGGApplication extends EskalonApplication {
 	private GameClient client;
 
 	@Override
-	public void create() {
-		super.create();
-
+	public String initApp() {
 		// Asset loading
 		this.assetManager.registerAssetLoaderParametersFactory(JSON.class,
 				new AssetLoaderParametersFactory<JSON>() {
@@ -86,14 +82,7 @@ public class ProjektGGApplication extends EskalonApplication {
 		this.soundManager.setMusicVolume(settings.getMusicVolume());
 
 		// Add screens
-		this.screenManager.addScreen("blank", new BlankEskalonScreen(this));
 		screenManager.addScreen("credits", new CreditsScreen(this));
-		screenManager.addScreen("splash",
-				new EskalonSplashScreen(this, (param) -> {
-					screenManager.pushScreen("blank", "splashOutTransition1");
-					screenManager.pushScreen("blank", "splashOutTransition2");
-					screenManager.pushScreen("loading", "splashOutTransition3");
-				}));
 		screenManager.addScreen("main_menu", new MainMenuScreen(this));
 		screenManager.addScreen("loading", new AssetLoadingScreen(this));
 		screenManager.addScreen("game_loading", new GameLoadingScreen(this));
@@ -108,32 +97,13 @@ public class ProjektGGApplication extends EskalonApplication {
 		screenManager.addScreen("settings", new SettingsScreen(this));
 		screenManager.addScreen("vote", new GameBallotScreen(this));
 
-		// Splash screen transitions
-		BlendingTransition splashBlendingTransition = new BlendingTransition(
-				batch, 0.25F, Interpolation.exp10In);
-		screenManager.addScreenTransition("splashInTransition",
-				splashBlendingTransition);
-		BlendingTransition splashOutTransition1 = new BlendingTransition(batch,
-				0.18F, Interpolation.exp5Out);
-		screenManager.addScreenTransition("splashOutTransition1",
-				splashOutTransition1);
-		BlankTimedTransition splashOutTransition2 = new BlankTimedTransition(
-				0.22F);
-		screenManager.addScreenTransition("splashOutTransition2",
-				splashOutTransition2);
-		BlendingTransition splashOutTransition3 = new BlendingTransition(batch,
-				0.275F, Interpolation.pow2In);
-		screenManager.addScreenTransition("splashOutTransition3",
-				splashOutTransition3);
-
-		// Other transitions
+		// Transitions
 		BlendingTransition assetLoadingTransition = new BlendingTransition(
 				batch, 0.51F, Interpolation.pow2In);
 		screenManager.addScreenTransition("assetLoadingTransition",
 				assetLoadingTransition);
 
-		// Push the first screen
-		screenManager.pushScreen("splash", "splashInTransition");
+		return "loading";
 	}
 
 	public GameSettings getSettings() {
@@ -180,8 +150,9 @@ public class ProjektGGApplication extends EskalonApplication {
 	@Override
 	public void dispose() {
 		super.dispose();
-		if (uiSkin != null)
-			uiSkin.dispose();
+
+		// if (uiSkin != null)
+		// uiSkin.dispose();
 	}
 
 }
