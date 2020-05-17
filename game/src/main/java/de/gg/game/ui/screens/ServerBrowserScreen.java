@@ -95,8 +95,8 @@ public class ServerBrowserScreen extends AbstractGGUIScreen {
 				new ButtonClickListener(application.getSoundManager()) {
 					@Override
 					protected void onClick() {
-						application.getScreenManager()
-								.pushScreen("lobby_creation", "blendingTransition");
+						application.getScreenManager().pushScreen(
+								"lobby_creation", "shortBlendingTransition");
 					}
 				});
 

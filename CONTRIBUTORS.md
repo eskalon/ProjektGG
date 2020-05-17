@@ -7,14 +7,6 @@ Eine Liste aller Contributor und der genutzten externen Assets:
 - [Vlarabor](https://github.com/Vlarabor)
 
 ## External assets and code
-### Code
-- **Sync class**\
-  Path: de.gg.desktop.Sync\
-  Author: [LWJGL Project](https://github.com/LWJGL/lwjgl/blob/master/src/java/org/lwjgl/opengl/Sync.java)\
-  License: [custom](http://legacy.lwjgl.org/license.php.html)
-  
-  - Sync class Copyright (c) 2002-2012 LWJGL Project
-
 ### UI
 - **The check button textures, the scroll bar and slider, the textfield and the dialog window background**\
   Path: ui/skin/skin.png\

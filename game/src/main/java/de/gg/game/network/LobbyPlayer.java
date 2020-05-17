@@ -33,6 +33,7 @@ public class LobbyPlayer implements ILocalized {
 	private boolean ready;
 	private Religion religion = Religion.values()[0];
 	private int professionTypeIndex;
+	// only used on the server side
 	private String hostname;
 
 	public String getSurname() {

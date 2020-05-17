@@ -62,13 +62,13 @@ public class PlayerLobbyConfigDialog extends BasicDialog {
 		Label religionLabel = new Label(
 				Lang.get("dialog.player_config.religion"), skin);
 
-		ImageTextButton iconButton = new ImageTextButton("Anpassen...", skin,
-				"small");
+		ImageTextButton iconButton = new ImageTextButton(
+				Lang.get("dialog.player_config.configure"), skin, "small");
 		Label iconLabel = new Label(Lang.get("dialog.player_config.icon"),
 				skin);
 
-		ImageTextButton professionButton = new ImageTextButton("Anpassen...",
-				skin, "small");
+		ImageTextButton professionButton = new ImageTextButton(
+				Lang.get("dialog.player_config.configure"), skin, "small");
 		Label professionLabel = new Label(
 				Lang.get("dialog.player_config.profession"), skin);
 
@@ -128,8 +128,8 @@ public class PlayerLobbyConfigDialog extends BasicDialog {
 						.getAvailableIcons(tmpPlayers);
 
 				for (int i = 0; i < availableIcons.size(); i++) {
-					ImageButton iconIButton = new ImageButton(skin.getDrawable(
-							availableIcons.get(i).getIconFileName()));
+					ImageButton iconIButton = new ImageButton(skin
+							.getDrawable(availableIcons.get(i).getFileName()));
 					final int index = i;
 					iconIButton.addListener(
 							new ButtonClickListener(game.getSoundManager()) {

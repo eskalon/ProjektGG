@@ -120,7 +120,7 @@ public abstract class BaseGameServer<C> {
 				callback.onSuccess(null); // Host successfully started
 			} catch (IOException | IllegalArgumentException e2) {
 				Log.error("Server",
-						"Der Server konnte nicht gestartet werden: %s", e2);
+						"Server could not be started: %s", e2);
 				callback.onFailure(e2); // Something went wrong
 			}
 		});

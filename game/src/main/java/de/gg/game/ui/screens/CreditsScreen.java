@@ -54,7 +54,7 @@ public class CreditsScreen extends AbstractImageScreen {
 	public void show() {
 		super.show();
 
-		posY = -25;
+		posY = -20;
 	}
 
 	@Override

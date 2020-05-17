@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton.ImageTextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.eskalon.commons.lang.Lang;
@@ -61,6 +62,19 @@ public class BasicDialog extends Dialog {
 	@Override
 	public void hide() {
 		hide(fadeOut(0.25F, Interpolation.fade));
+	}
+
+	/**
+	 * Adds a label to the content table. The dialog must have been constructed
+	 * with a skin to use this method.
+	 * 
+	 * @param text
+	 */
+	public Dialog text(String text) {
+		if (skin == null)
+			throw new IllegalStateException(
+					"This method may only be used if the dialog was constructed with a Skin.");
+		return text(text, skin.get("text-white-20", LabelStyle.class));
 	}
 
 	/**

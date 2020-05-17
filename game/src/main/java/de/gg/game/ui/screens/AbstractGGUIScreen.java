@@ -65,6 +65,7 @@ public abstract class AbstractGGUIScreen extends AbstractImageScreen {
 		stage.act(delta);
 		stage.draw();
 
+		// Resets the alpha changes made by scene2d actions
 		stage.getBatch().setColor(Color.WHITE);
 	}
 

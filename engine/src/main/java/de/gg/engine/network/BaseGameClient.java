@@ -123,7 +123,7 @@ public abstract class BaseGameClient {
 				// A successful connection further requires a proper handshake
 			} catch (IOException e) {
 				Log.error("Client", "Couldn't connect: %s", e);
-				callback.onFailure(e.toString());
+				callback.onFailure("Couldn't connect: " + e.getMessage());
 			}
 		});
 	}

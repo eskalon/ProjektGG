@@ -8,11 +8,11 @@ import com.google.common.eventbus.EventBus;
 import de.eskalon.commons.lang.Lang;
 import de.eskalon.commons.log.Log;
 import de.gg.game.events.AllPlayersReadyEvent;
+import de.gg.game.events.BallotFinishedEvent;
 import de.gg.game.events.ChangedGameSpeedEvent;
 import de.gg.game.events.LobbyDataReceivedEvent;
 import de.gg.game.events.ServerReadyEvent;
 import de.gg.game.events.UIRefreshEvent;
-import de.gg.game.events.BallotFinishedEvent;
 import de.gg.game.model.World;
 import de.gg.game.model.types.GameSpeed;
 import de.gg.game.model.types.PositionType;
@@ -32,9 +32,11 @@ public class ClientsideResultListener implements AuthoritativeResultListener {
 	private World world;
 
 	public ClientsideResultListener(EventBus eventBus, GameClient client) {
+		Preconditions.checkNotNull(eventBus);
 		Preconditions.checkNotNull(client);
 
 		this.eventBus = eventBus;
+		this.client = client;
 	}
 
 	public void setSession(GameSession session) {
@@ -107,8 +109,15 @@ public class ClientsideResultListener implements AuthoritativeResultListener {
 	}
 
 	@Override
-	public void onLobbyPlayerChanged(short playerId, LobbyPlayer lobbyPlayer) {
-		client.lobbyPlayers.put(playerId, lobbyPlayer);
+	public void onLobbyPlayerChanged(short playerId, LobbyPlayer player) {
+		LobbyPlayer local = client.lobbyPlayers.get(playerId);
+		local.setName(player.getName());
+		local.setSurname(player.getSurname());
+		local.setMale(player.isMale());
+		local.setIcon(player.getIcon());
+		local.setProfessionTypeIndex(player.getProfessionTypeIndex());
+		local.setReady(player.isReady());
+		local.setReligion(player.getReligion());
 		eventBus.post(new UIRefreshEvent());
 	}
 

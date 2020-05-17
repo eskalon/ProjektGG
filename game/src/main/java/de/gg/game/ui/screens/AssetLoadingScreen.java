@@ -149,10 +149,12 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 		// Load the skin
 		ObjectMap<String, Object> fontMap = new ObjectMap<>();
 		fontMap.put("main-18", mainFont18);
+		mainFont19.getData().markupEnabled = true;
 		fontMap.put("main-19", mainFont19);
 		fontMap.put("main-20", mainFont20);
 		fontMap.put("main-22", mainFont22);
 		fontMap.put("text-20", textFont20);
+		textFont20.getData().markupEnabled = true;
 		fontMap.put("title-24", titleFont24);
 		fontMap.put("handwritten-20", handwrittenFont20);
 
@@ -219,6 +221,7 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 
 		// Cursor
 		Gdx.graphics.setCursor(Gdx.graphics.newCursor(cursorPixmap, 0, 0));
+		// cursorPixmap.dispose();
 
 		// Discord integration
 		DiscordGGHandler.getInstance().setMenuPresence();

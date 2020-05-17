@@ -150,32 +150,32 @@ public class SettingsScreen extends AbstractGGUIScreen {
 		settings2ColTable.padTop(20);
 		Table buttonTable = new Table();
 
-		settings2ColTable.add(forwardLabel).padBottom(25);
-		settings2ColTable.add(forwardButton).padBottom(25);
+		settings2ColTable.add(forwardLabel).padBottom(22).left();
+		settings2ColTable.add(forwardButton).padBottom(22);
 
-		settings2ColTable.add(masterVolume).padBottom(25).padLeft(70);
-		settings2ColTable.add(masterSlider).padBottom(25).row();
+		settings2ColTable.add(masterVolume).padBottom(28).padLeft(75).padRight(10);
+		settings2ColTable.add(masterSlider).padBottom(22).row();
 
-		settings2ColTable.add(leftLabel).padBottom(25);
-		settings2ColTable.add(leftButton).padBottom(25);
+		settings2ColTable.add(leftLabel).padBottom(22).left();
+		settings2ColTable.add(leftButton).padBottom(22);
 
-		settings2ColTable.add(effectVolume).padBottom(25).padLeft(70);
-		settings2ColTable.add(effectSlider).padBottom(25).row();
+		settings2ColTable.add(effectVolume).padBottom(28).padLeft(75).padRight(10);
+		settings2ColTable.add(effectSlider).padBottom(22).row();
 
-		settings2ColTable.add(backwardLabel).padBottom(25);
-		settings2ColTable.add(backwardButton).padBottom(25);
+		settings2ColTable.add(backwardLabel).padBottom(22).left();
+		settings2ColTable.add(backwardButton).padBottom(22);
 
-		settings2ColTable.add(musicVolume).padBottom(25).padLeft(70);
-		settings2ColTable.add(musicSlider).padBottom(25).row();
+		settings2ColTable.add(musicVolume).padBottom(28).padLeft(75).padRight(10);
+		settings2ColTable.add(musicSlider).padBottom(22).row();
 
-		settings2ColTable.add(rightLabel).padBottom(50);
-		settings2ColTable.add(rightButton).padBottom(50).row();
+		settings2ColTable.add(rightLabel).padBottom(55).left();
+		settings2ColTable.add(rightButton).padBottom(55).row();
 
-		settings2ColTable.add(speedUpLabel).padBottom(25);
-		settings2ColTable.add(speedUpButton).padBottom(25).row();
+		settings2ColTable.add(speedUpLabel).padBottom(22).padRight(13).left();
+		settings2ColTable.add(speedUpButton).padBottom(22).row();
 
-		settings2ColTable.add(speedDownLabel).padBottom(25);
-		settings2ColTable.add(speedDownButton).padBottom(25);
+		settings2ColTable.add(speedDownLabel).padBottom(22).padRight(13).left();
+		settings2ColTable.add(speedDownButton).padBottom(22);
 
 		settingsTable.left().top().add(settings2ColTable).row();
 
@@ -185,7 +185,7 @@ public class SettingsScreen extends AbstractGGUIScreen {
 		mTable.setWidth(615);
 		mTable.setHeight(475);
 		mTable.setBackground(skin.getDrawable("parchment2"));
-		mTable.add(settingsTable).width(580).height(405).padRight(70).row();
+		mTable.add(settingsTable).width(580).height(405).padRight(90).row();
 		mTable.add(buttonTable).height(50).bottom();
 
 		mainTable.add(mTable);

@@ -87,8 +87,8 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 				new ButtonClickListener(application.getSoundManager()) {
 					@Override
 					protected void onClick() {
-						application.getScreenManager()
-								.pushScreen("server_browser", null);
+						application.getScreenManager().pushScreen(
+								"server_browser", "shortBlendingTransition");
 					}
 				});
 
@@ -135,17 +135,8 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 													new ISuccessCallback() {
 														public void onSuccess(
 																Object param) {
-															connectingDialog
-																	.setVisible(
-																			false);
-															BasicDialog
-																	.createAndShow(
-																			stage,
-																			skin,
-																			Lang.get(
-																					"ui.generic.connecting"),
-																			Lang.get(
-																					"screen.server_browser.receiving"));
+															// wait for
+															// LobbyDataReceivedEvent
 														};
 
 														public void onFailure(
@@ -181,22 +172,26 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 					}
 				});
 
+		Table titleTable = new Table();
 		Table settingsTable = new Table();
 		Table settings2ColTable = new Table();
 		Table settings3ColTable = new Table();
 		Table buttonTable = new Table();
 
-		settings2ColTable.add(nameLabel).padBottom(30);
-		settings2ColTable.add(nameField).padBottom(30).row();
-		settings2ColTable.add(portLabel);
+		titleTable.add(new Label("Lobby einrichten", skin, "title")).padTop(25);
+
+		settings2ColTable.add(nameLabel).padLeft(100).padBottom(20).padRight(10)
+				.padTop(30);
+		settings2ColTable.add(nameField).row();
+		settings2ColTable.add(portLabel).padLeft(100).padRight(10);
 		settings2ColTable.add(portField).row();
 
-		settings3ColTable.add(difficultyLabel).colspan(3).row();
-		settings3ColTable.add(easyDifficultyCheckbox).padRight(6);
-		settings3ColTable.add(normalDifficultyCheckbox).padRight(6);
+		settings3ColTable.add(difficultyLabel).colspan(3).padLeft(150).row();
+		settings3ColTable.add(easyDifficultyCheckbox).padLeft(150).padRight(12);
+		settings3ColTable.add(normalDifficultyCheckbox).padRight(12);
 		settings3ColTable.add(hardDifficultyCheckbox);
 
-		settingsTable.left().top().add(settings2ColTable).padBottom(40).row();
+		settingsTable.left().top().add(settings2ColTable).padBottom(27).row();
 		settingsTable.add(settings3ColTable).row();
 
 		buttonTable.add(backButton);
@@ -206,8 +201,9 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 		mTable.setWidth(615);
 		mTable.setHeight(475);
 		mTable.setBackground(skin.getDrawable("parchment2"));
-		mTable.add(settingsTable).width(580).height(405).row();
-		mTable.add(buttonTable).height(50).bottom();
+		mTable.add(titleTable).row();
+		mTable.add(settingsTable).width(580).height(215).row();
+		mTable.add(buttonTable).height(50).bottom().padBottom(50);
 
 		mainTable.add(mTable);
 	}
@@ -231,8 +227,9 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 
 	@Subscribe
 	public void onGameDataReceived(LobbyDataReceivedEvent ev) {
-		connectingDialog.setVisible(false);
-		application.getScreenManager().pushScreen("lobby", null);
+		connectingDialog.hide();
+		application.getScreenManager().pushScreen("lobby",
+				"blendingTransition");
 	}
 
 }

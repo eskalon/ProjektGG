@@ -99,14 +99,18 @@ public class ProjektGGApplication extends EskalonApplication {
 		screenManager.addScreen("vote", new GameBallotScreen(this));
 
 		// Transitions
-		BlendingTransition assetLoadingTransition = new BlendingTransition(
+		BlendingTransition shortBlendingTransition = new BlendingTransition(
+				batch, 0.15F, Interpolation.pow2In);
+		screenManager.addScreenTransition("shortBlendingTransition",
+				shortBlendingTransition);
+		BlendingTransition blendingTransition = new BlendingTransition(batch,
+				0.39F, Interpolation.sine);
+		screenManager.addScreenTransition("blendingTransition",
+				blendingTransition);
+		BlendingTransition longBlendingTransition = new BlendingTransition(
 				batch, 0.51F, Interpolation.pow2In);
 		screenManager.addScreenTransition("longBlendingTransition",
-				assetLoadingTransition);
-		BlendingTransition assetLoadingTransition2 = new BlendingTransition(
-				batch, 0.39F, Interpolation.sine);
-		screenManager.addScreenTransition("blendingTransition",
-				assetLoadingTransition2);
+				longBlendingTransition);
 
 		return "loading";
 	}

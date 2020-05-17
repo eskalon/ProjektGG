@@ -19,7 +19,7 @@ public enum PlayerIcon {
 		return color;
 	}
 
-	public String getIconFileName() {
+	public String getFileName() {
 		return iconFileName;
 	}
 }

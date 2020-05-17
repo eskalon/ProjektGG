@@ -2,6 +2,7 @@ package de.gg.game.ui.screens;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -96,7 +97,7 @@ public class LobbyScreen extends AbstractGGUIScreen {
 							Log.info("Server", "Server stopped");
 						});
 
-						application.getScreenManager().pushScreen("mainMenu",
+						application.getScreenManager().pushScreen("main_menu",
 								null);
 					}
 				});
@@ -136,7 +137,7 @@ public class LobbyScreen extends AbstractGGUIScreen {
 		chatInputField.setTextFieldListener(new TextFieldListener() {
 			@Override
 			public void keyTyped(TextField textField, char key) {
-				if (!textField.getText().isEmpty() && (key == (char) 13)) { // Enter
+				if (!textField.getText().isEmpty() && key == '\n') { // Enter
 					application.getSoundManager()
 							.playSoundEffect("button_click");
 
@@ -238,7 +239,6 @@ public class LobbyScreen extends AbstractGGUIScreen {
 							: null));
 		}
 
-		// TODO update chat messages
 		messagesArea.setText("");
 		for (ChatMessage c : application.getClient().getChatMessages()) {
 			addChatMessageToUI(c);
@@ -268,18 +268,23 @@ public class LobbyScreen extends AbstractGGUIScreen {
 	private Table updatePlayerSlot(Table t, LobbyPlayer p) {
 		t.clear();
 		if (p == null) {
-			t.add().width(25);
+			t.add().width(33);
 			t.add(new Label("[#D3D3D3FF]" + Lang.get("screen.lobby.free_slot"),
-					skin)).width(350);
-			t.add().width(50);
+					skin)).width(355);
+			t.add().width(45);
 		} else {
-			t.add().width(25); // Icon
+			// Icon
+			t.add(new Image(skin.getDrawable(p.getIcon().getFileName()))).padRight(6);
+			// Name
 			t.add(new Label(Lang.get(p).replace(" ", "  "), // Use two spaces to
 															// improve
 															// readability
-					skin)).width(350);
-			t.add().width(25); // TODO Ready
-			t.add().width(25); // TODO Kick
+					skin)).width(355);
+			// Ready
+			t.add(new Image(p.isReady() ? readyImage : notReadyImage))
+					.padLeft(3).padRight(4);
+			// TODO Kick
+			t.add().width(25);
 		}
 
 		return t;
@@ -290,7 +295,8 @@ public class LobbyScreen extends AbstractGGUIScreen {
 				+ (message.isSystemMessage() ? "[#EFE22DFF]"
 						: ("[#" + message.getSender().getIcon().getColor() + "]"
 								+ Lang.get(message.getSender()) + ": []"))
-				+ message + (message.isSystemMessage() ? "[]" : "") + " \n");
+				+ message.getMessage() + (message.isSystemMessage() ? "[]" : "")
+				+ " \n");
 		messagesPane.layout();
 		messagesPane.scrollTo(0, 0, 0, 0);
 	}
@@ -312,7 +318,8 @@ public class LobbyScreen extends AbstractGGUIScreen {
 			application.getClient().initGameSession();
 
 			Log.info("Client", "Loading game stuff...");
-			application.getScreenManager().pushScreen("game_loading", null);
+			application.getScreenManager().pushScreen("game_loading",
+					"blendingTransition");
 		} else {
 			gameStarted = false;
 		}

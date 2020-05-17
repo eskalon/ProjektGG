@@ -1,7 +1,7 @@
 ![Projekt GG Header](https://www.dropbox.com/s/a8rbml1ss9jnsga/project_gg_banner.png?raw=1)
 
 # Projekt GG
-ProjektGG ist eine mittelalterliche Wirtschafts- und Politiksimulation und reiht sich damit ein hinter Spielen wie _[Die Gilde](https://de.wikipedia.org/wiki/Die_Gilde)_ und _[Patrizier](https://de.wikipedia.org/wiki/Patrizier_(Computerspiel))_. Der Spieler lebt im [Bamberg](https://de.wikipedia.org/wiki/Bamberg) des Spätmittelalter und versucht politische und wirtschaftliche Bedeutung in seiner Stadt zu gewinnen. Der Fokus liegt hier ganz klar auf dem Multiplayer-Modus des Spiels, in dem verschiedene Spieler miteinander bzw. gegeneinander aktiv werden können.
+ProjektGG ist eine mittelalterliche Wirtschafts- und Politiksimulation und reiht sich damit ein hinter Spielen wie _[Die Gilde](https://de.wikipedia.org/wiki/Die_Gilde)_ und _[Patrizier](https://de.wikipedia.org/wiki/Patrizier_(Computerspiel))_. Der Spieler lebt im [Bamberg](https://de.wikipedia.org/wiki/Bamberg) des Spätmittelalters und versucht politische und wirtschaftliche Bedeutung in seiner Stadt zu gewinnen. Der Fokus liegt hier ganz klar auf dem Mehrspieler-Modus des Spiels, in dem verschiedene Spieler miteinander bzw. gegeneinander aktiv werden können.
 
 **Eine Auswahl der geplanten Funktionen:**
 * Eine Vielzahl [politischer Ämter](https://github.com/eskalon/ProjektGG/wiki/Amts%C3%BCbersicht), die sich durch individuelle Handlungsmöglichkeiten auszeichnen
@@ -15,10 +15,10 @@ ProjektGG ist eine mittelalterliche Wirtschafts- und Politiksimulation und reiht
 
 
 ## Wiki
-[Hier](https://github.com/eskalon/ProjektGG/wiki) pflegen wir ein ausgedehntes Wiki, um einen Überblick über den aktuellen und den geplanten Stand des Spiels zu bieten.
+Unter [diesem Link](https://github.com/eskalon/ProjektGG/wiki) pflegen wir ein ausgedehntes Wiki, das einen Überblick über den aktuellen und den geplanten Stand des Spiels bieten soll.
 
 ## Die Technik dahinter
-ProjektGG verwendet als Grundlage das Java-Framework libGDX. Für den Netzwerk-Part wird ein custom Fork von KryoNet verwendet. Mehr zur Technik dahinter ist [hier](https://github.com/eskalon/ProjektGG/wiki/Technik-dahinter) zu finden.
+ProjektGG verwendet das Java-Framework libGDX. Für die Netzwerk-Kommunikation wird ein custom Fork von KryoNet verwendet. Mehr zur Technik dahinter ist [hier](https://github.com/eskalon/ProjektGG/wiki/Technik-dahinter) zu finden.
 
 ## Mitarbeit
 Wir freuen uns über jede Form der Mitarbeit, ob im Wiki, im Issue-Tracker oder als Pull-Request. Wer Schreib-Rechte im Wiki haben bzw. als Collaborator ins Projekt einsteigen möchte, der möge bitte einen der momentanen Contributor kontaktieren.
