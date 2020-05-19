@@ -30,10 +30,14 @@ import de.gg.game.input.MapSelectionInputController;
 import de.gg.game.misc.DiscordGGHandler;
 import de.gg.game.misc.GameClock;
 import de.gg.game.model.World;
+import de.gg.game.model.entities.Player;
+import de.gg.game.model.types.PlayerIcon;
 import de.gg.game.model.types.PositionType;
 import de.gg.game.network.GameClient;
 import de.gg.game.network.GameServer;
+import de.gg.game.session.GameSession;
 import de.gg.game.ui.components.BasicDialog;
+import de.gg.game.ui.components.SimpleTextDialog;
 import de.gg.game.ui.rendering.SceneRenderer;
 
 /**
@@ -53,6 +57,7 @@ public class GameMapScreen extends AbstractGameScreen {
 	private GameSpeedInputProcessor gameSpeedInputProcessor;
 
 	private Label dateLabel;
+	private ImageButton iconButton;
 
 	/**
 	 * The pause dialog.
@@ -74,7 +79,7 @@ public class GameMapScreen extends AbstractGameScreen {
 				application.getWidth(), application.getHeight()));
 		this.camera.getCamera().translate(application.getWidth() / 2,
 				application.getHeight() / 2, 0);
-		// this.camera.update();
+		//this.camera.update();
 
 		pausePostProcessingEffect = new ColorBlendEffect(camera.getCamera(),
 				new Color(0.75F, 0.75F, 0.75F, 0.25F), application.getWidth(),
@@ -95,9 +100,9 @@ public class GameMapScreen extends AbstractGameScreen {
 
 		// CHARACTER DIALOG
 		BasicDialog characterMenuDialog = new BasicDialog(
-				Lang.get("screen.map.character_config"), skin, "window");
+				Lang.get("screen.map.character_config"), skin, "big");
 		ImageTextButton closeCharacterMenuButton = new ImageTextButton(
-				Lang.get("ui.generic.close"), skin, "small");
+				Lang.get("ui.generic.close"), skin);
 		closeCharacterMenuButton.addListener(
 				new ButtonClickListener(application.getSoundManager()) {
 					@Override
@@ -109,11 +114,9 @@ public class GameMapScreen extends AbstractGameScreen {
 		Table characterMenuTable = new Table();
 		Table changeableCharacterMenuTable = new Table();
 		ImageTextButton characterMenuTab1Button = new ImageTextButton(
-				Lang.get("screen.map.character_config.character"), skin,
-				"small");
+				Lang.get("screen.map.character_config.character"), skin);
 		ImageTextButton characterMenuTab2Button = new ImageTextButton(
-				Lang.get("screen.map.character_config.privileges"), skin,
-				"small");
+				Lang.get("screen.map.character_config.privileges"), skin);
 		characterMenuTab1Button.addListener(
 				new ButtonClickListener(application.getSoundManager()) {
 					@Override
@@ -150,7 +153,7 @@ public class GameMapScreen extends AbstractGameScreen {
 									Lang.get(
 											"screen.map.character_config.privilege.impeach",
 											PositionType.MAYOR),
-									skin, "small");
+									skin);
 							kickButton.addListener(new ButtonClickListener(
 									application.getSoundManager()) {
 								@Override
@@ -166,7 +169,7 @@ public class GameMapScreen extends AbstractGameScreen {
 												.arrangeImpeachmentVote(mayor,
 														(param) -> {
 															if ((Boolean) param == true) {
-																BasicDialog
+																SimpleTextDialog
 																		.createAndShow(
 																				stage,
 																				skin,
@@ -175,7 +178,7 @@ public class GameMapScreen extends AbstractGameScreen {
 																				Lang.get(
 																						"ui.generic.wip"));
 															} else {
-																BasicDialog
+																SimpleTextDialog
 																		.createAndShow(
 																				stage,
 																				skin,
@@ -206,7 +209,8 @@ public class GameMapScreen extends AbstractGameScreen {
 		characterMenuDialog.add(characterMenuTable).pad(30);
 
 		// PLAYER ICON
-		ImageButton iconButton = new ImageButton(skin, "icon_1");
+		iconButton = new ImageButton(
+				skin.getDrawable(PlayerIcon.ICON_1.getShieldDrawableName()));
 		iconButton.addListener(
 				new ButtonClickListener(application.getSoundManager()) {
 					@Override
@@ -225,8 +229,8 @@ public class GameMapScreen extends AbstractGameScreen {
 		// Gold
 		Table goldTable = new Table();
 		goldTable.setBackground(skin.getDrawable("info_background"));
-		goldTable.add(new Image(skin.getDrawable("gold_coin"))).left().top()
-				.padLeft(4).padBottom(2).padRight(4);
+		goldTable.add(new Image(skin.getDrawable("icon_gold_coin"))).left()
+				.top().padLeft(4).padBottom(2).padRight(4);
 		goldTable.add(new Label("19 Gulden", skin, "dark")).padBottom(5)
 				.expandX().left().top();
 
@@ -234,7 +238,7 @@ public class GameMapScreen extends AbstractGameScreen {
 		Table nameTable = new Table();
 		nameTable.setBackground(skin.getDrawable("info_background"));
 		nameTable.add(
-				new Label("Freiherr  Franz  von  Woyzeck", skin, "big-dark"))
+				new Label("Freiherr  Franz  von  Woyzeck", skin, "big_dark"))
 				.padBottom(2).expandX().left();
 
 		// Notifications
@@ -298,7 +302,8 @@ public class GameMapScreen extends AbstractGameScreen {
 				application.getPostProcessor()
 						.removeEffect(pausePostProcessingEffect);
 				if (object == (Integer) 1) {
-					application.getScreenManager().pushScreen("settings", null);
+					application.getScreenManager().pushScreen("settings",
+							"blendingTransition");
 				} else {
 					Log.info("Client", "Verbindung wird getrennt");
 					final GameClient client = application.getClient();
@@ -352,17 +357,20 @@ public class GameMapScreen extends AbstractGameScreen {
 
 	@Override
 	protected void setUIValues() {
-		World world = application.getClient().getSession().getWorld();
+		GameSession session = application.getClient().getSession();
+		World world = session.getWorld();
+		Player player = application.getClient().getLocalPlayer();
+
+		iconButton.getStyle().imageUp = skin
+				.getDrawable(player.getIcon().getShieldDrawableName());
 
 		selectionInputController.setWorld(world);
 		gameSpeedInputProcessor.setClientActionHandler(
 				application.getClient().getActionHandler());
 
 		dateLabel.setText(Lang.get("screen.map.time",
-				GameClock.getSeason(
-						application.getClient().getSession().getCurrentRound()),
-				GameClock.getYear(application.getClient().getSession()
-						.getCurrentRound())));
+				GameClock.getSeason(session.getCurrentRound()),
+				GameClock.getYear(session.getCurrentRound())));
 	}
 
 	@Override
@@ -397,8 +405,8 @@ public class GameMapScreen extends AbstractGameScreen {
 
 	@Subscribe
 	public void onHouseEnterEvent(HouseEnterEvent ev) {
-		application.getScreenManager().pushScreen("house_town_hall", null,
-				ev.getId());
+		application.getScreenManager().pushScreen("house_town_hall",
+				"circle_crop", ev.getId());
 	}
 
 	@Subscribe

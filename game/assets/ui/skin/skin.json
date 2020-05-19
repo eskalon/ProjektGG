@@ -1,198 +1,187 @@
 {
 	com.badlogic.gdx.graphics.Color: {
 		white: {
-			r: 1
-			g: 1
-			b: 1
+			r: 1,
+			g: 1,
+			b: 1,
 			a: 1
 		},
 		grey: {
-			r: 0.7
-			g: 0.7
-			b: 0.7
+			r: 0.7,
+			g: 0.7,
+			b: 0.7,
 			a: 1
 		},
 		dark_grey: {
-			r: 0.12
-			g: 0.12
-			b: 0.12
+			r: 0.12,
+			g: 0.12,
+			b: 0.12,
 			a: 1
 		},
 		ink_blue: {
-			r: 0.12
-			g: 0.10
-			b: 0.31
+			r: 0.12,
+			g: 0.10,
+			b: 0.31,
 			a: 1
 		}
 	},
 
 	com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: {
 		default: {
-			up: button-up
-			down: button-down
-			over: button-over
-			font: main-22
-			fontColor: white
-			downFontColor: grey
+			up: button_default_up,
+			down: button_default_down,
+			over: button_default_over
+			font: ui-element-18,
+			fontColor: white,
+			downFontColor: grey,
 			disabledFontColor: grey
-			disabled: button-up
 		},
-		normal: {
-			up: button-normal-up
-			down: button-normal-down
-			over: button-normal-over
-			font: main-22
-			fontColor: white
-			downFontColor: grey
-			disabledFontColor: grey
-		}
-		small: {
-			up: small-button-up
-			down: small-button-down
-			over: small-button-over
-			font: main-18
-			fontColor: white
-			downFontColor: grey
-			disabledFontColor: grey
+		large: {
+			up: button_large_up,
+			down: button_large_down,
+			over: button_large_over,
+			font: ui-element-23,
+			fontColor: white,
+			downFontColor: grey,
+			disabledFontColor: grey,
+			disabled: button_large_up
+		},
+		medium: {
+			up: button_normal_up,
+			down: button_normal_down,
+			over: button_normal_over,
+			font: ui-element-21,
+			fontColor: white,
+			downFontColor: grey,
+			disabledFontColor: grey,
 		}
 	},
 
 	com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
-		icon_1: {
-			up: icon_1
-			down: icon_1
-			over: icon_1
-		},
 		leaning_book: {
-			up: leaning_book
-			down: leaning_book
-			over: leaning_book
+			up: button_image_leaning_book,
+			down: button_image_leaning_book,
+			over: button_image_leaning_book
 		},
 		inventory: {
-			up: inventory
-			down: inventory
-			over: inventory
+			up: button_image_inventory,
+			down: button_image_inventory,
+			over: button_image_inventory
+		},
+		refresh: {
+			up: button_image_refresh_up,
+			down: button_image_refresh_down,
+			over: button_image_refresh_over
+		},
+		kick: {
+			up: button_image_kick_up,
+			down: button_image_kick_down,
+			over: button_image_kick_over
 		}
 	},
 
 	com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		default: {
-			font: main-19
+			font: ui-element-19,
 			fontColor: white
 		},
-		main-white-18: {
-			font: main-18
+		small: {
+			font: ui-element-18,
 			fontColor: white
 		},
 		dark: {
-			font: main-19
+			font: ui-element-19,
 			fontColor: dark_grey
 		},
-		big: {
-			font: main-22
-			fontColor: white
-		},
-		big-dark: {
-			font: main-22
+		big_dark: {
+			font: ui-element-21,
 			fontColor: dark_grey
-		},
-		with-background: {
-			font: text-20
-			fontColor: white
-			background: textarea
 		},
 		title: {
-			font: title-24
+			font: ui-title-24,
 			fontColor: white
 		},
-		handwritten: {
-			font: handwritten-20
-			fontColor: white
-		},
-		text-white-20: {
-			font: text-20
+		text: {
+			font: ui-text-20,
 			fontColor: white
 		}
-	},
-
-	com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
-		default: {
-			label: {
-				font: main-19
-			},
-			background: button-up,
-			wrapWidth: 400
-		}
-	},
-
-	com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
-		default: {
-			selection: textfield_selection
-			background: textfield
-			font: main-22
-			fontColor: white
-			cursor: cursor-selection
+		ink_title: {
+      font: ui-title-24,
+      fontColor: ink_blue
 		},
-		large: {
-			selection: textfield_selection
-			background: textfield_large
-			font: main-22
-			fontColor: white
-			cursor: cursor-selection
-		},
-		textarea: {
-			selection: textfield_selection
-			background: textarea
-			font: main-19
-			fontColor: white
-			cursor: cursor-selection
+		ink_text: {
+			font: ui-text-handwritten-20,
+			fontColor: ink_blue
 		}
 	},
 
 	com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
 		default: {
-			checkboxOn: check-round-on
-			checkboxOff: check-round-off
-			font: main-19
+			checkboxOn: check_box_round_on,
+			checkboxOff: check_box_round_off,
+			font: ui-element-19,
 			fontColor: white
 		}
 		square: {
-			checkboxOn: check-square-on
-			checkboxOff: check-square-off
-			font: main-19
+			checkboxOn: check_box_square_on,
+			checkboxOff: check_box_square_off,
+			font: ui-element-19,
 			fontColor: white
+		}
+	},
+
+	com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
+		default: {
+			selection: textfield_selection,
+			background: textfield,
+			font: ui-element-21,
+			fontColor: white,
+			cursor: cursor_selection
+		},
+		large: {
+			selection: textfield_selection,
+			background: textfield_large,
+			font: ui-text-20,
+			fontColor: white,
+			cursor: cursor_selection
 		}
 	},
 
 	com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
 		default-horizontal: {
-			background: slider-h,
-			knob: slider-knob-h,
-			knobOver: slider-knob-over-h,
-			knobDown: slider-knob-down-h,
-			disabledKnob: slider-knob-h
+			background: slider_h,
+			knob: slider_h_knob,
+			knobOver: slider_h_knob_over,
+			knobDown: slider_h_knob_down,
+			disabledKnob: slider_h_knob_down
 		}
 	},
 
 	com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 		default: {
-			vScroll: check-square-on
-			hScrollKnob: scroll-knob-h
-			background: scroll-h
-			hScroll: check-square-off
-			vScrollKnob: scroll-knob-v
+			vScroll: scroll_v
+			vScrollKnob: scroll_v_knob
+			hScroll: scroll_h
+			hScrollKnob: scroll_h_knob
+		},
+		with-background: {
+			background: scroll_pane
+			vScroll: scroll_v
+			vScrollKnob: scroll_v_knob
+			hScroll: scroll_h
+			hScrollKnob: scroll_h_knob
 		}
 	},
 
 	com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 		default: {
-			titleFont: main-19,
-			background: dialog,
+			titleFont: ui-text-20,
+			background: window_dialog,
 			titleFontColor: white
 		},
-		window: {
-			titleFont: main-19,
-			background: window,
+		big: {
+			titleFont: ui-element-19,
+			background: window_big,
 			titleFontColor: white
 		}
 	}

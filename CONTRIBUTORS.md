@@ -37,7 +37,7 @@ Eine Liste aller Contributor und der genutzten externen Assets:
   License: [CC-BY 2.0](https://creativecommons.org/licenses/by/2.0/legalcode)
 - **Gold coin**\
   Path: ui/skin/skin.png\
-  Author: [morgan3d](https://opengameart.org/content/spinning-gold-coin)\
+  Based on the work of: [morgan3d](https://opengameart.org/content/spinning-gold-coin)\
   License: [CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/legalcode)
 - **Leaning Book**\
   Path: ui/skin/skin.png\
@@ -98,6 +98,10 @@ The work of
   License: [CC0](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
   
 ### Fonts
+- **Almedra Regular**\
+  Path: fonts/alemdra/\
+  Author: Ana Sanfelippo\
+  License: [OFL 1.1](http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL_web)
 - **Almedra SC Regular**\
   Path: fonts/alemdra_sc/\
   Author: Ana Sanfelippo\

@@ -42,7 +42,7 @@ public class CharacterComponent extends Table {
 		this.nameLabel = new Label(fullName.replace(" ", "  "), skin);
 		if (character.getPosition() != null)
 			this.positionLabel = new Label(Lang.get(character.getPosition()),
-					skin, "main-white-18");
+					skin, "small");
 
 		if (opinion != -1) {
 			this.shapeRenderer = new ShapeRenderer();

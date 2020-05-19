@@ -33,8 +33,7 @@ public class GameTownHallInteriorScreen extends AbstractGameScreen {
 
 		// Buy citizenship
 		applyForCitizenshipButton = new ImageTextButton(
-				Lang.get("screen.house.town_hall.apply_for_citizenship"), skin,
-				"small");
+				Lang.get("screen.house.town_hall.apply_for_citizenship"), skin);
 		applyForCitizenshipButton.addListener(
 				new ButtonClickListener(application.getSoundManager()) {
 					@Override
@@ -49,8 +48,7 @@ public class GameTownHallInteriorScreen extends AbstractGameScreen {
 
 		// Apply for position
 		applyForPositionButton = new ImageTextButton(
-				Lang.get("screen.house.town_hall.apply_for_position"), skin,
-				"small");
+				Lang.get("screen.house.town_hall.apply_for_position"), skin);
 		applyForPositionButton.addListener(
 				new ButtonClickListener(application.getSoundManager()) {
 					@Override

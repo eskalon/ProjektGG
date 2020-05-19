@@ -37,9 +37,9 @@ public class CreditsScreen extends AbstractImageScreen {
 				.replace(")", "").replace("[", "").replace("](", ", ")
 				.replace("**", "").replace(" ", "  ").split("\n");
 
-		h2Font = app.getUISkin().getFont("title-24");
-		h3Font = app.getUISkin().getFont("main-22");
-		textFont = app.getUISkin().getFont("main-19");
+		h2Font = app.getUISkin().getFont("ui-title-24");
+		h3Font = app.getUISkin().getFont("ui-element-21");
+		textFont = app.getUISkin().getFont("ui-text-20");
 
 		addInputProcessor(new BackInputProcessor() {
 			@Override

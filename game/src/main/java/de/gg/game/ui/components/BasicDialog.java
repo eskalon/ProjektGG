@@ -5,7 +5,6 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
 import javax.annotation.Nullable;
 
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -13,9 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton.ImageTextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-
-import de.eskalon.commons.lang.Lang;
-import de.eskalon.commons.utils.ISimpleListener;
 
 /**
  * A basic dialog.
@@ -26,28 +22,19 @@ import de.eskalon.commons.utils.ISimpleListener;
  * overriding {@link #result(Object)}.
  * <p>
  * To display a dialog the {@link #show(Stage)}-method is used.
- * 
- * @see #createAndShow(Stage, Skin, String, String)
- * @see #createAndShow(Stage, Skin, String, String, boolean, ISimpleListener)
  */
 public class BasicDialog extends Dialog {
 
-	protected Skin skin;
-
 	public BasicDialog(String title, Skin skin, String windowStyleName) {
-		this(title, skin, skin.get(windowStyleName, WindowStyle.class));
+		super(title, skin, windowStyleName);
+
+		this.getTitleTable().getCell(this.getTitleLabel()).padLeft(16)
+				.padTop(35).padBottom(14);
+		this.getButtonTable().defaults().padBottom(16);
 	}
 
 	public BasicDialog(String title, Skin skin) {
-		this(title, skin, skin.get(WindowStyle.class));
-	}
-
-	private BasicDialog(String title, Skin skin, WindowStyle windowStyle) {
-		super(title, skin);
-		// setStyle(windowStyle);
-		this.skin = skin;
-		getContentTable().defaults().space(15);
-		getButtonTable().defaults().space(15);
+		this(title, skin, "default");
 	}
 
 	@Override
@@ -71,10 +58,10 @@ public class BasicDialog extends Dialog {
 	 * @param text
 	 */
 	public Dialog text(String text) {
-		if (skin == null)
+		if (getSkin() == null)
 			throw new IllegalStateException(
 					"This method may only be used if the dialog was constructed with a Skin.");
-		return text(text, skin.get("text-white-20", LabelStyle.class));
+		return text(text, getSkin().get("text", LabelStyle.class));
 	}
 
 	/**
@@ -88,35 +75,11 @@ public class BasicDialog extends Dialog {
 	 */
 	@Override
 	public Dialog button(String text, @Nullable Object object) {
-		return button(text, object,
-				skin.get("small", ImageTextButtonStyle.class));
-	}
+		if (getSkin() == null)
+			throw new IllegalStateException(
+					"This method may only be used if the dialog was constructed with a Skin.");
 
-	public static BasicDialog createAndShow(Stage stage, Skin skin,
-			String title, String text, boolean showOkButton,
-			@Nullable ISimpleListener listener) {
-		BasicDialog dialog = new BasicDialog(title, skin) {
-			@Override
-			public void result(Object obj) {
-				if (listener != null)
-					listener.listen(obj);
-				else
-					super.result(obj);
-			}
-		};
-		dialog.text(text);
-		if (showOkButton) {
-			dialog.key(Keys.ENTER, true);
-			dialog.button(Lang.get("ui.generic.ok"));
-		}
-
-		dialog.show(stage);
-		return dialog;
-	}
-
-	public static BasicDialog createAndShow(Stage stage, Skin skin,
-			String title, String text) {
-		return createAndShow(stage, skin, title, text, true, null);
+		return button(text, object, getSkin().get(ImageTextButtonStyle.class));
 	}
 
 }

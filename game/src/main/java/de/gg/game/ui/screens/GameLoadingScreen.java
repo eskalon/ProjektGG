@@ -19,15 +19,15 @@ import de.gg.game.session.GameSession;
 import de.gg.game.ui.rendering.SelectableRenderData;
 
 /**
- * This screen takes care of loading the assets for all ingame screens.
+ * This screen takes care of loading the assets for all in-game screens.
  */
 public class GameLoadingScreen extends AbstractAssetLoadingScreen {
 
 	@Asset("ui/backgrounds/game_loading_screen.jpg")
 	private Texture backgroundTexture;
-	@Asset("ui/images/loading_bar_top.png")
+	@Asset("ui/loading_bar_top.png")
 	private Texture topBarTexture;
-	@Asset("ui/images/loading_bar_bottom.png")
+	@Asset("ui/loading_bar_bottom.png")
 	private Texture bottomBarTexture;
 
 	private static final Vector3 Y_AXIS = new Vector3(0, 1, 0);
@@ -85,7 +85,7 @@ public class GameLoadingScreen extends AbstractAssetLoadingScreen {
 
 		if (((ProjektGGApplication) application).isHost()) {
 			((ProjektGGApplication) application).getServer().startMatch();
-			Log.info("Server", "Match started!");
+			Log.info("Server", "Game started!");
 		}
 
 		application.getScreenManager().pushScreen("round_end", "simple_zoom");
@@ -94,7 +94,7 @@ public class GameLoadingScreen extends AbstractAssetLoadingScreen {
 	@Subscribe
 	public void onRoundEndDataArrived(ServerReadyEvent event) {
 		((GameRoundendScreen) application.getScreenManager()
-				.getScreen("roundEnd")).setServerReady();
+				.getScreen("round_end")).setServerReady();
 	}
 
 	@Override

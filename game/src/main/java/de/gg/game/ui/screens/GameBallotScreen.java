@@ -40,8 +40,7 @@ public class GameBallotScreen extends AbstractGameScreen {
 		super.create();
 
 		labelTable = new Table();
-		infoText = new Label(Lang.get("ui.generic.loading"), skin,
-				"text-white-20");
+		infoText = new Label(Lang.get("ui.generic.loading"), skin, "text");
 		infoText.setWrap(true);
 
 		optionTable = new Table();
@@ -95,7 +94,7 @@ public class GameBallotScreen extends AbstractGameScreen {
 				.contains(localPlayer.getCurrentlyPlayedCharacterId())) {
 			for (BallotOption option : ev.getNewBallot().getOptions()) {
 				ImageTextButton button = new OffsettableImageTextButton(
-						Lang.get(option), skin, "small", 5);
+						Lang.get(option), skin, 5);
 				button.addListener(
 						new ButtonClickListener(application.getSoundManager()) {
 							@Override

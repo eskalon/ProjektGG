@@ -31,7 +31,6 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 	public MapSelectionInputController(EventBus bus, PerspectiveCamera camera) {
 		this.eventBus = bus;
 		this.camera = camera;
-
 	}
 
 	public void update() {

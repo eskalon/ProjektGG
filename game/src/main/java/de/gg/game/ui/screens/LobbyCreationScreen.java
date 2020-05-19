@@ -29,7 +29,7 @@ import de.gg.game.model.types.GameMap;
 import de.gg.game.network.GameClient;
 import de.gg.game.network.GameServer;
 import de.gg.game.session.GameSessionSetup;
-import de.gg.game.ui.components.BasicDialog;
+import de.gg.game.ui.components.SimpleTextDialog;
 
 public class LobbyCreationScreen extends AbstractGGUIScreen {
 
@@ -41,7 +41,7 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 	private OffsettableTextField nameField, portField;
 	private CheckBox normalDifficultyCheckbox;
 
-	private BasicDialog connectingDialog;
+	private SimpleTextDialog connectingDialog;
 	private List<PlayerStub> playerStubs;
 
 	public LobbyCreationScreen(ProjektGGApplication application) {
@@ -82,7 +82,7 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 		speedGroup.add(hardDifficultyCheckbox);
 
 		ImageTextButton backButton = new ImageTextButton(
-				Lang.get("ui.generic.back"), skin, "small");
+				Lang.get("ui.generic.back"), skin);
 		backButton.addListener(
 				new ButtonClickListener(application.getSoundManager()) {
 					@Override
@@ -93,7 +93,7 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 				});
 
 		ImageTextButton createButton = new ImageTextButton(
-				Lang.get("screen.lobby_creation.create"), skin, "small");
+				Lang.get("screen.lobby_creation.create"), skin);
 		createButton.addListener(
 				new ButtonClickListener(application.getSoundManager()) {
 					@Override
@@ -115,7 +115,7 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 
 							// Start Sever & Client
 							ServerSetup serverSetup = new ServerSetup(
-									nameField.getText(), 8,
+									nameField.getText(), 7,
 									Integer.valueOf(portField.getText()), true,
 									application.VERSION, true);
 							GameSessionSetup sessionSetup = new GameSessionSetup(
@@ -157,14 +157,12 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 										};
 									});
 
-							connectingDialog = new BasicDialog(Lang.get(
-									"screen.lobby_creation.starting_server.title"),
-									skin);
-							connectingDialog.text(Lang.get(
-									"screen.lobby_creation.starting_server.text"));
+							connectingDialog = SimpleTextDialog.createAndShow(stage, skin, Lang.get(
+									"screen.lobby_creation.starting_server.title"), Lang.get(
+											"screen.lobby_creation.starting_server.text"), false, null);
 							connectingDialog.show(stage);
 						} else {
-							BasicDialog.createAndShow(stage, skin, Lang.get(
+							SimpleTextDialog.createAndShow(stage, skin, Lang.get(
 									"screen.lobby_creation.fields_empty.title"),
 									Lang.get(
 											"screen.lobby_creation.fields_empty.text"));
@@ -178,7 +176,7 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 		Table settings3ColTable = new Table();
 		Table buttonTable = new Table();
 
-		titleTable.add(new Label("Lobby einrichten", skin, "title")).padTop(25);
+		titleTable.add(new Label(Lang.get("screen.lobby_creation.title"), skin, "title")).padTop(25);
 
 		settings2ColTable.add(nameLabel).padLeft(100).padBottom(20).padRight(10)
 				.padTop(30);
@@ -211,7 +209,7 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 	@Override
 	protected void setUIValues() {
 		nameField.setText("");
-		portField.setText("");
+		portField.setText(String.valueOf(BaseGameServer.DEFAULT_PORT));
 		normalDifficultyCheckbox.setChecked(true);
 	}
 
@@ -221,7 +219,7 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 		application.setClient(null);
 
 		connectingDialog.setVisible(false);
-		BasicDialog.createAndShow(stage, skin, Lang.get("ui.generic.error"),
+		SimpleTextDialog.createAndShow(stage, skin, Lang.get("ui.generic.error"),
 				msg);
 	}
 

@@ -2,7 +2,6 @@ package de.gg.game.ui.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -12,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.audio.ISoundManager;
@@ -27,10 +25,6 @@ public class MainMenuScreen extends AbstractGGUIScreen {
 
 	@Asset("ui/backgrounds/main_menu_screen.png")
 	private Texture backgroundImage;
-	@Asset("ui/images/logo.png")
-	private Texture logoTexture;
-	@Asset("ui/icons/github.png")
-	private Texture githubLogoTexture;
 
 	private boolean shownForFirstTime = true;
 
@@ -45,25 +39,25 @@ public class MainMenuScreen extends AbstractGGUIScreen {
 		setImage(backgroundImage);
 
 		ImageTextButton multiplayerButton = new ImageTextButton(
-				Lang.get("screen.main_menu.multiplayer"), skin);
+				Lang.get("screen.main_menu.multiplayer"), skin, "large");
 		multiplayerButton.addListener(
 				new FadeOutUIClickListener(application.getSoundManager(), stage,
 						"server_browser", "blendingTransition"));
 
 		ImageTextButton settingsButton = new ImageTextButton(
-				Lang.get("screen.main_menu.settings"), skin);
+				Lang.get("screen.main_menu.settings"), skin, "large");
 		settingsButton.addListener(
 				new FadeOutUIClickListener(application.getSoundManager(), stage,
 						"settings", "blendingTransition"));
 
 		ImageTextButton creditsButton = new ImageTextButton(
-				Lang.get("screen.main_menu.credits"), skin);
+				Lang.get("screen.main_menu.credits"), skin, "large");
 		creditsButton.addListener(
 				new FadeOutUIClickListener(application.getSoundManager(), stage,
 						"credits", "longBlendingTransition"));
 
 		ImageTextButton exitButton = new ImageTextButton(
-				Lang.get("screen.main_menu.quit"), skin);
+				Lang.get("screen.main_menu.quit"), skin, "large");
 		exitButton.addListener(
 				new ButtonClickListener(application.getSoundManager()) {
 					@Override
@@ -72,11 +66,10 @@ public class MainMenuScreen extends AbstractGGUIScreen {
 					}
 				});
 
-		Image logoImage = new Image(logoTexture);
+		Image logoImage = new Image(skin.getDrawable("logo"));
 
 		ImageButton githubRepoButton = new ImageButton(
-				new TextureRegionDrawable(
-						new TextureRegion(githubLogoTexture)));
+				skin.getDrawable("icon_github"));
 		githubRepoButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,

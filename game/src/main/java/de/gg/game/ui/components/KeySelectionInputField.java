@@ -19,12 +19,12 @@ public class KeySelectionInputField extends ImageTextButton {
 
 	public KeySelectionInputField(final KeyBinding keybind, Skin skin,
 			Stage stage, ISoundManager soundManager) {
-		super(keybind.toString(), skin, "small");
+		super(keybind.toString(), skin);
 
 		addListener(new ButtonClickListener(soundManager) {
 			@Override
 			protected void onClick() {
-				BasicDialog dialog = new BasicDialog(
+				SimpleTextDialog dialog = new SimpleTextDialog(
 						Lang.get("dialog.key_selection.select"), skin);
 				dialog.text(Lang.get("dialog.key_selection.press_key"))
 						.button("Zurück", false).key(Keys.ESCAPE, false);

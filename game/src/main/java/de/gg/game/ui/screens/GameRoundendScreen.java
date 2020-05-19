@@ -52,19 +52,19 @@ public class GameRoundendScreen extends AbstractGameScreen {
 		super.create();
 		setImage(backgroundTexture);
 
-		lastYearTitle = new Label("", skin, "big");
+		lastYearTitle = new Label("", skin, "ink_title");
 		lastYearTitle.setAlignment(Align.topLeft);
-		comingYearTitle = new Label("", skin, "big");
+		comingYearTitle = new Label("", skin, "ink_title");
 		comingYearTitle.setAlignment(Align.topLeft);
 
-		lastYearData = new Label("", skin);
+		lastYearData = new Label("", skin, "ink_text");
 		lastYearData.setAlignment(Align.topLeft);
 		lastYearData.setWrap(true);
-		comingYearData = new Label("", skin);
+		comingYearData = new Label("", skin, "ink_text");
 		comingYearData.setAlignment(Align.topLeft);
 		comingYearData.setWrap(true);
 
-		nextButton = new ImageTextButton("", skin, "normal");
+		nextButton = new ImageTextButton("", skin, "medium");
 
 		nextButton.addListener(new InputListener() {
 			@Override
@@ -83,8 +83,8 @@ public class GameRoundendScreen extends AbstractGameScreen {
 
 		Table dataTable = new Table();
 		// ScrollPane pane = new ScrollPane(dataTable);
-		dataTable.add(lastYearTitle).top().left().width(310).padRight(20);
-		dataTable.add(comingYearTitle).padLeft(55).width(295).padBottom(6)
+		dataTable.add(lastYearTitle).top().left().width(310).padLeft(20).padRight(0);
+		dataTable.add(comingYearTitle).padLeft(100).width(295).padBottom(10)
 				.row();
 
 		dataTable.add(lastYearData).padRight(20).width(310).height(395);
@@ -156,9 +156,10 @@ public class GameRoundendScreen extends AbstractGameScreen {
 					.getMattersToHoldVoteOn().isEmpty()) {
 				// TODO ersten ballot pollen und übergeben; timer etc. aus
 				// Session in BallotScreen!
-				application.getScreenManager().pushScreen("vote", null);
+				application.getScreenManager().pushScreen("vote",
+						"blendingTransition");
 			} else
-				application.getScreenManager().pushScreen("map", null);
+				application.getScreenManager().pushScreen("map", "circle_open");
 		}
 	}
 

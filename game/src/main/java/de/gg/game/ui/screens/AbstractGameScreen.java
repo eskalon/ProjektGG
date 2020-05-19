@@ -73,8 +73,10 @@ public abstract class AbstractGameScreen extends AbstractGGUIScreen {
 
 	@Override
 	public void render(float delta) {
-		if (dirty)
+		if (dirty) {
 			setUIValues();
+			dirty = false;
+		}
 
 		super.render(delta);
 

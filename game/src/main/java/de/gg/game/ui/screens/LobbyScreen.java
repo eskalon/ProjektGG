@@ -3,6 +3,7 @@ package de.gg.game.ui.screens;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -36,13 +37,8 @@ public class LobbyScreen extends AbstractGGUIScreen {
 
 	@Asset("ui/backgrounds/lobby_screen.jpg")
 	private Texture backgroundTexture;
-	@Asset("ui/icons/ready.png")
-	private Texture readyImage;
-	@Asset("ui/icons/not_ready.png")
-	private Texture notReadyImage;
-	@Asset("ui/icons/kick.png")
-	private Texture kickImage;
 
+	private final int maxPlayerCount = 7;
 	private Label messagesArea, settingsArea;
 	private Table[] playerSlots;
 	private ImageTextButton readyUpLobbyButton;
@@ -64,7 +60,7 @@ public class LobbyScreen extends AbstractGGUIScreen {
 				application, skin);
 
 		ImageTextButton playerSettingsButton = new ImageTextButton(
-				Lang.get("screen.lobby.configure"), skin, "small");
+				Lang.get("screen.lobby.configure"), skin);
 		playerSettingsButton.addListener(
 				new ButtonClickListener(application.getSoundManager()) {
 					@Override
@@ -77,7 +73,7 @@ public class LobbyScreen extends AbstractGGUIScreen {
 				});
 
 		ImageTextButton leaveButton = new ImageTextButton(
-				Lang.get("screen.lobby.disconnect"), skin, "small");
+				Lang.get("screen.lobby.disconnect"), skin);
 		leaveButton.addListener(
 				new ButtonClickListener(application.getSoundManager()) {
 					@Override
@@ -97,13 +93,13 @@ public class LobbyScreen extends AbstractGGUIScreen {
 							Log.info("Server", "Server stopped");
 						});
 
-						application.getScreenManager().pushScreen("main_menu",
+						application.getScreenManager().pushScreen("server_browser",
 								null);
 					}
 				});
 
 		readyUpLobbyButton = new ImageTextButton(Lang.get("screen.lobby.ready"),
-				skin, "small");
+				skin);
 		readyUpLobbyButton.addListener(
 				new ButtonClickListener(application.getSoundManager()) {
 					@Override
@@ -132,7 +128,7 @@ public class LobbyScreen extends AbstractGGUIScreen {
 
 		Table chatInputTable = new Table();
 		ImageTextButton sendButton = new ImageTextButton(
-				Lang.get("screen.lobby.send"), skin, "small");
+				Lang.get("screen.lobby.send"), skin);
 		chatInputField = new OffsettableTextField("", skin, "large", 8);
 		chatInputField.setTextFieldListener(new TextFieldListener() {
 			@Override
@@ -174,11 +170,14 @@ public class LobbyScreen extends AbstractGGUIScreen {
 					}
 				});
 
-		messagesArea = new Label("", skin, "with-background");
-		messagesArea.setAlignment(Align.topLeft);
+		messagesArea = new Label("", skin, "text");
+		messagesArea.setWidth(425);
 		messagesArea.setWrap(true);
 
-		messagesPane = new ScrollPane(messagesArea);
+		Table messagesTable = new Table();
+		messagesTable.add(messagesArea).padLeft(10).left().top().expand();
+
+		messagesPane = new ScrollPane(messagesTable, skin, "with-background");
 		messagesPane.setForceScroll(false, true);
 
 		chatInputTable.add(chatInputField).left().width(325).padRight(15);
@@ -187,7 +186,7 @@ public class LobbyScreen extends AbstractGGUIScreen {
 		chatTable.add(messagesPane).height(135).width(465).top().row();
 		chatTable.add(chatInputTable).left().padTop(10).width(465).bottom();
 
-		playerSlots = new Table[6];
+		playerSlots = new Table[maxPlayerCount];
 		for (int i = 0; i < playerSlots.length; i++) {
 			playerSlots[i] = new Table();
 			playerTable.add(playerSlots[i]).height(29).width(465).row();
@@ -197,7 +196,7 @@ public class LobbyScreen extends AbstractGGUIScreen {
 		mTable.setWidth(615);
 		mTable.setHeight(475);
 		mTable.setBackground(skin.getDrawable("parchment1"));
-		mTable.add(playerTable).width(465).height(185);
+		mTable.add(playerTable).width(465).height(185).padBottom(15);
 		mTable.add(settingsArea).width(155).height(185).row();
 		mTable.add(chatTable).height(185).bottom();
 		mTable.add(buttonTable).height(185);
@@ -270,21 +269,28 @@ public class LobbyScreen extends AbstractGGUIScreen {
 		if (p == null) {
 			t.add().width(33);
 			t.add(new Label("[#D3D3D3FF]" + Lang.get("screen.lobby.free_slot"),
-					skin)).width(355);
-			t.add().width(45);
+					skin)).width(350);
+			t.add().width(47);
 		} else {
 			// Icon
-			t.add(new Image(skin.getDrawable(p.getIcon().getFileName()))).padRight(6);
+			t.add(new Image(
+					skin.getDrawable(p.getIcon().getIconDrawableName())))
+					.padRight(11);
 			// Name
 			t.add(new Label(Lang.get(p).replace(" ", "  "), // Use two spaces to
 															// improve
 															// readability
-					skin)).width(355);
+					skin)).width(350);
 			// Ready
-			t.add(new Image(p.isReady() ? readyImage : notReadyImage))
-					.padLeft(3).padRight(4);
+			t.add(new Image(p.isReady() ? skin.getDrawable("icon_on")
+					: skin.getDrawable("icon_off"))).padRight(9);
 			// TODO Kick
-			t.add().width(25);
+			if (application.isHost()
+					&& p != application.getClient().getLocalLobbyPlayer()) {
+				ImageButton kickButton = new ImageButton(skin, "kick");
+				t.add(kickButton);
+			} else
+				t.add().width(27);
 		}
 
 		return t;

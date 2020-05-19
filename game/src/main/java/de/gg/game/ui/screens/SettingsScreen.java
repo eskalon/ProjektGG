@@ -130,7 +130,7 @@ public class SettingsScreen extends AbstractGGUIScreen {
 				application.getSoundManager());
 
 		ImageTextButton backButton = new ImageTextButton(
-				Lang.get("ui.generic.done"), skin, "small");
+				Lang.get("ui.generic.done"), skin);
 		backButton.addListener(
 				new ButtonClickListener(application.getSoundManager()) {
 					@Override

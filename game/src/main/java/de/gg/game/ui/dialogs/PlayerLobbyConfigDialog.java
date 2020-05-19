@@ -39,12 +39,12 @@ public class PlayerLobbyConfigDialog extends BasicDialog {
 	private ImageTextButton religionButton;
 
 	public PlayerLobbyConfigDialog(ProjektGGApplication game, Skin skin) {
-		super("Spielerkonfiguration", skin, "window");
+		super("Spielerkonfiguration", skin, "big");
 
 		// Create UI elements for player configuration dialog
-		BasicDialog iconDialog = new BasicDialog("Wappen", skin, "window");
+		BasicDialog iconDialog = new BasicDialog("Wappen", skin, "big");
 		BasicDialog professionDialog = new BasicDialog("Profession", skin,
-				"window");
+				"big");
 
 		surnameTextField = new OffsettableTextField(" - ", skin, 8);
 		nameTextField = new OffsettableTextField(" - ", skin, 8);
@@ -54,32 +54,32 @@ public class PlayerLobbyConfigDialog extends BasicDialog {
 		Label nameLabel = new Label(Lang.get("dialog.player_config.name"),
 				skin);
 
-		sexButton = new ImageTextButton(" - ", skin, "small");
+		sexButton = new ImageTextButton(" - ", skin);
 		Label sexLabel = new Label(Lang.get("dialog.player_config.gender"),
 				skin);
 
-		religionButton = new ImageTextButton(" - ", skin, "small");
+		religionButton = new ImageTextButton(" - ", skin);
 		Label religionLabel = new Label(
 				Lang.get("dialog.player_config.religion"), skin);
 
 		ImageTextButton iconButton = new ImageTextButton(
-				Lang.get("dialog.player_config.configure"), skin, "small");
+				Lang.get("dialog.player_config.configure"), skin);
 		Label iconLabel = new Label(Lang.get("dialog.player_config.icon"),
 				skin);
 
 		ImageTextButton professionButton = new ImageTextButton(
-				Lang.get("dialog.player_config.configure"), skin, "small");
+				Lang.get("dialog.player_config.configure"), skin);
 		Label professionLabel = new Label(
 				Lang.get("dialog.player_config.profession"), skin);
 
-		// ImageTextButton skillButton = new ImageTextButton("Anpassen...",
-		// skin, "small");
+		// ImageTextButton skillButton = new
+		// ImageTextButton(Lang.get("dialog.player_config.configure"), skin);
 		// Label skillLabel = new Label("Fähigkeiten: ", skin);
 
 		ImageTextButton applyButton = new ImageTextButton(
-				Lang.get("ui.generic.apply"), skin, "small");
+				Lang.get("ui.generic.apply"), skin);
 		ImageTextButton discardButton = new ImageTextButton(
-				Lang.get("ui.generic.cancel"), skin, "small");
+				Lang.get("ui.generic.cancel"), skin);
 
 		// Listener for configuration buttons
 		sexButton.addListener(new ButtonClickListener(game.getSoundManager()) {
@@ -128,8 +128,8 @@ public class PlayerLobbyConfigDialog extends BasicDialog {
 						.getAvailableIcons(tmpPlayers);
 
 				for (int i = 0; i < availableIcons.size(); i++) {
-					ImageButton iconIButton = new ImageButton(skin
-							.getDrawable(availableIcons.get(i).getFileName()));
+					ImageButton iconIButton = new ImageButton(skin.getDrawable(
+							availableIcons.get(i).getIconDrawableName()));
 					final int index = i;
 					iconIButton.addListener(
 							new ButtonClickListener(game.getSoundManager()) {
