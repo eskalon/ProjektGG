@@ -138,7 +138,7 @@ public class SettingsScreen extends AbstractGGUIScreen {
 						if (application.getScreenManager()
 								.getLastScreen() instanceof GameMapScreen)
 							application.getScreenManager().pushScreen("map",
-									null);
+									"blendingTransition");
 						else
 							application.getScreenManager().pushScreen(
 									"main_menu", "blendingTransition");
@@ -153,19 +153,22 @@ public class SettingsScreen extends AbstractGGUIScreen {
 		settings2ColTable.add(forwardLabel).padBottom(22).left();
 		settings2ColTable.add(forwardButton).padBottom(22);
 
-		settings2ColTable.add(masterVolume).padBottom(28).padLeft(75).padRight(10);
+		settings2ColTable.add(masterVolume).padBottom(28).padLeft(75)
+				.padRight(10);
 		settings2ColTable.add(masterSlider).padBottom(22).row();
 
 		settings2ColTable.add(leftLabel).padBottom(22).left();
 		settings2ColTable.add(leftButton).padBottom(22);
 
-		settings2ColTable.add(effectVolume).padBottom(28).padLeft(75).padRight(10);
+		settings2ColTable.add(effectVolume).padBottom(28).padLeft(75)
+				.padRight(10);
 		settings2ColTable.add(effectSlider).padBottom(22).row();
 
 		settings2ColTable.add(backwardLabel).padBottom(22).left();
 		settings2ColTable.add(backwardButton).padBottom(22);
 
-		settings2ColTable.add(musicVolume).padBottom(28).padLeft(75).padRight(10);
+		settings2ColTable.add(musicVolume).padBottom(28).padLeft(75)
+				.padRight(10);
 		settings2ColTable.add(musicSlider).padBottom(22).row();
 
 		settings2ColTable.add(rightLabel).padBottom(55).left();

@@ -27,7 +27,7 @@ public class SimpleTextDialog extends BasicDialog {
 		this.setWidth(290);
 		this.setHeight(177);
 		this.getTitleTable().getCell(this.getTitleLabel()).padLeft(16)
-				.padTop(35);
+				.padTop(38);
 		this.getContentTable().defaults().padLeft(7).padTop(11).padRight(5)
 				.center().width(270);
 		this.getButtonTable().defaults().padBottom(17);

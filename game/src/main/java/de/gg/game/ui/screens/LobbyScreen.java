@@ -93,8 +93,8 @@ public class LobbyScreen extends AbstractGGUIScreen {
 							Log.info("Server", "Server stopped");
 						});
 
-						application.getScreenManager().pushScreen("server_browser",
-								null);
+						application.getScreenManager()
+								.pushScreen("server_browser", null);
 					}
 				});
 

@@ -157,13 +157,17 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 										};
 									});
 
-							connectingDialog = SimpleTextDialog.createAndShow(stage, skin, Lang.get(
-									"screen.lobby_creation.starting_server.title"), Lang.get(
-											"screen.lobby_creation.starting_server.text"), false, null);
+							connectingDialog = SimpleTextDialog.createAndShow(
+									stage, skin,
+									Lang.get(
+											"screen.lobby_creation.starting_server.title"),
+									Lang.get(
+											"screen.lobby_creation.starting_server.text"),
+									false, null);
 							connectingDialog.show(stage);
 						} else {
-							SimpleTextDialog.createAndShow(stage, skin, Lang.get(
-									"screen.lobby_creation.fields_empty.title"),
+							SimpleTextDialog.createAndShow(stage, skin, Lang
+									.get("screen.lobby_creation.fields_empty.title"),
 									Lang.get(
 											"screen.lobby_creation.fields_empty.text"));
 						}
@@ -176,7 +180,8 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 		Table settings3ColTable = new Table();
 		Table buttonTable = new Table();
 
-		titleTable.add(new Label(Lang.get("screen.lobby_creation.title"), skin, "title")).padTop(25);
+		titleTable.add(new Label(Lang.get("screen.lobby_creation.title"), skin,
+				"title")).padTop(25);
 
 		settings2ColTable.add(nameLabel).padLeft(100).padBottom(20).padRight(10)
 				.padTop(30);
@@ -219,8 +224,8 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 		application.setClient(null);
 
 		connectingDialog.setVisible(false);
-		SimpleTextDialog.createAndShow(stage, skin, Lang.get("ui.generic.error"),
-				msg);
+		SimpleTextDialog.createAndShow(stage, skin,
+				Lang.get("ui.generic.error"), msg);
 	}
 
 	@Subscribe

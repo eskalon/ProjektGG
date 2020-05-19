@@ -192,7 +192,8 @@ public class ServerBrowserScreen extends AbstractGGUIScreen {
 	protected void setUIValues() {
 		if (pushParams != null) {
 			// Client was disconnected from a game
-			SimpleTextDialog.createAndShow(stage, skin, Lang.get("ui.generic.error"),
+			SimpleTextDialog.createAndShow(stage, skin,
+					Lang.get("ui.generic.error"),
 					Lang.get("ui.generic.disconnected"));
 		}
 

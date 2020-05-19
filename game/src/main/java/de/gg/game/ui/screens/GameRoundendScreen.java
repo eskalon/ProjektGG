@@ -83,7 +83,8 @@ public class GameRoundendScreen extends AbstractGameScreen {
 
 		Table dataTable = new Table();
 		// ScrollPane pane = new ScrollPane(dataTable);
-		dataTable.add(lastYearTitle).top().left().width(310).padLeft(20).padRight(0);
+		dataTable.add(lastYearTitle).top().left().width(310).padLeft(20)
+				.padRight(0);
 		dataTable.add(comingYearTitle).padLeft(100).width(295).padBottom(10)
 				.row();
 

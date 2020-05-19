@@ -44,7 +44,7 @@ public class GameTownHallInteriorScreen extends AbstractGameScreen {
 					}
 				});
 
-		mainTable.add(applyForCitizenshipButton);
+		mainTable.add(applyForCitizenshipButton).padBottom(7).row();
 
 		// Apply for position
 		applyForPositionButton = new ImageTextButton(
@@ -75,10 +75,10 @@ public class GameTownHallInteriorScreen extends AbstractGameScreen {
 				&& application.getClient().getLocalPlayer()
 						.getFortune(world) >= SocialStatus.NON_CITIZEN
 								.getFortuneRequirement()) {
-			applyForCitizenshipButton.setDisabled(true);
+			applyForCitizenshipButton.setDisabled(false);
 
 		} else {
-			applyForCitizenshipButton.setDisabled(false);
+			applyForCitizenshipButton.setDisabled(true);
 		}
 
 		// Apply for position

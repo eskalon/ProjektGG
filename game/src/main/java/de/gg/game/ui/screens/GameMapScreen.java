@@ -79,7 +79,7 @@ public class GameMapScreen extends AbstractGameScreen {
 				application.getWidth(), application.getHeight()));
 		this.camera.getCamera().translate(application.getWidth() / 2,
 				application.getHeight() / 2, 0);
-		//this.camera.update();
+		// this.camera.update();
 
 		pausePostProcessingEffect = new ColorBlendEffect(camera.getCamera(),
 				new Color(0.75F, 0.75F, 0.75F, 0.25F), application.getWidth(),
@@ -151,8 +151,7 @@ public class GameMapScreen extends AbstractGameScreen {
 							// TODO Impeachment
 							ImageTextButton kickButton = new ImageTextButton(
 									Lang.get(
-											"screen.map.character_config.privilege.impeach",
-											PositionType.MAYOR),
+											"screen.map.character_config.privilege.impeach"),
 									skin);
 							kickButton.addListener(new ButtonClickListener(
 									application.getSoundManager()) {
