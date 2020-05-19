@@ -1,8 +1,10 @@
 package de.gg.game.ui.screens;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Vector3;
 import com.google.common.eventbus.Subscribe;
 
@@ -77,9 +79,15 @@ public class GameLoadingScreen extends AbstractAssetLoadingScreen {
 			}
 		}
 
-		world.setSkybox(new ModelInstance(application.getAssetManager().get(
+		Model skyboxModel = application.getAssetManager().get(
 				session.getSessionSetup().getMap().getSkyboxPath(),
-				Model.class)));
+				Model.class);
+		for (Material m : skyboxModel.materials) {
+			// fixes a bug related to changes in gdx 1.9.9, see
+			// https://github.com/libgdx/libgdx/issues/5529
+			m.remove(ColorAttribute.Emissive);
+		}
+		world.setSkybox(new ModelInstance(skyboxModel));
 
 		Log.info("Client", "Game assets loaded");
 

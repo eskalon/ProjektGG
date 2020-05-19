@@ -187,7 +187,7 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 				circleCropShader);
 
 		GLTransitionsShaderTransition circleOpenShader = new GLTransitionsShaderTransition(
-				application.getUICamera(), 0.7F, Interpolation.linear);
+				application.getUICamera(), 0.5F, Interpolation.linear);
 		circleOpenShader.compileGLTransition(circleOpenText.getString());
 		application.getScreenManager().addScreenTransition("circle_open",
 				circleOpenShader);

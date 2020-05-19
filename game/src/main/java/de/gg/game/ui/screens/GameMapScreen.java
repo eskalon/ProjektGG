@@ -81,9 +81,9 @@ public class GameMapScreen extends AbstractGameScreen {
 				application.getHeight() / 2, 0);
 		// this.camera.update();
 
-		pausePostProcessingEffect = new ColorBlendEffect(camera.getCamera(),
-				new Color(0.75F, 0.75F, 0.75F, 0.25F), application.getWidth(),
-				application.getHeight());
+		pausePostProcessingEffect = new ColorBlendEffect(
+				application.getUICamera(), new Color(0.5F, 0.5F, 0.5F, 0.32F),
+				application.getWidth(), application.getHeight());
 
 		sceneRenderer = new SceneRenderer(camera.getCamera(),
 				fragmentShader.getString());
@@ -338,11 +338,11 @@ public class GameMapScreen extends AbstractGameScreen {
 					if (pauseShown) {
 						pauseDialog.hide();
 						application.getPostProcessor()
-								.addEffect(pausePostProcessingEffect);
+								.removeEffect(pausePostProcessingEffect);
 					} else {
 						pauseDialog.show(stage);
 						application.getPostProcessor()
-								.removeEffect(pausePostProcessingEffect);
+								.addEffect(pausePostProcessingEffect);
 					}
 
 					pauseShown = !pauseShown;
