@@ -27,7 +27,7 @@ public class GameTownHallInteriorScreen extends AbstractGameScreen {
 		addInputProcessor(new BackInputProcessor() {
 			@Override
 			public void onBackAction() {
-				application.getScreenManager().pushScreen("map", null);
+				application.getScreenManager().pushScreen("map", "circle_crop");
 			}
 		});
 
