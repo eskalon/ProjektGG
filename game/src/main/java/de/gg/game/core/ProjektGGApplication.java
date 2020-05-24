@@ -51,9 +51,9 @@ public class ProjektGGApplication extends EskalonApplication {
 	private GameServer server;
 	@Nullable
 	private GameClient client;
-	
+
 	public ProjektGGApplication() {
-		super(true);
+		super(false, true);
 	}
 
 	@Override

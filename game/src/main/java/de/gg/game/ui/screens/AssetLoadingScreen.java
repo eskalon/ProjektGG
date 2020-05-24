@@ -157,7 +157,6 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 		almendraFont20.getData().markupEnabled = true;
 		fontMap.put("ui-text-20", almendraFont20);
 		fontMap.put("ui-text-handwritten-20", appleFont20);
-
 		fontMap.put("ui-title-24", frederickaFont24);
 
 		application.getAssetManager().load(SKIN_PATH, Skin.class,
