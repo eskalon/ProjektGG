@@ -11,9 +11,9 @@ import com.esotericsoftware.kryonet.Listener.TypeListener;
 import com.google.common.base.Preconditions;
 
 import de.eskalon.commons.log.Log;
+import de.eskalon.commons.misc.ThreadHandler;
 import de.eskalon.commons.utils.ISuccessCallback;
 import de.eskalon.commons.utils.MachineIdentificationUtils;
-import de.gg.engine.misc.ThreadHandler;
 import de.gg.engine.network.message.ClientHandshakeRequest;
 import de.gg.engine.network.message.FailedHandshakeResponse;
 import de.gg.engine.network.message.ServerAcceptanceResponse;
