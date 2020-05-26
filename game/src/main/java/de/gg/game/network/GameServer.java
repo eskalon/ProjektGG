@@ -20,7 +20,7 @@ import com.google.gson.JsonSyntaxException;
 import de.eskalon.commons.asset.SimpleJSONParser;
 import de.eskalon.commons.lang.Lang;
 import de.eskalon.commons.log.Log;
-import de.gg.engine.misc.ThreadHandler;
+import de.eskalon.commons.misc.ThreadHandler;
 import de.gg.engine.network.BaseGameServer;
 import de.gg.engine.network.ServerSetup;
 import de.gg.engine.network.message.ClientHandshakeRequest;

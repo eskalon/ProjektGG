@@ -17,7 +17,7 @@ import de.eskalon.commons.asset.Text;
 import de.eskalon.commons.graphics.postproc.impl.ColorBlendEffect;
 import de.eskalon.commons.lang.Lang;
 import de.eskalon.commons.log.Log;
-import de.gg.engine.misc.ThreadHandler;
+import de.eskalon.commons.misc.ThreadHandler;
 import de.gg.engine.ui.rendering.CameraWrapper;
 import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.FullHourEvent;

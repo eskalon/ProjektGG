@@ -18,8 +18,8 @@ import com.google.common.eventbus.Subscribe;
 
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.lang.Lang;
+import de.eskalon.commons.misc.ThreadHandler;
 import de.eskalon.commons.utils.ISuccessCallback;
-import de.gg.engine.misc.ThreadHandler;
 import de.gg.engine.network.BaseGameServer;
 import de.gg.engine.network.ServerDiscoveryHandler;
 import de.gg.engine.network.message.DiscoveryResponsePacket;
@@ -203,23 +203,26 @@ public class ServerBrowserScreen extends AbstractGGUIScreen {
 	private void discoverServers() {
 		serverTable.clear();
 		dicoveredServers.clear();
-		if (discoveryFuture != null)
-			discoveryFuture.cancel(true);
-		discoveryFuture = ThreadHandler.getInstance().executeRunnable(() -> {
-			ServerDiscoveryHandler<DiscoveryResponsePacket> serverDiscoveryHandler = new ServerDiscoveryHandler<>(
-					DiscoveryResponsePacket.class, 4500);
-			serverDiscoveryHandler.discoverHosts(
-					BaseGameServer.UDP_DISCOVER_PORT,
-					(address, datagramPacket) -> {
-						if (!dicoveredServers
-								.contains(datagramPacket.getGameName()
-										+ datagramPacket.getPort())) {
-							dicoveredServers.add(datagramPacket.getGameName()
-									+ datagramPacket.getPort());
-							addServerToUI(serverTable, address, datagramPacket);
-						}
+		if (discoveryFuture == null || discoveryFuture.isDone())
+			discoveryFuture = ThreadHandler.getInstance()
+					.executeRunnable(() -> {
+						ServerDiscoveryHandler<DiscoveryResponsePacket> serverDiscoveryHandler = new ServerDiscoveryHandler<>(
+								DiscoveryResponsePacket.class, 4500);
+						serverDiscoveryHandler.discoverHosts(
+								BaseGameServer.UDP_DISCOVER_PORT,
+								(address, datagramPacket) -> {
+									if (!dicoveredServers.contains(
+											datagramPacket.getGameName()
+													+ datagramPacket
+															.getPort())) {
+										dicoveredServers.add(datagramPacket
+												.getGameName()
+												+ datagramPacket.getPort());
+										addServerToUI(serverTable, address,
+												datagramPacket);
+									}
+								});
 					});
-		});
 	}
 
 	private void addServerToUI(Table serverTable, String address,
