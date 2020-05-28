@@ -19,7 +19,7 @@ public class DesktopLauncher {
 		config.setWindowedMode(1280, 720);
 		config.setResizable(false);
 		config.useVsync(false);
-		config.setWindowIcon(FileType.Absolute, "icon16.png", "icon32.png",
+		config.setWindowIcon(FileType.Internal, "icon16.png", "icon32.png",
 				"icon48.png");
 
 		try {
