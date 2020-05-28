@@ -8,13 +8,13 @@ import java.util.concurrent.TimeoutException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import de.eskalon.commons.LibgdxUnitTest;
 import de.eskalon.commons.utils.ISuccessCallback;
 import de.gg.engine.network.BaseGameServer;
 import de.gg.engine.network.ServerDiscoveryHandler;
 import de.gg.engine.network.ServerDiscoveryHandler.HostDiscoveryListener;
 import de.gg.engine.network.ServerSetup;
 import de.gg.engine.network.message.DiscoveryResponsePacket;
+import de.gg.game.LibgdxUnitTest;
 import de.gg.game.misc.PlayerUtils.PlayerStub;
 import de.gg.game.model.types.GameDifficulty;
 import de.gg.game.model.types.GameMap;

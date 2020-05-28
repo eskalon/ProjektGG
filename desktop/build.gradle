@@ -36,11 +36,13 @@ jar.dependsOn classes
 
 
 task dist(type: Zip){
-	archiveName appName+'_'+version+'.zip'
+	archiveName appName+"_"+version+".zip"
 
+	from fileTree(project.assetsDir) {
+		exclude("CONTRIBUTORS.md")
+	}
 	from file("../LICENSE");
 	from file("../CONTRIBUTORS.md");
-	from files(project.assetsDir);
 	from jar.outputs.files
 }
 
@@ -50,14 +52,14 @@ dist.dependsOn jar
 eclipse {
     project {
         name = appName + "-desktop"
-        linkedResource name: 'assets', type: '2', location: 'PARENT-1-PROJECT_LOC/game/assets'
+        linkedResource name: "assets", type: "2", location: "PARENT-1-PROJECT_LOC/game/assets"
     }
 }
 
 task afterEclipseImport(description: "Post processing after project generation", group: "IDE") {
   doLast {
     def classpath = new XmlParser().parse(file(".classpath"))
-    new Node(classpath, "classpathentry", [ kind: 'src', path: 'assets' ]);
+    new Node(classpath, "classpathentry", [ kind: "src", path: "assets" ]);
     def writer = new FileWriter(file(".classpath"))
     def printer = new XmlNodePrinter(new PrintWriter(writer))
     printer.setPreserveWhitespace(true)
