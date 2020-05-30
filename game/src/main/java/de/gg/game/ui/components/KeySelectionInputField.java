@@ -8,8 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.eskalon.commons.audio.ISoundManager;
-import de.eskalon.commons.input.KeyBinding;
 import de.eskalon.commons.lang.Lang;
+import de.eskalon.commons.settings.EskalonSettings;
 import de.gg.game.input.ButtonClickListener;
 
 /**
@@ -17,9 +17,10 @@ import de.gg.game.input.ButtonClickListener;
  */
 public class KeySelectionInputField extends ImageTextButton {
 
-	public KeySelectionInputField(final KeyBinding keybind, Skin skin,
-			Stage stage, ISoundManager soundManager) {
-		super(keybind.toString(), skin);
+	public KeySelectionInputField(EskalonSettings settings,
+			String keybindName, Skin skin, Stage stage,
+			ISoundManager soundManager) {
+		super(settings.getKeybind(keybindName).toString(), skin);
 
 		addListener(new ButtonClickListener(soundManager) {
 			@Override
@@ -27,11 +28,12 @@ public class KeySelectionInputField extends ImageTextButton {
 				SimpleTextDialog dialog = new SimpleTextDialog(
 						Lang.get("dialog.key_selection.select"), skin);
 				dialog.text(Lang.get("dialog.key_selection.press_key"))
-						.button("Zurück", false).key(Keys.ESCAPE, false);
+						.button(Lang.get("ui.generic.back"), false)
+						.key(Keys.ESCAPE, false);
 				dialog.addListener(new InputListener() {
 					@Override
 					public boolean keyDown(InputEvent event, int keycode) {
-						keybind.setKeycode(keycode);
+						settings.setKeybind(keybindName, keycode);
 
 						setText(Keys.toString(keycode));
 						dialog.hide();

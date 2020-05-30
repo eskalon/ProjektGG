@@ -49,9 +49,8 @@ public class Character implements ILocalized {
 	}
 
 	/**
-	 * @return the character's reputation. Is never lower than <code>0</code>
-	 *         and <i>usually</i> in the range of <code>0</code> and
-	 *         <code>20</code>.
+	 * @return the character's reputation. Is never lower than {@code 0} and
+	 *         <i>usually</i> in the range of {@code 0} and {@code 20}.
 	 */
 	public int getReputation() {
 		int reputation = ((int) (highestPositionLevel * 1.5))
@@ -125,15 +124,15 @@ public class Character implements ILocalized {
 
 	/**
 	 * @param reputationModifiers
-	 *            Should be between <code>-20</code> and <code>+15</code>.
-	 *            Slowly shifts back to <code>0</code>.
+	 *            Should be between {@code -20} and {@code +20}. Slowly shifts
+	 *            back to {@code 0}.
 	 */
 	public void setReputationModifiers(int reputationModifiers) {
 		this.reputationModifiers = reputationModifiers;
 	}
 
 	/**
-	 * @return the character's health. Is <code>100</code> at the birth.
+	 * @return the character's health. Is {@code 100} at the birth.
 	 */
 	public int getHp() {
 		return hp;

@@ -67,8 +67,8 @@ public class CharacterBehaviour {
 		opinion += thisCharacter.getReputation();
 
 		// TODO Kinship
-		// +20 für Kinder, Eltern und Ehepartner
-		// +8 für Verwandte des Ehepartners
+		// +20 for kids, parents and spouses
+		// +8 for relatives of one's spouse
 
 		// Religion (5, 12)
 		if (otherCharacter.getNPCTrait() != null) {
@@ -162,7 +162,7 @@ public class CharacterBehaviour {
 			tmp += getOpinionOfAnotherCharacter(voteOptionCharId, characterId,
 					session);
 
-			// TODO weitere Modifikatoren mit einbeziehen
+			// TODO cosider other modifiers
 
 			if (characterId == voteOptionCharId)
 				tmp = 125;

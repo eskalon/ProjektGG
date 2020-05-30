@@ -1,10 +1,8 @@
 package de.gg.game.input;
 
-import com.badlogic.gdx.Input.Keys;
-
 import de.eskalon.commons.input.DefaultInputProcessor;
-import de.eskalon.commons.input.KeyBinding;
-import de.gg.game.core.GameSettings;
+import de.eskalon.commons.settings.EskalonSettings;
+import de.eskalon.commons.settings.KeyBinding;
 import de.gg.game.network.rmi.ClientsideActionHandler;
 import de.gg.game.network.rmi.SlaveActionListener;
 
@@ -18,9 +16,9 @@ public class GameSpeedInputProcessor implements DefaultInputProcessor {
 	private KeyBinding decreseSpeedKey;
 	private ClientsideActionHandler actionHandler;
 
-	public GameSpeedInputProcessor(GameSettings settings) {
-		this.increaseSpeedKey = settings.getKeybind("speedUpTime", Keys.PLUS);
-		this.decreseSpeedKey = settings.getKeybind("speedDownTime", Keys.MINUS);
+	public GameSpeedInputProcessor(EskalonSettings settings) {
+		this.increaseSpeedKey = settings.getKeybind("speedUpTime");
+		this.decreseSpeedKey = settings.getKeybind("speedDownTime");
 	}
 
 	public void setClientActionHandler(ClientsideActionHandler actionHandler) {

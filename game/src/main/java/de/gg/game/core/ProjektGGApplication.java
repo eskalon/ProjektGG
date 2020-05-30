@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.google.common.reflect.TypeToken;
 
 import de.eskalon.commons.asset.AnnotationAssetManager.AssetLoaderParametersFactory;
@@ -43,9 +43,7 @@ public class ProjektGGApplication extends EskalonApplication {
 
 	public static final String NAME = "ProjektGG";
 
-	private Skin uiSkin;
-
-	private GameSettings settings;
+	private GGSettings settings;
 
 	@Nullable
 	private GameServer server;
@@ -79,11 +77,18 @@ public class ProjektGGApplication extends EskalonApplication {
 				});
 
 		// Settings
-		this.settings = new GameSettings(
+		this.settings = new GGSettings(
 				NAME.trim().replace(" ", "-").toLowerCase());
 		this.soundManager.setEffectVolume(settings.getEffectVolume());
 		this.soundManager.setMasterVolume(settings.getMasterVolume());
 		this.soundManager.setMusicVolume(settings.getMusicVolume());
+
+		this.settings.getKeybind("cameraForward", Keys.W);
+		this.settings.getKeybind("cameraLeft", Keys.A);
+		this.settings.getKeybind("cameraBackward", Keys.S);
+		this.settings.getKeybind("cameraRight", Keys.D);
+		this.settings.getKeybind("speedUpTime", Keys.PLUS);
+		this.settings.getKeybind("speedDownTime", Keys.MINUS);
 
 		// Add screens
 		screenManager.addScreen("credits", new CreditsScreen(this));
@@ -119,16 +124,8 @@ public class ProjektGGApplication extends EskalonApplication {
 		return "loading";
 	}
 
-	public GameSettings getSettings() {
+	public GGSettings getSettings() {
 		return settings;
-	}
-
-	public void setUISkin(Skin skin) {
-		this.uiSkin = skin;
-	}
-
-	public Skin getUISkin() {
-		return uiSkin;
 	}
 
 	/**
@@ -158,14 +155,6 @@ public class ProjektGGApplication extends EskalonApplication {
 
 	public boolean isHost() {
 		return server != null;
-	}
-
-	@Override
-	public void dispose() {
-		super.dispose();
-
-		// if (uiSkin != null)
-		// uiSkin.dispose();
 	}
 
 }

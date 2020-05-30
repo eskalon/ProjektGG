@@ -132,9 +132,9 @@ public abstract class BaseGameClient {
 	 * Disconnects the client from the server.
 	 */
 	public void disconnect() {
-		Log.info("Client", "Trenne Verbindung...");
+		Log.info("Client", "Closing connection...");
 		client.close();
-		Log.info("Client", "Verbindung getrennt!");
+		Log.info("Client", "Connection closed!");
 	}
 
 	/**

@@ -1,6 +1,5 @@
 package de.gg.game.ui.screens;
 
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -12,7 +11,7 @@ import com.google.common.eventbus.Subscribe;
 
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.lang.Lang;
-import de.gg.game.core.GameSettings;
+import de.eskalon.commons.settings.EskalonSettings;
 import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.ConnectionLostEvent;
 import de.gg.game.events.RoundEndEvent;
@@ -34,8 +33,7 @@ public class SettingsScreen extends AbstractGGUIScreen {
 		super.create();
 		setImage(backgroundImage);
 
-		GameSettings settings = ((ProjektGGApplication) application)
-				.getSettings();
+		EskalonSettings settings = application.getSettings();
 
 		// VOLUME
 		Label masterVolume = new Label(
@@ -102,31 +100,30 @@ public class SettingsScreen extends AbstractGGUIScreen {
 		Label forwardLabel = new Label(Lang.get("screen.settings.forward_key"),
 				skin);
 		KeySelectionInputField forwardButton = new KeySelectionInputField(
-				settings.getKeybind("cameraForward", Keys.W), skin, stage,
+				settings, "cameraForward", skin, stage,
 				application.getSoundManager());
 		Label leftLabel = new Label(Lang.get("screen.settings.left_key"), skin);
-		KeySelectionInputField leftButton = new KeySelectionInputField(
-				settings.getKeybind("cameraLeft", Keys.A), skin, stage,
-				application.getSoundManager());
+		KeySelectionInputField leftButton = new KeySelectionInputField(settings,
+				"cameraLeft", skin, stage, application.getSoundManager());
 		Label backwardLabel = new Label(
 				Lang.get("screen.settings.backwards_key"), skin);
 		KeySelectionInputField backwardButton = new KeySelectionInputField(
-				settings.getKeybind("cameraBackward", Keys.S), skin, stage,
+				settings, "cameraBackward", skin, stage,
 				application.getSoundManager());
 		Label rightLabel = new Label(Lang.get("screen.settings.right_key"),
 				skin);
 		KeySelectionInputField rightButton = new KeySelectionInputField(
-				settings.getKeybind("cameraRight", Keys.D), skin, stage,
+				settings, "cameraRight", skin, stage,
 				application.getSoundManager());
 		Label speedUpLabel = new Label(Lang.get("screen.settings.speed_up_key"),
 				skin);
 		KeySelectionInputField speedUpButton = new KeySelectionInputField(
-				settings.getKeybind("speedUpTime", Keys.PLUS), skin, stage,
+				settings, "speedUpTime", skin, stage,
 				application.getSoundManager());
 		Label speedDownLabel = new Label(
 				Lang.get("screen.settings.speed_down_key"), skin);
 		KeySelectionInputField speedDownButton = new KeySelectionInputField(
-				settings.getKeybind("speedDownTime", Keys.MINUS), skin, stage,
+				settings, "speedDownTime", skin, stage,
 				application.getSoundManager());
 
 		ImageTextButton backButton = new ImageTextButton(

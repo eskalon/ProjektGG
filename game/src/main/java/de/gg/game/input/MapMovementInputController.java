@@ -2,13 +2,12 @@ package de.gg.game.input;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 
 import de.eskalon.commons.input.DefaultInputProcessor;
-import de.eskalon.commons.input.KeyBinding;
+import de.eskalon.commons.settings.EskalonSettings;
+import de.eskalon.commons.settings.KeyBinding;
 import de.gg.engine.ui.rendering.CameraWrapper;
-import de.gg.game.core.GameSettings;
 
 /**
  * @see CameraInputController The libgdx class this is based on.
@@ -38,14 +37,14 @@ public class MapMovementInputController implements DefaultInputProcessor {
 	public float scrollFactor = -0.1f;
 
 	public MapMovementInputController(CameraWrapper camera,
-			GameSettings settings) {
+			EskalonSettings settings) {
 		this.camera = camera;
 
 		resetInput();
-		this.forwardKey = settings.getKeybind("cameraForward", Keys.W);
-		this.backwardKey = settings.getKeybind("cameraBackward", Keys.S);
-		this.rightKey = settings.getKeybind("cameraRight", Keys.D);
-		this.leftKey = settings.getKeybind("cameraLeft", Keys.A);
+		this.forwardKey = settings.getKeybind("cameraForward");
+		this.backwardKey = settings.getKeybind("cameraBackward");
+		this.rightKey = settings.getKeybind("cameraRight");
+		this.leftKey = settings.getKeybind("cameraLeft");
 	}
 
 	public void update(float delta) {

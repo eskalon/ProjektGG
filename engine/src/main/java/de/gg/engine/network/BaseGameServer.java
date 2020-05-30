@@ -14,6 +14,7 @@ import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.kryonet.ServerDiscoveryHandler;
 import com.google.common.base.Preconditions;
 
+import de.eskalon.commons.lang.Lang;
 import de.eskalon.commons.log.Log;
 import de.eskalon.commons.misc.ThreadHandler;
 import de.eskalon.commons.utils.ISuccessCallback;
@@ -119,8 +120,7 @@ public abstract class BaseGameServer<C> {
 				}
 				callback.onSuccess(null); // Host successfully started
 			} catch (IOException | IllegalArgumentException e2) {
-				Log.error("Server",
-						"Server could not be started: %s", e2);
+				Log.error("Server", "Server could not be started: %s", e2);
 				callback.onFailure(e2); // Something went wrong
 			}
 		});
@@ -161,7 +161,7 @@ public abstract class BaseGameServer<C> {
 			Log.info("Server", "Client was rejected for want of capacity");
 
 			con.sendTCP(
-					new ServerRejectionResponse("Der Server ist bereits voll"));
+					new ServerRejectionResponse(Lang.get("server.is_full")));
 			con.close();
 		} else { // Still free slots
 			Log.info("Server", "Client accepted");

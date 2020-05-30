@@ -163,13 +163,10 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 				new SkinLoader.SkinParameter(SKIN_TEXTURE_ATLAS_PATH, fontMap));
 		application.getAssetManager().finishLoadingAsset(SKIN_PATH);
 
-		((ProjektGGApplication) application)
-				.setUISkin(application.getAssetManager().get(SKIN_PATH));
+		application.setUISkin(application.getAssetManager().get(SKIN_PATH));
 
-		// Set the type data
+		// Set some data
 		TypeRegistry.getInstance().initialize(application.getAssetManager());
-
-		// Misc stuff
 		CharacterFactory.initialize(application.getAssetManager());
 
 		// Transitions
@@ -220,7 +217,7 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 
 		// Cursor
 		Gdx.graphics.setCursor(Gdx.graphics.newCursor(cursorPixmap, 0, 0));
-		// cursorPixmap.dispose();
+		cursorPixmap.dispose();
 
 		// Discord integration
 		DiscordGGHandler.getInstance().setMenuPresence();
