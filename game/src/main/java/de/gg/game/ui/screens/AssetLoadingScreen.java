@@ -39,7 +39,7 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 
 	// Assets of the loading screen itself
 	private static final String BACKGROUND_PATH = "ui/backgrounds/loading_screen.jpg";
-	private static final String TITLE_PATH = "ui/title.png";
+	static final String TITLE_PATH = "ui/title.png";
 	private static final String BAR_TOP_PATH = "ui/loading_bar_top.png";
 	private static final String BAR_BOTTOM_PATH = "ui/loading_bar_bottom.png";
 	private Texture backgroundTexture;
