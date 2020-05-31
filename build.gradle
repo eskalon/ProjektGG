@@ -68,6 +68,8 @@ project(":engine") {
         compile "com.jagrosh:DiscordIPC:$discordIPCVersion"
         compile "org.reflections:reflections:$reflectionsVersion"
         compile "com.github.crykn:libgdx-screenmanager:$screenmanagerVersion"
+        
+        //compile files('../libs/commons-0.1.0.jar')
 
         testCompile "org.junit.platform:junit-platform-launcher:1.2.0" // needed for a bug in eclipse
 
