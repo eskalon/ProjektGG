@@ -1,27 +1,35 @@
-Eine Liste aller Contributor und der genutzten externen Assets:
+This game was produced by eskalon
 
-## Contributors
+
+
+## Team
+
 - [damios](https://github.com/crykn)
 - [dominator](https://github.com/dominator1999)
 - [Meidimax](https://github.com/Meidimax99)
 - [Vlarabor](https://github.com/Vlarabor)
 
-## External assets and code
+
+
+## Assets
+
+A special thanks to everyone that created the following assets!
+
 ### UI
 - **The check button textures, the scroll bar and slider, the textfield and the dialog window background**\
   Path: ui/skin/skin.png\
-  Based on the work or directly the work of: [Lamoon](https://opengameart.org/content/rpg-gui-construction-kit-v10)\
+  Based on the works of: [Lamoon](https://opengameart.org/content/rpg-gui-construction-kit-v10)\
   License: [CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/legalcode)
 - **The background images altar, baker, castle, ride, town, town2, town3**\
   Path: ui/backgrounds/\
   Based on public domain works:
-  - https://commons.wikimedia.org/wiki/File:Altar_frontal_from_La_Seu_d%27Urgell_or_of_the_Apostles_-_Google_Art_Project.jpg
-  - https://commons.wikimedia.org/wiki/File:Medieval_baker.jpg
-  - https://commons.wikimedia.org/wiki/File:Martellange_Avignon_165.jpg
-  - https://commons.wikimedia.org/wiki/File:Konrad_von_Gr%C3%BCnenberg_-_Beschreibung_der_Reise_von_Konstanz_nach_Jerusalem_-_Blatt_20v-21r.jpg
-  - https://commons.wikimedia.org/wiki/File:Nuremberg_chronicles_-_Nuremberga.png
-  - https://commons.wikimedia.org/wiki/File:Konrad_von_Gr%C3%BCnenberg_-_Beschreibung_der_Reise_von_Konstanz_nach_Jerusalem_-_Blatt_15v-16r.jpg
-  - https://commons.wikimedia.org/wiki/File:Weiditz_Trachtenbuch_029-030.jpg
+  - [Altar frontal from La Seu d'Urgell or of the Apostles](https://commons.wikimedia.org/wiki/File:Altar_frontal_from_La_Seu_d%27Urgell_or_of_the_Apostles_-_Google_Art_Project.jpg)
+  - [Medieval baker](https://commons.wikimedia.org/wiki/File:Medieval_baker.jpg)
+  - [Martellange Avignon](https://commons.wikimedia.org/wiki/File:Martellange_Avignon_165.jpg)
+  - [Beschreibung der Reise von Konstanz nach Jerusalem - Blatt 20-21](https://commons.wikimedia.org/wiki/File:Konrad_von_Gr%C3%BCnenberg_-_Beschreibung_der_Reise_von_Konstanz_nach_Jerusalem_-_Blatt_20v-21r.jpg)
+  - [Nuremberga](https://commons.wikimedia.org/wiki/File:Nuremberg_chronicles_-_Nuremberga.png)
+  - [Beschreibung der Reise von Konstanz nach Jerusalem - Blatt 15-16](https://commons.wikimedia.org/wiki/File:Konrad_von_Gr%C3%BCnenberg_-_Beschreibung_der_Reise_von_Konstanz_nach_Jerusalem_-_Blatt_15v-16r.jpg)
+  - [Weiditz Trachtenbuch - Blatt 29-30](https://commons.wikimedia.org/wiki/File:Weiditz_Trachtenbuch_029-030.jpg)
 - **Open book background**\
   Path: ui/skin/skin.png\
   Author: [jd](https://opengameart.org/content/old-pagesflip-with-sound)\

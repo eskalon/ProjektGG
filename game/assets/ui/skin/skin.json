@@ -106,8 +106,8 @@
 			fontColor: white
 		}
 		ink_title: {
-      font: ui-title-24,
-      fontColor: ink_blue
+			font: ui-title-24,
+			fontColor: ink_blue
 		},
 		ink_text: {
 			font: ui-text-handwritten-20,

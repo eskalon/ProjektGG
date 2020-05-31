@@ -65,6 +65,8 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 	// font)
 	@Asset(value = "frederickaFont24.ttf", params = "fonts/fredericka_the_great/FrederickatheGreat-Regular.ttf, 24")
 	private BitmapFont frederickaFont24;
+	@Asset(value = "frederickaFont29.ttf", params = "fonts/fredericka_the_great/FrederickatheGreat-Regular.ttf, 29")
+	private BitmapFont frederickaFont29;
 	@Asset(value = "appleFont20.ttf", params = "fonts/homemade_apple/HomemadeApple-Regular.ttf, 20")
 	private BitmapFont appleFont20;
 	private static final String SKIN_PATH = "ui/skin/skin.json";
@@ -158,6 +160,7 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 		fontMap.put("ui-text-20", almendraFont20);
 		fontMap.put("ui-text-handwritten-20", appleFont20);
 		fontMap.put("ui-title-24", frederickaFont24);
+		fontMap.put("ui-title-29", frederickaFont29);
 
 		application.getAssetManager().load(SKIN_PATH, Skin.class,
 				new SkinLoader.SkinParameter(SKIN_TEXTURE_ATLAS_PATH, fontMap));

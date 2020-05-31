@@ -3,6 +3,7 @@ package de.gg.game.ui.screens;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.utils.Align;
 
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.asset.Text;
@@ -21,7 +22,7 @@ public class CreditsScreen extends AbstractImageScreen {
 	private ProjektGGApplication app;
 
 	private String[] creditsTextSplitted;
-	private BitmapFont h2Font, h3Font, textFont;
+	private BitmapFont boldFont, h2Font, h3Font, textFont;
 
 	private float posY = 0;
 
@@ -33,12 +34,18 @@ public class CreditsScreen extends AbstractImageScreen {
 	@Override
 	protected void create() {
 		super.create();
-		creditsTextSplitted = creditsText.getString().replaceAll("\\\\", "")
-				.replace(")", "").replace("[", "").replace("](", ", ")
-				.replace("**", "").replace(" ", "  ").split("\n");
+		creditsTextSplitted = creditsText.getString()
+				.replaceAll("\\[(.+)\\]\\(([^ ]+?)( \"(.+)\")?\\)", "$1")
+				.replaceAll("\\\\", "").replaceAll("- ", "").replace(" ", "  ")
+				.split("\n");
 
-		h2Font = app.getUISkin().getFont("ui-title-24");
-		h3Font = app.getUISkin().getFont("ui-element-21");
+		for (String s : creditsTextSplitted) {
+			System.out.println("[" + s + "]");
+		}
+
+		boldFont = app.getUISkin().getFont("ui-element-21");
+		h2Font = app.getUISkin().getFont("ui-title-29");
+		h3Font = app.getUISkin().getFont("ui-title-24");
 		textFont = app.getUISkin().getFont("ui-text-20");
 
 		addInputProcessor(new BackInputProcessor() {
@@ -81,13 +88,21 @@ public class CreditsScreen extends AbstractImageScreen {
 			Color color) {
 		if (line.startsWith("###")) {
 			h3Font.setColor(color);
-			h3Font.draw(app.getSpriteBatch(), line.substring(4), xPos, yPos);
+			h3Font.draw(app.getSpriteBatch(), line.substring(4), xPos, yPos,
+					app.getWidth(), Align.center, false);
 		} else if (line.startsWith("##")) {
 			h2Font.setColor(color);
-			h2Font.draw(app.getSpriteBatch(), line.substring(3), xPos, yPos);
+			h2Font.draw(app.getSpriteBatch(), line.substring(3), xPos, yPos,
+					app.getWidth(), Align.center, false);
+		} else if (line.startsWith("**")) {
+			boldFont.setColor(color);
+			boldFont.draw(app.getSpriteBatch(),
+					line.substring(2, line.length() - 2), xPos, yPos,
+					app.getWidth(), Align.center, false);
 		} else {
 			textFont.setColor(color);
-			textFont.draw(app.getSpriteBatch(), line, xPos, yPos);
+			textFont.draw(app.getSpriteBatch(), line.strip(), xPos, yPos,
+					app.getWidth(), Align.center, false);
 		}
 	}
 
