@@ -1,14 +1,3 @@
-PROJEKT GG
-
-This Game Was Produced by eskalon
-
-
-
-
-
-ESKALON
-
-
 ## Team
 
 - [damios](https://github.com/crykn)
@@ -165,8 +154,3 @@ The work of
   Path: shaders/simple_zoom.trans\
   Author: [0gust1](https://github.com/gl-transitions/gl-transitions/blob/master/transitions/SimpleZoom.glsl)
   License: [MIT](https://opensource.org/licenses/MIT)
-  
-  
-  
-  
-And a Special Thanks to You!

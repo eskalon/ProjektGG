@@ -37,7 +37,12 @@ public class CreditsScreen extends AbstractImageScreen {
 	@Override
 	protected void create() {
 		super.create();
-		creditsTextSplitted = creditsText.getString()
+		String text = "PROJEKT GG\n" + "\n"
+				+ "This Game Was Produced by eskalon\n" + "\n" + "\n" + "\n"
+				+ "\n" + "\n" + "ESKALON\n" + "\n" + "\n"
+				+ creditsText.getString() + "\n" + "\n" + "\n" + "\n"
+				+ "\nAnd a Special Thanks to You!";
+		creditsTextSplitted = text
 				.replaceAll("\\[(.+)\\]\\(([^ ]+?)( \"(.+)\")?\\)", "$1")
 				.replaceAll("\\\\", "").replaceAll("- ", "").replace(" ", "  ")
 				.split("\n");
