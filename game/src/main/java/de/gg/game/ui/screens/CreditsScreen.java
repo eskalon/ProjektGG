@@ -114,7 +114,7 @@ public class CreditsScreen extends AbstractImageScreen {
 					(app.getWidth() - titleLogo.getWidth()) / 2, yPos - 110);
 		} else {
 			textFont.setColor(color);
-			textFont.draw(app.getSpriteBatch(), line.strip(), 0, yPos,
+			textFont.draw(app.getSpriteBatch(), line.trim(), 0, yPos,
 					app.getWidth(), Align.center, false);
 		}
 	}
