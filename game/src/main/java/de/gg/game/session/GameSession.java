@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 import com.google.common.base.Stopwatch;
 
 import de.damios.guacamole.gdx.Log;
+import de.eskalon.commons.misc.EskalonLogger;
 import de.gg.engine.misc.TickCounter;
 import de.gg.engine.misc.TickCounter.TickHandler;
 import de.gg.engine.utils.CountdownTimer;
@@ -241,7 +242,7 @@ public abstract class GameSession {
 
 		Log.info(localNetworkId == -1 ? "Server" : "Client",
 				"RoundEndSystem in %d ms verarbeitet",
-				logTimer.elapsed(Log.DEFAULT_TIME_UNIT));
+				logTimer.elapsed(EskalonLogger.DEFAULT_TIME_UNIT));
 	}
 
 	/**
@@ -263,7 +264,8 @@ public abstract class GameSession {
 						Log.info(localNetworkId == -1 ? "Server" : "Client",
 								"%s-System in %d ms verarbeitet",
 								sys.getClass().getSimpleName(),
-								logTimer.elapsed(Log.DEFAULT_TIME_UNIT));
+								logTimer.elapsed(
+										EskalonLogger.DEFAULT_TIME_UNIT));
 
 						sys.setAsProcessed(true);
 					}
@@ -281,7 +283,8 @@ public abstract class GameSession {
 						Log.info(localNetworkId == -1 ? "Server" : "Client",
 								"%s-System in %d ms verarbeitet",
 								sys.getClass().getSimpleName(),
-								logTimer.elapsed(Log.DEFAULT_TIME_UNIT));
+								logTimer.elapsed(
+										EskalonLogger.DEFAULT_TIME_UNIT));
 
 						sys.setAsProcessed(true);
 					}

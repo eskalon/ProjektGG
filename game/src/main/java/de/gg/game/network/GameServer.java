@@ -20,6 +20,7 @@ import com.google.gson.JsonSyntaxException;
 import de.damios.guacamole.gdx.Log;
 import de.eskalon.commons.asset.SimpleJSONParser;
 import de.eskalon.commons.lang.Lang;
+import de.eskalon.commons.misc.EskalonLogger;
 import de.eskalon.commons.misc.ThreadHandler;
 import de.gg.engine.network.BaseGameServer;
 import de.gg.engine.network.ServerSetup;
@@ -187,7 +188,7 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 
 		Log.info("Server", "Game was saved at '%s' (took %d ms)!",
 				savesFile.getAbsolutePath(),
-				timer.elapsed(Log.DEFAULT_TIME_UNIT));
+				timer.elapsed(EskalonLogger.DEFAULT_TIME_UNIT));
 	}
 
 	@Override
