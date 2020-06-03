@@ -16,10 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.google.common.eventbus.Subscribe;
 
+import de.damios.guacamole.ISuccessCallback;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.lang.Lang;
 import de.eskalon.commons.misc.ThreadHandler;
-import de.eskalon.commons.utils.ISuccessCallback;
 import de.gg.engine.network.BaseGameServer;
 import de.gg.engine.network.ServerDiscoveryHandler;
 import de.gg.engine.network.message.DiscoveryResponsePacket;

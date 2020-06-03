@@ -5,8 +5,8 @@ import java.util.HashMap;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
+import de.damios.guacamole.gdx.Log;
 import de.eskalon.commons.lang.Lang;
-import de.eskalon.commons.log.Log;
 import de.gg.game.events.AllPlayersReadyEvent;
 import de.gg.game.events.BallotFinishedEvent;
 import de.gg.game.events.ChangedGameSpeedEvent;

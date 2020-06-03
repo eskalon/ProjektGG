@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import javax.annotation.Nullable;
 
-import de.eskalon.commons.log.Log;
+import de.damios.guacamole.gdx.Log;
 import de.gg.game.ai.CharacterBehaviour;
 import de.gg.game.model.entities.Character;
 import de.gg.game.model.entities.Player;

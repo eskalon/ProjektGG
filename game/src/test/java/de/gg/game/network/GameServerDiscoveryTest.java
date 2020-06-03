@@ -8,7 +8,7 @@ import java.util.concurrent.TimeoutException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import de.eskalon.commons.utils.ISuccessCallback;
+import de.damios.guacamole.ISuccessCallback;
 import de.gg.engine.network.BaseGameServer;
 import de.gg.engine.network.ServerDiscoveryHandler;
 import de.gg.engine.network.ServerDiscoveryHandler.HostDiscoveryListener;

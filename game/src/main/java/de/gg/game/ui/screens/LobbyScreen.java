@@ -14,9 +14,9 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.google.common.eventbus.Subscribe;
 
+import de.damios.guacamole.gdx.Log;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.lang.Lang;
-import de.eskalon.commons.log.Log;
 import de.eskalon.commons.misc.ThreadHandler;
 import de.gg.engine.ui.components.OffsettableTextField;
 import de.gg.game.core.ProjektGGApplication;

@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Stopwatch;
 
-import de.eskalon.commons.log.Log;
+import de.damios.guacamole.gdx.Log;
 import de.gg.engine.misc.TickCounter;
 import de.gg.engine.misc.TickCounter.TickHandler;
 import de.gg.engine.utils.CountdownTimer;

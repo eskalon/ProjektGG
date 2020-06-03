@@ -12,11 +12,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.google.common.eventbus.Subscribe;
 
+import de.damios.guacamole.gdx.Log;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.asset.Text;
 import de.eskalon.commons.graphics.postproc.impl.ColorBlendEffect;
 import de.eskalon.commons.lang.Lang;
-import de.eskalon.commons.log.Log;
 import de.eskalon.commons.misc.ThreadHandler;
 import de.gg.engine.ui.rendering.CameraWrapper;
 import de.gg.game.core.ProjektGGApplication;

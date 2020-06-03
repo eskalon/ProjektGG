@@ -8,7 +8,7 @@ import com.esotericsoftware.kryonet.rmi.ObjectSpace;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
-import de.eskalon.commons.log.Log;
+import de.damios.guacamole.gdx.Log;
 import de.gg.engine.network.BaseGameClient;
 import de.gg.game.ai.CharacterBehaviour;
 import de.gg.game.events.ConnectionLostEvent;

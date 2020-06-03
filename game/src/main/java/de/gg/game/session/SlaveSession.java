@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 
 import com.google.common.eventbus.EventBus;
 
-import de.eskalon.commons.log.Log;
+import de.damios.guacamole.gdx.Log;
 import de.gg.game.events.NewBallotEvent;
 import de.gg.game.misc.GameClock;
 import de.gg.game.model.entities.Player;

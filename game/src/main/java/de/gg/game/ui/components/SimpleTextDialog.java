@@ -10,8 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
 
+import de.damios.guacamole.ISimpleListener;
 import de.eskalon.commons.lang.Lang;
-import de.eskalon.commons.utils.ISimpleListener;
 
 /**
  * A small dialog displaying a text, a button and nothing more.

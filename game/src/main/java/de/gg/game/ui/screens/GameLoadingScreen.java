@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Vector3;
 import com.google.common.eventbus.Subscribe;
 
+import de.damios.guacamole.gdx.Log;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.core.EskalonApplication;
-import de.eskalon.commons.log.Log;
 import de.eskalon.commons.screens.AbstractAssetLoadingScreen;
 import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.ServerReadyEvent;

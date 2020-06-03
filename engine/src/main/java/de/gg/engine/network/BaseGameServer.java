@@ -14,10 +14,10 @@ import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.kryonet.ServerDiscoveryHandler;
 import com.google.common.base.Preconditions;
 
+import de.damios.guacamole.ISuccessCallback;
+import de.damios.guacamole.gdx.Log;
 import de.eskalon.commons.lang.Lang;
-import de.eskalon.commons.log.Log;
 import de.eskalon.commons.misc.ThreadHandler;
-import de.eskalon.commons.utils.ISuccessCallback;
 import de.gg.engine.network.message.ClientHandshakeRequest;
 import de.gg.engine.network.message.DiscoveryResponsePacket;
 import de.gg.engine.network.message.ServerAcceptanceResponse;

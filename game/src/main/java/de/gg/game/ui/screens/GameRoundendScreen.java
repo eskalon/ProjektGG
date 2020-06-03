@@ -11,9 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.google.common.eventbus.Subscribe;
 
+import de.damios.guacamole.gdx.Log;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.lang.Lang;
-import de.eskalon.commons.log.Log;
 import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.AllPlayersReadyEvent;
 import de.gg.game.events.ServerReadyEvent;

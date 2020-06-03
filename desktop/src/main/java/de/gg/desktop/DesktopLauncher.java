@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
-import de.eskalon.commons.utils.graphics.Sync;
+import de.damios.guacamole.gdx.Sync;
 import de.gg.game.core.ProjektGGApplication;
 
 /**

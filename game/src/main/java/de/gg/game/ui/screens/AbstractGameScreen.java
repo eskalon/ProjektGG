@@ -3,7 +3,7 @@ package de.gg.game.ui.screens;
 import com.badlogic.gdx.Gdx;
 import com.google.common.eventbus.Subscribe;
 
-import de.eskalon.commons.log.Log;
+import de.damios.guacamole.gdx.Log;
 import de.eskalon.commons.misc.ThreadHandler;
 import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.ConnectionLostEvent;

@@ -3,8 +3,8 @@ package de.gg.game.network.rmi;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import de.eskalon.commons.log.Log;
-import de.eskalon.commons.utils.ISimpleCallback;
+import de.damios.guacamole.ISimpleCallback;
+import de.damios.guacamole.gdx.Log;
 import de.gg.game.model.types.PositionType;
 import de.gg.game.network.LobbyPlayer;
 
