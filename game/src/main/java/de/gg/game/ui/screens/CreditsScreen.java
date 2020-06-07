@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Align;
 
+import de.damios.guacamole.gdx.assets.Text;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
-import de.eskalon.commons.asset.Text;
 import de.eskalon.commons.core.EskalonApplication;
 import de.eskalon.commons.screens.AbstractImageScreen;
 import de.eskalon.commons.screens.EskalonSplashScreen.EskalonCommonsAssets;

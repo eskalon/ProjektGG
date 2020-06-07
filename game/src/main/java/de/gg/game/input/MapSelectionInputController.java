@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.collision.Ray;
 import com.google.common.eventbus.EventBus;
 
-import de.eskalon.commons.input.DefaultInputProcessor;
+import de.damios.guacamole.gdx.DefaultInputProcessor;
 import de.gg.game.events.HouseEnterEvent;
 import de.gg.game.events.HouseSelectionEvent;
 import de.gg.game.model.World;

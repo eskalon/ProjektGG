@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 
-import de.eskalon.commons.input.DefaultInputProcessor;
+import de.damios.guacamole.gdx.DefaultInputProcessor;
 import de.eskalon.commons.settings.EskalonSettings;
 import de.eskalon.commons.settings.KeyBinding;
 import de.gg.engine.ui.rendering.CameraWrapper;

@@ -1,6 +1,6 @@
 package de.gg.game.input;
 
-import de.eskalon.commons.input.DefaultInputProcessor;
+import de.damios.guacamole.gdx.DefaultInputProcessor;
 import de.eskalon.commons.settings.EskalonSettings;
 import de.eskalon.commons.settings.KeyBinding;
 import de.gg.game.network.rmi.ClientsideActionHandler;

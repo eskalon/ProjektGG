@@ -12,8 +12,8 @@ import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ObjectMap;
 
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
+import de.damios.guacamole.gdx.assets.Text;
 import de.eskalon.commons.asset.PlaylistDefinition;
-import de.eskalon.commons.asset.Text;
 import de.eskalon.commons.lang.Lang;
 import de.eskalon.commons.screen.transition.ScreenTransition;
 import de.eskalon.commons.screen.transition.impl.GLTransitionsShaderTransition;
