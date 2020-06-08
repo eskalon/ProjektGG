@@ -21,7 +21,7 @@ allprojects {
         commonsIOVersion = "2.6"
         discordIPCVersion = "0.4"
         gdxVersion = "1.9.10"
-        guacamoleVersion = "38cfa12bca" // = 0.2.0
+        guacamoleVersion = "c845dda" // = 0.2.0
         guavaVersion = "28.2-jre"
         gsonVersion = "2.8.6"
         junitVersion = "5.6.0"
