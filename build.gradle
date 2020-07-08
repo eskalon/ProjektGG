@@ -29,7 +29,7 @@ allprojects {
         mockitoVersion = "3.2.4"
         quakemonkeyVersion = "master-SNAPSHOT"
         reflectionsVersion = "0.9.11" //0.9.12 doesn't work, see https://github.com/ronmamo/reflections/issues/273
-        screenmanagerVersion = "05c6148849" // = 0.6.1
+        screenmanagerVersion = "237ced8304" // = 0.6.1
     }
 
     repositories {

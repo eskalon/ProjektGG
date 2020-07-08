@@ -409,7 +409,7 @@ public class GameMapScreen extends AbstractGameScreen {
 	}
 
 	@Subscribe
-	public void onFollHour(FullHourEvent ev) {
+	public void onFullHour(FullHourEvent ev) {
 		application.getSoundManager().playSoundEffect("clock_tick");
 	}
 
