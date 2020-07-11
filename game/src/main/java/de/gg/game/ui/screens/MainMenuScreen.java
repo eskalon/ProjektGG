@@ -87,14 +87,23 @@ public class MainMenuScreen extends AbstractGGUIScreen {
 
 		githubRepoButton.padLeft(3).padBottom(3).bottom().left();
 		stage.addActor(githubRepoButton);
+
+		stageInputWrapper.setEnabled(false);
 	}
 
 	@Override
 	protected void setUIValues() {
-		// Fade in the UI
+		// Fade in the UI & enable the input
+		SequenceAction sequence2 = new SequenceAction();
+		sequence2.addAction(Actions.delay(1.1F));
+		sequence2.addAction(
+				Actions.run(() -> stageInputWrapper.setEnabled(true)));
+
 		SequenceAction sequence = new SequenceAction();
 		sequence.addAction(Actions.delay(shownForFirstTime ? 0.85F : 0.17F));
-		sequence.addAction(Actions.alpha(1F, 1.6F, Interpolation.pow2In));
+		sequence.addAction(Actions.parallel(
+				Actions.alpha(1F, 1.6F, Interpolation.pow2In), sequence2));
+
 		stage.addAction(Actions.alpha(0F));
 		stage.addAction(sequence);
 
@@ -122,6 +131,7 @@ public class MainMenuScreen extends AbstractGGUIScreen {
 			sequence2.addAction(Actions.run(() -> application.getScreenManager()
 					.pushScreen(nextScreen, transition)));
 
+			stageInputWrapper.setEnabled(false);
 			stageToFadeOut.addAction(Actions.parallel(
 					Actions.alpha(0F, 0.45F, Interpolation.pow2In), sequence2));
 		}

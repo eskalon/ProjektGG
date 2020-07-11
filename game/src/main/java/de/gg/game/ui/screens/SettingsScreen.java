@@ -16,6 +16,7 @@ import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.ConnectionLostEvent;
 import de.gg.game.events.RoundEndEvent;
 import de.gg.game.events.ServerReadyEvent;
+import de.gg.game.input.BackInputProcessor;
 import de.gg.game.input.ButtonClickListener;
 import de.gg.game.ui.components.KeySelectionInputField;
 
@@ -30,6 +31,19 @@ public class SettingsScreen extends AbstractGGUIScreen {
 
 	@Override
 	protected void create() {
+		addInputProcessor(new BackInputProcessor() {
+			@Override
+			public void onBackAction() {
+				if (application.getScreenManager()
+						.getLastScreen() instanceof GameMapScreen)
+					application.getScreenManager().pushScreen("map",
+							"blendingTransition");
+				else
+					application.getScreenManager().pushScreen("main_menu",
+							"blendingTransition");
+			}
+		});
+
 		super.create();
 		setImage(backgroundImage);
 
