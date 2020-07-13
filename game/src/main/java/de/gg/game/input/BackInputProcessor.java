@@ -2,6 +2,8 @@ package de.gg.game.input;
 
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import de.damios.guacamole.gdx.DefaultInputProcessor;
 
@@ -35,5 +37,31 @@ public abstract class BackInputProcessor implements DefaultInputProcessor {
 	}
 
 	public abstract void onBackAction();
+
+	/**
+	 * This is a back input listener for Scene2D actors.
+	 */
+	public static abstract class BackInputActorListener extends ClickListener {
+		public BackInputActorListener() {
+			super(BACK_BUTTON);
+		}
+
+		public void clicked(InputEvent event, float x, float y) {
+			onBackAction();
+		}
+
+		public abstract void onBackAction();
+
+		@Override
+		public boolean keyDown(InputEvent event, int keycode) {
+			if (keycode == BACK_KEY) {
+				onBackAction();
+				return true;
+			}
+
+			return false;
+		}
+
+	}
 
 }

@@ -16,7 +16,7 @@ import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.ConnectionLostEvent;
 import de.gg.game.events.RoundEndEvent;
 import de.gg.game.events.ServerReadyEvent;
-import de.gg.game.input.BackInputProcessor;
+import de.gg.game.input.BackInputProcessor.BackInputActorListener;
 import de.gg.game.input.ButtonClickListener;
 import de.gg.game.ui.components.KeySelectionInputField;
 
@@ -31,7 +31,11 @@ public class SettingsScreen extends AbstractGGUIScreen {
 
 	@Override
 	protected void create() {
-		addInputProcessor(new BackInputProcessor() {
+		super.create();
+		setImage(backgroundImage);
+
+		stage.setKeyboardFocus(mainTable);
+		mainTable.addListener(new BackInputActorListener() {
 			@Override
 			public void onBackAction() {
 				if (application.getScreenManager()
@@ -43,9 +47,6 @@ public class SettingsScreen extends AbstractGGUIScreen {
 							"blendingTransition");
 			}
 		});
-
-		super.create();
-		setImage(backgroundImage);
 
 		EskalonSettings settings = application.getSettings();
 

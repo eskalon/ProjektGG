@@ -17,9 +17,8 @@ import de.gg.game.input.ButtonClickListener;
  */
 public class KeySelectionInputField extends ImageTextButton {
 
-	public KeySelectionInputField(EskalonSettings settings,
-			String keybindName, Skin skin, Stage stage,
-			ISoundManager soundManager) {
+	public KeySelectionInputField(EskalonSettings settings, String keybindName,
+			Skin skin, Stage stage, ISoundManager soundManager) {
 		super(settings.getKeybind(keybindName).toString(), skin);
 
 		addListener(new ButtonClickListener(soundManager) {
@@ -33,12 +32,15 @@ public class KeySelectionInputField extends ImageTextButton {
 				dialog.addListener(new InputListener() {
 					@Override
 					public boolean keyDown(InputEvent event, int keycode) {
-						settings.setKeybind(keybindName, keycode);
+						if (keycode != Keys.ESCAPE) {
+							settings.setKeybind(keybindName, keycode);
 
-						setText(Keys.toString(keycode));
-						dialog.hide();
+							setText(Keys.toString(keycode));
+							dialog.hide();
 
-						return true;
+							return true;
+						}
+						return false;
 					}
 				});
 				dialog.show(stage);

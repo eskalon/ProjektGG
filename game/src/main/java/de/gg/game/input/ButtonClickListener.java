@@ -2,14 +2,16 @@ package de.gg.game.input;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.google.common.base.Preconditions;
 
 import de.eskalon.commons.audio.ISoundManager;
 
 /**
- * This class takes care of a button click. It especially plays the click sound.
+ * This class provides an easy way of handling a button click. Furthermore, it
+ * plays a sound upon clicking.
  */
-public abstract class ButtonClickListener extends InputListener {
+public abstract class ButtonClickListener extends ClickListener {
 
 	private ISoundManager soundManager;
 
@@ -24,20 +26,18 @@ public abstract class ButtonClickListener extends InputListener {
 	}
 
 	@Override
-	public boolean touchDown(InputEvent event, float x, float y, int pointer,
-			int button) {
+	public void clicked(InputEvent event, float x, float y) {
 		if (arePreconditionsMet()) {
 			soundManager.playSoundEffect("button_click");
 			onClick();
-
-			return true;
+			event.cancel();
 		}
-		return false;
 	}
 
 	/**
-	 * If the button click should only trigger in certain circumstances this can
-	 * be taken care of by overriding this method.
+	 * If the {@linkplain #onClick() button click event} should only trigger
+	 * under certain circumstances this behavior can be taken care of by
+	 * overriding this method.
 	 *
 	 * @return whether the preconditions for this button click are met
 	 */
