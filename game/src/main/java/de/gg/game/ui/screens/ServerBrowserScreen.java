@@ -26,6 +26,7 @@ import de.gg.engine.network.message.DiscoveryResponsePacket;
 import de.gg.engine.ui.components.OffsettableTextField;
 import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.LobbyDataReceivedEvent;
+import de.gg.game.input.BackInputProcessor;
 import de.gg.game.input.BackInputProcessor.BackInputActorListener;
 import de.gg.game.input.ButtonClickListener;
 import de.gg.game.network.GameClient;
@@ -56,12 +57,18 @@ public class ServerBrowserScreen extends AbstractGGUIScreen {
 		super.create();
 		setImage(backgroundTexture);
 
-		stage.setKeyboardFocus(mainTable);
-		mainTable.addListener(new BackInputActorListener() {
+		BackInputProcessor backInput = new BackInputProcessor() {
 			@Override
 			public void onBackAction() {
 				application.getScreenManager().pushScreen("main_menu",
 						"blendingTransition");
+			}
+		};
+		addInputProcessor(backInput);
+		mainTable.addListener(new BackInputActorListener() {
+			@Override
+			public void onBackAction() {
+				backInput.onBackAction();
 			}
 		});
 

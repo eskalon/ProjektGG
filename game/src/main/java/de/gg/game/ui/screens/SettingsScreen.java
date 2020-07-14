@@ -1,12 +1,12 @@
 package de.gg.game.ui.screens;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.LeftClickSlider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.google.common.eventbus.Subscribe;
 
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
@@ -16,6 +16,7 @@ import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.ConnectionLostEvent;
 import de.gg.game.events.RoundEndEvent;
 import de.gg.game.events.ServerReadyEvent;
+import de.gg.game.input.BackInputProcessor;
 import de.gg.game.input.BackInputProcessor.BackInputActorListener;
 import de.gg.game.input.ButtonClickListener;
 import de.gg.game.ui.components.KeySelectionInputField;
@@ -34,8 +35,7 @@ public class SettingsScreen extends AbstractGGUIScreen {
 		super.create();
 		setImage(backgroundImage);
 
-		stage.setKeyboardFocus(mainTable);
-		mainTable.addListener(new BackInputActorListener() {
+		BackInputProcessor backInput = new BackInputProcessor() {
 			@Override
 			public void onBackAction() {
 				if (application.getScreenManager()
@@ -46,6 +46,13 @@ public class SettingsScreen extends AbstractGGUIScreen {
 					application.getScreenManager().pushScreen("main_menu",
 							"blendingTransition");
 			}
+		};
+		addInputProcessor(backInput);
+		mainTable.addListener(new BackInputActorListener() {
+			@Override
+			public void onBackAction() {
+				backInput.onBackAction();
+			}
 		});
 
 		EskalonSettings settings = application.getSettings();
@@ -53,61 +60,43 @@ public class SettingsScreen extends AbstractGGUIScreen {
 		// VOLUME
 		Label masterVolume = new Label(
 				Lang.get("screen.settings.master_volume"), skin);
-		Slider masterSlider = new Slider(0, 1, 0.05F, false, skin);
+		LeftClickSlider masterSlider = new LeftClickSlider(0, 1, 0.05F, false,
+				skin);
 		masterSlider.setValue(settings.getMasterVolume());
-		masterSlider.addListener(new InputListener() {
+		masterSlider.addListener(new ChangeListener() {
 			@Override
-			public void touchUp(InputEvent event, float x, float y, int pointer,
-					int button) {
+			public void changed(ChangeEvent event, Actor actor) {
 				settings.setMasterVolume(masterSlider.getValue());
 				application.getSoundManager()
 						.setMasterVolume(masterSlider.getValue());
-			}
-
-			@Override
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				return true;
 			}
 		});
 
 		Label effectVolume = new Label(
 				Lang.get("screen.settings.effect_volume"), skin);
-		Slider effectSlider = new Slider(0, 1, 0.05F, false, skin);
+		LeftClickSlider effectSlider = new LeftClickSlider(0, 1, 0.05F, false,
+				skin);
 		effectSlider.setValue(settings.getEffectVolume());
-		effectSlider.addListener(new InputListener() {
+		effectSlider.addListener(new ChangeListener() {
 			@Override
-			public void touchUp(InputEvent event, float x, float y, int pointer,
-					int button) {
+			public void changed(ChangeEvent event, Actor actor) {
 				settings.setEffectVolume(effectSlider.getValue());
 				application.getSoundManager()
 						.setEffectVolume(effectSlider.getValue());
-			}
-
-			@Override
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				return true;
 			}
 		});
 
 		Label musicVolume = new Label(Lang.get("screen.settings.music_volume"),
 				skin);
-		Slider musicSlider = new Slider(0, 1, 0.05F, false, skin);
+		LeftClickSlider musicSlider = new LeftClickSlider(0, 1, 0.05F, false,
+				skin);
 		musicSlider.setValue(settings.getMusicVolume());
-		musicSlider.addListener(new InputListener() {
+		musicSlider.addListener(new ChangeListener() {
 			@Override
-			public void touchUp(InputEvent event, float x, float y, int pointer,
-					int button) {
+			public void changed(ChangeEvent event, Actor actor) {
 				settings.setMusicVolume(musicSlider.getValue());
 				application.getSoundManager()
 						.setMusicVolume(musicSlider.getValue());
-			}
-
-			@Override
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				return true;
 			}
 		});
 

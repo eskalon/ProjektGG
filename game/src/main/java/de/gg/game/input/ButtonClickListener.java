@@ -1,7 +1,6 @@
 package de.gg.game.input;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.google.common.base.Preconditions;
 

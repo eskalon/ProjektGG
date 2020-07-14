@@ -2,8 +2,10 @@ package de.gg.game.input;
 
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import de.damios.guacamole.gdx.DefaultInputProcessor;
 
@@ -28,6 +30,11 @@ public abstract class BackInputProcessor implements DefaultInputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer,
 			int button) {
+		return button == BACK_BUTTON;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		if (button == BACK_BUTTON) {
 			onBackAction();
 			return true;
@@ -39,28 +46,52 @@ public abstract class BackInputProcessor implements DefaultInputProcessor {
 	public abstract void onBackAction();
 
 	/**
-	 * This is a back input listener for Scene2D actors.
+	 * This is a back input listener that handles clicks inside of Scene2D
+	 * actors. Is usually used in addition to a {@link BackInputProcessor}.
 	 */
-	public static abstract class BackInputActorListener extends ClickListener {
-		public BackInputActorListener() {
-			super(BACK_BUTTON);
-		}
+	public static abstract class BackInputActorListener
+			implements DefaultInputProcessor, EventListener {
+		private static final Vector2 tmpCoords = new Vector2();
 
-		public void clicked(InputEvent event, float x, float y) {
-			onBackAction();
-		}
+		public boolean handle(Event e) {
+			if (!(e instanceof InputEvent))
+				return false;
+			InputEvent event = (InputEvent) e;
 
-		public abstract void onBackAction();
+			switch (event.getType()) {
+			case touchDown: {
+				event.toCoordinates(event.getListenerActor(), tmpCoords);
+				return touchDown((int) tmpCoords.x, (int) tmpCoords.y,
+						event.getPointer(), event.getButton());
+			}
+			case touchUp: {
+				event.toCoordinates(event.getListenerActor(), tmpCoords);
+				return touchUp((int) tmpCoords.x, (int) tmpCoords.y,
+						event.getPointer(), event.getButton());
+			}
+			default:
+				return false;
+			}
+		}
 
 		@Override
-		public boolean keyDown(InputEvent event, int keycode) {
-			if (keycode == BACK_KEY) {
+		public boolean touchDown(int screenX, int screenY, int pointer,
+				int button) {
+			return button == BACK_BUTTON;
+		}
+
+		@Override
+		public boolean touchUp(int screenX, int screenY, int pointer,
+				int button) {
+			if (button == BACK_BUTTON) {
 				onBackAction();
 				return true;
 			}
 
 			return false;
 		}
+
+		public abstract void onBackAction();
 
 	}
 
