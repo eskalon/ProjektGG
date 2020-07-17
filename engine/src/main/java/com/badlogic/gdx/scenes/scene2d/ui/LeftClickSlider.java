@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.Pools;
 /**
  * This {@link Slider} only changes it value when it is <i>left</i> clicked on.
  */
+// TODO replace with https://github.com/libgdx/libgdx/pull/6101
 public class LeftClickSlider extends ProgressBar {
 	int button = Buttons.LEFT; // -1 as default
 	int draggingPointer = -1;
