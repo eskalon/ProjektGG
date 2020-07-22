@@ -20,16 +20,16 @@ allprojects {
         concurrentUnitVersion = "0.4.6"
         commonsIOVersion = "2.6"
         discordIPCVersion = "0.4"
-        gdxVersion = "1.9.10"
-        guacamoleVersion = "c845dda" // = 0.2.0
-        guavaVersion = "28.2-jre"
+        gdxVersion = "1.9.11"
+        guacamoleVersion = "v0.2.0" // "0.2.0" doesn't seem to work as a tag
+        guavaVersion = "29.0-jre"
         gsonVersion = "2.8.6"
         junitVersion = "5.6.0"
         kryonetVersion = "2.22.6"
         mockitoVersion = "3.2.4"
         quakemonkeyVersion = "master-SNAPSHOT"
         reflectionsVersion = "0.9.11" //0.9.12 doesn't work, see https://github.com/ronmamo/reflections/issues/273
-        screenmanagerVersion = "8fe1e4c" // = 0.6.1
+        screenmanagerVersion = "0.6.1"
     }
 
     repositories {
