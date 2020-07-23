@@ -2,13 +2,13 @@ package de.gg.engine.misc;
 
 import java.time.OffsetDateTime;
 
-import com.google.common.base.Preconditions;
 import com.jagrosh.discordipc.IPCClient;
 import com.jagrosh.discordipc.IPCListener;
 import com.jagrosh.discordipc.entities.RichPresence;
 import com.jagrosh.discordipc.exceptions.NoDiscordClientException;
 
 import de.damios.guacamole.ISimpleCallback;
+import de.damios.guacamole.Preconditions;
 import de.damios.guacamole.gdx.Log;
 import de.eskalon.commons.misc.ThreadHandler;
 

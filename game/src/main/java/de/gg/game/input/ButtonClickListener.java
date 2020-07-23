@@ -2,8 +2,8 @@ package de.gg.game.input;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.google.common.base.Preconditions;
 
+import de.damios.guacamole.Preconditions;
 import de.eskalon.commons.audio.ISoundManager;
 
 /**

@@ -2,8 +2,8 @@ package de.gg.game.network.rmi;
 
 import com.esotericsoftware.kryonet.rmi.ObjectSpace;
 import com.esotericsoftware.kryonet.rmi.RemoteObject;
-import com.google.common.base.Preconditions;
 
+import de.damios.guacamole.Preconditions;
 import de.damios.guacamole.gdx.Log;
 import de.gg.engine.network.BaseGameServer;
 import de.gg.engine.utils.CollectionUtils;

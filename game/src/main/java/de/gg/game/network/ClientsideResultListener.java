@@ -2,9 +2,9 @@ package de.gg.game.network;
 
 import java.util.HashMap;
 
-import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
+import de.damios.guacamole.Preconditions;
 import de.damios.guacamole.gdx.Log;
 import de.eskalon.commons.lang.Lang;
 import de.gg.game.events.AllPlayersReadyEvent;

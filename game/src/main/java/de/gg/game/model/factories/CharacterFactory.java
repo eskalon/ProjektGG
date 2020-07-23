@@ -54,51 +54,45 @@ public class CharacterFactory {
 	public static Character createCharacterWithStatus(Random random,
 			SocialStatus status) {
 		Character c = new Character();
-		c.setAge(RandomUtils.getRandomNumber(random, 17, 60));
+		c.setAge(RandomUtils.getInt(random, 17, 60));
 
 		if (status != SocialStatus.NON_CITIZEN)
-			c.setGold(RandomUtils.getRandomNumber(random,
-					status.getFortuneRequirement(),
+			c.setGold(RandomUtils.getInt(random, status.getFortuneRequirement(),
 					status.getFortuneRequirement() * 2 - 200));
 		else
-			c.setGold(RandomUtils.getRandomNumber(random, 135, 735));
+			c.setGold(RandomUtils.getInt(random, 135, 735));
 
 		if (status == SocialStatus.NON_CITIZEN)
-			c.setHighestPositionLevel(
-					RandomUtils.getRandomNumber(random, 0, 5));
+			c.setHighestPositionLevel(RandomUtils.getInt(random, 0, 5));
 		else if (status == SocialStatus.CITIZEN)
-			c.setHighestPositionLevel(
-					RandomUtils.getRandomNumber(random, 0, 3));
+			c.setHighestPositionLevel(RandomUtils.getInt(random, 0, 3));
 		else if (status == SocialStatus.PATRICIAN)
-			c.setHighestPositionLevel(
-					RandomUtils.getRandomNumber(random, 1, 6));
+			c.setHighestPositionLevel(RandomUtils.getInt(random, 1, 6));
 		else if (status == SocialStatus.CAVALIER)
-			c.setHighestPositionLevel(
-					RandomUtils.getRandomNumber(random, 2, 9));
+			c.setHighestPositionLevel(RandomUtils.getInt(random, 2, 9));
 		else if (status == SocialStatus.BARON)
-			c.setHighestPositionLevel(
-					RandomUtils.getRandomNumber(random, 7, 9));
+			c.setHighestPositionLevel(RandomUtils.getInt(random, 7, 9));
 
-		c.setHp(RandomUtils.getRandomNumber(random, 85, 105));
-		c.setMale(RandomUtils.rollTheDice(random, 2));
-		c.setMarried(!RandomUtils.rollTheDice(random, 3)); // two thirds of the
+		c.setHp(RandomUtils.getInt(random, 85, 105));
+		c.setMale(RandomUtils.isTrue(random, 2));
+		c.setMarried(!RandomUtils.isTrue(random, 3)); // two thirds of the
 		// characters cannot get married
 
 		if (c.isMale()) {
-			c.setName(MALE_NAMES.get(RandomUtils.getRandomNumber(random, 0,
-					MALE_NAMES.size() - 1)));
+			c.setName(MALE_NAMES
+					.get(RandomUtils.getInt(random, 0, MALE_NAMES.size() - 1)));
 		} else {
-			c.setName(FEMALE_NAMES.get(RandomUtils.getRandomNumber(random, 0,
-					FEMALE_NAMES.size() - 1)));
+			c.setName(FEMALE_NAMES.get(
+					RandomUtils.getInt(random, 0, FEMALE_NAMES.size() - 1)));
 		}
 
-		c.setReligion(RandomUtils.rollTheDice(random, 2) ? Religion.CATHOLIC
+		c.setReligion(RandomUtils.isTrue(random, 2) ? Religion.CATHOLIC
 				: Religion.ORTHODOX);
 		c.setStatus(status);
-		c.setSurname(SURNAMES.get(
-				RandomUtils.getRandomNumber(random, 0, SURNAMES.size() - 1)));
+		c.setSurname(SURNAMES
+				.get(RandomUtils.getInt(random, 0, SURNAMES.size() - 1)));
 
-		switch (RandomUtils.getRandomNumber(random, 0, 7)) {
+		switch (RandomUtils.getInt(random, 0, 7)) {
 		case 0:
 		case 1:
 		case 2:
@@ -135,13 +129,13 @@ public class CharacterFactory {
 	public static Character createRandomCharacter(Random random) {
 		SocialStatus status;
 
-		if (RandomUtils.rollTheDice(2)) {
+		if (RandomUtils.isTrue(2)) {
 			status = SocialStatus.CITIZEN; // 50%
-		} else if (!RandomUtils.rollTheDice(3)) {
+		} else if (!RandomUtils.isTrue(3)) {
 			status = SocialStatus.PATRICIAN; // 33%
-		} else if (!RandomUtils.rollTheDice(3)) {
+		} else if (!RandomUtils.isTrue(3)) {
 			status = SocialStatus.CAVALIER; // 11%
-		} else if (!RandomUtils.rollTheDice(4)) {
+		} else if (!RandomUtils.isTrue(4)) {
 			status = SocialStatus.BARON; // 4%
 		} else {
 			status = SocialStatus.NON_CITIZEN; // 1%
@@ -162,7 +156,7 @@ public class CharacterFactory {
 			break;
 		}
 		case 3: {
-			status = RandomUtils.rollTheDice(random, 3) ? SocialStatus.PATRICIAN
+			status = RandomUtils.isTrue(random, 3) ? SocialStatus.PATRICIAN
 					: SocialStatus.CITIZEN;
 			break;
 		}
@@ -172,7 +166,7 @@ public class CharacterFactory {
 			break;
 		}
 		case 6: {
-			status = RandomUtils.rollTheDice(random, 2) ? SocialStatus.PATRICIAN
+			status = RandomUtils.isTrue(random, 2) ? SocialStatus.PATRICIAN
 					: SocialStatus.CAVALIER;
 			break;
 		}
@@ -181,7 +175,7 @@ public class CharacterFactory {
 			break;
 		}
 		case 8: {
-			status = RandomUtils.rollTheDice(random, 3) ? SocialStatus.CAVALIER
+			status = RandomUtils.isTrue(random, 3) ? SocialStatus.CAVALIER
 					: SocialStatus.BARON;
 			break;
 		}
@@ -213,13 +207,13 @@ public class CharacterFactory {
 			ProfessionType profession, GameDifficulty difficulty,
 			boolean isMale, Religion religion, String name, String surname) {
 		Character c = new Character();
-		c.setAge(RandomUtils.getRandomNumber(random, 17, 23));
+		c.setAge(RandomUtils.getInt(random, 17, 23));
 		c.setGold(profession.getStartingGold()
 				+ difficulty.getAdditionalStartingGold());
 
 		c.setHighestPositionLevel(0);
 
-		c.setHp(RandomUtils.getRandomNumber(random, 96, 104));
+		c.setHp(RandomUtils.getInt(random, 96, 104));
 		c.setMale(isMale);
 		c.setMarried(false);
 		c.setName(name);

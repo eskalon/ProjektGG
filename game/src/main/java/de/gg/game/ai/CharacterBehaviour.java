@@ -57,7 +57,7 @@ public class CharacterBehaviour {
 
 		// Base Opinion (14, 43)
 		Random r = new Random(thisCharacterId * otherCharacterId);
-		opinion += RandomUtils.getRandomNumber(r, -9, 20) + 23;
+		opinion += RandomUtils.getInt(r, -9, 20) + 23;
 
 		// NPC Opinion Modifier (0, 10)
 		if (otherCharacter.getNPCTrait() != null)
@@ -109,7 +109,7 @@ public class CharacterBehaviour {
 	public static int getPerRoundAndCharacterPopularityModifier(long seed,
 			short characterIdA, short characterIdB) {
 		Random r = new Random(seed * characterIdA * characterIdB);
-		return RandomUtils.getRandomNumber(r, -3, 4);
+		return RandomUtils.getInt(r, -3, 4);
 	}
 
 	public static int getVoteOption(short characterId, Ballot matter,

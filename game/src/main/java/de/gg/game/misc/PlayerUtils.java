@@ -6,7 +6,6 @@ import java.util.List;
 
 import de.eskalon.commons.asset.SimpleJSONParser;
 import de.eskalon.commons.utils.RandomUtils;
-import de.gg.engine.utils.CollectionUtils;
 import de.gg.game.model.types.PlayerIcon;
 import de.gg.game.model.types.ProfessionType;
 import de.gg.game.network.LobbyPlayer;
@@ -126,8 +125,7 @@ public class PlayerUtils {
 	 */
 	public static LobbyPlayer getRandomPlayerWithUnusedProperties(
 			List<PlayerStub> playerStubs, Collection<LobbyPlayer> players) {
-		PlayerStub stub = CollectionUtils.getRandomElementInList(playerStubs,
-				RandomUtils.RANDOM);
+		PlayerStub stub = RandomUtils.getElement(playerStubs);
 
 		return new LobbyPlayer(stub.name, stub.surname,
 				getAvailableIcons(players).get(0),

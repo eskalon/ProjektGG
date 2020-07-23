@@ -15,15 +15,15 @@ public class EmployeeFactory {
 	}
 
 	public static Employee createRandomEmployee(Random r) {
-		int age = RandomUtils.getRandomNumber(r, 16, 70);
-		int agilitySkill = RandomUtils.rollTheDice(r, 2)
-				? (RandomUtils.rollTheDice(r, 3) ? 3 : 2)
+		int age = RandomUtils.getInt(r, 16, 70);
+		int agilitySkill = RandomUtils.isTrue(r, 2)
+				? (RandomUtils.isTrue(r, 3) ? 3 : 2)
 				: 1;
-		int craftingSkill = RandomUtils.rollTheDice(r, 2)
-				? (RandomUtils.rollTheDice(r, 3) ? 3 : 2)
+		int craftingSkill = RandomUtils.isTrue(r, 2)
+				? (RandomUtils.isTrue(r, 3) ? 3 : 2)
 				: 1;
-		int strengthSkill = RandomUtils.rollTheDice(r, 2)
-				? (RandomUtils.rollTheDice(r, 3) ? 3 : 2)
+		int strengthSkill = RandomUtils.isTrue(r, 2)
+				? (RandomUtils.isTrue(r, 3) ? 3 : 2)
 				: 1;
 
 		return new Employee("Test Name", age, craftingSkill, agilitySkill,

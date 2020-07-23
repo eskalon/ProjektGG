@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import de.eskalon.commons.utils.RandomUtils;
 import de.gg.engine.utils.CollectionUtils;
 
 public class BallotUtils {
@@ -55,8 +56,7 @@ public class BallotUtils {
 														// is needed
 				return -1;
 			else // Random option wins
-				return CollectionUtils.getRandomElementInList(resultOptions,
-						new Random(seed));
+				return RandomUtils.getElement(new Random(seed), resultOptions);
 		} else {
 			// One result
 			return entries[0].getKey();

@@ -13,10 +13,10 @@ import org.apache.commons.io.FileUtils;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.rmi.ObjectSpace;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.gson.JsonSyntaxException;
 
+import de.damios.guacamole.Preconditions;
 import de.damios.guacamole.gdx.Log;
 import de.eskalon.commons.asset.SimpleJSONParser;
 import de.eskalon.commons.lang.Lang;

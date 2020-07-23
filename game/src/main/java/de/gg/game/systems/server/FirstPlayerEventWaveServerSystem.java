@@ -30,13 +30,13 @@ public class FirstPlayerEventWaveServerSystem
 	public void process(short id, Player p) {
 		// ILLNESS
 		if (p.isIll()) {
-			if (RandomUtils.rollTheDice(random, 6)) { // Genesung
+			if (RandomUtils.isTrue(random, 6)) { // Recuperation
 				p.setIll(false);
 
 				resultListener.onPlayerIllnessChange(id, false);
 			}
-		} else { // Erkrankung
-			if (RandomUtils.rollTheDice(random, 90)) {
+		} else { // Infection
+			if (RandomUtils.isTrue(random, 90)) {
 				p.setIll(true);
 
 				resultListener.onPlayerIllnessChange(id, true);

@@ -7,11 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Random;
 
-import com.google.common.base.Preconditions;
-
-import de.eskalon.commons.utils.RandomUtils;
+import de.damios.guacamole.Preconditions;
 
 /**
  * This class contains utility methods for the work with collections.
@@ -99,25 +96,6 @@ public final class CollectionUtils {
 		}
 
 		return count > maxCount ? list.get(list.size() - 1) : popular;
-	}
-
-	/**
-	 * Returns a random element from the given list.
-	 *
-	 * @param list
-	 * @param random
-	 * @return the randomly selected element; {@code null} if the list is empty
-	 */
-	public static <T> T getRandomElementInList(List<T> list, Random random) {
-		Preconditions.checkNotNull(list, "The list cannot be null");
-		Preconditions.checkNotNull(random, "The random cannot be null");
-
-		if (list.isEmpty())
-			return null;
-
-		T item = list
-				.get(RandomUtils.getRandomNumber(random, 0, list.size() - 1));
-		return item;
 	}
 
 }
