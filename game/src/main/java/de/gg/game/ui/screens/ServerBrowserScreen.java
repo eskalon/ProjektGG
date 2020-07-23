@@ -218,7 +218,7 @@ public class ServerBrowserScreen extends AbstractGGUIScreen {
 	}
 
 	private void discoverServers() {
-		serverTable.clear();
+		serverTable.clearChildren();
 		dicoveredServers.clear();
 		if (discoveryFuture == null || discoveryFuture.isDone())
 			discoveryFuture = ThreadHandler.getInstance()

@@ -162,7 +162,7 @@ public class CharacterBehaviour {
 			tmp += getOpinionOfAnotherCharacter(voteOptionCharId, characterId,
 					session);
 
-			// TODO cosider other modifiers
+			// TODO consider other modifiers
 
 			if (characterId == voteOptionCharId)
 				tmp = 125;

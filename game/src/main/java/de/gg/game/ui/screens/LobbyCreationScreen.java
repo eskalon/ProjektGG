@@ -22,6 +22,8 @@ import de.gg.engine.network.ServerSetup;
 import de.gg.engine.ui.components.OffsettableTextField;
 import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.LobbyDataReceivedEvent;
+import de.gg.game.input.BackInputProcessor;
+import de.gg.game.input.BackInputProcessor.BackInputActorListener;
 import de.gg.game.input.ButtonClickListener;
 import de.gg.game.misc.PlayerUtils.PlayerStub;
 import de.gg.game.model.types.GameDifficulty;
@@ -51,8 +53,23 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 	@Override
 	protected void create() {
 		super.create();
-
 		setImage(backgroundTexture);
+
+		BackInputProcessor backInput = new BackInputProcessor() {
+			@Override
+			public void onBackAction() {
+				application.getScreenManager().pushScreen("server_browser",
+						"shortBlendingTransition");
+			}
+		};
+		addInputProcessor(backInput);
+		mainTable.addListener(new BackInputActorListener() {
+			@Override
+			public void onBackAction() {
+				backInput.onBackAction();
+			}
+		});
+
 		this.playerStubs = playerStubsJson
 				.getData(new TypeToken<ArrayList<PlayerStub>>() {
 				}.getType());
