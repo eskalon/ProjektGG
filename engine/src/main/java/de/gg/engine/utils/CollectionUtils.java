@@ -41,10 +41,10 @@ public final class CollectionUtils {
 	}
 
 	/**
-	 * Sorts a hashmap by its value.
+	 * Sorts a map by its value.
 	 *
 	 * @param map
-	 * @return the sorted hashmap
+	 * @return the sorted map
 	 */
 	public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(
 			Map<K, V> map) {

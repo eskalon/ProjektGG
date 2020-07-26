@@ -53,8 +53,6 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 	// font)
 	@Asset(value = "ui/skin/skin.json", params = "ui/skin/skin.atlas")
 	public Skin skin;
-	private static final String SKIN_PATH = "ui/skin/skin.json";
-	private static final String SKIN_TEXTURE_ATLAS_PATH = "ui/skin/skin.atlas";
 	// Sounds
 	@Asset("audio/button_click.mp3")
 	protected Sound buttonClickSound;

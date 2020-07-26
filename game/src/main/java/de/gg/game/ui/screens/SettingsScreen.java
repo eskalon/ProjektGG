@@ -24,7 +24,9 @@ import de.gg.game.ui.components.KeySelectionInputField;
 public class SettingsScreen extends AbstractGGUIScreen {
 
 	@Asset("ui/backgrounds/settings_screen.jpg")
-	private Texture backgroundImage;
+	private Texture backgroundImage1;
+	@Asset("ui/backgrounds/main_menu_screen.png")
+	private Texture backgroundImage2;
 
 	public SettingsScreen(ProjektGGApplication application) {
 		super(application);
@@ -33,7 +35,6 @@ public class SettingsScreen extends AbstractGGUIScreen {
 	@Override
 	protected void create() {
 		super.create();
-		setImage(backgroundImage);
 
 		BackInputProcessor backInput = new BackInputProcessor() {
 			@Override
@@ -197,7 +198,9 @@ public class SettingsScreen extends AbstractGGUIScreen {
 
 	@Override
 	protected void setUIValues() {
-		// no values to set
+		setImage((application.getScreenManager()
+				.getLastScreen() instanceof GameMapScreen) ? backgroundImage1
+						: backgroundImage2);
 	}
 
 	@Override

@@ -10,10 +10,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import de.eskalon.commons.audio.ISoundManager;
 import de.eskalon.commons.lang.Lang;
 import de.eskalon.commons.settings.EskalonSettings;
+import de.eskalon.commons.settings.KeyBinding;
 import de.gg.game.input.ButtonClickListener;
 
 /**
- * An input field with which {@link Keys} can be queried.
+ * An input field which allows querying {@link Keys}. Is used to set
+ * {@linkplain KeyBinding key bindings}.
  */
 public class KeySelectionInputField extends ImageTextButton {
 

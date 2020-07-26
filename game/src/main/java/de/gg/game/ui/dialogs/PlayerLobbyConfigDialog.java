@@ -140,6 +140,8 @@ public class PlayerLobbyConfigDialog extends BasicDialog {
 								}
 							});
 					iconTable.add(iconIButton).pad(25);
+					if (i == 4)
+						iconTable.row();
 				}
 
 				iconDialog.show(PlayerLobbyConfigDialog.this.getStage());
