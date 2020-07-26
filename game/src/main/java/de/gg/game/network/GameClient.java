@@ -80,10 +80,10 @@ public class GameClient extends BaseGameClient {
 
 	@Override
 	protected void onDisconnection() {
-		Log.info("Client", "Connection to server closed");
-
-		if (!orderlyDisconnect)
+		if (!orderlyDisconnect) {
+			Log.info("Client", "Connection to server lost");
 			eventBus.post(new ConnectionLostEvent());
+		}
 	}
 
 	@Override

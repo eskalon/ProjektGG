@@ -93,7 +93,7 @@ public abstract class BaseGameClient {
 					client.addListener(new Listener() {
 						@Override
 						public void disconnected(Connection connection) {
-							Log.error("Client", "Verbindung beendet");
+							Log.info("Client", "Connection closed!");
 							onDisconnection();
 						}
 					});
@@ -134,7 +134,6 @@ public abstract class BaseGameClient {
 	public void disconnect() {
 		Log.info("Client", "Closing connection...");
 		client.close();
-		Log.info("Client", "Connection closed!");
 	}
 
 	/**

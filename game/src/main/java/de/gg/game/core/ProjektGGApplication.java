@@ -17,6 +17,7 @@ import de.eskalon.commons.asset.JSON;
 import de.eskalon.commons.asset.JSONLoader.JSONLoaderParameter;
 import de.eskalon.commons.asset.SkinAssetLoaderParametersFactory;
 import de.eskalon.commons.core.EskalonApplication;
+import de.eskalon.commons.misc.ThreadHandler;
 import de.eskalon.commons.screen.transition.impl.BlendingTransition;
 import de.eskalon.commons.screens.AbstractAssetLoadingScreen;
 import de.eskalon.commons.screens.EskalonSplashScreen;
@@ -162,6 +163,17 @@ public class ProjektGGApplication extends EskalonApplication {
 
 	public boolean isHost() {
 		return server != null;
+	}
+
+	@Override
+	public void dispose() {
+		if (client != null)
+			client.disconnect();
+
+		if (isHost())
+			ThreadHandler.getInstance().executeRunnable(() -> server.stop());
+
+		super.dispose();
 	}
 
 }

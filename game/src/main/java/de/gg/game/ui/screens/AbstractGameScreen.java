@@ -3,7 +3,6 @@ package de.gg.game.ui.screens;
 import com.badlogic.gdx.Gdx;
 import com.google.common.eventbus.Subscribe;
 
-import de.damios.guacamole.gdx.Log;
 import de.eskalon.commons.misc.ThreadHandler;
 import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.ConnectionLostEvent;
@@ -40,10 +39,7 @@ public abstract class AbstractGameScreen extends AbstractGGUIScreen {
 			final GameServer server = application.getServer();
 			application.setServer(null);
 
-			ThreadHandler.getInstance().executeRunnable(() -> {
-				server.stop();
-				Log.info("Server", "Server beendet");
-			});
+			ThreadHandler.getInstance().executeRunnable(() -> server.stop());
 		}
 
 		application.getScreenManager().pushScreen("serverBrowser", null, true);
