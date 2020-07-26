@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import de.eskalon.commons.misc.DaemonThreadFactory;
 import de.gg.game.model.types.PositionType;
 import de.gg.game.model.votes.BallotResults;
 import de.gg.game.network.GameServer;
@@ -30,7 +31,8 @@ public class ServersideResultListenerStub
 
 		// only a single thread is used so results are distributed one after
 		// another
-		this.executor = Executors.newSingleThreadExecutor();
+		this.executor = Executors.newSingleThreadExecutor(
+				new DaemonThreadFactory("ServersideResultListenerStub"));
 	}
 
 	@Override

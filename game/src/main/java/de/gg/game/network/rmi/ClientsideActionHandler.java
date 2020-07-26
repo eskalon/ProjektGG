@@ -5,6 +5,7 @@ import java.util.concurrent.Executors;
 
 import de.damios.guacamole.ISimpleCallback;
 import de.damios.guacamole.gdx.Log;
+import de.eskalon.commons.misc.DaemonThreadFactory;
 import de.gg.game.model.types.PositionType;
 import de.gg.game.network.LobbyPlayer;
 
@@ -23,7 +24,8 @@ public class ClientsideActionHandler {
 		this.networkId = networkId;
 		this.actionListener = actionListener;
 
-		this.executor = Executors.newSingleThreadExecutor();
+		this.executor = Executors.newSingleThreadExecutor(
+				new DaemonThreadFactory("ClientSideActionHandler"));
 	}
 
 	public void requestGameData() {
