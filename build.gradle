@@ -18,7 +18,6 @@ allprojects {
         appName = "Projekt GG"
         aiVersion = "1.8.1"
         concurrentUnitVersion = "0.4.6"
-        commonsIOVersion = "2.6"
         discordIPCVersion = "0.4"
         freetypeSkinVersion = "0.3"
         gdxVersion = "1.9.11"
@@ -91,7 +90,6 @@ project(":game") {
         compile project(":engine")
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         // compile "com.github.crykn:quakemonkey:$quakemonkeyVersion"
-        compile "commons-io:commons-io:$commonsIOVersion"
         compile "com.github.acanthite:freetype-skin:$freetypeSkinVersion"
         
         testCompile "org.junit.platform:junit-platform-launcher:1.2.0" // needed for a bug in eclipse

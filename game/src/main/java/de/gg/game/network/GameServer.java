@@ -1,16 +1,13 @@
 package de.gg.game.network;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
 import javax.annotation.Nullable;
 
-import org.apache.commons.io.FileUtils;
-
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.rmi.ObjectSpace;
 import com.google.common.base.Stopwatch;
@@ -42,9 +39,6 @@ import de.gg.game.session.SavedGame;
 public class GameServer extends BaseGameServer<LobbyPlayer> {
 
 	public static final String SAVES_DIR = "./saves/";
-	private static final Charset CHARSET = Charset.isSupported("UTF-8")
-			? Charset.forName("UTF-8")
-			: Charset.defaultCharset();
 
 	private AuthoritativeSession session;
 	private GameSessionSetup sessionSetup;
@@ -169,25 +163,25 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 		}
 
 		// Save as file
-		File savesFile = new File(SAVES_DIR + serverSetup.getGameName());
+		FileHandle savesFile = Gdx.files
+				.external(SAVES_DIR + serverSetup.getGameName());
 
 		try {
 			// Rename existing save game file
 			if (savesFile.exists())
-				FileUtils.copyFile(savesFile,
-						new File(SAVES_DIR + serverSetup.getGameName() + "_"
-								+ (System.currentTimeMillis() / 1000)));
+				savesFile.moveTo(
+						Gdx.files.external(SAVES_DIR + serverSetup.getGameName()
+								+ "_" + (System.currentTimeMillis() / 1000)));
 
 			// Save new one
-			SimpleJSONParser saveGameParser = new SimpleJSONParser();
-			FileUtils.writeStringToFile(savesFile,
-					saveGameParser.parseToJson(save), CHARSET, false);
-		} catch (JsonSyntaxException | IOException e) {
+			savesFile.writeString(new SimpleJSONParser().parseToJson(save),
+					false);
+		} catch (JsonSyntaxException e) {
 			Log.error("Server", "Game couldn't be saved: %s", e.getMessage());
 		}
 
 		Log.info("Server", "Game was saved at '%s' (took %d ms)!",
-				savesFile.getAbsolutePath(),
+				savesFile.path(),
 				timer.elapsed(EskalonLogger.DEFAULT_TIME_UNIT));
 	}
 
