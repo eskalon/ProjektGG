@@ -1,5 +1,5 @@
 {
-	com.badlogic.gdx.graphics.Color: {
+	Color: {
 		white: {
 			r: 1,
 			g: 1,
@@ -25,8 +25,43 @@
 			a: 1
 		}
 	},
+	
+	BitmapFont: {
+		ui-element-18: {
+			file: ../fonts/alemdra_sc/AlmendraSC-Regular.ttf,
+			size: 18
+		},
+		ui-element-19: {
+			file: ../fonts/alemdra_sc/AlmendraSC-Regular.ttf,
+			size: 19
+		},
+		ui-element-21: {
+			file: ../fonts/alemdra_sc/AlmendraSC-Regular.ttf,
+			size: 21
+		},
+		ui-element-23: {
+			file: ../fonts/alemdra_sc/AlmendraSC-Regular.ttf,
+			size: 23
+		},
+		ui-text-20: {
+			file: ../fonts/almendra/Almendra-Regular.ttf,
+			size: 20
+		},
+		ui-title-24: {
+			file: ../fonts/fredericka_the_great/FrederickatheGreat-Regular.ttf,
+			size: 24
+		},
+		ui-title-29: {
+			file: ../fonts/fredericka_the_great/FrederickatheGreat-Regular.ttf,
+			size: 29
+		},
+		ui-text-handwritten-20: {
+			file: ../fonts/homemade_apple/HomemadeApple-Regular.ttf,
+			size: 20
+		},
+	},
 
-	com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: {
+	ImageTextButtonStyle: {
 		default: {
 			up: button_default_up,
 			down: button_default_down,
@@ -57,7 +92,7 @@
 		}
 	},
 
-	com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
+	ImageButtonStyle: {
 		leaning_book: {
 			up: button_image_leaning_book,
 			down: button_image_leaning_book,
@@ -80,7 +115,7 @@
 		}
 	},
 
-	com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
+	LabelStyle: {
 		default: {
 			font: ui-element-19,
 			fontColor: white
@@ -115,7 +150,7 @@
 		}
 	},
 
-	com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
+	CheckBoxStyle: {
 		default: {
 			checkboxOn: check_box_round_on,
 			checkboxOff: check_box_round_off,
@@ -130,7 +165,7 @@
 		}
 	},
 
-	com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
+	TextFieldStyle: {
 		default: {
 			selection: textfield_selection,
 			background: textfield,
@@ -147,7 +182,7 @@
 		}
 	},
 
-	com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
+	SliderStyle: {
 		default-horizontal: {
 			background: slider_h,
 			knob: slider_h_knob,
@@ -157,7 +192,7 @@
 		}
 	},
 
-	com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
+	ScrollPaneStyle: {
 		default: {
 			vScroll: scroll_v
 			vScrollKnob: scroll_v_knob
@@ -173,7 +208,7 @@
 		}
 	},
 
-	com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
+	WindowStyle: {
 		default: {
 			titleFont: ui-text-20,
 			background: window_dialog,

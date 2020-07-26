@@ -1,7 +1,6 @@
 package de.gg.game.ui.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -9,10 +8,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.I18NBundle;
-import com.badlogic.gdx.utils.ObjectMap;
 
-import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.damios.guacamole.gdx.assets.Text;
+import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.asset.PlaylistDefinition;
 import de.eskalon.commons.lang.Lang;
 import de.eskalon.commons.screen.transition.ScreenTransition;
@@ -51,24 +49,10 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 	@Asset("lang/lang")
 	public I18NBundle langBundle;
 	// Assets for the UI skin
-	@Asset(value = "almendraSCFont18.ttf", params = "fonts/alemdra_sc/AlmendraSC-Regular.ttf, 18")
-	private BitmapFont almendraSCFont18;
-	@Asset(value = "almendraSCFont19.ttf", params = "fonts/alemdra_sc/AlmendraSC-Regular.ttf, 19")
-	private BitmapFont almendraSCFont19;
-	@Asset(value = "almendraSCFont21.ttf", params = "fonts/alemdra_sc/AlmendraSC-Regular.ttf, 21")
-	private BitmapFont almendraSCFont21;
-	@Asset(value = "almendraSCFont23.ttf", params = "fonts/alemdra_sc/AlmendraSC-Regular.ttf, 23")
-	private BitmapFont almendraSCFont23;
-	@Asset(value = "almendraFont20.ttf", params = "fonts/almendra/Almendra-Regular.ttf, 20")
-	private BitmapFont almendraFont20;
 	// UNUSED: "fonts/jim_nightshade/JimNightshade-Regular.ttf" (normal text
 	// font)
-	@Asset(value = "frederickaFont24.ttf", params = "fonts/fredericka_the_great/FrederickatheGreat-Regular.ttf, 24")
-	private BitmapFont frederickaFont24;
-	@Asset(value = "frederickaFont29.ttf", params = "fonts/fredericka_the_great/FrederickatheGreat-Regular.ttf, 29")
-	private BitmapFont frederickaFont29;
-	@Asset(value = "appleFont20.ttf", params = "fonts/homemade_apple/HomemadeApple-Regular.ttf, 20")
-	private BitmapFont appleFont20;
+	@Asset(value = "ui/skin/skin.json", params = "ui/skin/skin.atlas")
+	public Skin skin;
 	private static final String SKIN_PATH = "ui/skin/skin.json";
 	private static final String SKIN_TEXTURE_ATLAS_PATH = "ui/skin/skin.atlas";
 	// Sounds
@@ -150,23 +134,11 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 		Lang.setBundle(langBundle);
 
 		// Load the skin
-		ObjectMap<String, Object> fontMap = new ObjectMap<>();
-		fontMap.put("ui-element-18", almendraSCFont18);
-		almendraSCFont19.getData().markupEnabled = true;
-		fontMap.put("ui-element-19", almendraSCFont19);
-		fontMap.put("ui-element-21", almendraSCFont21);
-		fontMap.put("ui-element-23", almendraSCFont23);
-		almendraFont20.getData().markupEnabled = true;
-		fontMap.put("ui-text-20", almendraFont20);
-		fontMap.put("ui-text-handwritten-20", appleFont20);
-		fontMap.put("ui-title-24", frederickaFont24);
-		fontMap.put("ui-title-29", frederickaFont29);
-
-		application.getAssetManager().load(SKIN_PATH, Skin.class,
-				new SkinLoader.SkinParameter(SKIN_TEXTURE_ATLAS_PATH, fontMap));
-		application.getAssetManager().finishLoadingAsset(SKIN_PATH);
-
-		application.setUISkin(application.getAssetManager().get(SKIN_PATH));
+		application.setUISkin(skin);
+		application.getUISkin().get("ui-element-19", BitmapFont.class)
+				.getData().markupEnabled = true;
+		application.getUISkin().get("ui-text-20", BitmapFont.class)
+				.getData().markupEnabled = true;
 
 		// Set some data
 		TypeRegistry.getInstance().initialize(application.getAssetManager());
@@ -220,7 +192,6 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 
 		// Cursor
 		Gdx.graphics.setCursor(Gdx.graphics.newCursor(cursorPixmap, 0, 0));
-		cursorPixmap.dispose();
 
 		// Discord integration
 		DiscordGGHandler.getInstance().setMenuPresence();

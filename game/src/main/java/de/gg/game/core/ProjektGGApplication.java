@@ -8,11 +8,14 @@ import javax.annotation.Nullable;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.github.acanthite.gdx.graphics.g2d.FreeTypeSkinLoader;
 import com.google.common.reflect.TypeToken;
 
 import de.eskalon.commons.asset.AnnotationAssetManager.AssetLoaderParametersFactory;
 import de.eskalon.commons.asset.JSON;
 import de.eskalon.commons.asset.JSONLoader.JSONLoaderParameter;
+import de.eskalon.commons.asset.SkinAssetLoaderParametersFactory;
 import de.eskalon.commons.core.EskalonApplication;
 import de.eskalon.commons.screen.transition.impl.BlendingTransition;
 import de.eskalon.commons.screens.AbstractAssetLoadingScreen;
@@ -57,6 +60,10 @@ public class ProjektGGApplication extends EskalonApplication {
 	@Override
 	public String initApp() {
 		// Asset loading
+		this.assetManager.setLoader(Skin.class, new FreeTypeSkinLoader(
+				this.assetManager.getFileHandleResolver()));
+		this.assetManager.registerAssetLoaderParametersFactory(Skin.class,
+				new SkinAssetLoaderParametersFactory());
 		this.assetManager.registerAssetLoaderParametersFactory(JSON.class,
 				new AssetLoaderParametersFactory<JSON>() {
 					private Type stringListType = new TypeToken<ArrayList<String>>() {
