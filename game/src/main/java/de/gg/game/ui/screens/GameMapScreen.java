@@ -82,8 +82,7 @@ public class GameMapScreen extends AbstractGameScreen {
 		// this.camera.update();
 
 		pausePostProcessingEffect = new ColorBlendEffect(
-				application.getUICamera(), new Color(0.5F, 0.5F, 0.5F, 0.32F),
-				application.getWidth(), application.getHeight());
+				application.getUICamera(), new Color(0.5F, 0.5F, 0.5F, 0.32F));
 
 		sceneRenderer = new SceneRenderer(camera.getCamera(),
 				fragmentShader.getString());
