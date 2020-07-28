@@ -21,15 +21,15 @@ allprojects {
         discordIPCVersion = "0.4"
         freetypeSkinVersion = "0.3"
         gdxVersion = "1.9.11"
-        guacamoleVersion = "0.2.0"
+        guacamoleVersion = "b6e8c0dbd1" // = 0.2.1
         guavaVersion = "29.0-jre"
         gsonVersion = "2.8.6"
         junitVersion = "5.6.0"
         kryonetVersion = "2.22.6"
-        mockitoVersion = "3.2.4"
+        mockitoVersion = "3.4.4"
         quakemonkeyVersion = "master-SNAPSHOT"
         reflectionsVersion = "0.9.11" //0.9.12 doesn't work, see https://github.com/ronmamo/reflections/issues/273
-        screenmanagerVersion = "38040d35e0" // = 0.6.2
+        screenmanagerVersion = "02f859df8f" // = 0.6.2
     }
 
     repositories {
@@ -73,7 +73,7 @@ project(":engine") {
         
         //compile files('../libs/commons-0.1.0.jar')
 
-        testCompile "org.junit.platform:junit-platform-launcher:1.2.0" // needed for a bug in eclipse
+        //testCompile "org.junit.platform:junit-platform-launcher:1.2.0" // needed for a bug in eclipse
 
         testCompile "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
     }
@@ -92,7 +92,7 @@ project(":game") {
         // compile "com.github.crykn:quakemonkey:$quakemonkeyVersion"
         compile "com.github.acanthite:freetype-skin:$freetypeSkinVersion"
         
-        testCompile "org.junit.platform:junit-platform-launcher:1.2.0" // needed for a bug in eclipse
+        //testCompile "org.junit.platform:junit-platform-launcher:1.2.0" // needed for a bug in eclipse
         
         //testCompile project(':engine').sourceSets.test.output
         testCompile "org.junit.jupiter:junit-jupiter-engine:$junitVersion"

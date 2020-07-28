@@ -9,8 +9,8 @@ import com.jagrosh.discordipc.exceptions.NoDiscordClientException;
 
 import de.damios.guacamole.ISimpleCallback;
 import de.damios.guacamole.Preconditions;
+import de.damios.guacamole.concurrent.ThreadHandler;
 import de.damios.guacamole.gdx.Log;
-import de.eskalon.commons.misc.ThreadHandler;
 
 public abstract class DiscordRichPresenceHandler {
 

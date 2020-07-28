@@ -19,14 +19,14 @@ import de.gg.game.model.entities.BuildingSlot;
 /**
  * This class is responsible for rendering the city.
  */
-public class SceneRenderer implements Disposable {
+public class GameRenderer implements Disposable {
 
 	private PerspectiveCamera camera;
 
 	private ModelBatch modelBatch, outlineModelBatch;
 	public Environment environment;
 
-	public SceneRenderer(PerspectiveCamera camera, String fragmentShader) {
+	public GameRenderer(PerspectiveCamera camera, String fragmentShader) {
 		this.camera = camera;
 
 		Config config = new Config();

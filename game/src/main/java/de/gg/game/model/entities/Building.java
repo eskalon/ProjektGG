@@ -5,7 +5,7 @@ import java.util.List;
 
 import de.eskalon.commons.asset.ExcludeAnnotationExclusionStrategy.ExcludeFromJSON;
 import de.gg.game.model.types.BuildingType;
-import de.gg.game.ui.rendering.SceneRenderer;
+import de.gg.game.ui.rendering.GameRenderer;
 import de.gg.game.ui.rendering.SelectableRenderData;
 
 /**
@@ -41,7 +41,7 @@ public class Building {
 
 	/**
 	 * @return the model data of the building.
-	 * @see SceneRenderer
+	 * @see GameRenderer
 	 */
 	public SelectableRenderData getRenderData() {
 		return renderData;

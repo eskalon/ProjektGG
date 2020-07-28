@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import de.eskalon.commons.misc.DaemonThreadFactory;
+import de.damios.guacamole.concurrent.DaemonThreadFactory;
 import de.gg.game.model.types.PositionType;
 import de.gg.game.model.votes.BallotResults;
 import de.gg.game.network.GameServer;

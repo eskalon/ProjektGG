@@ -12,12 +12,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.google.common.eventbus.Subscribe;
 
+import de.damios.guacamole.concurrent.ThreadHandler;
 import de.damios.guacamole.gdx.Log;
 import de.damios.guacamole.gdx.assets.Text;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.graphics.postproc.impl.ColorBlendEffect;
 import de.eskalon.commons.lang.Lang;
-import de.eskalon.commons.misc.ThreadHandler;
 import de.gg.engine.ui.rendering.CameraWrapper;
 import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.FullHourEvent;
@@ -38,7 +38,7 @@ import de.gg.game.network.GameServer;
 import de.gg.game.session.GameSession;
 import de.gg.game.ui.components.BasicDialog;
 import de.gg.game.ui.components.SimpleTextDialog;
-import de.gg.game.ui.rendering.SceneRenderer;
+import de.gg.game.ui.rendering.GameRenderer;
 
 /**
  * This screen is the main game screen and is rendered when the player is in the
@@ -50,7 +50,7 @@ public class GameMapScreen extends AbstractGameScreen {
 	private Text fragmentShader;
 
 	private CameraWrapper camera;
-	private SceneRenderer sceneRenderer;
+	private GameRenderer gameRenderer;
 
 	private MapSelectionInputController selectionInputController;
 	private MapMovementInputController movementInputController;
@@ -84,7 +84,7 @@ public class GameMapScreen extends AbstractGameScreen {
 		pausePostProcessingEffect = new ColorBlendEffect(
 				application.getUICamera(), new Color(0.5F, 0.5F, 0.5F, 0.32F));
 
-		sceneRenderer = new SceneRenderer(camera.getCamera(),
+		gameRenderer = new GameRenderer(camera.getCamera(),
 				fragmentShader.getString());
 
 		selectionInputController = new MapSelectionInputController(
@@ -378,7 +378,7 @@ public class GameMapScreen extends AbstractGameScreen {
 
 		// Render city
 		if (application.getClient() != null) // Null while disconnecting
-			sceneRenderer
+			gameRenderer
 					.render(application.getClient().getSession().getWorld());
 	}
 
@@ -416,8 +416,8 @@ public class GameMapScreen extends AbstractGameScreen {
 	public void dispose() {
 		super.dispose();
 
-		if (sceneRenderer != null)
-			sceneRenderer.dispose();
+		if (gameRenderer != null)
+			gameRenderer.dispose();
 	}
 
 }

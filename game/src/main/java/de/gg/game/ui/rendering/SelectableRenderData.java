@@ -19,7 +19,7 @@ public class SelectableRenderData extends BaseRenderData {
 	/**
 	 * Whether this model is selected by the player.
 	 *
-	 * @see SceneRenderer#renderOutlines(BuildingSlot[])
+	 * @see GameRenderer#renderOutlines(BuildingSlot[])
 	 */
 	public boolean isSelected = false;
 

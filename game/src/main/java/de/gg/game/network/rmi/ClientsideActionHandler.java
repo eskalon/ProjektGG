@@ -4,8 +4,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import de.damios.guacamole.ISimpleCallback;
+import de.damios.guacamole.concurrent.DaemonThreadFactory;
 import de.damios.guacamole.gdx.Log;
-import de.eskalon.commons.misc.DaemonThreadFactory;
 import de.gg.game.model.types.PositionType;
 import de.gg.game.network.LobbyPlayer;
 

@@ -13,11 +13,11 @@ import com.github.acanthite.gdx.graphics.g2d.FreeTypeSkinLoader;
 import com.google.common.reflect.TypeToken;
 
 import de.eskalon.commons.asset.AnnotationAssetManager.AssetLoaderParametersFactory;
+import de.damios.guacamole.concurrent.ThreadHandler;
 import de.eskalon.commons.asset.JSON;
 import de.eskalon.commons.asset.JSONLoader.JSONLoaderParameter;
 import de.eskalon.commons.asset.SkinAssetLoaderParametersFactory;
 import de.eskalon.commons.core.EskalonApplication;
-import de.eskalon.commons.misc.ThreadHandler;
 import de.eskalon.commons.screen.transition.impl.BlendingTransition;
 import de.eskalon.commons.screens.AbstractAssetLoadingScreen;
 import de.eskalon.commons.screens.EskalonSplashScreen;
