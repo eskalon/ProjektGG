@@ -48,7 +48,7 @@ public class GameBallotScreen extends AbstractGameScreen {
 		buttonTable = new Table();
 
 		buttonTable.setSkin(skin);
-		mainTable.padTop(-250);
+		//mainTable.padTop(-250);
 		labelTable.add(infoText).center().width(700).padLeft(180).padRight(180);
 		mainTable.add(labelTable).padBottom(80).top().center().row();
 		buttonTable.add(voterTable).left();
