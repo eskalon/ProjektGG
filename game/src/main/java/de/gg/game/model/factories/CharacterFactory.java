@@ -8,8 +8,8 @@ import com.google.common.reflect.TypeToken;
 
 import de.eskalon.commons.asset.AnnotationAssetManager;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
-import de.eskalon.commons.asset.JSON;
 import de.eskalon.commons.utils.RandomUtils;
+import de.gg.game.asset.JSON;
 import de.gg.game.model.entities.Character;
 import de.gg.game.model.types.GameDifficulty;
 import de.gg.game.model.types.NPCCharacterTrait;

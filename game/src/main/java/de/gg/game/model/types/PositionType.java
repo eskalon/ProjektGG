@@ -5,9 +5,9 @@ import java.util.List;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
 
-import de.eskalon.commons.asset.JSON;
-import de.eskalon.commons.asset.JSONLoader.JSONLoaderParameter;
 import de.eskalon.commons.lang.ILocalizable;
+import de.gg.game.asset.JSON;
+import de.gg.game.asset.JSONLoader.JSONLoaderParameter;
 
 /**
  * Represents a position/post a character can take in the city or state.

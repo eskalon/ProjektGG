@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import de.eskalon.commons.asset.SimpleJSONParser;
 import de.eskalon.commons.utils.RandomUtils;
+import de.gg.game.asset.SimpleJSONParser;
 import de.gg.game.model.types.PlayerIcon;
 import de.gg.game.model.types.ProfessionType;
 import de.gg.game.network.LobbyPlayer;

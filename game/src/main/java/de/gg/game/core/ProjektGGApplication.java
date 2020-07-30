@@ -12,15 +12,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.github.acanthite.gdx.graphics.g2d.FreeTypeSkinLoader;
 import com.google.common.reflect.TypeToken;
 
-import de.eskalon.commons.asset.AnnotationAssetManager.AssetLoaderParametersFactory;
 import de.damios.guacamole.concurrent.ThreadHandler;
-import de.eskalon.commons.asset.JSON;
-import de.eskalon.commons.asset.JSONLoader.JSONLoaderParameter;
+import de.eskalon.commons.asset.AnnotationAssetManager.AssetLoaderParametersFactory;
 import de.eskalon.commons.asset.SkinAssetLoaderParametersFactory;
 import de.eskalon.commons.core.EskalonApplication;
 import de.eskalon.commons.screen.transition.impl.BlendingTransition;
 import de.eskalon.commons.screens.AbstractAssetLoadingScreen;
 import de.eskalon.commons.screens.EskalonSplashScreen;
+import de.gg.game.asset.JSON;
+import de.gg.game.asset.JSONLoader;
+import de.gg.game.asset.JSONLoader.JSONLoaderParameter;
 import de.gg.game.misc.PlayerUtils.PlayerStub;
 import de.gg.game.network.GameClient;
 import de.gg.game.network.GameServer;
@@ -63,6 +64,8 @@ public class ProjektGGApplication extends EskalonApplication {
 		// Asset loading
 		this.assetManager.setLoader(Skin.class, new FreeTypeSkinLoader(
 				this.assetManager.getFileHandleResolver()));
+		this.assetManager.setLoader(JSON.class,
+				new JSONLoader(this.assetManager.getFileHandleResolver()));
 		this.assetManager.registerAssetLoaderParametersFactory(Skin.class,
 				new SkinAssetLoaderParametersFactory());
 		this.assetManager.registerAssetLoaderParametersFactory(JSON.class,

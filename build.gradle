@@ -101,7 +101,11 @@ project(":game") {
         testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        }
+    }
+    
+     sourceSets.test {
+   		resources.srcDirs = ["src/test/assets"]
+	}
 }
 
 tasks.eclipse.doLast {

@@ -3,7 +3,7 @@ package de.gg.game.model.entities;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.eskalon.commons.asset.ExcludeAnnotationExclusionStrategy.ExcludeFromJSON;
+import de.gg.game.asset.ExcludeAnnotationExclusionStrategy.ExcludeFromJSON;
 import de.gg.game.model.types.BuildingType;
 import de.gg.game.ui.rendering.GameRenderer;
 import de.gg.game.ui.rendering.SelectableRenderData;

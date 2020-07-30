@@ -4,9 +4,9 @@ import javax.annotation.Nullable;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
 
-import de.eskalon.commons.asset.JSON;
-import de.eskalon.commons.asset.JSONLoader.JSONLoaderParameter;
 import de.eskalon.commons.lang.ILocalizable;
+import de.gg.game.asset.JSON;
+import de.gg.game.asset.JSONLoader.JSONLoaderParameter;
 import de.gg.game.model.entities.Building;
 
 public enum BuildingType implements ILocalizable {

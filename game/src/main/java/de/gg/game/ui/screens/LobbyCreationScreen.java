@@ -15,11 +15,11 @@ import com.google.common.reflect.TypeToken;
 
 import de.damios.guacamole.ISuccessCallback;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
-import de.eskalon.commons.asset.JSON;
 import de.eskalon.commons.lang.Lang;
 import de.gg.engine.network.BaseGameServer;
 import de.gg.engine.network.ServerSetup;
 import de.gg.engine.ui.components.OffsettableTextField;
+import de.gg.game.asset.JSON;
 import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.LobbyDataReceivedEvent;
 import de.gg.game.input.BackInputProcessor;

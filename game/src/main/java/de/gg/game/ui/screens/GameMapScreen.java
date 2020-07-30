@@ -16,6 +16,7 @@ import de.damios.guacamole.concurrent.ThreadHandler;
 import de.damios.guacamole.gdx.Log;
 import de.damios.guacamole.gdx.assets.Text;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
+import de.eskalon.commons.graphics.postproc.PostProcessingPipeline;
 import de.eskalon.commons.graphics.postproc.impl.ColorBlendEffect;
 import de.eskalon.commons.lang.Lang;
 import de.gg.engine.ui.rendering.CameraWrapper;
@@ -65,6 +66,8 @@ public class GameMapScreen extends AbstractGameScreen {
 	private BasicDialog pauseDialog;
 	private BasicDialog houseSelectionDialog;
 	private boolean pauseShown = false;
+
+	private PostProcessingPipeline postProcessor;
 	private ColorBlendEffect pausePostProcessingEffect;
 
 	public GameMapScreen(ProjektGGApplication application) {
@@ -81,8 +84,10 @@ public class GameMapScreen extends AbstractGameScreen {
 				application.getHeight() / 2, 0);
 		// this.camera.update();
 
+		this.postProcessor = new PostProcessingPipeline(application.getWidth(),
+				application.getHeight(), true);
 		pausePostProcessingEffect = new ColorBlendEffect(
-				application.getUICamera(), new Color(0.5F, 0.5F, 0.5F, 0.32F));
+				application.getUICamera(), new Color(0.4F, 0.4F, 0.4F, 0.4F));
 
 		gameRenderer = new GameRenderer(camera.getCamera(),
 				fragmentShader.getString());
@@ -297,8 +302,7 @@ public class GameMapScreen extends AbstractGameScreen {
 			@Override
 			protected void result(Object object) {
 				pauseShown = false;
-				application.getPostProcessor()
-						.removeEffect(pausePostProcessingEffect);
+				postProcessor.removeEffect(pausePostProcessingEffect);
 				if (object == (Integer) 1) {
 					application.getScreenManager().pushScreen("settings",
 							"blendingTransition");
@@ -336,12 +340,10 @@ public class GameMapScreen extends AbstractGameScreen {
 				if (keycode == Keys.ESCAPE) {
 					if (pauseShown) {
 						pauseDialog.hide();
-						application.getPostProcessor()
-								.removeEffect(pausePostProcessingEffect);
+						postProcessor.removeEffect(pausePostProcessingEffect);
 					} else {
 						pauseDialog.show(stage);
-						application.getPostProcessor()
-								.addEffect(pausePostProcessingEffect);
+						postProcessor.addEffect(pausePostProcessingEffect);
 					}
 
 					pauseShown = !pauseShown;
@@ -373,13 +375,27 @@ public class GameMapScreen extends AbstractGameScreen {
 
 	@Override
 	public void renderGame(float delta) {
+
 		movementInputController.update(delta);
 		selectionInputController.update();
 
 		// Render city
-		if (application.getClient() != null) // Null while disconnecting
+		if (application.getClient() != null) {// Null while disconnecting
+			boolean doPostProcessing = postProcessor.hasEffects();
+			if (doPostProcessing) {
+				postProcessor.beginCapture();
+			}
 			gameRenderer
 					.render(application.getClient().getSession().getWorld());
+
+			if (doPostProcessing) {
+				postProcessor.endCapture();
+				postProcessor
+						.renderEffectsOntoBatch(application.getSpriteBatch());
+			}
+
+		}
+
 	}
 
 	@Subscribe

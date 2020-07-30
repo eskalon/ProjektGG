@@ -5,11 +5,11 @@ import java.util.List;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
 
-import de.eskalon.commons.asset.JSON;
-import de.eskalon.commons.asset.SimpleJSONParser;
-import de.eskalon.commons.asset.JSONLoader.JSONLoaderParameter;
 import de.eskalon.commons.lang.ILocalizable;
 import de.gg.engine.ui.rendering.BaseRenderData;
+import de.gg.game.asset.JSON;
+import de.gg.game.asset.SimpleJSONParser;
+import de.gg.game.asset.JSONLoader.JSONLoaderParameter;
 import de.gg.game.model.entities.BuildingSlot;
 
 /**

@@ -2,9 +2,9 @@ package de.gg.game.model.types;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
 
-import de.eskalon.commons.asset.JSON;
-import de.eskalon.commons.asset.JSONLoader.JSONLoaderParameter;
 import de.eskalon.commons.lang.ILocalizable;
+import de.gg.game.asset.JSON;
+import de.gg.game.asset.JSONLoader.JSONLoaderParameter;
 
 public enum SocialStatus implements ILocalizable {
 	NON_CITIZEN, CITIZEN, PATRICIAN, CAVALIER, BARON;
