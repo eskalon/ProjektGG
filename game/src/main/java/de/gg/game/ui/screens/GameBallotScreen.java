@@ -74,8 +74,8 @@ public class GameBallotScreen extends AbstractGameScreen {
 		infoText.setText(ev.getNewBallot().getInfoText());
 
 		// Display the voters
-		voterTable.add(new Label(Lang.get("screen.vote.voters"), skin))
-				.padBottom(30).row();
+		voterTable.add(new Label(Lang.get("screen.vote.voters"), skin, "title"))
+				.padBottom(12).row();
 		for (short s : ev.getNewBallot().getVoters()) {
 			// PositionType posT = world.getCharacter(s).getPosition();
 			boolean isLocalPlayer = s == application.getClient()
