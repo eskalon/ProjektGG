@@ -2,28 +2,26 @@ package de.gg.game.input;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 
-import de.gg.engine.input.DefaultInputProcessor;
-import de.gg.engine.input.SettableKeysProcessor;
-import de.gg.engine.setting.ConfigHandler;
+import de.damios.guacamole.gdx.DefaultInputProcessor;
+import de.eskalon.commons.settings.EskalonSettings;
+import de.eskalon.commons.settings.KeyBinding;
 import de.gg.engine.ui.rendering.CameraWrapper;
 
 /**
  * @see CameraInputController The libgdx class this is based on.
  */
-public class MapMovementInputController
-		implements DefaultInputProcessor, SettableKeysProcessor {
+public class MapMovementInputController implements DefaultInputProcessor {
 
 	public CameraWrapper camera;
 
 	// Key binds
 	public int rotateButton = Buttons.RIGHT;
-	public int forwardKey;
-	public int backwardKey;
-	public int rightKey;
-	public int leftKey;
+	public KeyBinding forwardKey;
+	public KeyBinding backwardKey;
+	public KeyBinding rightKey;
+	public KeyBinding leftKey;
 
 	protected boolean forwardPressed;
 	protected boolean backwardPressed;
@@ -38,26 +36,19 @@ public class MapMovementInputController
 	public float translateUnits = 10f;
 	public float scrollFactor = -0.1f;
 
-	public MapMovementInputController(final CameraWrapper camera) {
+	public MapMovementInputController(CameraWrapper camera,
+			EskalonSettings settings) {
 		this.camera = camera;
 
 		resetInput();
+		this.forwardKey = settings.getKeybind("cameraForward");
+		this.backwardKey = settings.getKeybind("cameraBackward");
+		this.rightKey = settings.getKeybind("cameraRight");
+		this.leftKey = settings.getKeybind("cameraLeft");
 	}
 
-	@Override
-	public void loadKeybinds(ConfigHandler settings) {
-		resetInput();
-
-		this.forwardKey = settings.getInt("forwardKey", Keys.W);
-		this.backwardKey = settings.getInt("backwardKey", Keys.S);
-		this.rightKey = settings.getInt("rightKey", Keys.D);
-		this.leftKey = settings.getInt("leftKey", Keys.A);
-	}
-
-	public void update() {
+	public void update(float delta) {
 		if (rightPressed || leftPressed || forwardPressed || backwardPressed) {
-			final float delta = Gdx.graphics.getDeltaTime();
-
 			if (rightPressed) {
 				camera.translateOnXYPlane(270, delta * translateUnits);
 			}
@@ -130,26 +121,26 @@ public class MapMovementInputController
 
 	@Override
 	public boolean keyDown(int keycode) {
-		if (keycode == forwardKey)
+		if (forwardKey.isTriggered(keycode))
 			forwardPressed = true;
-		else if (keycode == backwardKey)
+		else if (backwardKey.isTriggered(keycode))
 			backwardPressed = true;
-		else if (keycode == rightKey)
+		else if (rightKey.isTriggered(keycode))
 			rightPressed = true;
-		else if (keycode == leftKey)
+		else if (leftKey.isTriggered(keycode))
 			leftPressed = true;
 		return false;
 	}
 
 	@Override
 	public boolean keyUp(int keycode) {
-		if (keycode == forwardKey)
+		if (forwardKey.isTriggered(keycode))
 			forwardPressed = false;
-		else if (keycode == backwardKey)
+		else if (backwardKey.isTriggered(keycode))
 			backwardPressed = false;
-		else if (keycode == rightKey)
+		else if (rightKey.isTriggered(keycode))
 			rightPressed = false;
-		else if (keycode == leftKey)
+		else if (leftKey.isTriggered(keycode))
 			leftPressed = false;
 		return false;
 	}

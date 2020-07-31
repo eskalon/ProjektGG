@@ -1,96 +1,166 @@
 package de.gg.game.ui.screens;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Vector3;
 import com.google.common.eventbus.Subscribe;
 
-import de.gg.engine.asset.AnnotationAssetManager;
-import de.gg.engine.asset.AnnotationAssetManager.InjectAsset;
-import de.gg.engine.log.Log;
-import de.gg.game.entities.BuildingSlot;
+import de.damios.guacamole.gdx.Log;
+import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
+import de.eskalon.commons.core.EskalonApplication;
+import de.eskalon.commons.screens.AbstractAssetLoadingScreen;
+import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.ServerReadyEvent;
+import de.gg.game.model.World;
+import de.gg.game.model.entities.BuildingSlot;
+import de.gg.game.model.types.BuildingType;
+import de.gg.game.session.GameSession;
 import de.gg.game.ui.rendering.SelectableRenderData;
-import de.gg.game.world.World;
 
 /**
- * This screen takes care of loading the assets for all ingame screens.
+ * This screen takes care of loading the assets for all in-game screens.
  */
-public class GameLoadingScreen extends BaseLoadingScreen {
+public class GameLoadingScreen extends AbstractAssetLoadingScreen {
 
-	@InjectAsset("ui/backgrounds/altar.jpg")
-	private Texture backgroundImage;
-
-	private static final String HOUSE1_MODEL_PATH = "models/buildings/test_houses/house1.g3db";
-	private static final String SKYBOX_MODEL_PATH = "models/skybox/skybox.g3db";
+	@Asset("ui/backgrounds/game_loading_screen.jpg")
+	private Texture backgroundTexture;
+	@Asset("ui/loading_bar_top.png")
+	private Texture topBarTexture;
+	@Asset("ui/loading_bar_bottom.png")
+	private Texture bottomBarTexture;
 
 	private static final Vector3 Y_AXIS = new Vector3(0, 1, 0);
 
-	@Override
-	protected void initAssets(AnnotationAssetManager assetManager) {
-		super.backgroundTexture = backgroundImage;
-		assetManager.load(GameMapScreen.class);
-		assetManager.load(GameInHouseScreen.class);
-		assetManager.load(GameRoundendScreen.class);
-		assetManager.load(GameVoteScreen.class);
-
-		// Load all models
-		// TODO replace with one big scene
-		assetManager.load(HOUSE1_MODEL_PATH, Model.class);
-		assetManager.load(SKYBOX_MODEL_PATH, Model.class);
+	public GameLoadingScreen(EskalonApplication application) {
+		super(application, null);
 	}
 
 	@Override
-	protected synchronized void onFinishedLoading(
-			AnnotationAssetManager assetManager) {
-		assetManager.injectAssets(game.getScreen("map"));
-		assetManager.injectAssets(game.getScreen("house"));
-		assetManager.injectAssets(game.getScreen("roundEnd"));
-		assetManager.injectAssets(game.getScreen("vote"));
+	public void show() {
+		super.show();
 
-		game.getScreen("map").finishLoading();
-		game.getScreen("house").finishLoading();
-		game.getScreen("roundEnd").finishLoading();
-		game.getScreen("vote").finishLoading();
+		// Load game assets
+		application.getAssetManager().load(
+				((ProjektGGApplication) application).getClient().getSession()
+						.getSessionSetup().getMap().getSkyboxPath(),
+				Model.class);
 
-		World world = game.getClient().getSession().getWorld();
+		for (BuildingType t : BuildingType.values()) {
+			application.getAssetManager().load(t.getModelPath(), Model.class);
+		}
 
-		// TODO folgendes als Worker, der in eigenen Loading-Screen integriert
-		// ist, umsetzen, sodass sich für den Nutzer sichtbar ein Balken bewegt
+		// TODO unload them when disconnecting?
+	}
+
+	@Override
+	protected void onFinishedLoading() {
+		GameSession session = ((ProjektGGApplication) application).getClient()
+				.getSession();
+		World world = session.getWorld();
 
 		// Create the ModelInstances
 		for (BuildingSlot s : world.getBuildingSlots()) {
 			if (s.isBuiltOn()) {
-				s.getBuilding().setRenderData(new SelectableRenderData(
-						assetManager.get(HOUSE1_MODEL_PATH, Model.class)));
+				System.out.println("A" + (s.getBuilding().getRenderData() == null));
+				System.out.println(s);
+				System.out.println(s.getBuilding());
+				s.getBuilding().setRenderData(
+						new SelectableRenderData(application.getAssetManager()
+								.get(s.getBuilding().getType().getModelPath(),
+										Model.class)));
+				System.out.println("B" + (s.getBuilding().getRenderData() == null));
+				System.out.println(s);
+				System.out.println(s.getBuilding());
+				
+				System.out.println("---");
+				
+				// FIXME
+				// passiert, wenn voriger Client hostet nächstes Game?
+				System.out.println(s.getBuilding().getType().getModelPath());
+				System.out.println(application.getAssetManager()
+						.contains(s.getBuilding().getType().getModelPath()));
+				System.out.println(application.getAssetManager()
+						.isLoaded(s.getBuilding().getType().getModelPath()));
+				System.out.println("----");
+				System.out.println(">>>> BUG 2 : "
+						+ (s.getBuilding().getRenderData() == null));
+				System.err.println(
+						s.getBuilding().getRenderData().transform == null);
+
 				s.getBuilding().getRenderData().transform.translate(s.getPosX(),
 						0, s.getPosZ());
 				s.getBuilding().getRenderData().transform.rotate(Y_AXIS,
 						s.getRotationToStreet());
 
-				// TODO Use _one_ scene for all models:
+				// TODO Use _one_ scene for all models?
 				// new SelectableRenderData(scene,
 				// building1.getType().getNodeName(), true);
-
 			}
 		}
-		world.setSkybox(new ModelInstance(
-				assetManager.get(SKYBOX_MODEL_PATH, Model.class)));
 
-		Log.info("Client", "Assets geladen");
+		Model skyboxModel = application.getAssetManager().get(
+				session.getSessionSetup().getMap().getSkyboxPath(),
+				Model.class);
+		for (Material m : skyboxModel.materials) {
+			// fixes a bug related to changes in gdx 1.9.9, see
+			// https://github.com/libgdx/libgdx/issues/5529
+			m.remove(ColorAttribute.Emissive);
+		}
+		world.setSkybox(new ModelInstance(skyboxModel));
 
-		if (game.isHost()) {
-			game.getServer().startMatch();
-			Log.info("Server", "Match gestartet");
+		Log.info("Client", "Game assets loaded");
+
+		if (((ProjektGGApplication) application).isHost()) {
+			((ProjektGGApplication) application).getServer().startMatch();
+			Log.info("Server", "Game started!");
 		}
 
-		game.pushScreen("roundEnd");
+		application.getScreenManager().pushScreen("round_end", "simple_zoom");
 	}
 
 	@Subscribe
 	public void onRoundEndDataArrived(ServerReadyEvent event) {
-		((GameRoundendScreen) game.getScreen("roundEnd")).setServerReady();
+		((GameRoundendScreen) application.getScreenManager()
+				.getScreen("round_end")).setServerReady();
+	}
+
+	@Override
+	public void render(float delta, float progress) {
+		application.getSpriteBatch().begin();
+		application.getSpriteBatch()
+				.setProjectionMatrix(application.getUICamera().combined);
+
+		// Draw the background
+		application.getSpriteBatch().draw(this.backgroundTexture, 0, 0,
+				application.getWidth(), application.getHeight());
+
+		// Get useful values
+		float imageWidth = topBarTexture.getWidth();
+		float imageHeight = topBarTexture.getHeight();
+
+		// The actual drawing
+		application.getSpriteBatch().draw(bottomBarTexture,
+				(application.getWidth() / 2) - (imageWidth / 2) + 1,
+				(application.getHeight() / 4) - imageHeight / 2);
+		application.getSpriteBatch().draw(topBarTexture,
+				(application.getWidth() / 2) - (imageWidth / 2),
+				(application.getHeight() / 4) - imageHeight / 2, 0, 0,
+				Math.round(imageWidth * progress), (int) imageHeight);
+
+		application.getSpriteBatch().end();
+	}
+
+	@Override
+	protected void loadOwnAssets() {
+		// not needed as screen assets are loaded beforehand
+	}
+
+	@Override
+	public void dispose() {
+		// nothing to dispose that isn't disposed elsewhere
 	}
 
 }

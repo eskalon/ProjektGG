@@ -9,9 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-import de.gg.engine.lang.Lang;
-import de.gg.engine.utils.ColorUtils;
-import de.gg.game.entities.Character;
+import de.eskalon.commons.lang.Lang;
+import de.eskalon.commons.utils.ColorUtils;
+import de.gg.game.model.entities.Character;
 
 /**
  * This component represents an character. It displays the character's name and
@@ -42,7 +42,7 @@ public class CharacterComponent extends Table {
 		this.nameLabel = new Label(fullName.replace(" ", "  "), skin);
 		if (character.getPosition() != null)
 			this.positionLabel = new Label(Lang.get(character.getPosition()),
-					skin, "main-white-18");
+					skin, "small");
 
 		if (opinion != -1) {
 			this.shapeRenderer = new ShapeRenderer();

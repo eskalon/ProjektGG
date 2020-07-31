@@ -8,16 +8,17 @@ import java.util.concurrent.TimeoutException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import de.gg.LibgdxUnitTest;
+import de.damios.guacamole.ISuccessCallback;
 import de.gg.engine.network.BaseGameServer;
 import de.gg.engine.network.ServerDiscoveryHandler;
 import de.gg.engine.network.ServerDiscoveryHandler.HostDiscoveryListener;
 import de.gg.engine.network.ServerSetup;
 import de.gg.engine.network.message.DiscoveryResponsePacket;
+import de.gg.game.LibgdxUnitTest;
+import de.gg.game.misc.PlayerUtils.PlayerStub;
+import de.gg.game.model.types.GameDifficulty;
+import de.gg.game.model.types.GameMap;
 import de.gg.game.session.GameSessionSetup;
-import de.gg.game.types.GameDifficulty;
-import de.gg.game.types.GameMap;
-import de.gg.game.utils.PlayerUtils.PlayerStub;
 import net.jodah.concurrentunit.Waiter;
 
 public class GameServerDiscoveryTest extends LibgdxUnitTest {
@@ -34,7 +35,7 @@ public class GameServerDiscoveryTest extends LibgdxUnitTest {
 	private PlayerStub stub;
 
 	@Test
-	public void testServer() throws TimeoutException {
+	public void testServer() throws TimeoutException, InterruptedException {
 		com.esotericsoftware.minlog.Log.INFO();
 		waiter = new Waiter();
 		sdh = new ServerDiscoveryHandler<>(DiscoveryResponsePacket.class, 2500);
@@ -59,14 +60,15 @@ public class GameServerDiscoveryTest extends LibgdxUnitTest {
 
 		server = new GameServer(serverSetup, sessionSetup, null,
 				Arrays.asList(stub, stub, stub));
-		server.start(new de.gg.engine.network.IHostCallback() {
+		server.start(new ISuccessCallback() {
 			@Override
-			public void onHostStarted(Exception e) {
-				if (e != null)
-					waiter.fail(e);
-				else {
-					waiter.resume();
-				}
+			public void onSuccess(Object param) {
+				waiter.resume();
+			}
+
+			@Override
+			public void onFailure(Object param) {
+				waiter.fail((String) param);
 			}
 		});
 
@@ -77,7 +79,8 @@ public class GameServerDiscoveryTest extends LibgdxUnitTest {
 		server.stop();
 	}
 
-	public void testServerDiscovery(Waiter waiter) throws TimeoutException {
+	public void testServerDiscovery(Waiter waiter)
+			throws TimeoutException, InterruptedException {
 		sdh.discoverHosts(BaseGameServer.UDP_DISCOVER_PORT,
 				new HostDiscoveryListener<>() {
 					@Override

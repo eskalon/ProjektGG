@@ -1,6 +1,6 @@
 package de.gg.game.events;
 
-import de.gg.game.types.GameSpeed;
+import de.gg.game.model.types.GameSpeed;
 
 /**
  * Is posted when the game speed changes.

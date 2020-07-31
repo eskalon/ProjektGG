@@ -6,13 +6,14 @@ import javax.annotation.Nullable;
 
 import com.google.common.eventbus.EventBus;
 
-import de.gg.engine.log.Log;
-import de.gg.game.entities.Player;
-import de.gg.game.events.NewVoteEvent;
+import de.damios.guacamole.gdx.Log;
+import de.gg.game.events.NewBallotEvent;
+import de.gg.game.misc.GameClock;
+import de.gg.game.model.entities.Player;
+import de.gg.game.model.votes.Ballot;
 import de.gg.game.network.LobbyPlayer;
 import de.gg.game.systems.ProcessingSystem;
 import de.gg.game.systems.client.FirstEventWaveClientSystem;
-import de.gg.game.votes.VoteableMatter;
 
 /**
  * This class simulates a game session on the client of a multiplayer game.
@@ -88,7 +89,7 @@ public class SlaveSession extends GameSession {
 	}
 
 	@Override
-	protected void onNewVote(VoteableMatter matterToVoteOn) {
-		eventBus.post(new NewVoteEvent(matterToVoteOn));
+	protected void onNewBallot(@Nullable Ballot ballot) {
+		eventBus.post(new NewBallotEvent(ballot));
 	}
 }

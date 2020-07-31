@@ -1,4 +1,5 @@
 {
 	"name": "Rathaus",
-	"maxHealth": 100
+	"maxHealth": 100,
+	"modelPath" = "models/buildings/test_houses/house1.g3db"
 }

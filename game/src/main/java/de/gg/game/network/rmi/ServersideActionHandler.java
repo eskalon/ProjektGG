@@ -2,22 +2,22 @@ package de.gg.game.network.rmi;
 
 import com.esotericsoftware.kryonet.rmi.ObjectSpace;
 import com.esotericsoftware.kryonet.rmi.RemoteObject;
-import com.google.common.base.Preconditions;
 
-import de.gg.engine.log.Log;
+import de.damios.guacamole.Preconditions;
+import de.damios.guacamole.gdx.Log;
 import de.gg.engine.network.BaseGameServer;
 import de.gg.engine.utils.CollectionUtils;
-import de.gg.game.data.vote.VoteResults;
-import de.gg.game.entities.Position;
+import de.gg.game.misc.PlayerUtils;
+import de.gg.game.model.World;
+import de.gg.game.model.entities.Position;
+import de.gg.game.model.types.GameSpeed;
+import de.gg.game.model.types.PositionType;
+import de.gg.game.model.votes.BallotResults;
+import de.gg.game.model.votes.BallotUtils;
+import de.gg.game.model.votes.ImpeachmentBallot;
 import de.gg.game.network.GameServer;
 import de.gg.game.network.LobbyPlayer;
 import de.gg.game.session.AuthoritativeSession;
-import de.gg.game.types.GameSpeed;
-import de.gg.game.types.PositionType;
-import de.gg.game.utils.PlayerUtils;
-import de.gg.game.votes.ImpeachmentVote;
-import de.gg.game.votes.VoteUtils;
-import de.gg.game.world.World;
 
 public class ServersideActionHandler implements SlaveActionListener {
 	private final GameServer server;
@@ -72,8 +72,8 @@ public class ServersideActionHandler implements SlaveActionListener {
 		// Check if all votes were made
 		if (session.getIndividualVotes().size() == session.getMatterToVoteOn()
 				.getVoters().size()) {
-			VoteResults result = new VoteResults(
-					VoteUtils.getVoteResult(session.getMatterToVoteOn(),
+			BallotResults result = new BallotResults(
+					BallotUtils.getBallotResult(session.getMatterToVoteOn(),
 							session.getIndividualVotes(),
 							session.getSessionSetup().getSeed()),
 					session.getIndividualVotes());
@@ -149,7 +149,7 @@ public class ServersideActionHandler implements SlaveActionListener {
 			// TODO überprüfen, ob nicht bereits ein anderer einen Vote
 			// initiiert hat
 
-			world.getMattersToHoldVoteOn().add(new ImpeachmentVote(world, t,
+			world.getMattersToHoldVoteOn().add(new ImpeachmentBallot(world, t,
 					world.getPlayer(clientId).getCurrentlyPlayedCharacterId()));
 
 			clientResultListeners.onImpeachmentVoteArranged(targetCharacterId,
@@ -179,7 +179,7 @@ public class ServersideActionHandler implements SlaveActionListener {
 
 	@Override
 	public void onChatmessageSent(short clientId, String msg) {
-		clientResultListeners.onChatMessageSent(clientId, msg);
+		clientResultListeners.onChatMessage(clientId, msg);
 	}
 
 	@Override

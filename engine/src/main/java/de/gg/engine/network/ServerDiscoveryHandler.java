@@ -35,7 +35,6 @@ public class ServerDiscoveryHandler<P extends DiscoveryResponsePacket> {
 		Client c = new Client();
 		c.getKryo().register(packetClass);
 		c.setDiscoveryHandler(new ClientDiscoveryHandler() {
-
 			@Override
 			public DatagramPacket onRequestNewDatagramPacket() {
 				byte[] buffer = new byte[1024];

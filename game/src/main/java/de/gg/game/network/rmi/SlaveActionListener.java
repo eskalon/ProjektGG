@@ -1,7 +1,7 @@
 package de.gg.game.network.rmi;
 
+import de.gg.game.model.types.PositionType;
 import de.gg.game.network.LobbyPlayer;
-import de.gg.game.types.PositionType;
 
 /**
  * This interface takes care of a player's actions. Those are mainly triggered

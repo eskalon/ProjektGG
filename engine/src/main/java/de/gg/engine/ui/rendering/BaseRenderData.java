@@ -36,7 +36,7 @@ public class BaseRenderData extends ModelInstance {
 	}
 
 	/**
-	 * @return <code>-1</code> on no intersection; when there is an
+	 * @return {@code -1} on no intersection; when there is an
 	 *         intersection: the squared distance between the center of this
 	 *         object and the point on the ray closest to this object.
 	 */

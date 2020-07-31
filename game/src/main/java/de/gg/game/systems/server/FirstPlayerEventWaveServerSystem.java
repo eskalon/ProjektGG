@@ -2,10 +2,10 @@ package de.gg.game.systems.server;
 
 import java.util.Random;
 
-import de.gg.engine.utils.RandomUtils;
-import de.gg.game.entities.Player;
+import de.eskalon.commons.utils.RandomUtils;
+import de.gg.game.model.World;
+import de.gg.game.model.entities.Player;
 import de.gg.game.network.rmi.AuthoritativeResultListener;
-import de.gg.game.world.World;
 
 /**
  * This system processes after 60 seconds and takes care of the first wave of
@@ -30,13 +30,13 @@ public class FirstPlayerEventWaveServerSystem
 	public void process(short id, Player p) {
 		// ILLNESS
 		if (p.isIll()) {
-			if (RandomUtils.rollTheDice(random, 6)) { // Genesung
+			if (RandomUtils.isTrue(random, 6)) { // Recuperation
 				p.setIll(false);
 
 				resultListener.onPlayerIllnessChange(id, false);
 			}
-		} else { // Erkrankung
-			if (RandomUtils.rollTheDice(random, 90)) {
+		} else { // Infection
+			if (RandomUtils.isTrue(random, 90)) {
 				p.setIll(true);
 
 				resultListener.onPlayerIllnessChange(id, true);

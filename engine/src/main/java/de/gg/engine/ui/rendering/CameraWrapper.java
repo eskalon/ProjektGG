@@ -106,8 +106,8 @@ public class CameraWrapper {
 	 * @see #rotateAround(Vector3, Vector3, float)
 	 */
 	public void rotateAroundTarget(float angleX, float angleY) {
-		// Berechnet die Achse, die senkrecht zu UP und DIRECTION der Kamera
-		// steht; zusätzlich mit y = 0
+		// Calculates the axis, that is perpendicular to UP and DIRECTION of the
+		// camera; additionally y is set to 0
 		tmp2.set(camera.direction).crs(camera.up).y = 0f;
 
 		rotateAround(target, tmp2.nor(), angleY);

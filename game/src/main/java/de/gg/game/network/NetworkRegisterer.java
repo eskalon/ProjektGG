@@ -5,21 +5,21 @@ import java.util.HashMap;
 
 import com.esotericsoftware.kryo.Kryo;
 
-import de.gg.engine.network.message.ClientHandshakeMessage;
-import de.gg.engine.network.message.ServerAcceptanceMessage;
-import de.gg.engine.network.message.ServerHandshakeMessage;
-import de.gg.engine.network.message.ServerRejectionMessage;
-import de.gg.game.data.vote.VoteResults;
+import de.gg.engine.network.message.ClientHandshakeRequest;
+import de.gg.engine.network.message.ServerAcceptanceResponse;
+import de.gg.engine.network.message.SuccessfulHandshakeResponse;
+import de.gg.engine.network.message.ServerRejectionResponse;
+import de.gg.game.model.types.GameDifficulty;
+import de.gg.game.model.types.GameMap;
+import de.gg.game.model.types.GameSpeed;
+import de.gg.game.model.types.PlayerIcon;
+import de.gg.game.model.types.PositionType;
+import de.gg.game.model.types.ProfessionType;
+import de.gg.game.model.types.Religion;
+import de.gg.game.model.votes.BallotResults;
 import de.gg.game.network.rmi.AuthoritativeResultListener;
 import de.gg.game.network.rmi.SlaveActionListener;
 import de.gg.game.session.GameSessionSetup;
-import de.gg.game.types.GameDifficulty;
-import de.gg.game.types.GameMap;
-import de.gg.game.types.GameSpeed;
-import de.gg.game.types.PlayerIcon;
-import de.gg.game.types.PositionType;
-import de.gg.game.types.ProfessionType;
-import de.gg.game.types.Religion;
 
 /**
  * This class takes care of registering all classes needed by the multiplayer
@@ -51,10 +51,10 @@ public class NetworkRegisterer {
 		kryo.register(ProfessionType.class);
 
 		// Messages
-		kryo.register(ServerHandshakeMessage.class);
-		kryo.register(ClientHandshakeMessage.class);
-		kryo.register(ServerAcceptanceMessage.class);
-		kryo.register(ServerRejectionMessage.class);
+		kryo.register(SuccessfulHandshakeResponse.class);
+		kryo.register(ClientHandshakeRequest.class);
+		kryo.register(ServerAcceptanceResponse.class);
+		kryo.register(ServerRejectionResponse.class);
 
 		// Map Stuff
 		kryo.register(GameDifficulty.class);
@@ -68,7 +68,7 @@ public class NetworkRegisterer {
 		// RMI
 		kryo.register(GameSpeed.class);
 		kryo.register(PositionType.class);
-		kryo.register(VoteResults.class);
+		kryo.register(BallotResults.class);
 	}
 
 }

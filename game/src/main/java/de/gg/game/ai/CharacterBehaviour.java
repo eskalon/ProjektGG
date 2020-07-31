@@ -5,15 +5,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import de.eskalon.commons.utils.RandomUtils;
 import de.gg.engine.utils.CollectionUtils;
-import de.gg.engine.utils.RandomUtils;
-import de.gg.game.entities.Character;
+import de.gg.game.model.entities.Character;
+import de.gg.game.model.types.NPCCharacterTrait;
+import de.gg.game.model.votes.Ballot;
+import de.gg.game.model.votes.BallotOption;
+import de.gg.game.model.votes.ElectionBallot;
+import de.gg.game.model.votes.ImpeachmentBallot;
 import de.gg.game.session.GameSession;
-import de.gg.game.types.NPCCharacterTrait;
-import de.gg.game.votes.ElectionVote;
-import de.gg.game.votes.ImpeachmentVote;
-import de.gg.game.votes.VoteOption;
-import de.gg.game.votes.VoteableMatter;
 
 /**
  * This class is responsible for simulating a character's actions.
@@ -57,23 +57,22 @@ public class CharacterBehaviour {
 
 		// Base Opinion (14, 43)
 		Random r = new Random(thisCharacterId * otherCharacterId);
-		opinion += RandomUtils.getRandomNumber(r, -9, 20) + 23;
+		opinion += RandomUtils.getInt(r, -9, 20) + 23;
 
 		// NPC Opinion Modifier (0, 10)
 		if (otherCharacter.getNPCTrait() != null)
-			opinion += otherCharacter.getNPCTrait().getData()
-					.getBaseOpinionModifier();
+			opinion += otherCharacter.getNPCTrait().getBaseOpinionModifier();
 
 		// Reputation (0, 20)
 		opinion += thisCharacter.getReputation();
 
 		// TODO Kinship
-		// +20 für Kinder, Eltern und Ehepartner
-		// +8 für Verwandte des Ehepartners
+		// +20 for kids, parents and spouses
+		// +8 for relatives of one's spouse
 
 		// Religion (5, 12)
 		if (otherCharacter.getNPCTrait() != null) {
-			boolean isReligionImportant = otherCharacter.getNPCTrait().getData()
+			boolean isReligionImportant = otherCharacter.getNPCTrait()
 					.isReligionImportant();
 			if (thisCharacter.getReligion() == otherCharacter.getReligion())
 				opinion += isReligionImportant ? 16 : 11;
@@ -110,21 +109,21 @@ public class CharacterBehaviour {
 	public static int getPerRoundAndCharacterPopularityModifier(long seed,
 			short characterIdA, short characterIdB) {
 		Random r = new Random(seed * characterIdA * characterIdB);
-		return RandomUtils.getRandomNumber(r, -3, 4);
+		return RandomUtils.getInt(r, -3, 4);
 	}
 
-	public static int getVoteOption(short characterId, VoteableMatter matter,
+	public static int getVoteOption(short characterId, Ballot matter,
 			GameSession session) {
-		if (matter instanceof ElectionVote)
-			return getElectionVoteOption(characterId, (ElectionVote) matter,
+		if (matter instanceof ElectionBallot)
+			return getElectionVoteOption(characterId, (ElectionBallot) matter,
 					session);
 		else // Impeachment Vote
 			return getImpeachmentVoteOption(characterId,
-					(ImpeachmentVote) matter, session);
+					(ImpeachmentBallot) matter, session);
 	}
 
 	private static int getImpeachmentVoteOption(short characterId,
-			ImpeachmentVote matter, GameSession session) {
+			ImpeachmentBallot matter, GameSession session) {
 		int tmp = -20;
 		short characterToImpeachId = matter.getPos().getCurrentHolder();
 		Character character = session.getWorld().getCharacter(characterId);
@@ -136,16 +135,15 @@ public class CharacterBehaviour {
 			int opinion = getOpinionOfAnotherCharacter(characterToImpeachId,
 					characterId, session);
 			tmp += opinion;
-			int posLevel = matter.getType().getData().getLevel();
+			int posLevel = matter.getType().getLevel();
 			if (trait != null) {
 				// Ambition
-				if (character.getPosition().getData().getLevel()
-						+ 1 == posLevel)
-					tmp += trait.getData().getAmbitionDecisionModifier() - 15;
+				if (character.getPosition().getLevel() + 1 == posLevel)
+					tmp += trait.getAmbitionDecisionModifier() - 15;
 
 				// Loyalty
 				if (opinion >= 55)
-					tmp += trait.getData().getGeneralLoyaltyDecisionModifier();
+					tmp += trait.getGeneralLoyaltyDecisionModifier();
 			}
 		}
 
@@ -154,17 +152,17 @@ public class CharacterBehaviour {
 
 	@SuppressWarnings("unchecked")
 	private static int getElectionVoteOption(short characterId,
-			ElectionVote matter, GameSession session) {
+			ElectionBallot matter, GameSession session) {
 		Map<Integer, Integer> options = new HashMap<>();
 
-		for (VoteOption vo : matter.getOptions()) {
+		for (BallotOption vo : matter.getOptions()) {
 			int tmp = 0;
 			short voteOptionCharId = (short) vo.getValue();
 
 			tmp += getOpinionOfAnotherCharacter(voteOptionCharId, characterId,
 					session);
 
-			// TODO weitere Modifikatoren mit einbeziehen
+			// TODO consider other modifiers
 
 			if (characterId == voteOptionCharId)
 				tmp = 125;

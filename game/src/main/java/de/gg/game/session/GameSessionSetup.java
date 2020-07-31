@@ -2,8 +2,8 @@ package de.gg.game.session;
 
 import java.util.Objects;
 
-import de.gg.game.types.GameDifficulty;
-import de.gg.game.types.GameMap;
+import de.gg.game.model.types.GameDifficulty;
+import de.gg.game.model.types.GameMap;
 
 /**
  * Holds all the information about the settings of a game session. The

@@ -7,17 +7,17 @@ import com.google.common.base.Preconditions;
  * <p>
  * After it was {@linkplain #start(int) started} it has to get
  * {@linkplain #update() updated}. After the specified target time is reached
- * the {@link #update(int)}-methods return <code>true</code>. To reuse the timer
- * is has to get {@linkplain #reset() reset} and {@linkplain #start(int)
- * started} again.
+ * the {@link #update(int)}-methods return {@code true}. To reuse the timer is
+ * has to get {@linkplain #reset() reset} and {@linkplain #start(int) started}
+ * again.
  */
 public class CountdownTimer {
 
 	private long lastTime = -1;
 	private long timeRunning;
 	/**
-	 * The time after which the {@link #update(int)}-methods return
-	 * <code>true</code> in milliseconds.
+	 * The time after which the {@link #update(int)}-methods return {@code true}
+	 * in milliseconds.
 	 */
 	private int targetTime;
 
@@ -47,7 +47,7 @@ public class CountdownTimer {
 	}
 
 	/**
-	 * @return whether the countdown timer is running. Is <code>true</code> even
+	 * @return whether the countdown timer is running. Is {@code true} even
 	 *         after the target time is reached, as long as the timer is not
 	 *         {@linkplain #reset() reset}.
 	 */

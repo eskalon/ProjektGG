@@ -10,21 +10,25 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Listener.TypeListener;
 import com.google.common.base.Preconditions;
 
-import de.gg.engine.log.Log;
-import de.gg.engine.network.message.ClientHandshakeMessage;
-import de.gg.engine.network.message.ServerAcceptanceMessage;
-import de.gg.engine.network.message.ServerHandshakeMessage;
-import de.gg.engine.network.message.ServerRejectionMessage;
-import de.gg.engine.utils.MachineIdentificationUtils;
+import de.damios.guacamole.ISuccessCallback;
+import de.damios.guacamole.concurrent.ThreadHandler;
+import de.damios.guacamole.gdx.Log;
+import de.eskalon.commons.utils.MachineIdentificationUtils;
+import de.gg.engine.network.message.ClientHandshakeRequest;
+import de.gg.engine.network.message.FailedHandshakeResponse;
+import de.gg.engine.network.message.ServerAcceptanceResponse;
+import de.gg.engine.network.message.ServerRejectionResponse;
+import de.gg.engine.network.message.SuccessfulHandshakeResponse;
 
 /**
  * This class takes care of handling the networking part for a basic game
  * client.
  * 
- * @see #connect(IClientConnectCallback, String, String, int)
+ * @see #connect(ISuccessCallback, String, String, int)
  * @see #disconnect()
  */
 public abstract class BaseGameClient {
+
 	protected Client client;
 	/**
 	 * The network ID of the local player.
@@ -54,12 +58,13 @@ public abstract class BaseGameClient {
 	 * @param port
 	 *            The server's port.
 	 */
-	public void connect(IClientConnectCallback callback, String gameVersion,
+	public void connect(ISuccessCallback callback, String gameVersion,
 			String ip, int port) {
-		Preconditions.checkNotNull(gameVersion, "gameVersion cannot be null.");
+		Preconditions.checkNotNull(callback, "callback cannot be null.");
+		Preconditions.checkNotNull(gameVersion, "game version cannot be null.");
 		Preconditions.checkNotNull(ip, "ip cannot be null.");
 
-		Log.info("Client", "--- Neuem Spiel wird beigetreten ---");
+		Log.info("Client", "--- Connecting to Server ---");
 
 		client = new Client();
 		client.start();
@@ -67,41 +72,38 @@ public abstract class BaseGameClient {
 		TypeListener listener = new TypeListener();
 		// CLIENT CONNECTION
 		// On Server acceptance (stage 1 of connection)
-		listener.addTypeHandler(ServerAcceptanceMessage.class, (con, msg) -> {
-			if (gameVersion.equals(msg.getServerVersion())) { // right server
-																// version
-				client.sendTCP(new ClientHandshakeMessage(
-						MachineIdentificationUtils.getHostname())); // send
-																	// handshake
-			} else { // wrong server version
-				Log.info("Client",
-						"Fehler beim Verbinden: Falsche Server-Version (%s)",
-						msg.getServerVersion());
-				callback.onClientConnected(
-						"Falsche Server-Version: " + msg.getServerVersion());
-				con.close();
-			}
-
+		listener.addTypeHandler(ServerAcceptanceResponse.class, (con, msg) -> {
+			client.sendTCP(new ClientHandshakeRequest(
+					MachineIdentificationUtils.getHostname(), gameVersion));
 		});
 		// Server full
-		listener.addTypeHandler(ServerRejectionMessage.class, (con, msg) -> {
-			Log.info("Client", "Fehler beim Verbinden (Rejection): %s",
+		listener.addTypeHandler(ServerRejectionResponse.class, (con, msg) -> {
+			Log.info("Client", "Couldn't connect: Client was rejected (%s)",
 					msg.getMessage());
-			callback.onClientConnected(msg.getMessage());
+			callback.onFailure(msg.getMessage());
 		});
 		// Server handshake (stage 2 of connection)
-		listener.addTypeHandler(ServerHandshakeMessage.class, (con, msg) -> {
-			if (msg.wasSuccessful()) {
-				Log.info("Client", "Verbinden war erfolgreich. Netzwerk-ID: %d",
-						localClientId);
-				localClientId = msg.getClientNetworkId();
-				onSuccessfulHandshake();
-				callback.onClientConnected(null); // Successful handshake
-			} else {
-				Log.info("Client", "Fehler beim Verbinden (Handshake): %s",
-						msg.getMsg());
-				callback.onClientConnected(msg.getMsg());
-			}
+		listener.addTypeHandler(SuccessfulHandshakeResponse.class,
+				(con, msg) -> {
+					Log.info("Client",
+							"Connection established. Local network ID is: %d",
+							localClientId);
+					localClientId = msg.getClientNetworkId();
+					onSuccessfulHandshake();
+					client.addListener(new Listener() {
+						@Override
+						public void disconnected(Connection connection) {
+							Log.info("Client", "Connection closed!");
+							onDisconnection();
+						}
+					});
+					callback.onSuccess(null);
+				});
+		listener.addTypeHandler(FailedHandshakeResponse.class, (con, msg) -> {
+			Log.info("Client",
+					"Couldn't connect: Handshake was not successful (%s)",
+					msg.getMsg());
+			callback.onFailure(msg.getMsg());
 		});
 		// Ping
 		listener.addTypeHandler(Ping.class, (con, msg) -> {
@@ -114,33 +116,24 @@ public abstract class BaseGameClient {
 		onCreation();
 
 		client.addListener(listener);
-		client.addListener(new Listener() {
-			@Override
-			public void disconnected(Connection connection) {
-				Log.error("Client", "Verbindung beendet");
-				onDisconnection();
-			}
-		});
 
-		final Thread connectingThread = new Thread(() -> {
+		ThreadHandler.getInstance().executeRunnable(() -> {
 			try {
 				client.connect(6000, ip, port);
 				// A successful connection further requires a proper handshake
 			} catch (IOException e) {
-				Log.error("Client", "Fehler beim Verbinden: ", e);
-				callback.onClientConnected(e.toString());
+				Log.error("Client", "Couldn't connect: %s", e);
+				callback.onFailure("Couldn't connect: " + e.getMessage());
 			}
 		});
-		connectingThread.start();
 	}
 
 	/**
 	 * Disconnects the client from the server.
 	 */
 	public void disconnect() {
-		Log.info("Client", "Trenne Verbindung...");
+		Log.info("Client", "Closing connection...");
 		client.close();
-		Log.info("Client", "Verbindung getrennt!");
 	}
 
 	/**
@@ -176,8 +169,8 @@ public abstract class BaseGameClient {
 	/* --- Methods for child classes --- */
 	/**
 	 * This method is called when the {@link #client} is created. This is the
-	 * place to register the networked classes to the {@linkplain Kryo kryo}
-	 * serializer.
+	 * place to register the networked classes with the {@linkplain Kryo
+	 * serializer}.
 	 */
 	protected abstract void onCreation();
 

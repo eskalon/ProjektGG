@@ -1,14 +1,14 @@
 package de.gg.game.network;
 
-import de.gg.engine.lang.Localized;
-import de.gg.game.types.PlayerIcon;
-import de.gg.game.types.Religion;
+import de.eskalon.commons.lang.ILocalized;
+import de.gg.game.model.types.PlayerIcon;
+import de.gg.game.model.types.Religion;
 
 /**
  * This class describes a client in the lobby. It is also used by the server to
  * save the ready state of its clients.
  */
-public class LobbyPlayer implements Localized {
+public class LobbyPlayer implements ILocalized {
 
 	public LobbyPlayer() {
 		// default public constructor
@@ -33,6 +33,7 @@ public class LobbyPlayer implements Localized {
 	private boolean ready;
 	private Religion religion = Religion.values()[0];
 	private int professionTypeIndex;
+	// only used on the server side
 	private String hostname;
 
 	public String getSurname() {

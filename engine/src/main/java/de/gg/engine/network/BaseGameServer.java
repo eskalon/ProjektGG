@@ -14,19 +14,22 @@ import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.kryonet.ServerDiscoveryHandler;
 import com.google.common.base.Preconditions;
 
-import de.gg.engine.log.Log;
-import de.gg.engine.network.message.ClientHandshakeMessage;
+import de.damios.guacamole.ISuccessCallback;
+import de.damios.guacamole.concurrent.ThreadHandler;
+import de.damios.guacamole.gdx.Log;
+import de.eskalon.commons.lang.Lang;
+import de.gg.engine.network.message.ClientHandshakeRequest;
 import de.gg.engine.network.message.DiscoveryResponsePacket;
-import de.gg.engine.network.message.ServerAcceptanceMessage;
-import de.gg.engine.network.message.ServerHandshakeMessage;
-import de.gg.engine.network.message.ServerRejectionMessage;
+import de.gg.engine.network.message.ServerAcceptanceResponse;
+import de.gg.engine.network.message.ServerRejectionResponse;
+import de.gg.engine.network.message.SuccessfulHandshakeResponse;
 
 /**
  * The basic implementation of a game server.
  *
  * @param <C>
  *            The type of player connected to this server.
- * @see #start(IHostCallback)
+ * @see #start(ISuccessCallback)
  * @see #stop()
  */
 public abstract class BaseGameServer<C> {
@@ -78,10 +81,10 @@ public abstract class BaseGameServer<C> {
 	 * @param callback
 	 *            the callback that is informed when the server is started.
 	 */
-	public void start(IHostCallback callback) {
+	public void start(ISuccessCallback callback) {
 		Preconditions.checkNotNull(callback, "callback cannot be null.");
 
-		Log.info("Client", "--- Neues Spiel wird erstellt ---");
+		Log.info("Server", "--- Server is starting ---");
 
 		this.server = new Server();
 		this.server.start();
@@ -99,30 +102,28 @@ public abstract class BaseGameServer<C> {
 			}
 		});
 		TypeListener typeListener = new TypeListener();
-		typeListener.addTypeHandler(ClientHandshakeMessage.class,
+		typeListener.addTypeHandler(ClientHandshakeRequest.class,
 				(con, msg) -> onClientHandshake(con, msg));
 		server.addListener(typeListener);
 
 		onCreation();
 
-		Thread t = new Thread(() -> {
+		ThreadHandler.getInstance().executeRunnable(() -> {
 			try {
 				// Start the server
 				server.bind(serverSetup.getPort());
-				Log.info("Server", "Server gestartet");
+				Log.info("Server", "Server started");
 
 				// Create & start the broadcast server
 				if (serverSetup.isPublic()) {
 					startBroadcastServer();
 				}
-				callback.onHostStarted(null); // Host successfully started
+				callback.onSuccess(null); // Host successfully started
 			} catch (IOException | IllegalArgumentException e2) {
-				Log.error("Server",
-						"Der Server konnte nicht gestartet werden: %s", e2);
-				callback.onHostStarted(e2); // Something went wrong
+				Log.error("Server", "Server could not be started: %s", e2);
+				callback.onFailure(e2); // Something went wrong
 			}
 		});
-		t.start();
 	}
 
 	private void startBroadcastServer() {
@@ -149,26 +150,24 @@ public abstract class BaseGameServer<C> {
 
 		try {
 			broadcastServer.bind(0, UDP_DISCOVER_PORT);
-			Log.info("Server", "Broadcast-Server gestartet");
+			Log.info("Server", "Broadcast server started");
 		} catch (IOException e1) {
-			Log.error("Server",
-					"Der Broadcast-Server konnte nicht gestartet werden: %s",
-					e1);
+			Log.error("Server", "Broadcast server couldn't be started: %s", e1);
 		}
 	}
 
 	private synchronized void onClientConnected(Connection con) {
 		if (players.size() >= serverSetup.getMaxPlayerCount()) { // Match full
-			Log.info("Server", "Client mangels Kapazität abgewiesen");
+			Log.info("Server", "Client was rejected for want of capacity");
 
 			con.sendTCP(
-					new ServerRejectionMessage("Der Server ist bereits voll"));
+					new ServerRejectionResponse(Lang.get("server.is_full")));
 			con.close();
 		} else { // Still free slots
-			Log.info("Server", "Client angenommen");
+			Log.info("Server", "Client accepted");
 
 			connections.put(con, playerIdIterator);
-			con.sendTCP(new ServerAcceptanceMessage(serverSetup.getVersion()));
+			con.sendTCP(new ServerAcceptanceResponse());
 			// onPlayerConnected(playerIdIterator);
 			playerIdIterator++;
 		}
@@ -178,7 +177,7 @@ public abstract class BaseGameServer<C> {
 		Short id = connections.remove(con);
 
 		if (id != null) {
-			Log.info("Server", "Client %d hat die Verbindung getrennt", id);
+			Log.info("Server", "Client %d has disconnected", id);
 
 			if (players.containsKey(id)) {
 				onPlayerDisconnected(con, id);
@@ -192,12 +191,12 @@ public abstract class BaseGameServer<C> {
 	 * Stops the server. Also takes care of saving the game.
 	 */
 	public void stop() {
-		Log.info("Server", "Server wird gestoppt...");
+		Log.info("Server", "Server is stopping...");
 		server.stop();
 		if (broadcastServer != null)
 			stopBroadcastServer();
 
-		Log.info("Server", "Server gestoppt!");
+		Log.info("Server", "Server stopped!");
 	}
 
 	protected void stopBroadcastServer() {
@@ -222,8 +221,8 @@ public abstract class BaseGameServer<C> {
 	/**
 	 * This method is called when the client sends its handshake message.
 	 * <p>
-	 * Subclasses have to send a {@link ServerHandshakeMessage} back, denoting
-	 * whether the handshake was a success.
+	 * Subclasses have to send a {@link SuccessfulHandshakeResponse} back,
+	 * denoting whether the handshake was a success.
 	 * 
 	 * @param con
 	 *            The connection of the client initiating the handshake.
@@ -231,6 +230,6 @@ public abstract class BaseGameServer<C> {
 	 *            The actual handshake message.
 	 */
 	protected abstract void onClientHandshake(Connection con,
-			ClientHandshakeMessage msg);
+			ClientHandshakeRequest msg);
 
 }

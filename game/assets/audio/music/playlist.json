@@ -1,0 +1,31 @@
+{
+  name: "default",
+  shuffle: true,
+  repeat: true,
+  music: [
+    [
+      "King's Feast",
+      "kings_feast.mp3"
+    ],
+    [
+      "Market Day",
+      "market_day.mp3"
+    ],
+    [
+      "Minstrel Dance",
+      "minstrel_dance.mp3"
+    ],
+    [
+      "Rejoicing",
+      "rejoicing.mp3"
+    ],
+    [
+      "The Bard's Tale",
+      "the_bards_tale.mp3"
+    ],
+    [
+      "The Old Tower Inn",
+      "the_old_tower_inn.mp3"
+    ]
+  ]
+}

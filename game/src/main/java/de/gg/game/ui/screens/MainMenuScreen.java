@@ -2,90 +2,74 @@ package de.gg.game.ui.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
-import de.gg.engine.asset.AnnotationAssetManager.InjectAsset;
-import de.gg.engine.lang.Lang;
+import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
+import de.eskalon.commons.audio.ISoundManager;
+import de.eskalon.commons.lang.Lang;
+import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.input.ButtonClickListener;
 
 /**
  * This screen represents the main menu.
  */
-public class MainMenuScreen extends BaseUIScreen {
+public class MainMenuScreen extends AbstractGGUIScreen {
 
-	@InjectAsset("ui/backgrounds/castle.jpg")
+	@Asset("ui/backgrounds/main_menu_screen.png")
 	private Texture backgroundImage;
-	@InjectAsset("ui/images/logo.png")
-	private Texture logoTexture;
-	@InjectAsset("ui/icons/github.png")
-	private Texture githubLogoTexture;
 
-	@Override
-	protected void onInit() {
-		super.onInit();
+	private boolean shownForFirstTime = true;
 
-		super.backgroundTexture = backgroundImage;
+	public MainMenuScreen(ProjektGGApplication application) {
+		super(application);
 	}
 
 	@Override
-	protected void initUI() {
+	protected void create() {
+		super.create();
+
+		setImage(backgroundImage);
+
 		ImageTextButton multiplayerButton = new ImageTextButton(
-				Lang.get("screen.main_menu.multiplayer"), skin);
+				Lang.get("screen.main_menu.multiplayer"), skin, "large");
 		multiplayerButton.addListener(
-				new ButtonClickListener(buttonClickSound, game.getSettings()) {
-					@Override
-					protected void onClick() {
-						game.pushScreen("serverBrowser");
-					}
-				});
+				new FadeOutUIClickListener(application.getSoundManager(), stage,
+						"server_browser", "blendingTransition"));
 
 		ImageTextButton settingsButton = new ImageTextButton(
-				Lang.get("screen.main_menu.settings"), skin);
+				Lang.get("screen.main_menu.settings"), skin, "large");
 		settingsButton.addListener(
-				new ButtonClickListener(buttonClickSound, game.getSettings()) {
-					@Override
-					protected void onClick() {
-						((SettingsScreen) game.getScreen("settings"))
-								.setCaller(MainMenuScreen.this);
-						game.pushScreen("settings");
-					}
-				});
+				new FadeOutUIClickListener(application.getSoundManager(), stage,
+						"settings", "blendingTransition"));
 
 		ImageTextButton creditsButton = new ImageTextButton(
-				Lang.get("screen.main_menu.credits"), skin);
+				Lang.get("screen.main_menu.credits"), skin, "large");
 		creditsButton.addListener(
-				new ButtonClickListener(buttonClickSound, game.getSettings()) {
-					@Override
-					protected void onClick() {
-						if (!game.IN_DEV_ENV)
-							game.pushScreen("credits");
-					}
-				});
+				new FadeOutUIClickListener(application.getSoundManager(), stage,
+						"credits", "longBlendingTransition"));
 
 		ImageTextButton exitButton = new ImageTextButton(
-				Lang.get("screen.main_menu.quit"), skin);
+				Lang.get("screen.main_menu.quit"), skin, "large");
 		exitButton.addListener(
-				new ButtonClickListener(buttonClickSound, game.getSettings()) {
+				new ButtonClickListener(application.getSoundManager()) {
 					@Override
 					protected void onClick() {
 						Gdx.app.exit();
 					}
 				});
 
-		Image logoImage = new Image(logoTexture);
+		Image logoImage = new Image(skin.getDrawable("logo"));
 
 		ImageButton githubRepoButton = new ImageButton(
-				new TextureRegionDrawable(
-						new TextureRegion(githubLogoTexture)));
+				skin.getDrawable("icon_github"));
 		githubRepoButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,
@@ -95,27 +79,63 @@ public class MainMenuScreen extends BaseUIScreen {
 			}
 		});
 
-		Label versionLabel = new Label(game.VERSION, skin);
-		Table versionTable = new Table();
-		versionTable.add(versionLabel);
-
-		// githubRepoButton.addListener(
-		// new TextTooltip("Zu unserem Gihtub-Repository", skin));
-
-		mainTable.add(logoImage).padBottom(25f).padTop(-120f).row();
+		mainTable.add(logoImage).padBottom(25f).padTop(-80f).row();
 		mainTable.add(multiplayerButton).padBottom(11f).row();
 		mainTable.add(settingsButton).padBottom(11f).row();
 		mainTable.add(creditsButton).padBottom(11f).row();
 		mainTable.add(exitButton).row();
 
 		githubRepoButton.padLeft(3).padBottom(3).bottom().left();
-
-		GlyphLayout layout = new GlyphLayout(skin.getFont("main-19"),
-				game.VERSION);
-		versionTable.padBottom(28)
-				.padLeft(game.getViewportWidth() * 2 - layout.width - 8);
-
 		stage.addActor(githubRepoButton);
-		stage.addActor(versionTable);
+
+		stageInputWrapper.setEnabled(false);
 	}
+
+	@Override
+	protected void setUIValues() {
+		// Fade in the UI & enable the input
+		SequenceAction sequence2 = new SequenceAction();
+		sequence2.addAction(Actions.delay(1.1F));
+		sequence2.addAction(
+				Actions.run(() -> stageInputWrapper.setEnabled(true)));
+
+		SequenceAction sequence = new SequenceAction();
+		sequence.addAction(Actions.delay(shownForFirstTime ? 0.85F : 0.17F));
+		sequence.addAction(Actions.parallel(
+				Actions.alpha(1F, 1.6F, Interpolation.pow2In), sequence2));
+
+		stage.addAction(Actions.alpha(0F));
+		stage.addAction(sequence);
+
+		if (shownForFirstTime)
+			shownForFirstTime = false;
+	}
+
+	public class FadeOutUIClickListener extends ButtonClickListener {
+
+		private Stage stageToFadeOut;
+		private String nextScreen, transition;
+
+		public FadeOutUIClickListener(ISoundManager soundManager,
+				Stage stageToFadeOut, String nextScreen, String transition) {
+			super(soundManager);
+			this.stageToFadeOut = stageToFadeOut;
+			this.nextScreen = nextScreen;
+			this.transition = transition;
+		}
+
+		@Override
+		protected void onClick() {
+			SequenceAction sequence2 = new SequenceAction();
+			sequence2.addAction(Actions.delay(0.35F));
+			sequence2.addAction(Actions.run(() -> application.getScreenManager()
+					.pushScreen(nextScreen, transition)));
+
+			stageInputWrapper.setEnabled(false);
+			stageToFadeOut.addAction(Actions.parallel(
+					Actions.alpha(0F, 0.45F, Interpolation.pow2In), sequence2));
+		}
+
+	}
+
 }

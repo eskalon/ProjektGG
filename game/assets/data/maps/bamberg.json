@@ -1,5 +1,6 @@
 {
 	"name": "Bamberg",
+	"skyboxPath": "models/skybox/skybox.g3db",
 	"buildingSlots": [
 		{
 			"posX": 15,

@@ -1,10 +1,8 @@
 package de.gg.game.input;
 
-import com.badlogic.gdx.Input.Keys;
-
-import de.gg.engine.input.DefaultInputProcessor;
-import de.gg.engine.input.SettableKeysProcessor;
-import de.gg.engine.setting.ConfigHandler;
+import de.damios.guacamole.gdx.DefaultInputProcessor;
+import de.eskalon.commons.settings.EskalonSettings;
+import de.eskalon.commons.settings.KeyBinding;
 import de.gg.game.network.rmi.ClientsideActionHandler;
 import de.gg.game.network.rmi.SlaveActionListener;
 
@@ -12,31 +10,29 @@ import de.gg.game.network.rmi.SlaveActionListener;
  * This input processor takes care of relaying the game speed actions to the
  * {@link SlaveActionListener}.
  */
-public class GameSpeedInputProcessor
-		implements DefaultInputProcessor, SettableKeysProcessor {
+public class GameSpeedInputProcessor implements DefaultInputProcessor {
 
-	private int INCREASE_SPEED_KEY;
-	private int DECREASE_SPEED_KEY;
+	private KeyBinding increaseSpeedKey;
+	private KeyBinding decreseSpeedKey;
 	private ClientsideActionHandler actionHandler;
+
+	public GameSpeedInputProcessor(EskalonSettings settings) {
+		this.increaseSpeedKey = settings.getKeybind("speedUpTime");
+		this.decreseSpeedKey = settings.getKeybind("speedDownTime");
+	}
 
 	public void setClientActionHandler(ClientsideActionHandler actionHandler) {
 		this.actionHandler = actionHandler;
 	}
 
 	@Override
-	public void loadKeybinds(ConfigHandler settings) {
-		this.INCREASE_SPEED_KEY = settings.getInt("speedUpKey", Keys.PLUS);
-		this.DECREASE_SPEED_KEY = settings.getInt("speedDownKey", Keys.MINUS);
-	}
-
-	@Override
 	public boolean keyDown(int keycode) {
-		if (INCREASE_SPEED_KEY == keycode) {
+		if (increaseSpeedKey.isTriggered(keycode)) {
 			actionHandler.increaseGameSpeed();
 
 			return true;
 		}
-		if (DECREASE_SPEED_KEY == keycode) {
+		if (decreseSpeedKey.isTriggered(keycode)) {
 			actionHandler.decreaseGameSpeed();
 
 			return true;
