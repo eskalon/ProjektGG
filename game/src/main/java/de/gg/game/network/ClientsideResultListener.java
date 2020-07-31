@@ -80,6 +80,8 @@ public class ClientsideResultListener implements AuthoritativeResultListener {
 
 	@Override
 	public void onServerReady() {
+		// FIXME session may not be initialized by now and is thus null!
+		
 		Log.info("Client", "Der Server is bereit");
 		Log.debug("Client", "%d Ticks hinter der Server-Simulation",
 				GameSession.TICKS_PER_ROUND - session.getTickCount());

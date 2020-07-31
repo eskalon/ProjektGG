@@ -205,6 +205,8 @@ public abstract class GameSession {
 			if (matterToVoteOn == null) {
 				matterToVoteOn = world.getMattersToHoldVoteOn().pollFirst();
 
+				onNewBallot(matterToVoteOn);
+
 				if (matterToVoteOn == null) {
 					holdVote = false;
 				}

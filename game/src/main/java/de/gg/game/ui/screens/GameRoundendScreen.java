@@ -159,8 +159,9 @@ public class GameRoundendScreen extends AbstractGameScreen {
 				// Session in BallotScreen!
 				application.getScreenManager().pushScreen("vote",
 						"blendingTransition");
-			} else
+			} else {
 				application.getScreenManager().pushScreen("map", "circle_open");
+			}
 		}
 	}
 

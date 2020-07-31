@@ -42,7 +42,7 @@ public abstract class AbstractGameScreen extends AbstractGGUIScreen {
 			ThreadHandler.getInstance().executeRunnable(() -> server.stop());
 		}
 
-		application.getScreenManager().pushScreen("serverBrowser", null, true);
+		application.getScreenManager().pushScreen("server_browser", null, true);
 	}
 
 	@Subscribe

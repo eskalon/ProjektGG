@@ -62,6 +62,11 @@ public class AuthoritativeSession extends GameSession {
 
 		super.init(players, savedGame);
 
+		// FIXME wenn man ein zweites mal ein spiel hostet, kann es passieren,
+		// dass während dem obigen init() der GameLoadingScreen fertig wird.
+		// Während dann die Modelle gesetzt werden, werden im init nochmals die
+		// Buildings verändert. -> zusammenlegen
+
 		// Setup the server processing systems
 		ServerProcessingSystem<Character> s;
 		s = new FirstCharacterEventWaveServerSystem(clientResultListeners);

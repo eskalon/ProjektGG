@@ -22,7 +22,7 @@ public class BuildingSlot {
 	}
 
 	/**
-	 * @return the center y-position of this building slot.
+	 * @return the center z-position of this building slot.
 	 */
 	public int getPosZ() {
 		return posZ;

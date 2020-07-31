@@ -104,6 +104,7 @@ public class LobbyScreen extends AbstractGGUIScreen {
 				new ButtonClickListener(application.getSoundManager()) {
 					@Override
 					protected void onClick() {
+						// TODO warum nicht readyUp(); ?
 						application.getClient().getLocalLobbyPlayer()
 								.toggleReady();
 						application.getClient().getActionHandler()
@@ -208,6 +209,7 @@ public class LobbyScreen extends AbstractGGUIScreen {
 	protected void setUIValues() {
 		GameSessionSetup sessionSetup = application.getClient().getLobbyData()
 				.getSessionSetup();
+		gameStarted = false;
 
 		if (application.isHost()) {
 			readyUpLobbyButton.setText(Lang.get("screen.lobby.start_game"));

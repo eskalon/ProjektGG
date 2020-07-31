@@ -375,7 +375,6 @@ public class GameMapScreen extends AbstractGameScreen {
 
 	@Override
 	public void renderGame(float delta) {
-
 		movementInputController.update(delta);
 		selectionInputController.update();
 
@@ -395,7 +394,6 @@ public class GameMapScreen extends AbstractGameScreen {
 			}
 
 		}
-
 	}
 
 	@Subscribe
