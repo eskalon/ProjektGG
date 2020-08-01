@@ -21,7 +21,7 @@ allprojects {
         discordIPCVersion = "0.4"
         freetypeSkinVersion = "0.3"
         gdxVersion = "1.9.11"
-        guacamoleVersion = "b6e8c0dbd1" // = 0.2.1
+        guacamoleVersion = "0.2.1"
         guavaVersion = "29.0-jre"
         gsonVersion = "2.8.6"
         junitVersion = "5.6.0"
@@ -29,7 +29,7 @@ allprojects {
         mockitoVersion = "3.4.4"
         quakemonkeyVersion = "master-SNAPSHOT"
         reflectionsVersion = "0.9.11" //0.9.12 doesn't work, see https://github.com/ronmamo/reflections/issues/273
-        screenmanagerVersion = "02f859df8f" // = 0.6.2
+        screenmanagerVersion = "6083006c32" // = 0.6.2
     }
 
     repositories {

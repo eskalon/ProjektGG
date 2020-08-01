@@ -36,12 +36,14 @@ public class GameRenderer implements Disposable {
 
 		modelBatch = new CullingModelBatch();
 		environment = new Environment();
-		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f,
-				0.4f, 0.4f, 1f));
-		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f,
-				-0.2f));
+		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4F,
+				0.4F, 0.4F, 1F));
+		environment.add(new DirectionalLight().set(0.8F, 0.8F, 0.8F, -1F, -0.8F,
+				-0.2F));
+	}
 
-		this.camera.position.set(1f, 1f, 1f);
+	public void resetCamera() {
+		this.camera.position.set(1F, 1F, 1F);
 		this.camera.lookAt(0, 0, 0);
 		this.camera.near = 1f;
 		this.camera.far = 300f;

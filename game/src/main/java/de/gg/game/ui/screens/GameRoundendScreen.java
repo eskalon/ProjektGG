@@ -160,7 +160,9 @@ public class GameRoundendScreen extends AbstractGameScreen {
 				application.getScreenManager().pushScreen("vote",
 						"blendingTransition");
 			} else {
-				application.getScreenManager().pushScreen("map", "circle_open");
+				application.getScreenManager().pushScreen("map", "circle_open",
+						pushParams); // pass on the params denoting whether this
+										// is a nwe game
 			}
 		}
 	}

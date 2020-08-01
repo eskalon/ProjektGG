@@ -66,7 +66,7 @@ public class MapMovementInputController implements DefaultInputProcessor {
 		}
 	}
 
-	private void resetInput() {
+	public void resetInput() {
 		rightPressed = false;
 		leftPressed = false;
 		forwardPressed = false;

@@ -2,7 +2,6 @@ package de.gg.game.ui.screens;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -78,13 +77,12 @@ public class GameMapScreen extends AbstractGameScreen {
 	protected void create() {
 		super.create();
 
-		this.camera = new CameraWrapper(new PerspectiveCamera(67,
-				application.getWidth(), application.getHeight()));
-		this.camera.getCamera().translate(application.getWidth() / 2,
+		camera = new CameraWrapper(67, application.getWidth(),
+				application.getHeight());
+		camera.setPosition(application.getWidth() / 2,
 				application.getHeight() / 2, 0);
-		// this.camera.update();
 
-		this.postProcessor = new PostProcessingPipeline(application.getWidth(),
+		postProcessor = new PostProcessingPipeline(application.getWidth(),
 				application.getHeight(), true);
 		pausePostProcessingEffect = new ColorBlendEffect(
 				application.getUICamera(), new Color(0.4F, 0.4F, 0.4F, 0.4F));
@@ -361,12 +359,17 @@ public class GameMapScreen extends AbstractGameScreen {
 		World world = session.getWorld();
 		Player player = application.getClient().getLocalPlayer();
 
-		iconButton.getStyle().imageUp = skin
-				.getDrawable(player.getIcon().getShieldDrawableName());
+		if (pushParams != null) { // Is a new game
+			gameRenderer.resetCamera();
+			selectionInputController.setWorld(world);
+			gameSpeedInputProcessor.setClientActionHandler(
+					application.getClient().getActionHandler());
+			iconButton.getStyle().imageUp = skin
+					.getDrawable(player.getIcon().getShieldDrawableName());
+		}
 
-		selectionInputController.setWorld(world);
-		gameSpeedInputProcessor.setClientActionHandler(
-				application.getClient().getActionHandler());
+		selectionInputController.resetSelection();
+		movementInputController.resetInput();
 
 		dateLabel.setText(Lang.get("screen.map.time",
 				GameClock.getSeason(session.getCurrentRound()),

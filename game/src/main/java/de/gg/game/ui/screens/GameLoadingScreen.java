@@ -64,31 +64,12 @@ public class GameLoadingScreen extends AbstractAssetLoadingScreen {
 		// Create the ModelInstances
 		for (BuildingSlot s : world.getBuildingSlots()) {
 			if (s.isBuiltOn()) {
-				System.out.println("A" + (s.getBuilding().getRenderData() == null));
-				System.out.println(s);
-				System.out.println(s.getBuilding());
 				s.getBuilding().setRenderData(
 						new SelectableRenderData(application.getAssetManager()
 								.get(s.getBuilding().getType().getModelPath(),
 										Model.class)));
-				System.out.println("B" + (s.getBuilding().getRenderData() == null));
-				System.out.println(s);
-				System.out.println(s.getBuilding());
-				
-				System.out.println("---");
-				
-				// FIXME
-				// passiert, wenn voriger Client hostet nächstes Game?
-				System.out.println(s.getBuilding().getType().getModelPath());
-				System.out.println(application.getAssetManager()
-						.contains(s.getBuilding().getType().getModelPath()));
-				System.out.println(application.getAssetManager()
-						.isLoaded(s.getBuilding().getType().getModelPath()));
-				System.out.println("----");
-				System.out.println(">>>> BUG 2 : "
-						+ (s.getBuilding().getRenderData() == null));
-				System.err.println(
-						s.getBuilding().getRenderData().transform == null);
+
+				// FIXME siehe AuthoritativeSession#init(...)
 
 				s.getBuilding().getRenderData().transform.translate(s.getPosX(),
 						0, s.getPosZ());
@@ -118,7 +99,8 @@ public class GameLoadingScreen extends AbstractAssetLoadingScreen {
 			Log.info("Server", "Game started!");
 		}
 
-		application.getScreenManager().pushScreen("round_end", "simple_zoom");
+		application.getScreenManager().pushScreen("round_end", "simple_zoom",
+				1);
 	}
 
 	@Subscribe

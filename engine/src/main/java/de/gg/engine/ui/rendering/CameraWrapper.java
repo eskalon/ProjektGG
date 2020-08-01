@@ -27,8 +27,10 @@ public class CameraWrapper {
 	 */
 	private boolean updateTargetOnZoom = false;
 
-	public CameraWrapper(PerspectiveCamera camera) {
-		this.camera = camera;
+	public CameraWrapper(float fieldOfViewY, float viewportWidth,
+			float viewportHeight) {
+		this.camera = new PerspectiveCamera(fieldOfViewY, viewportWidth,
+				viewportHeight);
 	}
 
 	/**
@@ -51,6 +53,41 @@ public class CameraWrapper {
 	}
 
 	/**
+	 * Sets the camera to the given position.
+	 *
+	 * @param x
+	 *            the x position
+	 * @param y
+	 *            the y position
+	 * @param z
+	 *            the z position
+	 */
+	public void setPosition(float x, float y, float z) {
+		if (updateTargetOnTranslation)
+			target.add(camera.position.x - x, camera.position.y - y,
+					camera.position.z - z);
+
+		this.camera.position.set(x, y, z);
+	}
+
+	/**
+	 * Sets the target around which the camera is rotated.
+	 *
+	 * @param x
+	 *            the x position
+	 * @param y
+	 *            the y position
+	 * @param z
+	 *            the z position
+	 */
+	public void setTarget(float x, float y, float z) {
+		this.camera.position.set(x, y, z);
+
+		if (updateTargetOnTranslation)
+			target.add(tmp);
+	}
+
+	/**
 	 * Moves the camera by the given amount on each axis.
 	 *
 	 * @param x
@@ -64,7 +101,7 @@ public class CameraWrapper {
 		this.camera.translate(x, y, z);
 
 		if (updateTargetOnTranslation)
-			target.add(tmp);
+			target.add(x, y, z);
 	}
 
 	/**
@@ -77,7 +114,7 @@ public class CameraWrapper {
 		this.camera.translate(vec);
 
 		if (updateTargetOnTranslation)
-			target.add(tmp);
+			target.add(vec);
 	}
 
 	/**
