@@ -1,6 +1,6 @@
 package de.gg.engine.network.message;
 
-public class ClientHandshakeRequest {
+public final class ClientHandshakeRequest {
 
 	/**
 	 * The hostname of the client's machine.

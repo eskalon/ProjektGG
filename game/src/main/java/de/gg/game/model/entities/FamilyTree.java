@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Represents a family hierarchy.
  */
-public class FamilyTree {
+public final class FamilyTree {
 
 	private short fatherCharacterId = -1, motherCharacterId = -1;
 	private List<Short> childrenCharacterIds = new ArrayList<>();

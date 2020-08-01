@@ -1,6 +1,6 @@
 package de.gg.engine.network.message;
 
-public class FailedHandshakeResponse {
+public final class FailedHandshakeResponse {
 
 	private String msg;
 

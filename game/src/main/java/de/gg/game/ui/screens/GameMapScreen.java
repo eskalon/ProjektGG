@@ -210,8 +210,8 @@ public class GameMapScreen extends AbstractGameScreen {
 		characterMenuDialog.add(characterMenuTable).pad(30);
 
 		// PLAYER ICON
-		iconButton = new ImageButton(
-				skin.getDrawable(PlayerIcon.ICON_1.getShieldDrawableName()));
+		iconButton = new ImageButton(skin
+				.getDrawable(PlayerIcon.values()[0].getShieldDrawableName()));
 		iconButton.addListener(
 				new ButtonClickListener(application.getSoundManager()) {
 					@Override

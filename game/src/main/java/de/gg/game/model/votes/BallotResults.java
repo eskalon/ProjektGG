@@ -5,7 +5,7 @@ import java.util.HashMap;
 /**
  * This class describes the results of a vote.
  */
-public class BallotResults {
+public final class BallotResults {
 
 	/**
 	 * A hashmap of the individually cast votes.

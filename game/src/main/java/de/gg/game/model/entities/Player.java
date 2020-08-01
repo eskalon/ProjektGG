@@ -7,7 +7,7 @@ import de.gg.game.model.World;
 import de.gg.game.model.types.PlayerIcon;
 import de.gg.game.model.types.PlayerTaskType;
 
-public class Player {
+public final class Player {
 
 	private int availableAp;
 	private short currentlyPlayedCharacterId;

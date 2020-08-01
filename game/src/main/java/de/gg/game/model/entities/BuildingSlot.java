@@ -2,7 +2,7 @@ package de.gg.game.model.entities;
 
 import de.gg.game.model.types.BuildingSlotType;
 
-public class BuildingSlot {
+public final class BuildingSlot {
 
 	private int posX, posZ;
 	private int rotationToStreet;

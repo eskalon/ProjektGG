@@ -3,7 +3,7 @@ package de.gg.game.model.entities;
 /**
  * Holds information about the skills a player can have.
  */
-public class PlayerSkillSet {
+public final class PlayerSkillSet {
 
 	private int agilitySkill;
 	private int bargainSkill;

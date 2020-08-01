@@ -21,7 +21,7 @@ import de.gg.game.model.votes.Ballot;
 import de.gg.game.network.LobbyPlayer;
 import de.gg.game.session.GameSessionSetup;
 
-public class World {
+public final class World {
 
 	private ModelInstance skyBox;
 	List<BaseRenderData> staticProps = new ArrayList<>();
