@@ -1,6 +1,6 @@
 package de.gg.engine.network.message;
 
-public class SuccessfulHandshakeResponse {
+public final class SuccessfulHandshakeResponse {
 
 	private short clientNetworkId;
 

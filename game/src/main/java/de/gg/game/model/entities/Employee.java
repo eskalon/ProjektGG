@@ -2,7 +2,7 @@ package de.gg.game.model.entities;
 
 import de.gg.game.model.types.ItemType;
 
-public class Employee {
+public final class Employee {
 
 	private String fullName;
 	private int age;

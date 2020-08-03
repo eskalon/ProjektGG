@@ -5,7 +5,7 @@ import java.util.List;
 
 import de.gg.game.model.types.CartType;
 
-public class Cart {
+public final class Cart {
 
 	private CartType type;
 	private List<ItemStack> stacks = new ArrayList<>();

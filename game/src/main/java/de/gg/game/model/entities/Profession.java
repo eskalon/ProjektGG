@@ -4,7 +4,7 @@ import de.eskalon.commons.lang.ILocalizable;
 import de.gg.game.model.types.PlayerTaskType;
 import de.gg.game.model.types.ProfessionType;
 
-public class Profession implements ILocalizable {
+public final class Profession implements ILocalizable {
 
 	private ProfessionType profession;
 	/**

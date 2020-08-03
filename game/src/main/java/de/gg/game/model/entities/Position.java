@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * This class represents a position.
  */
-public class Position {
+public final class Position {
 
 	private short currentHolder;
 	private List<Short> applicants = new ArrayList<>();

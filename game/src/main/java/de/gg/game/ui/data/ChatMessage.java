@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 
 import de.gg.game.network.LobbyPlayer;
 
-public class ChatMessage {
+public final class ChatMessage {
 
 	/**
 	 * {@code null} if this is a system message

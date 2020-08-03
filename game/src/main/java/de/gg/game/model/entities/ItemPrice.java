@@ -2,7 +2,7 @@ package de.gg.game.model.entities;
 
 import de.gg.game.model.types.ItemType;
 
-public class ItemPrice {
+public final class ItemPrice {
 
 	private ItemType itemType;
 	private int temporaryEfects;

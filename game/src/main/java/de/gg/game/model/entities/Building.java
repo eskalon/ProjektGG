@@ -11,7 +11,7 @@ import de.gg.game.ui.rendering.SelectableRenderData;
 /**
  * A building located on an {@link BuildingSlot}.
  */
-public class Building {
+public final class Building {
 
 	@ExcludeFromJSON
 	private SelectableRenderData renderData;

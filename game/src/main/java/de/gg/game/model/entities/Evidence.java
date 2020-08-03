@@ -2,7 +2,7 @@ package de.gg.game.model.entities;
 
 import de.gg.game.model.types.CrimeType;
 
-public class Evidence {
+public final class Evidence {
 
 	private Character offender;
 	/**

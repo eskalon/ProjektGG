@@ -8,7 +8,7 @@ import de.gg.game.model.types.PositionType;
 import de.gg.game.model.types.Religion;
 import de.gg.game.model.types.SocialStatus;
 
-public class Character implements ILocalized {
+public final class Character implements ILocalized {
 
 	private String name, surname;
 	private boolean isMale;

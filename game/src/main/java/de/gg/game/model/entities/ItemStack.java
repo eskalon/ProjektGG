@@ -2,7 +2,7 @@ package de.gg.game.model.entities;
 
 import de.gg.game.model.types.ItemType;
 
-public class ItemStack {
+public final class ItemStack {
 
 	private ItemType type;
 	private int count;
