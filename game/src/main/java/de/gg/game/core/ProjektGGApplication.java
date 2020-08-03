@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.github.acanthite.gdx.graphics.g2d.FreeTypeSkinLoader;
 import com.google.common.reflect.TypeToken;
@@ -61,6 +62,9 @@ public class ProjektGGApplication extends EskalonApplication {
 
 	@Override
 	public String initApp() {
+		float layer = 0;
+		MathUtils.clamp(layer + 0x1p-7 , 0f, 1f);
+		
 		// Asset loading
 		this.assetManager.setLoader(Skin.class, new FreeTypeSkinLoader(
 				this.assetManager.getFileHandleResolver()));

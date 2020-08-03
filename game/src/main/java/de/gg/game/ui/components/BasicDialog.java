@@ -28,9 +28,16 @@ public class BasicDialog extends Dialog {
 	public BasicDialog(String title, Skin skin, String windowStyleName) {
 		super(title, skin, windowStyleName);
 
-		this.getTitleTable().getCell(this.getTitleLabel()).padLeft(16)
-				.padTop(35).padBottom(14);
-		this.getButtonTable().defaults().padBottom(16);
+		this.getTitleTable().getCell(this.getTitleLabel()).padLeft(22)
+				.padTop(40);
+		this.getContentTable().padTop(26);
+		this.getButtonTable().padBottom(18);
+		this.getButtonTable().defaults().padBottom(0).padTop(0);
+
+		// this.getTitleTable().getCell(this.getTitleLabel()).padLeft(22)
+		// .padTop(40);
+		// this.getButtonTable().padBottom(-20);
+		// this.getButtonTable().defaults().padBottom(0).padTop(12);
 	}
 
 	public BasicDialog(String title, Skin skin) {
@@ -61,7 +68,7 @@ public class BasicDialog extends Dialog {
 		if (getSkin() == null)
 			throw new IllegalStateException(
 					"This method may only be used if the dialog was constructed with a Skin.");
-		return text(text, getSkin().get("text", LabelStyle.class));
+		return text(text, getSkin().get("dark_text", LabelStyle.class));
 	}
 
 	/**

@@ -40,6 +40,11 @@ public class PlayerLobbyConfigDialog extends BasicDialog {
 
 	public PlayerLobbyConfigDialog(ProjektGGApplication game, Skin skin) {
 		super("Spielerkonfiguration", skin, "big");
+		
+		// don't forget that some layout stuff happens in super(...) as well!
+		this.getTitleTable().getCell(this.getTitleLabel()).padLeft(24)
+		.padTop(44);
+		this.getContentTable().padTop(5);
 
 		// Create UI elements for player configuration dialog
 		BasicDialog iconDialog = new BasicDialog("Wappen", skin, "big");

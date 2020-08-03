@@ -139,7 +139,11 @@
 		text: {
 			font: ui-text-20,
 			fontColor: white
-		}
+		},
+		dark_text: {
+			font: ui-text-20,
+			fontColor: dark_grey
+		},
 		ink_title: {
 			font: ui-title-24,
 			fontColor: ink_blue
@@ -210,14 +214,14 @@
 
 	WindowStyle: {
 		default: {
-			titleFont: ui-text-20,
+			titleFont: ui-element-21,
 			background: window_dialog,
-			titleFontColor: white
+			titleFontColor: dark_grey
 		},
 		big: {
-			titleFont: ui-element-19,
+			titleFont: ui-element-21,
 			background: window_big,
-			titleFontColor: white
+			titleFontColor: dark_grey
 		}
 	}
 }

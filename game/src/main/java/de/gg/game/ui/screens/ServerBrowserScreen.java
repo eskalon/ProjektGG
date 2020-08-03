@@ -152,8 +152,10 @@ public class ServerBrowserScreen extends AbstractGGUIScreen {
 								.key(Keys.ENTER, true).key(Keys.ESCAPE, false);
 						dialog.getContentTable().add(ipInputField).width(170)
 								.row();
-						dialog.getContentTable().add(new Label(
-								Lang.get("screen.server_browser.port"), skin));
+						dialog.getContentTable()
+								.add(new Label(
+										Lang.get("screen.server_browser.port"),
+										skin, "dark_text"));
 						dialog.getContentTable().add(portInputField).width(150)
 								.left();
 						dialog.show(stage);

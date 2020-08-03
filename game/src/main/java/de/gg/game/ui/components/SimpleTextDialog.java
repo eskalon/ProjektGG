@@ -26,11 +26,12 @@ public class SimpleTextDialog extends BasicDialog {
 
 		this.setWidth(290);
 		this.setHeight(177);
-		this.getTitleTable().getCell(this.getTitleLabel()).padLeft(16)
-				.padTop(38);
-		this.getContentTable().defaults().padLeft(7).padTop(11).padRight(5)
-				.center().width(270);
-		this.getButtonTable().defaults().padBottom(17);
+
+		// don't forget that some layout stuff happens in super(...) as well!
+		this.getContentTable().defaults().padLeft(6).padRight(5).center()
+				.width(270);
+		this.getContentTable().padTop(22);
+		this.getButtonTable().padBottom(22);
 	}
 
 	public SimpleTextDialog(String title, Skin skin) {
@@ -46,7 +47,7 @@ public class SimpleTextDialog extends BasicDialog {
 		if (getSkin() == null)
 			throw new IllegalStateException(
 					"This method may only be used if the dialog was constructed with a Skin.");
-		return text(text, getSkin().get("text", LabelStyle.class));
+		return text(text, getSkin().get("dark_text", LabelStyle.class));
 	}
 
 	/** Adds a label to the content table. */
