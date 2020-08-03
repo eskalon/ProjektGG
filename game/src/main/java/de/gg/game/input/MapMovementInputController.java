@@ -50,16 +50,16 @@ public class MapMovementInputController implements DefaultInputProcessor {
 	public void update(float delta) {
 		if (rightPressed || leftPressed || forwardPressed || backwardPressed) {
 			if (rightPressed) {
-				camera.translateOnXYPlane(270, delta * translateUnits);
+				camera.translateOnXZPlane(270, delta * translateUnits);
 			}
 			if (leftPressed) {
-				camera.translateOnXYPlane(90, delta * translateUnits);
+				camera.translateOnXZPlane(90, delta * translateUnits);
 			}
 			if (forwardPressed) {
-				camera.translateOnXYPlane(0, delta * translateUnits);
+				camera.translateOnXZPlane(0, delta * translateUnits);
 			}
 			if (backwardPressed) {
-				camera.translateOnXYPlane(180, delta * translateUnits);
+				camera.translateOnXZPlane(180, delta * translateUnits);
 			}
 
 			camera.update();
@@ -94,12 +94,12 @@ public class MapMovementInputController implements DefaultInputProcessor {
 
 	protected boolean process(float deltaX, float deltaY, int button) {
 		if (button == rotateButton) {
-			camera.rotateAroundTarget(deltaX * -rotationSpeed,
+			camera.rotateAroundTargetOnXZPlane(deltaX * -rotationSpeed,
 					deltaY * rotationSpeed);
+			camera.update();
+			return true;
 		}
-
-		camera.update();
-		return true;
+		return false;
 	}
 
 	@Override

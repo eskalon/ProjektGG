@@ -142,10 +142,12 @@ public class CameraWrapper {
 	 *            the y angle in degrees
 	 * @see #rotateAround(Vector3, Vector3, float)
 	 */
-	public void rotateAroundTarget(float angleX, float angleY) {
+	public void rotateAroundTargetOnXZPlane(float angleX, float angleY) {
 		// Calculates the axis, that is perpendicular to UP and DIRECTION of the
-		// camera; additionally y is set to 0
-		tmp2.set(camera.direction).crs(camera.up).y = 0f;
+		// camera
+		tmp2.set(camera.direction).crs(camera.up);
+
+		tmp2.y = 0;
 
 		rotateAround(target, tmp2.nor(), angleY);
 		rotateAround(target, Vector3.Y, angleX);
@@ -158,7 +160,7 @@ public class CameraWrapper {
 	 * @param angle
 	 * @param units
 	 */
-	public void translateOnXYPlane(int angle, float units) {
+	public void translateOnXZPlane(int angle, float units) {
 		tmp.set(camera.direction).y = 0;
 		translate(tmp.rotate(Vector3.Y, angle).scl(units));
 	}
