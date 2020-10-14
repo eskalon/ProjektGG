@@ -12,9 +12,9 @@ import com.esotericsoftware.kryonet.Listener.ConnectionListener;
 import com.esotericsoftware.kryonet.Listener.TypeListener;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.kryonet.ServerDiscoveryHandler;
-import com.google.common.base.Preconditions;
 
 import de.damios.guacamole.ISuccessCallback;
+import de.damios.guacamole.Preconditions;
 import de.damios.guacamole.concurrent.ThreadHandler;
 import de.damios.guacamole.gdx.Log;
 import de.eskalon.commons.lang.Lang;

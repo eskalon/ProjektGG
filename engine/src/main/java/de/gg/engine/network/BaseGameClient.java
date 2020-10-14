@@ -8,9 +8,9 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.FrameworkMessage.Ping;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Listener.TypeListener;
-import com.google.common.base.Preconditions;
 
 import de.damios.guacamole.ISuccessCallback;
+import de.damios.guacamole.Preconditions;
 import de.damios.guacamole.concurrent.ThreadHandler;
 import de.damios.guacamole.gdx.Log;
 import de.eskalon.commons.utils.MachineIdentificationUtils;

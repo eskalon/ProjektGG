@@ -5,8 +5,8 @@ import java.net.DatagramPacket;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.ClientDiscoveryHandler;
-import com.google.common.base.Preconditions;
 
+import de.damios.guacamole.Preconditions;
 import de.gg.engine.network.message.DiscoveryResponsePacket;
 
 /**

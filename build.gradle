@@ -19,7 +19,7 @@ allprojects {
         aiVersion = "1.8.1"
         concurrentUnitVersion = "0.4.6"
         discordIPCVersion = "0.4"
-        freetypeSkinVersion = "0.3"
+        freetypeSkinVersion = "0.3.1"
         gdxVersion = "1.9.11"
         guacamoleVersion = "0.2.1"
         guavaVersion = "29.0-jre"
@@ -65,15 +65,13 @@ project(":engine") {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "com.github.crykn:kryonet:$kryonetVersion"
-        //compile "com.google.guava:guava:$guavaVersion"
+        compile "com.google.guava:guava:$guavaVersion"
         compile "com.google.code.gson:gson:$gsonVersion"
         compile "com.jagrosh:DiscordIPC:$discordIPCVersion"
         compile "org.reflections:reflections:$reflectionsVersion"
         compile "com.github.crykn:libgdx-screenmanager:$screenmanagerVersion"
         
         //compile files('../libs/commons-0.1.0.jar')
-
-        //testCompile "org.junit.platform:junit-platform-launcher:1.2.0" // needed for a bug in eclipse
 
         testCompile "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
     }
@@ -90,9 +88,7 @@ project(":game") {
         compile project(":engine")
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         // compile "com.github.crykn:quakemonkey:$quakemonkeyVersion"
-        compile "com.github.acanthite:freetype-skin:$freetypeSkinVersion"
-        
-        //testCompile "org.junit.platform:junit-platform-launcher:1.2.0" // needed for a bug in eclipse
+        compile "com.github.crykn:freetype-skin:$freetypeSkinVersion"
         
         //testCompile project(':engine').sourceSets.test.output
         testCompile "org.junit.jupiter:junit-jupiter-engine:$junitVersion"

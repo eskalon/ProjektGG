@@ -1,6 +1,6 @@
 package de.gg.engine.utils;
 
-import com.google.common.base.Preconditions;
+import de.damios.guacamole.Preconditions;
 
 /**
  * A simple countdown timer.
