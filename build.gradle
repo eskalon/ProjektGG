@@ -21,15 +21,12 @@ allprojects {
         discordIPCVersion = "0.4"
         freetypeSkinVersion = "0.3.1"
         gdxVersion = "1.9.11"
-        guacamoleVersion = "0.2.1"
-        guavaVersion = "29.0-jre"
         gsonVersion = "2.8.6"
         junitVersion = "5.6.0"
         kryonetVersion = "2.22.6"
         mockitoVersion = "3.4.4"
+        pancakeVersion = "cb2793322c" // = 0.1.1
         quakemonkeyVersion = "master-SNAPSHOT"
-        reflectionsVersion = "0.9.11" //0.9.12 doesn't work, see https://github.com/ronmamo/reflections/issues/273
-        screenmanagerVersion = "0.6.2"
     }
 
     repositories {
@@ -50,7 +47,6 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-        compile "com.github.crykn.guacamole:gdx-desktop:$guacamoleVersion"
     }
     
     sourceSets.main {
@@ -64,13 +60,11 @@ project(":engine") {
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        compile "com.github.eskalon:pancake:$pancakeVersion"
+        
         compile "com.github.crykn:kryonet:$kryonetVersion"
-        compile "com.google.guava:guava:$guavaVersion"
         compile "com.google.code.gson:gson:$gsonVersion"
         compile "com.jagrosh:DiscordIPC:$discordIPCVersion"
-        compile "org.reflections:reflections:$reflectionsVersion"
-        compile "com.github.crykn:libgdx-screenmanager:$screenmanagerVersion"
-        
         //compile files('../libs/commons-0.1.0.jar')
 
         testCompile "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
@@ -86,8 +80,7 @@ project(":game") {
 
     dependencies {
         compile project(":engine")
-        compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
-        // compile "com.github.crykn:quakemonkey:$quakemonkeyVersion"
+        //compile "com.github.crykn:quakemonkey:$quakemonkeyVersion"
         compile "com.github.crykn:freetype-skin:$freetypeSkinVersion"
         
         //testCompile project(':engine').sourceSets.test.output
