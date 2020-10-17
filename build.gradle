@@ -21,10 +21,11 @@ allprojects {
         discordIPCVersion = "0.4"
         gdxVersion = "1.9.11"
         gsonVersion = "2.8.6"
+        guavaVersion = "30.0-jre"
         junitVersion = "5.6.0"
         kryonetVersion = "2.22.6"
         mockitoVersion = "3.4.4"
-        pancakeVersion = "f840befb16" // = 0.1.1
+        pancakeVersion = "573a6652fd" // = 0.1.1
         quakemonkeyVersion = "master-SNAPSHOT"
     }
 
@@ -59,7 +60,8 @@ project(":engine") {
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        compile "com.github.eskalon:pancake:$pancakeVersion"
+        compile "com.github.eskalon.pancake:core:$pancakeVersion"
+        compile "com.github.eskalon.pancake:desktop:$pancakeVersion"
         
         compile "com.github.crykn:kryonet:$kryonetVersion"
         compile "com.google.code.gson:gson:$gsonVersion"
@@ -79,6 +81,7 @@ project(":game") {
 
     dependencies {
         compile project(":engine")
+        compile "com.google.guava:guava:$guavaVersion"
         //compile "com.github.crykn:quakemonkey:$quakemonkeyVersion"
         
         //testCompile project(':engine').sourceSets.test.output

@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.google.common.eventbus.Subscribe;
-import com.google.common.reflect.TypeToken;
+import com.google.gson.reflect.TypeToken;
 
 import de.damios.guacamole.ISuccessCallback;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;

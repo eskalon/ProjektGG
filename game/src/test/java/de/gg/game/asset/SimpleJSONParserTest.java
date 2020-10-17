@@ -7,7 +7,8 @@ import java.util.Date;
 
 import org.junit.jupiter.api.Test;
 
-import com.google.common.reflect.TypeToken;
+import com.google.gson.reflect.TypeToken;
+
 
 public class SimpleJSONParserTest {
 

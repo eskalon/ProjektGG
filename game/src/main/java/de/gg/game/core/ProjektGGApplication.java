@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.math.Interpolation;
-import com.google.common.reflect.TypeToken;
+import com.google.gson.reflect.TypeToken;
 
 import de.damios.guacamole.concurrent.ThreadHandler;
 import de.eskalon.commons.asset.AnnotationAssetManager.AssetLoaderParametersFactory;
