@@ -112,8 +112,8 @@ public class MapMovementInputController implements DefaultInputProcessor {
 	}
 
 	@Override
-	public boolean scrolled(int amount) {
-		camera.zoom(amount * scrollFactor * translateUnits);
+	public boolean scrolled(float amountX, float amountY) {
+		camera.zoom(amountY * scrollFactor * translateUnits);
 		camera.update();
 
 		return true;
