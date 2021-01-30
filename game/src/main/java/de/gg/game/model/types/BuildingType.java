@@ -33,8 +33,7 @@ public enum BuildingType implements ILocalizable {
 	 * @return the upgraded version of this building. {@code null} if this
 	 *         building cannot be upgraded.
 	 */
-	@Nullable
-	public BuildingType getUpgradeOption() {
+	public @Nullable BuildingType getUpgradeOption() {
 		if (getData().upgradeOptionIndex == -1)
 			return null;
 		return BuildingType.values()[getData().upgradeOptionIndex];
@@ -75,8 +74,7 @@ public enum BuildingType implements ILocalizable {
 	 * @return The items this building can produce. If this building cannot
 	 *         produce any items it returns {@cod null}.
 	 */
-	@Nullable
-	public ItemType[] getProduciableGoods() {
+	public @Nullable ItemType[] getProduciableGoods() {
 		if (getData().producibleGoodsIds != null
 				&& getData().producibleGoodsIds.length > 0) {
 			ItemType[] tmp = new ItemType[getData().producibleGoodsIds.length];

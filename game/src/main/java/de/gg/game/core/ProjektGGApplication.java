@@ -47,10 +47,8 @@ public class ProjektGGApplication extends EskalonApplication {
 
 	private GGSettings settings;
 
-	@Nullable
-	private GameServer server;
-	@Nullable
-	private GameClient client;
+	private @Nullable GameServer server;
+	private @Nullable GameClient client;
 
 	public ProjektGGApplication() {
 		super(false, true);
@@ -136,8 +134,7 @@ public class ProjektGGApplication extends EskalonApplication {
 	 * @return the game client; {@code null} if the player is not in a game or
 	 *         currently disconnecting from one
 	 */
-	@Nullable
-	public GameClient getClient() {
+	public @Nullable GameClient getClient() {
 		return client;
 	}
 
@@ -148,8 +145,7 @@ public class ProjektGGApplication extends EskalonApplication {
 	/**
 	 * @return the game server; {@code null} if the player is not hosting a game
 	 */
-	@Nullable
-	public GameServer getServer() {
+	public @Nullable GameServer getServer() {
 		return server;
 	}
 

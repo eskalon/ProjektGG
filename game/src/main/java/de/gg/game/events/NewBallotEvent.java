@@ -10,8 +10,7 @@ import de.gg.game.session.SlaveSession;
  */
 public class NewBallotEvent {
 
-	@Nullable
-	private Ballot newBallot;
+	private @Nullable Ballot newBallot;
 
 	public NewBallotEvent(@Nullable Ballot newBallot) {
 		this.newBallot = newBallot;
@@ -21,8 +20,7 @@ public class NewBallotEvent {
 	 * @return the new ballot; is {@code null} if the voting process is over for
 	 *         this round
 	 */
-	@Nullable
-	public Ballot getNewBallot() {
+	public @Nullable Ballot getNewBallot() {
 		return newBallot;
 	}
 
