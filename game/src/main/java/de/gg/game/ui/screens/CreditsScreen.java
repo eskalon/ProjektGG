@@ -4,16 +4,21 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.damios.guacamole.gdx.assets.Text;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.core.EskalonApplication;
+import de.eskalon.commons.screens.AbstractEskalonScreen;
 import de.eskalon.commons.screens.AbstractImageScreen;
 import de.eskalon.commons.screens.EskalonSplashScreen.EskalonCommonsAssets;
 import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.input.BackInputProcessor;
 
-public class CreditsScreen extends AbstractImageScreen {
+public class CreditsScreen extends AbstractEskalonScreen {
+
+	private Viewport viewport;
 
 	@Asset("CONTRIBUTORS.md")
 	private Text creditsText;
@@ -30,13 +35,12 @@ public class CreditsScreen extends AbstractImageScreen {
 	private float posY = 0;
 
 	public CreditsScreen(ProjektGGApplication application) {
-		super(application.getWidth(), application.getHeight());
 		this.app = application;
+		this.viewport = new ScreenViewport();
 	}
 
 	@Override
 	protected void create() {
-		super.create();
 		String text = "PROJEKT GG\n" + "\n"
 				+ "This Game Was Produced by eskalon\n" + "\n" + "\n" + "\n"
 				+ "\n" + "\n" + "ESKALON\n" + "\n" + "\n"
@@ -74,8 +78,10 @@ public class CreditsScreen extends AbstractImageScreen {
 
 	@Override
 	public void render(float delta) {
+		viewport.apply();
+		app.getSpriteBatch().setProjectionMatrix(viewport.getCamera().combined);
+
 		app.getSpriteBatch().begin();
-		app.getSpriteBatch().setProjectionMatrix(app.getUICamera().combined);
 
 		// app.getSpriteBatch().draw(this.backgroundTexture, 0, 0,
 		// app.getWidth(), app.getHeight());

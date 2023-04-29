@@ -3,6 +3,7 @@ package de.gg.game.network;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
 
@@ -15,9 +16,9 @@ import com.google.gson.JsonSyntaxException;
 
 import de.damios.guacamole.Preconditions;
 import de.damios.guacamole.concurrent.ThreadHandler;
-import de.damios.guacamole.gdx.Log;
+import de.damios.guacamole.gdx.log.Logger;
+import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.lang.Lang;
-import de.eskalon.commons.misc.EskalonLogger;
 import de.gg.engine.network.BaseGameServer;
 import de.gg.engine.network.ServerSetup;
 import de.gg.engine.network.message.ClientHandshakeRequest;
@@ -37,6 +38,8 @@ import de.gg.game.session.GameSessionSetup;
 import de.gg.game.session.SavedGame;
 
 public class GameServer extends BaseGameServer<LobbyPlayer> {
+
+	private static final Logger LOG = LoggerService.getLogger(GameServer.class);
 
 	public static final String SAVES_DIR = "./saves/";
 
@@ -94,7 +97,7 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 
 	public void update() {
 		if (session.update()) {
-			Log.info("Server", "Round is over");
+			LOG.info("[SERVER] Round is over");
 
 			// Inform the clients
 			resultListener.onServerReady();
@@ -124,10 +127,10 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 		// Close Broadcast-Server
 		ThreadHandler.getInstance().executeRunnable(() -> {
 			stopBroadcastServer();
-			Log.info("Server", "Broadcast server closed");
+			LOG.info("[SERVER] Broadcast server closed");
 		});
 
-		Log.info("Server", "Match initialized");
+		LOG.info("[SERVER] Match initialized");
 	}
 
 	/**
@@ -177,12 +180,11 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 			savesFile.writeString(new SimpleJSONParser().parseToJson(save),
 					false);
 		} catch (JsonSyntaxException e) {
-			Log.error("Server", "Game couldn't be saved: %s", e.getMessage());
+			LOG.error("[SERVER] Game couldn't be saved: %s", e.getMessage());
 		}
 
-		Log.info("Server", "Game was saved at '%s' (took %d ms)!",
-				savesFile.path(),
-				timer.elapsed(EskalonLogger.DEFAULT_TIME_UNIT));
+		LOG.info("[SERVER] Game was saved at '%s' (took %d ms)!",
+				savesFile.path(), timer.elapsed(TimeUnit.MILLISECONDS));
 	}
 
 	@Override
@@ -201,7 +203,7 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 		LobbyPlayer p;
 
 		if (!serverSetup.getVersion().equals(msg.getVersion())) {
-			Log.info("Server", "Kick: Version mismatch (%s)", msg.getVersion());
+			LOG.info("[SERVER] Kick: Version mismatch (%s)", msg.getVersion());
 			con.sendTCP(new FailedHandshakeResponse(
 					Lang.get("dialog.connecting_failed.version_mismatch")));
 			con.close();
@@ -219,8 +221,8 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 			}
 
 			if (foundId == -1) {
-				Log.info("Server",
-						"Kick: Client isn't part of this loaded save game");
+				LOG.info(
+						"[SERVER] Kick: Client isn't part of this loaded save game");
 				con.sendTCP(new FailedHandshakeResponse(
 						Lang.get("dialog.connecting_failed.not_in_save")));
 				con.close();
@@ -231,16 +233,16 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 						|| (foundId == HOST_PLAYER_NETWORK_ID
 								&& id != HOST_PLAYER_NETWORK_ID)) {
 					// Host has hanged changed
-					Log.info("Server",
-							"Kick: The host of a loaded save game cannot be changed");
+					LOG.info(
+							"[SERVER] Kick: The host of a loaded save game cannot be changed");
 					con.sendTCP(new FailedHandshakeResponse(Lang.get(
 							"dialog.connecting_failed.cannot_change_host")));
 					con.close();
 					// Server gets closed if need be
 					return;
 				}
-				Log.info("Server",
-						"Client was recognized as part of this loaded save game");
+				LOG.info(
+						"[SERVER] Client was recognized as part of this loaded save game");
 				Player oldPlayer = savedGame.world.getPlayer(foundId);
 				Character oldCharacter = savedGame.world.getCharacter(
 						oldPlayer.getCurrentlyPlayedCharacterId());
@@ -249,7 +251,7 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 						oldCharacter.isMale());
 			}
 		} else {
-			Log.info("Server", "Client %d was registered as new player", id);
+			LOG.info("[SERVER] Client %d was registered as new player", id);
 
 			p = PlayerUtils.getRandomPlayerWithUnusedProperties(playerStubs,
 					players.values());
@@ -262,7 +264,7 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 
 		// Establish RMI connection (part 1)
 		objectSpace.addConnection(con);
-		Log.info("Server", "RMI connection to client established");
+		LOG.info("[SERVER] RMI connection to client established");
 
 		// Perform the handshake
 		con.sendTCP(new SuccessfulHandshakeResponse(id));

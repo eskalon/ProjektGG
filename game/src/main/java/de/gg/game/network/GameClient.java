@@ -8,7 +8,8 @@ import com.esotericsoftware.kryonet.rmi.ObjectSpace;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
-import de.damios.guacamole.gdx.Log;
+import de.damios.guacamole.gdx.log.Logger;
+import de.damios.guacamole.gdx.log.LoggerService;
 import de.gg.engine.network.BaseGameClient;
 import de.gg.game.ai.CharacterBehaviour;
 import de.gg.game.events.ConnectionLostEvent;
@@ -49,6 +50,8 @@ import de.gg.game.ui.data.NotificationData;
  */
 public class GameClient extends BaseGameClient {
 
+	private static final Logger LOG = LoggerService.getLogger(GameClient.class);
+
 	private EventBus eventBus;
 
 	private ClientsideActionHandler actionHandler;
@@ -81,7 +84,7 @@ public class GameClient extends BaseGameClient {
 	@Override
 	protected void onDisconnection() {
 		if (!orderlyDisconnect) {
-			Log.info("Client", "Connection to server lost");
+			LOG.info("[CLIENT] Connection to server lost");
 			eventBus.post(new ConnectionLostEvent());
 		}
 	}
@@ -98,7 +101,7 @@ public class GameClient extends BaseGameClient {
 				254, SlaveActionListener.class);
 
 		if (actionListener == null)
-			Log.error("Client", "actionListener of player %d is null",
+			LOG.error("[CLIENT] actionListener of player %d is null",
 					localClientId);
 
 		this.actionHandler = new ClientsideActionHandler(localClientId,
@@ -106,7 +109,7 @@ public class GameClient extends BaseGameClient {
 
 		actionHandler.requestGameData();
 
-		Log.info("Client", "RMI connection to server established");
+		LOG.info("[CLIENT] RMI connection to server established");
 	}
 
 	@Override
@@ -133,7 +136,7 @@ public class GameClient extends BaseGameClient {
 
 		resultListener.setSession(session);
 
-		Log.info("Client", "Match initialized");
+		LOG.info("[CLIENT] Match initialized");
 	}
 
 	/**

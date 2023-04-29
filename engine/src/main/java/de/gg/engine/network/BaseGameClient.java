@@ -9,10 +9,11 @@ import com.esotericsoftware.kryonet.FrameworkMessage.Ping;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Listener.TypeListener;
 
-import de.damios.guacamole.ISuccessCallback;
+import de.damios.guacamole.ICallback;
 import de.damios.guacamole.Preconditions;
 import de.damios.guacamole.concurrent.ThreadHandler;
-import de.damios.guacamole.gdx.Log;
+import de.damios.guacamole.gdx.log.Logger;
+import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.utils.MachineIdentificationUtils;
 import de.gg.engine.network.message.ClientHandshakeRequest;
 import de.gg.engine.network.message.FailedHandshakeResponse;
@@ -24,11 +25,13 @@ import de.gg.engine.network.message.SuccessfulHandshakeResponse;
  * This class takes care of handling the networking part for a basic game
  * client.
  * 
- * @see #connect(ISuccessCallback, String, String, int)
+ * @see #connect(ICallback, String, String, int)
  * @see #disconnect()
  */
 public abstract class BaseGameClient {
 
+	private static final Logger LOG = LoggerService
+			.getLogger(BaseGameClient.class);
 	protected Client client;
 	/**
 	 * The network ID of the local player.
@@ -58,13 +61,13 @@ public abstract class BaseGameClient {
 	 * @param port
 	 *            The server's port.
 	 */
-	public void connect(ISuccessCallback callback, String gameVersion,
-			String ip, int port) {
+	public void connect(ICallback callback, String gameVersion, String ip,
+			int port) {
 		Preconditions.checkNotNull(callback, "callback cannot be null.");
 		Preconditions.checkNotNull(gameVersion, "game version cannot be null.");
 		Preconditions.checkNotNull(ip, "ip cannot be null.");
 
-		Log.info("Client", "--- Connecting to Server ---");
+		LOG.info("[CLIENT] --- Connecting to Server ---");
 
 		client = new Client();
 		client.start();
@@ -78,30 +81,30 @@ public abstract class BaseGameClient {
 		});
 		// Server full
 		listener.addTypeHandler(ServerRejectionResponse.class, (con, msg) -> {
-			Log.info("Client", "Couldn't connect: Client was rejected (%s)",
+			LOG.info("[CLIENT] Couldn't connect: Client was rejected (%s)",
 					msg.getMessage());
 			callback.onFailure(msg.getMessage());
 		});
 		// Server handshake (stage 2 of connection)
 		listener.addTypeHandler(SuccessfulHandshakeResponse.class,
 				(con, msg) -> {
-					Log.info("Client",
-							"Connection established. Local network ID is: %d",
+					LOG.info(
+							"[CLIENT] Connection established. Local network ID is: %d",
 							localClientId);
 					localClientId = msg.getClientNetworkId();
 					onSuccessfulHandshake();
 					client.addListener(new Listener() {
 						@Override
 						public void disconnected(Connection connection) {
-							Log.info("Client", "Connection closed!");
+							LOG.info("[CLIENT] Connection closed!");
 							onDisconnection();
 						}
 					});
 					callback.onSuccess(null);
 				});
 		listener.addTypeHandler(FailedHandshakeResponse.class, (con, msg) -> {
-			Log.info("Client",
-					"Couldn't connect: Handshake was not successful (%s)",
+			LOG.info(
+					"[CLIENT] Couldn't connect: Handshake was not successful (%s)",
 					msg.getMsg());
 			callback.onFailure(msg.getMsg());
 		});
@@ -109,7 +112,7 @@ public abstract class BaseGameClient {
 		listener.addTypeHandler(Ping.class, (con, msg) -> {
 			if (msg.isReply) {
 				this.ping = con.getReturnTripTime();
-				Log.info("Client", "Ping: %d", ping);
+				LOG.info("[CLIENT] Ping: %d", ping);
 			}
 		});
 
@@ -122,7 +125,7 @@ public abstract class BaseGameClient {
 				client.connect(6000, ip, port);
 				// A successful connection further requires a proper handshake
 			} catch (IOException e) {
-				Log.error("Client", "Couldn't connect: %s", e);
+				LOG.error("[CLIENT] Couldn't connect: %s", e);
 				callback.onFailure("Couldn't connect: " + e.getMessage());
 			}
 		});
@@ -132,7 +135,7 @@ public abstract class BaseGameClient {
 	 * Disconnects the client from the server.
 	 */
 	public void disconnect() {
-		Log.info("Client", "Closing connection...");
+		LOG.info("[CLIENT] Closing connection...");
 		client.close();
 	}
 

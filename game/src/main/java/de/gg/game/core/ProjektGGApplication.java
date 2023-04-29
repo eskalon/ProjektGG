@@ -8,11 +8,15 @@ import javax.annotation.Nullable;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.math.Interpolation;
+import com.google.common.eventbus.EventBus;
 import com.google.gson.reflect.TypeToken;
 
 import de.damios.guacamole.concurrent.ThreadHandler;
 import de.eskalon.commons.asset.AnnotationAssetManager.AssetLoaderParametersFactory;
 import de.eskalon.commons.core.EskalonApplication;
+import de.eskalon.commons.core.EskalonApplicationConfiguration;
+import de.eskalon.commons.misc.EventBusLogger;
+import de.eskalon.commons.misc.EventQueueBus;
 import de.eskalon.commons.screen.transition.impl.BlendingTransition;
 import de.eskalon.commons.screens.AbstractAssetLoadingScreen;
 import de.eskalon.commons.screens.EskalonSplashScreen;
@@ -50,8 +54,12 @@ public class ProjektGGApplication extends EskalonApplication {
 	private @Nullable GameServer server;
 	private @Nullable GameClient client;
 
-	public ProjektGGApplication() {
-		super(false, true);
+	/* TODO */
+	// - Reintroduce the (forked) Guava EventBus to Pancake!!!
+
+	@Override
+	protected EskalonApplicationConfiguration getAppConfig() {
+		return super.getAppConfig().provideDepthBuffers();
 	}
 
 	@Override
@@ -123,7 +131,16 @@ public class ProjektGGApplication extends EskalonApplication {
 		screenManager.addScreenTransition("longBlendingTransition",
 				longBlendingTransition);
 
+		// Event Bus 2
+		eventBus2.register(new EventBusLogger());
+
 		return "loading";
+	}
+
+	@Override
+	public void render() {
+		eventBus2.distributeEvents();
+		super.render();
 	}
 
 	public GGSettings getSettings() {
@@ -166,6 +183,12 @@ public class ProjektGGApplication extends EskalonApplication {
 			ThreadHandler.getInstance().executeRunnable(() -> server.stop());
 
 		super.dispose();
+	}
+
+	private EventQueueBus eventBus2 = new EventQueueBus();
+
+	public EventBus getEventBus2() {
+		return eventBus2;
 	}
 
 }

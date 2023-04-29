@@ -8,7 +8,7 @@ import java.util.concurrent.TimeoutException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import de.damios.guacamole.ISuccessCallback;
+import de.damios.guacamole.ICallback;
 import de.gg.engine.network.BaseGameServer;
 import de.gg.engine.network.ServerDiscoveryHandler;
 import de.gg.engine.network.ServerDiscoveryHandler.HostDiscoveryListener;
@@ -60,7 +60,7 @@ public class GameServerDiscoveryTest extends LibgdxUnitTest {
 
 		server = new GameServer(serverSetup, sessionSetup, null,
 				Arrays.asList(stub, stub, stub));
-		server.start(new ISuccessCallback() {
+		server.start(new ICallback() {
 			@Override
 			public void onSuccess(Object param) {
 				waiter.resume();

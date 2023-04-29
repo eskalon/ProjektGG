@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.I18NBundle;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.damios.guacamole.gdx.assets.Text;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
@@ -34,6 +36,8 @@ import de.gg.game.model.types.TypeRegistry;
  * This screen takes care of loading the game's assets.
  */
 public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
+
+	private Viewport viewport;
 
 	// Assets of the loading screen itself
 	private static final String BACKGROUND_PATH = "ui/backgrounds/loading_screen.jpg";
@@ -76,6 +80,7 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 
 	public AssetLoadingScreen(ProjektGGApplication application) {
 		super(application, "de.gg.game");
+		this.viewport = new ScreenViewport();
 	}
 
 	@Override
@@ -144,19 +149,19 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 
 		// Transitions
 		GLTransitionsShaderTransition simpleZoomShader = new GLTransitionsShaderTransition(
-				application.getUICamera(), 0.9F, Interpolation.smooth);
+				0.9F, Interpolation.smooth);
 		simpleZoomShader.compileGLTransition(simpleZoomText.getString());
 		application.getScreenManager().addScreenTransition("simple_zoom",
 				simpleZoomShader);
 
 		GLTransitionsShaderTransition circleCropShader = new GLTransitionsShaderTransition(
-				application.getUICamera(), 0.8F, Interpolation.linear);
+				0.8F, Interpolation.linear);
 		circleCropShader.compileGLTransition(circleCropText.getString());
 		application.getScreenManager().addScreenTransition("circle_crop",
 				circleCropShader);
 
 		GLTransitionsShaderTransition circleOpenShader = new GLTransitionsShaderTransition(
-				application.getUICamera(), 0.5F, Interpolation.linear);
+				0.5F, Interpolation.linear);
 		circleOpenShader.compileGLTransition(circleOpenText.getString());
 		application.getScreenManager().addScreenTransition("circle_open",
 				circleOpenShader);
@@ -201,9 +206,10 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 
 	@Override
 	public void render(float delta, float progress) {
-		application.getSpriteBatch().begin();
+		viewport.apply();
 		application.getSpriteBatch()
-				.setProjectionMatrix(application.getUICamera().combined);
+				.setProjectionMatrix(viewport.getCamera().combined);
+		application.getSpriteBatch().begin();
 
 		// Draw the background
 		application.getSpriteBatch().draw(this.backgroundTexture, 0, 0,

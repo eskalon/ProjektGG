@@ -3,13 +3,14 @@ package de.gg.game.session;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
 
 import com.google.common.base.Stopwatch;
 
-import de.damios.guacamole.gdx.Log;
-import de.eskalon.commons.misc.EskalonLogger;
+import de.damios.guacamole.gdx.log.Logger;
+import de.damios.guacamole.gdx.log.LoggerService;
 import de.gg.engine.misc.TickCounter;
 import de.gg.engine.misc.TickCounter.TickHandler;
 import de.gg.engine.utils.CountdownTimer;
@@ -46,6 +47,10 @@ import de.gg.game.ui.screens.GameBallotScreen;
  *
  */
 public abstract class GameSession {
+
+	private static final Logger LOG = LoggerService
+			.getLogger(GameSession.class);
+
 	public static final int ROUND_DURATION_IN_SECONDS = 35; // 8*60
 	protected static final int TICKS_PER_SECOND = 10;
 
@@ -188,8 +193,8 @@ public abstract class GameSession {
 	 */
 	public synchronized boolean update() {
 		if (!initialized) {
-			Log.error(localNetworkId == -1 ? "Server" : "Client",
-					"Die Session muss zuerst initialisiert werden, bevor sie geupdated werden kann");
+			LOG.error((localNetworkId == -1 ? "[SERVER]" : "[CLIENT]")
+					+ "Die Session muss zuerst initialisiert werden, bevor sie geupdated werden kann");
 			return false;
 		}
 
@@ -242,9 +247,10 @@ public abstract class GameSession {
 			roundEndSystem.processPosition(e.getKey(), e.getValue());
 		}
 
-		Log.info(localNetworkId == -1 ? "Server" : "Client",
-				"RoundEndSystem in %d ms verarbeitet",
-				logTimer.elapsed(EskalonLogger.DEFAULT_TIME_UNIT));
+		LOG.info(
+				(localNetworkId == -1 ? "[SERVER]" : "[CLIENT]")
+						+ "RoundEndSystem in %d ms verarbeitet",
+				logTimer.elapsed(TimeUnit.MILLISECONDS));
 	}
 
 	/**
@@ -263,11 +269,11 @@ public abstract class GameSession {
 								.entrySet()) {
 							sys.process(e.getKey(), e.getValue());
 						}
-						Log.info(localNetworkId == -1 ? "Server" : "Client",
-								"%s-System in %d ms verarbeitet",
+						LOG.info(
+								(localNetworkId == -1 ? "[SERVER]" : "[CLIENT]")
+										+ "%s-System in %d ms verarbeitet",
 								sys.getClass().getSimpleName(),
-								logTimer.elapsed(
-										EskalonLogger.DEFAULT_TIME_UNIT));
+								logTimer.elapsed(TimeUnit.MILLISECONDS));
 
 						sys.setAsProcessed(true);
 					}
@@ -282,11 +288,11 @@ public abstract class GameSession {
 								.entrySet()) {
 							sys.process(e.getKey(), e.getValue());
 						}
-						Log.info(localNetworkId == -1 ? "Server" : "Client",
-								"%s-System in %d ms verarbeitet",
+						LOG.info(
+								(localNetworkId == -1 ? "[SERVER]" : "[CLIENT]")
+										+ "%s-System in %d ms verarbeitet",
 								sys.getClass().getSimpleName(),
-								logTimer.elapsed(
-										EskalonLogger.DEFAULT_TIME_UNIT));
+								logTimer.elapsed(TimeUnit.MILLISECONDS));
 
 						sys.setAsProcessed(true);
 					}
@@ -303,8 +309,8 @@ public abstract class GameSession {
 	public synchronized void startNextRound() {
 		currentRound++;
 
-		Log.debug(localNetworkId == -1 ? "Server" : "Client",
-				"Runde %s gestartet; Letzte Runde wurden %s Ticks gezählt",
+		LOG.debug((localNetworkId == -1 ? "[SERVER]" : "[CLIENT]")
+				+ "Runde %s gestartet; Letzte Runde wurden %s Ticks gezählt",
 				currentRound, tickCounter.getTickCount());
 
 		// Reset the tick counter
@@ -321,8 +327,9 @@ public abstract class GameSession {
 		}
 
 		// Take care of votes
-		Log.info(localNetworkId == -1 ? "Server" : "Client",
-				"Es stehen %d Tagesordnunspunkte an",
+		LOG.info(
+				(localNetworkId == -1 ? "[SERVER]" : "[CLIENT]")
+						+ "Es stehen %d Tagesordnunspunkte an",
 				world.getMattersToHoldVoteOn().size());
 		holdVote = !world.getMattersToHoldVoteOn().isEmpty();
 	}

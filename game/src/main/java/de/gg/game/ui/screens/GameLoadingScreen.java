@@ -6,9 +6,12 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.google.common.eventbus.Subscribe;
 
-import de.damios.guacamole.gdx.Log;
+import de.damios.guacamole.gdx.log.Logger;
+import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.core.EskalonApplication;
 import de.eskalon.commons.screens.AbstractAssetLoadingScreen;
@@ -25,6 +28,9 @@ import de.gg.game.ui.rendering.SelectableRenderData;
  */
 public class GameLoadingScreen extends AbstractAssetLoadingScreen {
 
+	private static final Logger LOG = LoggerService
+			.getLogger(GameLoadingScreen.class);
+
 	@Asset("ui/backgrounds/game_loading_screen.jpg")
 	private Texture backgroundTexture;
 	@Asset("ui/loading_bar_top.png")
@@ -32,15 +38,20 @@ public class GameLoadingScreen extends AbstractAssetLoadingScreen {
 	@Asset("ui/loading_bar_bottom.png")
 	private Texture bottomBarTexture;
 
+	private Viewport viewport;
+
 	private static final Vector3 Y_AXIS = new Vector3(0, 1, 0);
 
 	public GameLoadingScreen(EskalonApplication application) {
 		super(application, null);
+		this.viewport = new ScreenViewport();
 	}
 
 	@Override
 	public void show() {
 		super.show();
+
+		((ProjektGGApplication) application).getEventBus2().register(this);
 
 		// Load game assets
 		application.getAssetManager().load(
@@ -53,6 +64,12 @@ public class GameLoadingScreen extends AbstractAssetLoadingScreen {
 		}
 
 		// TODO unload them when disconnecting?
+	}
+
+	@Override
+	public void hide() {
+		super.hide();
+		((ProjektGGApplication) application).getEventBus2().unregister(this);
 	}
 
 	@Override
@@ -92,11 +109,11 @@ public class GameLoadingScreen extends AbstractAssetLoadingScreen {
 		}
 		world.setSkybox(new ModelInstance(skyboxModel));
 
-		Log.info("Client", "Game assets loaded");
+		LOG.info("[CLIENT] Game assets loaded");
 
 		if (((ProjektGGApplication) application).isHost()) {
 			((ProjektGGApplication) application).getServer().startMatch();
-			Log.info("Server", "Game started!");
+			LOG.info("[SERVER] Game started!");
 		}
 
 		application.getScreenManager().pushScreen("round_end", "simple_zoom",
@@ -111,9 +128,10 @@ public class GameLoadingScreen extends AbstractAssetLoadingScreen {
 
 	@Override
 	public void render(float delta, float progress) {
-		application.getSpriteBatch().begin();
+		viewport.apply();
 		application.getSpriteBatch()
-				.setProjectionMatrix(application.getUICamera().combined);
+				.setProjectionMatrix(viewport.getCamera().combined);
+		application.getSpriteBatch().begin();
 
 		// Draw the background
 		application.getSpriteBatch().draw(this.backgroundTexture, 0, 0,

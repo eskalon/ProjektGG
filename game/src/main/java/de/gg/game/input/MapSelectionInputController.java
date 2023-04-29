@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.google.common.eventbus.EventBus;
 
 import de.damios.guacamole.gdx.DefaultInputProcessor;
+import de.eskalon.commons.event.EventQueueBus;
 import de.gg.game.events.HouseEnterEvent;
 import de.gg.game.events.HouseSelectionEvent;
 import de.gg.game.model.World;
@@ -28,7 +29,8 @@ public class MapSelectionInputController implements DefaultInputProcessor {
 
 	private int clickX, clickY;
 
-	public MapSelectionInputController(EventBus bus, PerspectiveCamera camera) {
+	public MapSelectionInputController(EventBus bus,
+			PerspectiveCamera camera) {
 		this.eventBus = bus;
 		this.camera = camera;
 	}

@@ -15,7 +15,8 @@ import com.badlogic.gdx.utils.Array;
 import com.google.common.eventbus.Subscribe;
 
 import de.damios.guacamole.concurrent.ThreadHandler;
-import de.damios.guacamole.gdx.Log;
+import de.damios.guacamole.gdx.log.Logger;
+import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.lang.Lang;
 import de.gg.engine.ui.components.OffsettableTextField;
@@ -34,6 +35,9 @@ import de.gg.game.ui.dialogs.PlayerLobbyConfigDialog;
  * The screen for a lobby.
  */
 public class LobbyScreen extends AbstractGGUIScreen {
+
+	private static final Logger LOG = LoggerService
+			.getLogger(LobbyScreen.class);
 
 	@Asset("ui/backgrounds/lobby_screen.jpg")
 	private Texture backgroundTexture;
@@ -78,7 +82,7 @@ public class LobbyScreen extends AbstractGGUIScreen {
 				new ButtonClickListener(application.getSoundManager()) {
 					@Override
 					protected void onClick() {
-						Log.info("Client", "Disconnecting from Lobby");
+						LOG.info("[CLIENT] Disconnecting from Lobby");
 						final GameClient client = application.getClient();
 						final GameServer server = application.getServer();
 						application.setClient(null);
@@ -86,11 +90,11 @@ public class LobbyScreen extends AbstractGGUIScreen {
 
 						ThreadHandler.getInstance().executeRunnable(() -> {
 							client.disconnect();
-							Log.info("Client", "Client disconnected");
+							LOG.info("[CLIENT] Client disconnected");
 							if (server != null) {
 								server.stop();
 							}
-							Log.info("Server", "Server stopped");
+							LOG.info("[SERVER] Server stopped");
 						});
 
 						application.getScreenManager()
@@ -325,7 +329,7 @@ public class LobbyScreen extends AbstractGGUIScreen {
 			// Set up the game on the client side
 			application.getClient().initGameSession();
 
-			Log.info("Client", "Loading game stuff...");
+			LOG.info("[CLIENT] Loading game stuff...");
 			application.getScreenManager().pushScreen("game_loading",
 					"blendingTransition");
 		} else {

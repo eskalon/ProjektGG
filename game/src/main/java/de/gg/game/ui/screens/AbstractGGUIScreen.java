@@ -18,4 +18,16 @@ public abstract class AbstractGGUIScreen extends AbstractEskalonUIScreen {
 		return application;
 	}
 
+	@Override
+	public void show() {
+		super.show();
+		application.getEventBus2().register(this);
+	}
+
+	@Override
+	public void hide() {
+		super.hide();
+		application.getEventBus2().unregister(this);
+	}
+
 }

@@ -1,10 +1,11 @@
 package de.gg.game.ui.screens;
 
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.LeftClickSlider;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.google.common.eventbus.Subscribe;
@@ -61,8 +62,8 @@ public class SettingsScreen extends AbstractGGUIScreen {
 		// VOLUME
 		Label masterVolume = new Label(
 				Lang.get("screen.settings.master_volume"), skin);
-		LeftClickSlider masterSlider = new LeftClickSlider(0, 1, 0.05F, false,
-				skin);
+		Slider masterSlider = new Slider(0, 1, 0.05F, false, skin);
+		masterSlider.setButton(Buttons.LEFT);
 		masterSlider.setValue(settings.getMasterVolume());
 		masterSlider.addListener(new ChangeListener() {
 			@Override
@@ -75,8 +76,8 @@ public class SettingsScreen extends AbstractGGUIScreen {
 
 		Label effectVolume = new Label(
 				Lang.get("screen.settings.effect_volume"), skin);
-		LeftClickSlider effectSlider = new LeftClickSlider(0, 1, 0.05F, false,
-				skin);
+		Slider effectSlider = new Slider(0, 1, 0.05F, false, skin);
+		effectSlider.setButton(Buttons.LEFT);
 		effectSlider.setValue(settings.getEffectVolume());
 		effectSlider.addListener(new ChangeListener() {
 			@Override
@@ -89,8 +90,8 @@ public class SettingsScreen extends AbstractGGUIScreen {
 
 		Label musicVolume = new Label(Lang.get("screen.settings.music_volume"),
 				skin);
-		LeftClickSlider musicSlider = new LeftClickSlider(0, 1, 0.05F, false,
-				skin);
+		Slider musicSlider = new Slider(0, 1, 0.05F, false, skin);
+		musicSlider.setButton(Buttons.LEFT);
 		musicSlider.setValue(settings.getMusicVolume());
 		musicSlider.addListener(new ChangeListener() {
 			@Override

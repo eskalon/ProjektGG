@@ -11,7 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.google.common.eventbus.Subscribe;
 
-import de.damios.guacamole.gdx.Log;
+import de.damios.guacamole.gdx.log.Logger;
+import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.lang.Lang;
 import de.gg.game.core.ProjektGGApplication;
@@ -27,6 +28,9 @@ import de.gg.game.misc.GameClock;
  * this screen switches either to the voting or the map screen.
  */
 public class GameRoundendScreen extends AbstractGameScreen {
+
+	private static final Logger LOG = LoggerService
+			.getLogger(GameRoundendScreen.class);
 
 	@Asset("ui/backgrounds/round_end_screen.jpg")
 	private Texture backgroundTexture;
@@ -73,7 +77,7 @@ public class GameRoundendScreen extends AbstractGameScreen {
 				application.getSoundManager().playSoundEffect("page_flip");
 				nextButton.setText(Lang.get("ui.generic.waiting"));
 
-				Log.debug("Client", "Client ist ready for next round");
+				LOG.debug("[CLIENT] Client ist ready for next round");
 
 				application.getClient().getActionHandler().readyUp();
 

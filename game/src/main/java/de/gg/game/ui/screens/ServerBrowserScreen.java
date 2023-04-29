@@ -16,7 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.google.common.eventbus.Subscribe;
 
-import de.damios.guacamole.ISuccessCallback;
+import de.damios.guacamole.ICallback;
 import de.damios.guacamole.concurrent.ThreadHandler;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.lang.Lang;
@@ -38,7 +38,7 @@ public class ServerBrowserScreen extends AbstractGGUIScreen {
 	@Asset("ui/backgrounds/server_browser_screen.jpg")
 	private Texture backgroundTexture;
 
-	private ISuccessCallback connectionCallback;
+	private ICallback connectionCallback;
 
 	private Dialog connectingDialog;
 	private Table serverTable;
@@ -72,7 +72,7 @@ public class ServerBrowserScreen extends AbstractGGUIScreen {
 			}
 		});
 
-		this.connectionCallback = new ISuccessCallback() {
+		this.connectionCallback = new ICallback() {
 			@Override
 			public void onSuccess(Object param) {
 			}
@@ -130,7 +130,7 @@ public class ServerBrowserScreen extends AbstractGGUIScreen {
 								if ((Boolean) obj) {
 									// Connect to client
 									application.setClient(new GameClient(
-											application.getEventBus()));
+											application.getEventBus2()));
 									application.getClient().connect(
 											connectionCallback,
 											application.VERSION,
@@ -253,7 +253,7 @@ public class ServerBrowserScreen extends AbstractGGUIScreen {
 					@Override
 					protected void onClick() {
 						application.setClient(
-								new GameClient(application.getEventBus()));
+								new GameClient(application.getEventBus2()));
 						application.getClient().connect(connectionCallback,
 								application.VERSION, address, packet.getPort());
 						connectingDialog = SimpleTextDialog.createAndShow(stage,

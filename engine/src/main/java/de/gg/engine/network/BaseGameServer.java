@@ -13,10 +13,11 @@ import com.esotericsoftware.kryonet.Listener.TypeListener;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.kryonet.ServerDiscoveryHandler;
 
-import de.damios.guacamole.ISuccessCallback;
+import de.damios.guacamole.ICallback;
 import de.damios.guacamole.Preconditions;
 import de.damios.guacamole.concurrent.ThreadHandler;
-import de.damios.guacamole.gdx.Log;
+import de.damios.guacamole.gdx.log.Logger;
+import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.lang.Lang;
 import de.gg.engine.network.message.ClientHandshakeRequest;
 import de.gg.engine.network.message.DiscoveryResponsePacket;
@@ -29,11 +30,13 @@ import de.gg.engine.network.message.SuccessfulHandshakeResponse;
  *
  * @param <C>
  *            The type of player connected to this server.
- * @see #start(ISuccessCallback)
+ * @see #start(ICallback)
  * @see #stop()
  */
 public abstract class BaseGameServer<C> {
 
+	private static final Logger LOG = LoggerService
+			.getLogger(BaseGameServer.class);
 	public static final int DEFAULT_PORT = 55678;
 	public static final int UDP_DISCOVER_PORT = 54678;
 	/**
@@ -81,10 +84,10 @@ public abstract class BaseGameServer<C> {
 	 * @param callback
 	 *            the callback that is informed when the server is started.
 	 */
-	public void start(ISuccessCallback callback) {
+	public void start(ICallback callback) {
 		Preconditions.checkNotNull(callback, "callback cannot be null.");
 
-		Log.info("Server", "--- Server is starting ---");
+		LOG.info("[SERVER] --- Server is starting ---");
 
 		this.server = new Server();
 		this.server.start();
@@ -112,7 +115,7 @@ public abstract class BaseGameServer<C> {
 			try {
 				// Start the server
 				server.bind(serverSetup.getPort());
-				Log.info("Server", "Server started");
+				LOG.info("[SERVER] Server started");
 
 				// Create & start the broadcast server
 				if (serverSetup.isPublic()) {
@@ -120,7 +123,7 @@ public abstract class BaseGameServer<C> {
 				}
 				callback.onSuccess(null); // Host successfully started
 			} catch (IOException | IllegalArgumentException e2) {
-				Log.error("Server", "Server could not be started: %s", e2);
+				LOG.error("[Server] Server could not be started: %s", e2);
 				callback.onFailure(e2); // Something went wrong
 			}
 		});
@@ -150,21 +153,21 @@ public abstract class BaseGameServer<C> {
 
 		try {
 			broadcastServer.bind(0, UDP_DISCOVER_PORT);
-			Log.info("Server", "Broadcast server started");
+			LOG.info("[SERVER] Broadcast server started");
 		} catch (IOException e1) {
-			Log.error("Server", "Broadcast server couldn't be started: %s", e1);
+			LOG.error("[SERVER] Broadcast server couldn't be started: %s", e1);
 		}
 	}
 
 	private synchronized void onClientConnected(Connection con) {
 		if (players.size() >= serverSetup.getMaxPlayerCount()) { // Match full
-			Log.info("Server", "Client was rejected for want of capacity");
+			LOG.info("[SERVER] Client was rejected for want of capacity");
 
 			con.sendTCP(
 					new ServerRejectionResponse(Lang.get("server.is_full")));
 			con.close();
 		} else { // Still free slots
-			Log.info("Server", "Client accepted");
+			LOG.info("[SERVER] Client accepted");
 
 			connections.put(con, playerIdIterator);
 			con.sendTCP(new ServerAcceptanceResponse());
@@ -177,7 +180,7 @@ public abstract class BaseGameServer<C> {
 		Short id = connections.remove(con);
 
 		if (id != null) {
-			Log.info("Server", "Client %d has disconnected", id);
+			LOG.info("[SERVER] Client %d has disconnected", id);
 
 			if (players.containsKey(id)) {
 				onPlayerDisconnected(con, id);
@@ -191,12 +194,12 @@ public abstract class BaseGameServer<C> {
 	 * Stops the server. Also takes care of saving the game.
 	 */
 	public void stop() {
-		Log.info("Server", "Server is stopping...");
+		LOG.info("[SERVER] Server is stopping...");
 		server.stop();
 		if (broadcastServer != null)
 			stopBroadcastServer();
 
-		Log.info("Server", "Server stopped!");
+		LOG.info("[SERVER] Server stopped!");
 	}
 
 	protected void stopBroadcastServer() {

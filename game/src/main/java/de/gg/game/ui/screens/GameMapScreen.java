@@ -1,7 +1,6 @@
 package de.gg.game.ui.screens;
 
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -9,14 +8,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.crashinvaders.vfx.effects.ChainVfxEffect;
+import com.crashinvaders.vfx.effects.GaussianBlurEffect;
 import com.google.common.eventbus.Subscribe;
 
 import de.damios.guacamole.concurrent.ThreadHandler;
-import de.damios.guacamole.gdx.Log;
 import de.damios.guacamole.gdx.assets.Text;
+import de.damios.guacamole.gdx.log.Logger;
+import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
-import de.eskalon.commons.graphics.postproc.PostProcessingPipeline;
-import de.eskalon.commons.graphics.postproc.impl.ColorBlendEffect;
+import de.eskalon.commons.graphics.PostProcessingPipeline;
 import de.eskalon.commons.lang.Lang;
 import de.gg.engine.ui.rendering.CameraWrapper;
 import de.gg.game.core.ProjektGGApplication;
@@ -46,6 +47,9 @@ import de.gg.game.ui.rendering.GameRenderer;
  */
 public class GameMapScreen extends AbstractGameScreen {
 
+	private static final Logger LOG = LoggerService
+			.getLogger(GameMapScreen.class);
+
 	@Asset("shaders/single_color_selection.frag")
 	private Text fragmentShader;
 
@@ -67,7 +71,7 @@ public class GameMapScreen extends AbstractGameScreen {
 	private boolean pauseShown = false;
 
 	private PostProcessingPipeline postProcessor;
-	private ColorBlendEffect pausePostProcessingEffect;
+	private ChainVfxEffect pausePostProcessingEffect;
 
 	public GameMapScreen(ProjektGGApplication application) {
 		super(application);
@@ -84,14 +88,13 @@ public class GameMapScreen extends AbstractGameScreen {
 
 		postProcessor = new PostProcessingPipeline(application.getWidth(),
 				application.getHeight(), true);
-		pausePostProcessingEffect = new ColorBlendEffect(
-				application.getUICamera(), new Color(0.4F, 0.4F, 0.4F, 0.4F));
+		pausePostProcessingEffect = new GaussianBlurEffect();
 
 		gameRenderer = new GameRenderer(camera.getCamera(),
 				fragmentShader.getString());
 
 		selectionInputController = new MapSelectionInputController(
-				application.getEventBus(), camera.getCamera());
+				application.getEventBus2(), camera.getCamera());
 		addInputProcessor(selectionInputController);
 		movementInputController = new MapMovementInputController(camera,
 				application.getSettings());
@@ -305,7 +308,7 @@ public class GameMapScreen extends AbstractGameScreen {
 					application.getScreenManager().pushScreen("settings",
 							"blendingTransition");
 				} else {
-					Log.info("Client", "Verbindung wird getrennt");
+					LOG.info("[CLIENT] Verbindung wird getrennt");
 					final GameClient client = application.getClient();
 					final GameServer server = application.getServer();
 					// Set stuff to null to stop updates
@@ -392,8 +395,7 @@ public class GameMapScreen extends AbstractGameScreen {
 
 			if (doPostProcessing) {
 				postProcessor.endCapture();
-				postProcessor
-						.renderEffectsOntoBatch(application.getSpriteBatch());
+				postProcessor.renderEffectsToScreen(delta);
 			}
 
 		}
@@ -401,7 +403,7 @@ public class GameMapScreen extends AbstractGameScreen {
 
 	@Subscribe
 	public void onHouseSelectionEvent(HouseSelectionEvent ev) {
-		Log.debug("Input", "Building selected: %d", ev.getId());
+		LOG.debug("[INPUT] Building selected: %d", ev.getId());
 
 		if (ev.getId() == -1) {
 			houseSelectionDialog.hide();

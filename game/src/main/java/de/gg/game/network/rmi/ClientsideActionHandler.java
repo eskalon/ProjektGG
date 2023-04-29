@@ -3,9 +3,10 @@ package de.gg.game.network.rmi;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import de.damios.guacamole.ISimpleCallback;
 import de.damios.guacamole.concurrent.DaemonThreadFactory;
-import de.damios.guacamole.gdx.Log;
+import de.damios.guacamole.func.BooleanConsumer;
+import de.damios.guacamole.gdx.log.Logger;
+import de.damios.guacamole.gdx.log.LoggerService;
 import de.gg.game.model.types.PositionType;
 import de.gg.game.network.LobbyPlayer;
 
@@ -14,6 +15,9 @@ import de.gg.game.network.LobbyPlayer;
  * used to relay the player actions to the server.
  */
 public class ClientsideActionHandler {
+
+	private static final Logger LOG = LoggerService
+			.getLogger(ClientsideActionHandler.class);
 
 	private short networkId;
 	private SlaveActionListener actionListener;
@@ -44,9 +48,9 @@ public class ClientsideActionHandler {
 	public void readyUp() {
 		executor.submit(() -> {
 			if (!actionListener.readyUp(networkId))
-				Log.error("Client", "Fehler beim \"auf Bereit stellen\"");
+				LOG.error("[CLIENT] Fehler beim \"auf Bereit stellen\"");
 			else
-				Log.info("Client", "Client ist bereit");
+				LOG.info("[CLIENT] Client ist bereit");
 		});
 	}
 
@@ -62,14 +66,14 @@ public class ClientsideActionHandler {
 		executor.submit(() -> actionListener.onVoteCast(vote, networkId));
 	}
 
-	public void applyForPosition(PositionType t, ISimpleCallback callback) {
+	public void applyForPosition(PositionType t, BooleanConsumer callback) {
 		executor.submit(() -> callback
-				.call(actionListener.onAppliedForPosition(t, networkId)));
+				.accept(actionListener.onAppliedForPosition(t, networkId)));
 	}
 
 	public void arrangeImpeachmentVote(short targetCharacterId,
-			ISimpleCallback callback) {
-		executor.submit(() -> callback.call(actionListener
+			BooleanConsumer callback) {
+		executor.submit(() -> callback.accept(actionListener
 				.onImpeachmentVoteArranged(targetCharacterId, networkId)));
 	}
 

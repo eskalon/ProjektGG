@@ -1,19 +1,25 @@
 package de.gg.engine.misc;
 
 import java.time.OffsetDateTime;
+import java.util.function.Consumer;
+
+import org.lwjgl.system.Callback;
+import org.lwjgl.system.CallbackI;
 
 import com.jagrosh.discordipc.IPCClient;
 import com.jagrosh.discordipc.IPCListener;
 import com.jagrosh.discordipc.entities.RichPresence;
 import com.jagrosh.discordipc.exceptions.NoDiscordClientException;
 
-import de.damios.guacamole.ISimpleCallback;
 import de.damios.guacamole.Preconditions;
 import de.damios.guacamole.concurrent.ThreadHandler;
-import de.damios.guacamole.gdx.Log;
+import de.damios.guacamole.gdx.log.Logger;
+import de.damios.guacamole.gdx.log.LoggerService;
 
 public abstract class DiscordRichPresenceHandler {
 
+	private static final Logger LOG = LoggerService
+			.getLogger(DiscordRichPresenceHandler.class);
 	/**
 	 * Whether the handler is enabled.
 	 */
@@ -45,12 +51,12 @@ public abstract class DiscordRichPresenceHandler {
 		if (connected)
 			client.sendRichPresence(presence);
 		else
-			connect((Object) -> {
+			connect(() -> {
 				client.sendRichPresence(presence);
 			});
 	}
 
-	protected void connect(ISimpleCallback callback) {
+	protected void connect(Runnable onCompletion) {
 		if (!enabled)
 			return;
 
@@ -63,14 +69,13 @@ public abstract class DiscordRichPresenceHandler {
 					@Override
 					public void onReady(IPCClient client) {
 						connected = true;
-						callback.call(null);
-						Log.info("Discord",
-								"Connection to the ipc established");
+						onCompletion.run();
+						LOG.info("[DISCORD] Connection to the ipc established");
 					}
 				});
 				client.connect();
 			} catch (NoDiscordClientException e) {
-				Log.error("Discord", "Couldn't connect to the ipc: %s", e);
+				LOG.error("[DISCORD] Couldn't connect to the ipc: %s", e);
 			}
 		});
 	}

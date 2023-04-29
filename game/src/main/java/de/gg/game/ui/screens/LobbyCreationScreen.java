@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.google.common.eventbus.Subscribe;
 import com.google.gson.reflect.TypeToken;
 
-import de.damios.guacamole.ISuccessCallback;
+import de.damios.guacamole.ICallback;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.lang.Lang;
 import de.gg.engine.network.BaseGameServer;
@@ -140,39 +140,35 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 									System.currentTimeMillis());
 							application.setServer(new GameServer(serverSetup,
 									sessionSetup, null, playerStubs));
-							application.getServer()
-									.start(new ISuccessCallback() {
-										@Override
-										public void onSuccess(Object param) {
-											// Connect client to server
-											application.setClient(
-													new GameClient(application
-															.getEventBus()));
-											application.getClient().connect(
-													new ISuccessCallback() {
-														public void onSuccess(
-																Object param) {
-															// wait for
-															// LobbyDataReceivedEvent
-														};
+							application.getServer().start(new ICallback() {
+								@Override
+								public void onSuccess(Object param) {
+									// Connect client to server
+									application.setClient(new GameClient(
+											application.getEventBus2()));
+									application.getClient()
+											.connect(new ICallback() {
+												public void onSuccess(
+														Object param) {
+													// wait for
+													// LobbyDataReceivedEvent
+												};
 
-														public void onFailure(
-																Object param) {
-															onHostStartingFailed(
-																	((Exception) param)
-																			.getMessage());
-														};
-													}, application.VERSION,
-													"localhost",
+												public void onFailure(
+														Object param) {
+													onHostStartingFailed(
+															((Exception) param)
+																	.getMessage());
+												};
+											}, application.VERSION, "localhost",
 													serverSetup.getPort());
-										}
+								}
 
-										public void onFailure(Object param) {
-											onHostStartingFailed(
-													((Exception) param)
-															.getMessage());
-										};
-									});
+								public void onFailure(Object param) {
+									onHostStartingFailed(
+											((Exception) param).getMessage());
+								};
+							});
 
 							connectingDialog = SimpleTextDialog.createAndShow(
 									stage, skin,

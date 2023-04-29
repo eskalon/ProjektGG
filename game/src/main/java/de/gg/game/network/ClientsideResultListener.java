@@ -5,7 +5,8 @@ import java.util.HashMap;
 import com.google.common.eventbus.EventBus;
 
 import de.damios.guacamole.Preconditions;
-import de.damios.guacamole.gdx.Log;
+import de.damios.guacamole.gdx.log.Logger;
+import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.lang.Lang;
 import de.gg.game.events.AllPlayersReadyEvent;
 import de.gg.game.events.BallotFinishedEvent;
@@ -25,6 +26,9 @@ import de.gg.game.session.SavedGame;
 import de.gg.game.ui.data.ChatMessage;
 
 public class ClientsideResultListener implements AuthoritativeResultListener {
+
+	private static final Logger LOG = LoggerService
+			.getLogger(ClientsideResultListener.class);
 
 	private GameClient client;
 	private EventBus eventBus;
@@ -72,7 +76,7 @@ public class ClientsideResultListener implements AuthoritativeResultListener {
 
 	@Override
 	public synchronized void onAllPlayersReadied() {
-		Log.debug("Client", "Alle Spieler sind bereit! Nächste Runde startet");
+		LOG.debug("[CLIENT] Alle Spieler sind bereit! Nächste Runde startet");
 
 		session.startNextRound();
 		eventBus.post(new AllPlayersReadyEvent(true));
@@ -81,9 +85,9 @@ public class ClientsideResultListener implements AuthoritativeResultListener {
 	@Override
 	public void onServerReady() {
 		// FIXME session may not be initialized by now and is thus null!
-		
-		Log.info("Client", "Der Server is bereit");
-		Log.debug("Client", "%d Ticks hinter der Server-Simulation",
+
+		LOG.info("[CLIENT] Der Server is bereit");
+		LOG.debug("[CLIENT] %d Ticks hinter der Server-Simulation",
 				GameSession.TICKS_PER_ROUND - session.getTickCount());
 
 		// TODO Screen instant weiter; Screen sonst _nicht_ von selbst ändern!
@@ -94,7 +98,7 @@ public class ClientsideResultListener implements AuthoritativeResultListener {
 	@Override
 	public void onGameSetup(HashMap<Short, LobbyPlayer> players,
 			GameSessionSetup sessionSetup, SavedGame savedGame) {
-		Log.info("Client", "Received lobby data");
+		LOG.info("[CLIENT] Received lobby data");
 
 		client.lobbyPlayers = players;
 		client.lobbyData = new LobbyData(sessionSetup, savedGame);

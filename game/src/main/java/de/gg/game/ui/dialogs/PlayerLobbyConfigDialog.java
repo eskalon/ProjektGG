@@ -205,7 +205,7 @@ public class PlayerLobbyConfigDialog extends BasicDialog {
 								selectedProfessionIndex);
 
 						// To update the ui
-						game.getEventBus().post(new UIRefreshEvent());
+						game.getEventBus2().post(new UIRefreshEvent());
 
 						// Inform the server
 						game.getClient().getActionHandler()

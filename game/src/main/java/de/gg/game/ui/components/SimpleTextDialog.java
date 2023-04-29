@@ -1,5 +1,7 @@
 package de.gg.game.ui.components;
 
+import java.util.function.Consumer;
+
 import javax.annotation.Nullable;
 
 import com.badlogic.gdx.Input.Keys;
@@ -10,14 +12,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
 
-import de.damios.guacamole.ISimpleListener;
 import de.eskalon.commons.lang.Lang;
 
 /**
  * A small dialog displaying a text, a button and nothing more.
  * 
  * @see #createAndShow(Stage, Skin, String, String)
- * @see #createAndShow(Stage, Skin, String, String, boolean, ISimpleListener)
+ * @see #createAndShow(Stage, Skin, String, String, boolean, Consumer)
  */
 public class SimpleTextDialog extends BasicDialog {
 
@@ -61,12 +62,12 @@ public class SimpleTextDialog extends BasicDialog {
 
 	public static SimpleTextDialog createAndShow(Stage stage, Skin skin,
 			String title, String text, boolean showOkButton,
-			@Nullable ISimpleListener listener) {
+			@Nullable Consumer listener) {
 		SimpleTextDialog dialog = new SimpleTextDialog(title, skin) {
 			@Override
 			public void result(Object obj) {
 				if (listener != null)
-					listener.listen(obj);
+					listener.accept(obj);
 				else
 					super.result(obj);
 			}

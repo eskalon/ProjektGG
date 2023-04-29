@@ -4,7 +4,8 @@ import com.esotericsoftware.kryonet.rmi.ObjectSpace;
 import com.esotericsoftware.kryonet.rmi.RemoteObject;
 
 import de.damios.guacamole.Preconditions;
-import de.damios.guacamole.gdx.Log;
+import de.damios.guacamole.gdx.log.Logger;
+import de.damios.guacamole.gdx.log.LoggerService;
 import de.gg.engine.network.BaseGameServer;
 import de.gg.engine.utils.CollectionUtils;
 import de.gg.game.misc.PlayerUtils;
@@ -20,6 +21,10 @@ import de.gg.game.network.LobbyPlayer;
 import de.gg.game.session.AuthoritativeSession;
 
 public class ServersideActionHandler implements SlaveActionListener {
+
+	private static final Logger LOG = LoggerService
+			.getLogger(ServersideActionHandler.class);
+
 	private final GameServer server;
 	private AuthoritativeSession session;
 	private World world;
@@ -52,7 +57,7 @@ public class ServersideActionHandler implements SlaveActionListener {
 								clientId),
 						clientId, AuthoritativeResultListener.class);
 		if (resultListener == null) {
-			Log.error("Server", "Der resultListener des Spielers %d ist null",
+			LOG.error("[SERVER] Der resultListener des Spielers %d ist null",
 					clientId);
 			return;
 		}
@@ -90,8 +95,7 @@ public class ServersideActionHandler implements SlaveActionListener {
 
 		server.getPlayers().get(networkId).setReady(true);
 
-		Log.info("Server", "Spieler %d ist für nächste Runde bereit",
-				networkId);
+		LOG.info("[SERVER] Spieler %d ist für nächste Runde bereit", networkId);
 
 		if (PlayerUtils.areAllPlayersReady(server.getPlayers().values())) {
 			startNextRoundForEveryone();
@@ -101,7 +105,7 @@ public class ServersideActionHandler implements SlaveActionListener {
 	}
 
 	private synchronized void startNextRoundForEveryone() {
-		Log.info("Server", "Alle Spieler sind für die Runde bereit");
+		LOG.info("[SERVER] Alle Spieler sind für die Runde bereit");
 
 		for (LobbyPlayer player : server.getPlayers().values()) {
 			player.setReady(false);
@@ -184,8 +188,8 @@ public class ServersideActionHandler implements SlaveActionListener {
 
 	@Override
 	public void onPlayerChanged(short clientId, LobbyPlayer player) {
-		Log.debug("Server",
-				"Die Konfiguration von Spieler %d hat sich geändert", clientId);
+		LOG.debug("[SERVER] Die Konfiguration von Spieler %d hat sich geändert",
+				clientId);
 		server.getPlayers().put(clientId, player);
 		clientResultListeners.onLobbyPlayerChanged(clientId, player);
 

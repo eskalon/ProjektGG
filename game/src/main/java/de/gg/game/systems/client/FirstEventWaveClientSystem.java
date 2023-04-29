@@ -25,7 +25,8 @@ public class FirstEventWaveClientSystem extends ProcessingSystem<Player> {
 	private EventBus eventBus;
 	private short localPlayerId;
 
-	public FirstEventWaveClientSystem(EventBus eventBus, short localPlayerId) {
+	public FirstEventWaveClientSystem(EventBus eventBus,
+			short localPlayerId) {
 		super(600, false);
 		this.eventBus = eventBus;
 		this.localPlayerId = localPlayerId;

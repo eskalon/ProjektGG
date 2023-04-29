@@ -4,7 +4,8 @@ import java.util.HashMap;
 
 import javax.annotation.Nullable;
 
-import de.damios.guacamole.gdx.Log;
+import de.damios.guacamole.gdx.log.Logger;
+import de.damios.guacamole.gdx.log.LoggerService;
 import de.gg.game.ai.CharacterBehaviour;
 import de.gg.game.model.entities.Character;
 import de.gg.game.model.entities.Player;
@@ -26,6 +27,9 @@ import de.gg.game.systems.server.ServerProcessingSystem;
  * This class takes care of simulating the game session on the server side.
  */
 public class AuthoritativeSession extends GameSession {
+
+	private static final Logger LOG = LoggerService
+			.getLogger(AuthoritativeSession.class);
 
 	// private HashMap<Short, AuthoritativeResultListener> resultListeners;
 	private AuthoritativeResultListener clientResultListeners;
@@ -141,7 +145,7 @@ public class AuthoritativeSession extends GameSession {
 	}
 
 	public SavedGame createSaveGame() {
-		Log.info("Server", "Spiel speichern...");
+		LOG.info("[SERVER] Spiel speichern...");
 
 		SavedGame save = new SavedGame();
 		save.world = this.world;
