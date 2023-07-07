@@ -1,10 +1,6 @@
 package de.gg.game.thirdparty;
 
 import java.time.OffsetDateTime;
-import java.util.function.Consumer;
-
-import org.lwjgl.system.Callback;
-import org.lwjgl.system.CallbackI;
 
 import com.jagrosh.discordipc.IPCClient;
 import com.jagrosh.discordipc.IPCListener;

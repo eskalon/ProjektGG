@@ -24,7 +24,8 @@ task debug(dependsOn: classes, type: JavaExec) {
 }
 
 jar {
-	from {configurations.compile.collect {zipTree(it)}}
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
 
     manifest {
         attributes (

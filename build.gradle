@@ -21,7 +21,7 @@ allprojects {
         gdxVersion = "1.12.0"
         gsonVersion = "2.10.1"
         guacamoleVersion = "1b0dd58494" // TODO: remove, when the proper version is pulled in via screenmanager
-        kryonetVersion = "2.22.8"
+        kryonetVersion = "c767618c5d" // = 2.22.9
         pancakeVersion = "e12e728db4" // = 0.1.2
         //quakemonkeyVersion = "master-SNAPSHOT"
         vfxVersion = "0.6.1"
@@ -41,10 +41,10 @@ allprojects {
 }
 
 project(":desktop") {
-    apply plugin: "java"
+    apply plugin: "java-library"
 
     dependencies {
-        implementation project(":game")
+        api project(":game")
         implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
@@ -56,18 +56,17 @@ project(":desktop") {
 }
 
 project(":engine") {
-    apply plugin: "java"
+    apply plugin: "java-library"
 
     dependencies {
-        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        implementation "com.github.eskalon.pancake:core:$pancakeVersion"
-        implementation "com.github.eskalon.pancake:desktop:$pancakeVersion"
-        
-        implementation "com.github.crykn:kryonet:$kryonetVersion"
-        implementation "com.google.code.gson:gson:$gsonVersion"
-        implementation "com.github.jagrosh:DiscordIPC:$discordIPCVersion"
-        //implementation files('../libs/commons-0.1.0.jar')
+        api "com.badlogicgames.gdx:gdx:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        api "com.github.eskalon.pancake:core:$pancakeVersion"
+        api "com.github.eskalon.pancake:desktop:$pancakeVersion"
+        api "com.github.crykn:kryonet:$kryonetVersion"
+        api "com.google.code.gson:gson:$gsonVersion"
+        api "com.github.jagrosh:DiscordIPC:$discordIPCVersion"
+        //api files('../libs/commons-0.1.0.jar')
 
         testImplementation "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
     }
@@ -78,13 +77,13 @@ project(":engine") {
 }
 
 project(":game") {
-    apply plugin: "java"
+    apply plugin: "java-library"
 
     dependencies {
-        implementation project(":engine")
-        implementation "com.github.crykn.gdx-vfx:gdx-vfx-effects:$vfxVersion"
-        implementation "com.github.crykn.guacamole:gdx:$guacamoleVersion"
-        //implementation "com.github.crykn:quakemonkey:$quakemonkeyVersion"
+        api project(":engine")
+        api "com.github.crykn.gdx-vfx:gdx-vfx-effects:$vfxVersion"
+        api "com.github.crykn.guacamole:gdx:$guacamoleVersion"
+        //api "com.github.crykn:quakemonkey:$quakemonkeyVersion"
         
         //testImplementation project(':engine').sourceSets.test.output
         testImplementation "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
