@@ -10,27 +10,27 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.google.common.eventbus.Subscribe;
 import com.google.gson.reflect.TypeToken;
 
 import de.damios.guacamole.ICallback;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
+import de.eskalon.commons.event.Subscribe;
 import de.eskalon.commons.lang.Lang;
 import de.gg.engine.network.BaseGameServer;
-import de.gg.engine.network.ServerSetup;
-import de.gg.engine.ui.components.OffsettableTextField;
+import de.gg.engine.network.ServerSettings;
 import de.gg.game.asset.JSON;
 import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.LobbyDataReceivedEvent;
 import de.gg.game.input.BackInputProcessor;
 import de.gg.game.input.BackInputProcessor.BackInputActorListener;
 import de.gg.game.input.ButtonClickListener;
-import de.gg.game.misc.PlayerUtils.PlayerStub;
+import de.gg.game.misc.PlayerUtils.PlayerTemplate;
 import de.gg.game.model.types.GameDifficulty;
 import de.gg.game.model.types.GameMap;
 import de.gg.game.network.GameClient;
 import de.gg.game.network.GameServer;
 import de.gg.game.session.GameSessionSetup;
+import de.gg.game.ui.components.OffsettableTextField;
 import de.gg.game.ui.components.SimpleTextDialog;
 
 public class LobbyCreationScreen extends AbstractGGUIScreen {
@@ -44,7 +44,7 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 	private CheckBox normalDifficultyCheckbox;
 
 	private SimpleTextDialog connectingDialog;
-	private List<PlayerStub> playerStubs;
+	private List<PlayerTemplate> playerStubs;
 
 	public LobbyCreationScreen(ProjektGGApplication application) {
 		super(application);
@@ -71,7 +71,7 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 		});
 
 		this.playerStubs = playerStubsJson
-				.getData(new TypeToken<ArrayList<PlayerStub>>() {
+				.getData(new TypeToken<ArrayList<PlayerTemplate>>() {
 				}.getType());
 
 		Label nameLabel = new Label(Lang.get("screen.lobby_creation.name"),
@@ -131,7 +131,7 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 							}
 
 							// Start Sever & Client
-							ServerSetup serverSetup = new ServerSetup(
+							ServerSettings serverSetup = new ServerSettings(
 									nameField.getText(), 7,
 									Integer.valueOf(portField.getText()), true,
 									application.VERSION, true);
@@ -145,7 +145,7 @@ public class LobbyCreationScreen extends AbstractGGUIScreen {
 								public void onSuccess(Object param) {
 									// Connect client to server
 									application.setClient(new GameClient(
-											application.getEventBus2()));
+											application.getEventBus()));
 									application.getClient()
 											.connect(new ICallback() {
 												public void onSuccess(

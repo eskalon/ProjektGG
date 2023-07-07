@@ -12,7 +12,7 @@ import de.gg.game.model.entities.Player;
 import de.gg.game.model.votes.Ballot;
 import de.gg.game.model.votes.BallotResults;
 import de.gg.game.model.votes.BallotUtils;
-import de.gg.game.network.LobbyPlayer;
+import de.gg.game.network.PlayerData;
 import de.gg.game.network.rmi.AuthoritativeResultListener;
 import de.gg.game.network.rmi.ServersideResultListenerStub;
 import de.gg.game.systems.ProcessingSystem;
@@ -58,9 +58,9 @@ public class AuthoritativeSession extends GameSession {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void init(HashMap<Short, LobbyPlayer> players,
+	public void init(HashMap<Short, PlayerData> players,
 			@Nullable SavedGame savedGame) {
-		for (LobbyPlayer player : players.values()) {
+		for (PlayerData player : players.values()) {
 			player.setReady(false);
 		}
 

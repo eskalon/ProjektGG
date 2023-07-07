@@ -2,8 +2,7 @@ package de.gg.game.systems.client;
 
 import java.util.Map.Entry;
 
-import com.google.common.eventbus.EventBus;
-
+import de.eskalon.commons.event.EventBus;
 import de.eskalon.commons.lang.Lang;
 import de.gg.game.events.NotificationCreationEvent;
 import de.gg.game.model.World;
@@ -25,8 +24,7 @@ public class FirstEventWaveClientSystem extends ProcessingSystem<Player> {
 	private EventBus eventBus;
 	private short localPlayerId;
 
-	public FirstEventWaveClientSystem(EventBus eventBus,
-			short localPlayerId) {
+	public FirstEventWaveClientSystem(EventBus eventBus, short localPlayerId) {
 		super(600, false);
 		this.eventBus = eventBus;
 		this.localPlayerId = localPlayerId;

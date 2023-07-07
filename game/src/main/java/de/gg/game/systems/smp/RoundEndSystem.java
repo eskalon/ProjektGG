@@ -106,8 +106,8 @@ public class RoundEndSystem {
 		}
 
 		// AP
-		p.setAvailableAp(
-				p.getAvailableAp() + 4 + p.getSkills().getAgilitySkill());
+		p.setAvailableAP(
+				p.getAvailableAP() + 4 + p.getSkills().getAgilitySkill());
 	}
 
 	public void processPosition(PositionType type, Position p) {

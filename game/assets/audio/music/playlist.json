@@ -5,27 +5,43 @@
   music: [
     [
       "King's Feast",
-      "kings_feast.mp3"
+      "default/kings_feast.mp3"
     ],
     [
       "Market Day",
-      "market_day.mp3"
+      "default/market_day.mp3"
     ],
     [
       "Minstrel Dance",
-      "minstrel_dance.mp3"
+      "default/minstrel_dance.mp3"
     ],
     [
       "Rejoicing",
-      "rejoicing.mp3"
+      "default/rejoicing.mp3"
     ],
     [
       "The Bard's Tale",
-      "the_bards_tale.mp3"
+      "default/the_bards_tale.mp3"
     ],
     [
       "The Old Tower Inn",
-      "the_old_tower_inn.mp3"
+      "default/the_old_tower_inn.mp3"
+    ],
+	[
+      "Tower of Great Lords",
+      "default/tower_of_great_lords.wav"
+    ],
+	[
+      "Time to Buy a New Sword",
+      "default/time_to_buy_a_new_sword.mp3"
+    ],
+	[
+      "For the King",
+      "default/for_the_king.wav"
+    ],
+	[
+      "Land of Fearless",
+      "default/land_of_fearless.mp3"
     ]
   ]
 }

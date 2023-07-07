@@ -7,13 +7,12 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
 
-import com.google.common.base.Stopwatch;
-
+import de.damios.guacamole.Stopwatch;
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
-import de.gg.engine.misc.TickCounter;
-import de.gg.engine.misc.TickCounter.TickHandler;
-import de.gg.engine.utils.CountdownTimer;
+import de.gg.game.misc.CountdownTimer;
+import de.gg.game.misc.TickCounter;
+import de.gg.game.misc.TickCounter.TickHandler;
 import de.gg.game.model.World;
 import de.gg.game.model.entities.Character;
 import de.gg.game.model.entities.Player;
@@ -22,7 +21,7 @@ import de.gg.game.model.types.GameSpeed;
 import de.gg.game.model.types.PositionType;
 import de.gg.game.model.votes.Ballot;
 import de.gg.game.model.votes.BallotResults;
-import de.gg.game.network.LobbyPlayer;
+import de.gg.game.network.PlayerData;
 import de.gg.game.systems.ProcessingSystem;
 import de.gg.game.systems.smp.RoundEndSystem;
 import de.gg.game.ui.screens.GameBallotScreen;
@@ -126,7 +125,7 @@ public abstract class GameSession {
 	 * @param savedGame
 	 *            <i>Not</i> <code>null</code> if this is a loaded game state.
 	 */
-	public synchronized void init(HashMap<Short, LobbyPlayer> players,
+	public synchronized void init(HashMap<Short, PlayerData> players,
 			@Nullable SavedGame savedGame) {
 		if (savedGame == null) {
 			this.world = new World();
@@ -138,7 +137,7 @@ public abstract class GameSession {
 
 			// Switch player IDs when loading game
 			if (savedGame != null) {
-				for (Entry<Short, LobbyPlayer> newE : players.entrySet()) {
+				for (Entry<Short, PlayerData> newE : players.entrySet()) {
 					for (Entry<Short, String> oldE : savedGame.clientIdentifiers
 							.entrySet()) {
 						if (newE.getValue().getHostname()
@@ -193,7 +192,7 @@ public abstract class GameSession {
 	 */
 	public synchronized boolean update() {
 		if (!initialized) {
-			LOG.error((localNetworkId == -1 ? "[SERVER]" : "[CLIENT]")
+			LOG.error((localNetworkId == -1 ? "[SERVER] " : "[CLIENT] ")
 					+ "Die Session muss zuerst initialisiert werden, bevor sie geupdated werden kann");
 			return false;
 		}
@@ -248,9 +247,9 @@ public abstract class GameSession {
 		}
 
 		LOG.info(
-				(localNetworkId == -1 ? "[SERVER]" : "[CLIENT]")
+				(localNetworkId == -1 ? "[SERVER] " : "[CLIENT] ")
 						+ "RoundEndSystem in %d ms verarbeitet",
-				logTimer.elapsed(TimeUnit.MILLISECONDS));
+				logTimer.getTime(TimeUnit.MILLISECONDS));
 	}
 
 	/**
@@ -270,10 +269,11 @@ public abstract class GameSession {
 							sys.process(e.getKey(), e.getValue());
 						}
 						LOG.info(
-								(localNetworkId == -1 ? "[SERVER]" : "[CLIENT]")
+								(localNetworkId == -1 ? "[SERVER] "
+										: "[CLIENT] ")
 										+ "%s-System in %d ms verarbeitet",
 								sys.getClass().getSimpleName(),
-								logTimer.elapsed(TimeUnit.MILLISECONDS));
+								logTimer.getTime(TimeUnit.MILLISECONDS));
 
 						sys.setAsProcessed(true);
 					}
@@ -289,10 +289,11 @@ public abstract class GameSession {
 							sys.process(e.getKey(), e.getValue());
 						}
 						LOG.info(
-								(localNetworkId == -1 ? "[SERVER]" : "[CLIENT]")
+								(localNetworkId == -1 ? "[SERVER] "
+										: "[CLIENT] ")
 										+ "%s-System in %d ms verarbeitet",
 								sys.getClass().getSimpleName(),
-								logTimer.elapsed(TimeUnit.MILLISECONDS));
+								logTimer.getTime(TimeUnit.MILLISECONDS));
 
 						sys.setAsProcessed(true);
 					}
@@ -309,7 +310,7 @@ public abstract class GameSession {
 	public synchronized void startNextRound() {
 		currentRound++;
 
-		LOG.debug((localNetworkId == -1 ? "[SERVER]" : "[CLIENT]")
+		LOG.debug((localNetworkId == -1 ? "[SERVER] " : "[CLIENT] ")
 				+ "Runde %s gestartet; Letzte Runde wurden %s Ticks gezählt",
 				currentRound, tickCounter.getTickCount());
 
@@ -328,7 +329,7 @@ public abstract class GameSession {
 
 		// Take care of votes
 		LOG.info(
-				(localNetworkId == -1 ? "[SERVER]" : "[CLIENT]")
+				(localNetworkId == -1 ? "[SERVER] " : "[CLIENT] ")
 						+ "Es stehen %d Tagesordnunspunkte an",
 				world.getMattersToHoldVoteOn().size());
 		holdVote = !world.getMattersToHoldVoteOn().isEmpty();

@@ -10,24 +10,25 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
-import com.google.common.eventbus.Subscribe;
 
 import de.damios.guacamole.concurrent.ThreadHandler;
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
+import de.eskalon.commons.event.Subscribe;
 import de.eskalon.commons.lang.Lang;
-import de.gg.engine.ui.components.OffsettableTextField;
 import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.UIRefreshEvent;
 import de.gg.game.input.ButtonClickListener;
 import de.gg.game.misc.PlayerUtils;
 import de.gg.game.network.GameClient;
 import de.gg.game.network.GameServer;
-import de.gg.game.network.LobbyPlayer;
+import de.gg.game.network.PlayerData;
 import de.gg.game.session.GameSessionSetup;
+import de.gg.game.ui.components.OffsettableTextField;
 import de.gg.game.ui.data.ChatMessage;
 import de.gg.game.ui.dialogs.PlayerLobbyConfigDialog;
 
@@ -240,7 +241,7 @@ public class LobbyScreen extends AbstractGGUIScreen {
 		for (int i = 0; i < playerSlots.length; i++) {
 			updatePlayerSlot(playerSlots[i],
 					(playersArray.length >= (i + 1)
-							? (LobbyPlayer) playersArray[i]
+							? (PlayerData) playersArray[i]
 							: null));
 		}
 
@@ -270,7 +271,7 @@ public class LobbyScreen extends AbstractGGUIScreen {
 		startGameIfReady();
 	}
 
-	private Table updatePlayerSlot(Table t, LobbyPlayer p) {
+	private Table updatePlayerSlot(Table t, PlayerData p) {
 		t.clear();
 		if (p == null) {
 			t.add().width(33);
@@ -290,13 +291,25 @@ public class LobbyScreen extends AbstractGGUIScreen {
 			// Ready
 			t.add(new Image(p.isReady() ? skin.getDrawable("icon_on")
 					: skin.getDrawable("icon_off"))).padRight(9);
-			// TODO Kick
-			if (application.isHost()
-					&& p != application.getClient().getLocalLobbyPlayer()) {
-				ImageButton kickButton = new ImageButton(skin, "kick");
-				t.add(kickButton);
-			} else
+			// Host / Kick
+			if (application.isHost()) {
+				if (p != application.getClient().getLocalLobbyPlayer()) {
+					ImageButton kickButton = new ImageButton(skin, "kick");
+					kickButton.addListener(new ButtonClickListener(
+							application.getSoundManager()) {
+						@Override
+						protected void onClick() {
+							// TODO implement kicking
+						}
+					});
+					t.add(kickButton);
+				} else {
+					t.add().width(27);
+				}
+			} else {
+				// TODO add host icon
 				t.add().width(27);
+			}
 		}
 
 		return t;

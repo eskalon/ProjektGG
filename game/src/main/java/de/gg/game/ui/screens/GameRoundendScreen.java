@@ -9,17 +9,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
-import com.google.common.eventbus.Subscribe;
 
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
+import de.eskalon.commons.event.Subscribe;
 import de.eskalon.commons.lang.Lang;
 import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.AllPlayersReadyEvent;
 import de.gg.game.events.ServerReadyEvent;
-import de.gg.game.misc.DiscordGGHandler;
 import de.gg.game.misc.GameClock;
+import de.gg.game.thirdparty.DiscordGGHandler;
 
 /**
  * This screen is rendered after a round ends. When the server is

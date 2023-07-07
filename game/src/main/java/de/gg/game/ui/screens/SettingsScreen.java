@@ -8,9 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.google.common.eventbus.Subscribe;
 
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
+import de.eskalon.commons.event.Subscribe;
 import de.eskalon.commons.lang.Lang;
 import de.eskalon.commons.settings.EskalonSettings;
 import de.gg.game.core.ProjektGGApplication;
@@ -21,6 +21,9 @@ import de.gg.game.input.BackInputProcessor;
 import de.gg.game.input.BackInputProcessor.BackInputActorListener;
 import de.gg.game.input.ButtonClickListener;
 import de.gg.game.ui.components.KeySelectionInputField;
+import de.gg.game.ui.components.KeySelectionInputField.BindingType;
+import de.gg.game.ui.screens.GameMapScreen.GameMapAxisBinding;
+import de.gg.game.ui.screens.GameMapScreen.GameMapBinaryBinding;
 
 public class SettingsScreen extends AbstractGGUIScreen {
 
@@ -64,11 +67,10 @@ public class SettingsScreen extends AbstractGGUIScreen {
 				Lang.get("screen.settings.master_volume"), skin);
 		Slider masterSlider = new Slider(0, 1, 0.05F, false, skin);
 		masterSlider.setButton(Buttons.LEFT);
-		masterSlider.setValue(settings.getMasterVolume());
+		masterSlider.setValue(application.getSoundManager().getMasterVolume());
 		masterSlider.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				settings.setMasterVolume(masterSlider.getValue());
 				application.getSoundManager()
 						.setMasterVolume(masterSlider.getValue());
 			}
@@ -78,11 +80,10 @@ public class SettingsScreen extends AbstractGGUIScreen {
 				Lang.get("screen.settings.effect_volume"), skin);
 		Slider effectSlider = new Slider(0, 1, 0.05F, false, skin);
 		effectSlider.setButton(Buttons.LEFT);
-		effectSlider.setValue(settings.getEffectVolume());
+		effectSlider.setValue(application.getSoundManager().getEffectVolume());
 		effectSlider.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				settings.setEffectVolume(effectSlider.getValue());
 				application.getSoundManager()
 						.setEffectVolume(effectSlider.getValue());
 			}
@@ -92,11 +93,10 @@ public class SettingsScreen extends AbstractGGUIScreen {
 				skin);
 		Slider musicSlider = new Slider(0, 1, 0.05F, false, skin);
 		musicSlider.setButton(Buttons.LEFT);
-		musicSlider.setValue(settings.getMusicVolume());
+		musicSlider.setValue(application.getSoundManager().getMusicVolume());
 		musicSlider.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				settings.setMusicVolume(musicSlider.getValue());
 				application.getSoundManager()
 						.setMusicVolume(musicSlider.getValue());
 			}
@@ -106,31 +106,35 @@ public class SettingsScreen extends AbstractGGUIScreen {
 		Label forwardLabel = new Label(Lang.get("screen.settings.forward_key"),
 				skin);
 		KeySelectionInputField forwardButton = new KeySelectionInputField(
-				settings, "cameraForward", skin, stage,
+				settings, GameMapAxisBinding.MOVE_FORWARDS_BACKWARDS,
+				BindingType.AXIS_MAX, skin, stage,
 				application.getSoundManager());
 		Label leftLabel = new Label(Lang.get("screen.settings.left_key"), skin);
 		KeySelectionInputField leftButton = new KeySelectionInputField(settings,
-				"cameraLeft", skin, stage, application.getSoundManager());
+				GameMapAxisBinding.MOVE_LEFT_RIGHT, BindingType.AXIS_MIN, skin,
+				stage, application.getSoundManager());
 		Label backwardLabel = new Label(
 				Lang.get("screen.settings.backwards_key"), skin);
 		KeySelectionInputField backwardButton = new KeySelectionInputField(
-				settings, "cameraBackward", skin, stage,
+				settings, GameMapAxisBinding.MOVE_FORWARDS_BACKWARDS,
+				BindingType.AXIS_MIN, skin, stage,
 				application.getSoundManager());
 		Label rightLabel = new Label(Lang.get("screen.settings.right_key"),
 				skin);
 		KeySelectionInputField rightButton = new KeySelectionInputField(
-				settings, "cameraRight", skin, stage,
+				settings, GameMapAxisBinding.MOVE_LEFT_RIGHT,
+				BindingType.AXIS_MAX, skin, stage,
 				application.getSoundManager());
 		Label speedUpLabel = new Label(Lang.get("screen.settings.speed_up_key"),
 				skin);
 		KeySelectionInputField speedUpButton = new KeySelectionInputField(
-				settings, "speedUpTime", skin, stage,
-				application.getSoundManager());
+				settings, GameMapBinaryBinding.INCREASE_SPEED,
+				BindingType.BINARY, skin, stage, application.getSoundManager());
 		Label speedDownLabel = new Label(
 				Lang.get("screen.settings.speed_down_key"), skin);
 		KeySelectionInputField speedDownButton = new KeySelectionInputField(
-				settings, "speedDownTime", skin, stage,
-				application.getSoundManager());
+				settings, GameMapBinaryBinding.DECREASE_SPEED,
+				BindingType.BINARY, skin, stage, application.getSoundManager());
 
 		ImageTextButton backButton = new ImageTextButton(
 				Lang.get("ui.generic.done"), skin);

@@ -1,7 +1,7 @@
 package de.gg.engine.network.message;
 
 /**
- * This packet is sent to the client after he discovered a game server.
+ * This packet is sent to the client by a discovered game server.
  */
 public class DiscoveryResponsePacket {
 

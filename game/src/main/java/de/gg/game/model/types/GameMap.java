@@ -6,11 +6,11 @@ import java.util.List;
 import com.badlogic.gdx.assets.AssetDescriptor;
 
 import de.eskalon.commons.lang.ILocalizable;
-import de.gg.engine.ui.rendering.BaseRenderData;
 import de.gg.game.asset.JSON;
 import de.gg.game.asset.SimpleJSONParser;
 import de.gg.game.asset.JSONLoader.JSONLoaderParameter;
 import de.gg.game.model.entities.BuildingSlot;
+import de.gg.game.ui.rendering.BaseRenderData;
 
 /**
  * This class holds all the information about the map's setup, e.g. the map

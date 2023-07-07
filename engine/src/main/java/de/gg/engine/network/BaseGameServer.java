@@ -6,7 +6,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.util.HashMap;
 
-import com.esotericsoftware.kryo.Kryo;
+import javax.annotation.Nullable;
+
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener.ConnectionListener;
 import com.esotericsoftware.kryonet.Listener.TypeListener;
@@ -19,49 +20,45 @@ import de.damios.guacamole.concurrent.ThreadHandler;
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.lang.Lang;
-import de.gg.engine.network.message.ClientHandshakeRequest;
+import de.gg.engine.network.message.ConnectionEstablishedMessage;
+import de.gg.engine.network.message.ConnectionRejectedMessage;
 import de.gg.engine.network.message.DiscoveryResponsePacket;
-import de.gg.engine.network.message.ServerAcceptanceResponse;
-import de.gg.engine.network.message.ServerRejectionResponse;
-import de.gg.engine.network.message.SuccessfulHandshakeResponse;
+import de.gg.engine.network.message.LobbyJoinRequestMessage;
+import de.gg.engine.network.message.LobbyJoinedMessage;
 
 /**
- * The basic implementation of a game server.
+ * A basic game server.
  *
- * @param <C>
+ * @param <D>
  *            The type of player connected to this server.
  * @see #start(ICallback)
  * @see #stop()
  */
-public abstract class BaseGameServer<C> {
+public abstract class BaseGameServer<D> {
 
 	private static final Logger LOG = LoggerService
 			.getLogger(BaseGameServer.class);
+
 	public static final int DEFAULT_PORT = 55678;
 	public static final int UDP_DISCOVER_PORT = 54678;
 	/**
-	 * The network id of the local player. Is always <code>0</code>.
+	 * The network ID of the local player.
 	 */
 	public static final short HOST_PLAYER_NETWORK_ID = 0;
+
 	protected Server server;
 	private Server broadcastServer;
-
-	protected ServerSetup serverSetup;
-
-	public HashMap<Short, String> clientIdentifiers;
+	protected ServerSettings serverSettings;
 
 	/**
 	 * A count of all joined players. Used to generate the player IDs.
 	 */
 	private short playerIdIterator = 0;
+
 	/**
 	 * A hashmap of all connected players, keyed by their ID.
 	 */
-	protected HashMap<Short, C> players;
-	/**
-	 * Maps the connections to the player IDs.
-	 */
-	protected HashMap<Connection, Short> connections;
+	protected HashMap<Short, D> players;
 
 	/**
 	 * Creates a server object with the specified settings.
@@ -69,30 +66,14 @@ public abstract class BaseGameServer<C> {
 	 * @param serverSetup
 	 *            The server's settings, especially containing the port.
 	 */
-	public BaseGameServer(ServerSetup serverSetup) {
-		Preconditions.checkNotNull(serverSetup, "server setup cannot be null");
+	public BaseGameServer(ServerSettings serverSettings) {
+		Preconditions.checkNotNull(serverSettings,
+				"server settings cannot be null");
 
 		this.players = new HashMap<>();
-		this.connections = new HashMap<>();
-		this.serverSetup = serverSetup;
-	}
-
-	/**
-	 * Sets up a server asynchronously. After it is finished the callback is
-	 * informed.
-	 *
-	 * @param callback
-	 *            the callback that is informed when the server is started.
-	 */
-	public void start(ICallback callback) {
-		Preconditions.checkNotNull(callback, "callback cannot be null.");
-
-		LOG.info("[SERVER] --- Server is starting ---");
+		this.serverSettings = serverSettings;
 
 		this.server = new Server();
-		this.server.start();
-
-		// ON NEW CONNECTION & ON DICONNECTED
 		this.server.addListener(new ConnectionListener() {
 			@Override
 			public void connected(Connection con) {
@@ -105,20 +86,30 @@ public abstract class BaseGameServer<C> {
 			}
 		});
 		TypeListener typeListener = new TypeListener();
-		typeListener.addTypeHandler(ClientHandshakeRequest.class,
-				(con, msg) -> onClientHandshake(con, msg));
+		typeListener.addTypeHandler(LobbyJoinRequestMessage.class,
+				(con, msg) -> onLobbyJoinRequest(con, msg));
 		server.addListener(typeListener);
+	}
 
-		onCreation();
+	/**
+	 * Sets up a server asynchronously. After it is finished the callback is
+	 * informed.
+	 *
+	 * @param callback
+	 */
+	public void start(ICallback callback) {
+		Preconditions.checkNotNull(callback, "callback cannot be null");
 
+		LOG.info("[SERVER] --- Server is starting ---");
 		ThreadHandler.getInstance().executeRunnable(() -> {
 			try {
 				// Start the server
-				server.bind(serverSetup.getPort());
+				server.bind(serverSettings.getPort());
+				server.start();
 				LOG.info("[SERVER] Server started");
 
 				// Create & start the broadcast server
-				if (serverSetup.isPublic()) {
+				if (serverSettings.isPublic()) {
 					startBroadcastServer();
 				}
 				callback.onSuccess(null); // Host successfully started
@@ -131,15 +122,14 @@ public abstract class BaseGameServer<C> {
 
 	private void startBroadcastServer() {
 		broadcastServer = new Server();
-		broadcastServer.start();
 		broadcastServer.getKryo().register(DiscoveryResponsePacket.class);
 		broadcastServer.setDiscoveryHandler(new ServerDiscoveryHandler() {
 			@Override
 			public boolean onDiscoverHost(DatagramChannel datagramChannel,
 					InetSocketAddress fromAddress) throws IOException {
 				DiscoveryResponsePacket packet = new DiscoveryResponsePacket(
-						serverSetup.getPort(), serverSetup.getGameName(),
-						players.size(), serverSetup.getMaxPlayerCount());
+						serverSettings.getPort(), serverSettings.getGameName(),
+						players.size(), serverSettings.getMaxPlayerCount());
 
 				ByteBuffer buffer = ByteBuffer.allocate(256);
 				broadcastServer.getSerialization().write(null, buffer, packet);
@@ -153,6 +143,7 @@ public abstract class BaseGameServer<C> {
 
 		try {
 			broadcastServer.bind(0, UDP_DISCOVER_PORT);
+			broadcastServer.start();
 			LOG.info("[SERVER] Broadcast server started");
 		} catch (IOException e1) {
 			LOG.error("[SERVER] Broadcast server couldn't be started: %s", e1);
@@ -160,33 +151,46 @@ public abstract class BaseGameServer<C> {
 	}
 
 	private synchronized void onClientConnected(Connection con) {
-		if (players.size() >= serverSetup.getMaxPlayerCount()) { // Match full
+		if (players.size() >= serverSettings.getMaxPlayerCount()) { // Lobby is
+																	// full
 			LOG.info("[SERVER] Client was rejected for want of capacity");
 
 			con.sendTCP(
-					new ServerRejectionResponse(Lang.get("server.is_full")));
+					new ConnectionRejectedMessage(Lang.get("server.is_full")));
 			con.close();
 		} else { // Still free slots
 			LOG.info("[SERVER] Client accepted");
 
-			connections.put(con, playerIdIterator);
-			con.sendTCP(new ServerAcceptanceResponse());
-			// onPlayerConnected(playerIdIterator);
+			con.setArbitraryData(playerIdIterator);
+			con.sendTCP(new ConnectionEstablishedMessage());
 			playerIdIterator++;
 		}
 	}
 
 	private synchronized void onClientDisconnected(Connection con) {
-		Short id = connections.remove(con);
+		if (con.getArbitraryData() != null) {
+			short id = (short) con.getArbitraryData();
 
-		if (id != null) {
-			LOG.info("[SERVER] Client %d has disconnected", id);
+			LOG.info("[SERVER] Client %d disconnected", id);
 
 			if (players.containsKey(id)) {
-				onPlayerDisconnected(con, id);
+				onPlayerDisconnected(id);
 
 				players.remove(id);
 			}
+		}
+	}
+
+	private synchronized void onLobbyJoinRequest(Connection con,
+			LobbyJoinRequestMessage msg) {
+		short id = (short) con.getArbitraryData();
+		String response = handleLobbyJoinRequest(id, msg);
+
+		if (response == null) {
+			con.sendTCP(new LobbyJoinedMessage(id));
+		} else {
+			con.sendTCP(new ConnectionRejectedMessage(response));
+			con.close();
 		}
 	}
 
@@ -207,32 +211,24 @@ public abstract class BaseGameServer<C> {
 		broadcastServer = null;
 	}
 
-	public ServerSetup getServerSetup() {
-		return serverSetup;
+	public ServerSettings getServerSetup() {
+		return serverSettings;
 	}
 
 	/* --- Methods for child classes --- */
 	/**
-	 * This method is called when the {@link #server} is created. This is the
-	 * place to register the networked classes to the {@linkplain Kryo kryo}
-	 * serializer.
-	 */
-	protected abstract void onCreation();
-
-	protected abstract void onPlayerDisconnected(Connection con, short id);
-
-	/**
-	 * This method is called when the client sends its handshake message.
-	 * <p>
-	 * Subclasses have to send a {@link SuccessfulHandshakeResponse} back,
-	 * denoting whether the handshake was a success.
+	 * This method is called when a {@link LobbyJoinRequestMessage} is received
+	 * after a {@link ConnectionEstablishedMessage connection was established}.
 	 * 
-	 * @param con
-	 *            The connection of the client initiating the handshake.
 	 * @param msg
-	 *            The actual handshake message.
+	 * 
+	 * @return {@code null} if the lobby join request is successful; an error
+	 *         message otherwise
+	 * 
 	 */
-	protected abstract void onClientHandshake(Connection con,
-			ClientHandshakeRequest msg);
+	protected abstract @Nullable String handleLobbyJoinRequest(short id,
+			LobbyJoinRequestMessage msg);
+
+	protected abstract void onPlayerDisconnected(short id);
 
 }

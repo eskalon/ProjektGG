@@ -12,10 +12,10 @@ import de.damios.guacamole.ICallback;
 import de.gg.engine.network.BaseGameServer;
 import de.gg.engine.network.ServerDiscoveryHandler;
 import de.gg.engine.network.ServerDiscoveryHandler.HostDiscoveryListener;
-import de.gg.engine.network.ServerSetup;
+import de.gg.engine.network.ServerSettings;
 import de.gg.engine.network.message.DiscoveryResponsePacket;
 import de.gg.game.LibgdxUnitTest;
-import de.gg.game.misc.PlayerUtils.PlayerStub;
+import de.gg.game.misc.PlayerUtils.PlayerTemplate;
 import de.gg.game.model.types.GameDifficulty;
 import de.gg.game.model.types.GameMap;
 import de.gg.game.session.GameSessionSetup;
@@ -32,7 +32,7 @@ public class GameServerDiscoveryTest extends LibgdxUnitTest {
 	private final String gameName = "Test Game - ABC";
 	private final int maxPlayerCount = 2;
 	@Mock
-	private PlayerStub stub;
+	private PlayerTemplate stub;
 
 	@Test
 	public void testServer() throws TimeoutException, InterruptedException {
@@ -53,8 +53,8 @@ public class GameServerDiscoveryTest extends LibgdxUnitTest {
 			sdh.discoverHosts(123, null);
 		});
 
-		ServerSetup serverSetup = new ServerSetup(gameName, maxPlayerCount,
-				port, true, serverVersion, true);
+		ServerSettings serverSetup = new ServerSettings(gameName,
+				maxPlayerCount, port, true, serverVersion, true);
 		GameSessionSetup sessionSetup = new GameSessionSetup(
 				GameDifficulty.EASY, GameMap.BAMBERG, 25);
 

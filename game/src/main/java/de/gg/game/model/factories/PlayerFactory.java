@@ -35,7 +35,7 @@ public class PlayerFactory {
 			int combatSkill, int craftingSkill, int rhetoricalSkill,
 			int stealthSkill) {
 		Player p = new Player();
-		p.setAvailableAp(4);
+		p.setAvailableAP(4);
 		p.setCurrentlyPlayedCharacterId(characterId);
 		p.setIcon(icon);
 		p.getLearnedProfessions().add(profession);

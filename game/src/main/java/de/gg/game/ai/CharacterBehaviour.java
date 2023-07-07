@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import de.eskalon.commons.utils.RandomUtils;
-import de.gg.engine.utils.CollectionUtils;
+import de.gg.game.misc.CollectionUtils;
 import de.gg.game.model.entities.Character;
 import de.gg.game.model.types.NPCCharacterTrait;
 import de.gg.game.model.votes.Ballot;

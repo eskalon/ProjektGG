@@ -8,7 +8,7 @@ import de.damios.guacamole.concurrent.DaemonThreadFactory;
 import de.gg.game.model.types.PositionType;
 import de.gg.game.model.votes.BallotResults;
 import de.gg.game.network.GameServer;
-import de.gg.game.network.LobbyPlayer;
+import de.gg.game.network.PlayerData;
 import de.gg.game.session.AuthoritativeSession;
 import de.gg.game.session.GameSessionSetup;
 import de.gg.game.session.SavedGame;
@@ -137,7 +137,7 @@ public class ServersideResultListenerStub
 	}
 
 	@Override
-	public void onGameSetup(HashMap<Short, LobbyPlayer> players,
+	public void onGameSetup(HashMap<Short, PlayerData> players,
 			GameSessionSetup sessionSetup, SavedGame savedGame) {
 		throw new UnsupportedOperationException();
 	}
@@ -154,7 +154,7 @@ public class ServersideResultListenerStub
 	}
 
 	@Override
-	public void onPlayerJoined(short senderId, LobbyPlayer lobbyPlayer) {
+	public void onPlayerJoined(short senderId, PlayerData lobbyPlayer) {
 		informClients(new ResultTask() {
 			@Override
 			protected void informClient(
@@ -165,7 +165,7 @@ public class ServersideResultListenerStub
 	}
 
 	@Override
-	public void onLobbyPlayerChanged(short senderId, LobbyPlayer lobbyPlayer) {
+	public void onLobbyPlayerChanged(short senderId, PlayerData lobbyPlayer) {
 		informClients(new ResultTask() {
 			@Override
 			protected void informClient(

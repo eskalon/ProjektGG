@@ -8,7 +8,7 @@ import de.damios.guacamole.func.BooleanConsumer;
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
 import de.gg.game.model.types.PositionType;
-import de.gg.game.network.LobbyPlayer;
+import de.gg.game.network.PlayerData;
 
 /**
  * This class is a convenience wrapper for {@link SlaveActionListener}. It is
@@ -40,7 +40,7 @@ public class ClientsideActionHandler {
 		executor.submit(() -> actionListener.onChatmessageSent(networkId, msg));
 	}
 
-	public void changeLocalPlayer(LobbyPlayer player) {
+	public void changeLocalPlayer(PlayerData player) {
 		executor.submit(
 				() -> actionListener.onPlayerChanged(networkId, player));
 	}

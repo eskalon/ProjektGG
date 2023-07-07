@@ -8,7 +8,7 @@ import de.eskalon.commons.utils.RandomUtils;
 import de.gg.game.asset.SimpleJSONParser;
 import de.gg.game.model.types.PlayerIcon;
 import de.gg.game.model.types.ProfessionType;
-import de.gg.game.network.LobbyPlayer;
+import de.gg.game.network.PlayerData;
 
 /**
  * This class contains utility methods for working with players.
@@ -23,12 +23,12 @@ public class PlayerUtils {
 	 * @return A list of all unused icons.
 	 */
 	public static List<PlayerIcon> getAvailableIcons(
-			Collection<LobbyPlayer> players) {
+			Collection<PlayerData> players) {
 		List<PlayerIcon> tmp = new ArrayList<>();
 
 		for (PlayerIcon i : PlayerIcon.values()) {
 			boolean taken = false;
-			for (LobbyPlayer p : players) {
+			for (PlayerData p : players) {
 				if (p.getIcon() == i) {
 					taken = true;
 
@@ -47,12 +47,12 @@ public class PlayerUtils {
 	 * @return A list of all unused professions indices.
 	 */
 	public static List<Integer> getAvailableProfessionIndices(
-			Collection<LobbyPlayer> players) {
+			Collection<PlayerData> players) {
 		List<Integer> tmp = new ArrayList<>();
 
 		for (int i = 0; i < ProfessionType.values().length; i++) {
 			boolean taken = false;
-			for (LobbyPlayer p : players) {
+			for (PlayerData p : players) {
 				if (p.getProfessionTypeIndex() == i) {
 					taken = true;
 
@@ -74,10 +74,10 @@ public class PlayerUtils {
 	 *            The players.
 	 * @return The overall ready status.
 	 */
-	public static boolean areAllPlayersReady(Collection<LobbyPlayer> players) {
+	public static boolean areAllPlayersReady(Collection<PlayerData> players) {
 		boolean allReady = true;
 
-		for (LobbyPlayer p : players) {
+		for (PlayerData p : players) {
 			if (!p.isReady()) {
 				allReady = false;
 				break;
@@ -98,10 +98,10 @@ public class PlayerUtils {
 	 * @return The overall ready status.
 	 */
 	public static boolean areAllPlayersReadyExcept(
-			Collection<LobbyPlayer> players, LobbyPlayer player) {
+			Collection<PlayerData> players, PlayerData player) {
 		boolean allReady = true;
 
-		for (LobbyPlayer p : players) {
+		for (PlayerData p : players) {
 			if (p != player) {
 				if (!p.isReady()) {
 					allReady = false;
@@ -123,11 +123,11 @@ public class PlayerUtils {
 	 *            unused player icons.
 	 * @return The random player.
 	 */
-	public static LobbyPlayer getRandomPlayerWithUnusedProperties(
-			List<PlayerStub> playerStubs, Collection<LobbyPlayer> players) {
-		PlayerStub stub = RandomUtils.getElement(playerStubs);
+	public static PlayerData getRandomPlayerWithUnusedProperties(
+			List<PlayerTemplate> playerStubs, Collection<PlayerData> players) {
+		PlayerTemplate stub = RandomUtils.getElement(playerStubs);
 
-		return new LobbyPlayer(stub.name, stub.surname,
+		return new PlayerData(stub.name, stub.surname,
 				getAvailableIcons(players).get(0),
 				getAvailableProfessionIndices(players).get(0), stub.isMale);
 	}
@@ -136,7 +136,7 @@ public class PlayerUtils {
 	 * This class represents the player data read via
 	 * {@linkplain SimpleJSONParser json} and holds a name as well as a surname.
 	 */
-	public class PlayerStub {
+	public class PlayerTemplate {
 		public String name, surname;
 		public boolean isMale;
 	}

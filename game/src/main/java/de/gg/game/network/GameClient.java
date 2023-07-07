@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.esotericsoftware.kryonet.rmi.ObjectSpace;
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
+import de.eskalon.commons.event.EventBus;
+import de.eskalon.commons.event.Subscribe;
 import de.gg.engine.network.BaseGameClient;
 import de.gg.game.ai.CharacterBehaviour;
 import de.gg.game.events.ConnectionLostEvent;
@@ -66,23 +66,20 @@ public class GameClient extends BaseGameClient {
 	private SlaveSession session;
 	List<ChatMessage> chatMessages = new ArrayList<>();
 
-	HashMap<Short, LobbyPlayer> lobbyPlayers;
+	HashMap<Short, PlayerData> lobbyPlayers;
 	LobbyData lobbyData;
 
 	public GameClient(EventBus eventBus) {
 		this.eventBus = eventBus;
 		this.eventBus.register(this);
 
+		NetworkRegisterer.registerClasses(client.getKryo());
+
 		this.resultListener = new ClientsideResultListener(eventBus, this);
 	}
 
 	@Override
-	protected void onCreation() {
-		NetworkRegisterer.registerClasses(client.getKryo());
-	}
-
-	@Override
-	protected void onDisconnection() {
+	protected void onConnectionClosed() {
 		if (!orderlyDisconnect) {
 			LOG.info("[CLIENT] Connection to server lost");
 			eventBus.post(new ConnectionLostEvent());
@@ -90,7 +87,7 @@ public class GameClient extends BaseGameClient {
 	}
 
 	@Override
-	protected void onSuccessfulHandshake() {
+	protected void onLobbyJoined() {
 		// Establish RMI
 		ObjectSpace.registerClasses(client.getKryo());
 		objectSpace = new ObjectSpace();
@@ -182,11 +179,11 @@ public class GameClient extends BaseGameClient {
 		return chatMessages;
 	}
 
-	public HashMap<Short, LobbyPlayer> getLobbyPlayers() {
+	public HashMap<Short, PlayerData> getLobbyPlayers() {
 		return lobbyPlayers;
 	}
 
-	public LobbyPlayer getLocalLobbyPlayer() {
+	public PlayerData getLocalLobbyPlayer() {
 		return lobbyPlayers.get(localClientId);
 	}
 

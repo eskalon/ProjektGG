@@ -1,7 +1,6 @@
 package de.gg.game.misc;
 
-import com.google.common.eventbus.EventBus;
-
+import de.eskalon.commons.event.EventBus;
 import de.eskalon.commons.lang.Lang;
 import de.gg.game.events.FullHourEvent;
 import de.gg.game.session.GameSession;

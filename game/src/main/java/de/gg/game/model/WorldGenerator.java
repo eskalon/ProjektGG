@@ -16,19 +16,19 @@ import de.gg.game.model.types.BuildingType;
 import de.gg.game.model.types.GameMap;
 import de.gg.game.model.types.PositionType;
 import de.gg.game.model.types.ProfessionType;
-import de.gg.game.network.LobbyPlayer;
+import de.gg.game.network.PlayerData;
 import de.gg.game.session.GameSessionSetup;
 
 public class WorldGenerator {
 
 	protected World world;
 	protected GameSessionSetup setup;
-	protected HashMap<Short, LobbyPlayer> players;
+	protected HashMap<Short, PlayerData> players;
 	protected Random random;
 	protected GameMap map;
 
 	public WorldGenerator(World world, GameSessionSetup setup,
-			HashMap<Short, LobbyPlayer> players) {
+			HashMap<Short, PlayerData> players) {
 		this.world = world;
 		this.setup = setup;
 		this.players = players;
@@ -84,8 +84,8 @@ public class WorldGenerator {
 	}
 
 	private void generatePlayers() {
-		for (Entry<Short, LobbyPlayer> entry : players.entrySet()) {
-			LobbyPlayer lp = entry.getValue();
+		for (Entry<Short, PlayerData> entry : players.entrySet()) {
+			PlayerData lp = entry.getValue();
 
 			Profession profession = new Profession(
 					ProfessionType.values()[lp.getProfessionTypeIndex()]);

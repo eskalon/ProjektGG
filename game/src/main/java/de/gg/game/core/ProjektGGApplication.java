@@ -5,25 +5,25 @@ import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.math.Interpolation;
-import com.google.common.eventbus.EventBus;
 import com.google.gson.reflect.TypeToken;
 
 import de.damios.guacamole.concurrent.ThreadHandler;
 import de.eskalon.commons.asset.AnnotationAssetManager.AssetLoaderParametersFactory;
 import de.eskalon.commons.core.EskalonApplication;
 import de.eskalon.commons.core.EskalonApplicationConfiguration;
-import de.eskalon.commons.misc.EventBusLogger;
-import de.eskalon.commons.misc.EventQueueBus;
+import de.eskalon.commons.input.DefaultInputHandler;
+import de.eskalon.commons.input.IInputHandler;
 import de.eskalon.commons.screen.transition.impl.BlendingTransition;
 import de.eskalon.commons.screens.AbstractAssetLoadingScreen;
 import de.eskalon.commons.screens.EskalonSplashScreen;
 import de.gg.game.asset.JSON;
 import de.gg.game.asset.JSONLoader;
 import de.gg.game.asset.JSONLoader.JSONLoaderParameter;
-import de.gg.game.misc.PlayerUtils.PlayerStub;
+import de.gg.game.misc.PlayerUtils.PlayerTemplate;
 import de.gg.game.network.GameClient;
 import de.gg.game.network.GameServer;
 import de.gg.game.ui.screens.AssetLoadingScreen;
@@ -31,6 +31,8 @@ import de.gg.game.ui.screens.CreditsScreen;
 import de.gg.game.ui.screens.GameBallotScreen;
 import de.gg.game.ui.screens.GameLoadingScreen;
 import de.gg.game.ui.screens.GameMapScreen;
+import de.gg.game.ui.screens.GameMapScreen.GameMapAxisBinding;
+import de.gg.game.ui.screens.GameMapScreen.GameMapBinaryBinding;
 import de.gg.game.ui.screens.GameRoundendScreen;
 import de.gg.game.ui.screens.GameTownHallInteriorScreen;
 import de.gg.game.ui.screens.LobbyCreationScreen;
@@ -47,19 +49,14 @@ import de.gg.game.ui.screens.SettingsScreen;
  */
 public class ProjektGGApplication extends EskalonApplication {
 
-	public static final String NAME = "ProjektGG";
-
-	private GGSettings settings;
+	public static final String GAME_NAME = "ProjektGG";
 
 	private @Nullable GameServer server;
 	private @Nullable GameClient client;
 
-	/* TODO */
-	// - Reintroduce the (forked) Guava EventBus to Pancake!!!
-
 	@Override
 	protected EskalonApplicationConfiguration getAppConfig() {
-		return super.getAppConfig().provideDepthBuffers();
+		return super.getAppConfig().setAppName(GAME_NAME).provideDepthBuffers();
 	}
 
 	@Override
@@ -71,7 +68,7 @@ public class ProjektGGApplication extends EskalonApplication {
 				new AssetLoaderParametersFactory<JSON>() {
 					private Type stringListType = new TypeToken<ArrayList<String>>() {
 					}.getType();
-					private Type stubListType = new TypeToken<ArrayList<PlayerStub>>() {
+					private Type stubListType = new TypeToken<ArrayList<PlayerTemplate>>() {
 					}.getType();
 
 					@Override
@@ -86,19 +83,25 @@ public class ProjektGGApplication extends EskalonApplication {
 					}
 				});
 
-		// Settings
-		this.settings = new GGSettings(
-				NAME.trim().replace(" ", "-").toLowerCase());
-		this.soundManager.setEffectVolume(settings.getEffectVolume());
-		this.soundManager.setMasterVolume(settings.getMasterVolume());
-		this.soundManager.setMusicVolume(settings.getMusicVolume());
+		// Default keybinds
+		IInputHandler.registerAxisBinding(settings,
+				GameMapAxisBinding.MOVE_LEFT_RIGHT, Keys.A, Keys.D, -2);
+		IInputHandler.registerAxisBinding(settings,
+				GameMapAxisBinding.MOVE_FORWARDS_BACKWARDS, Keys.S, Keys.W, -2);
+		IInputHandler.registerAxisBinding(settings, GameMapAxisBinding.ZOOM, -2,
+				-2, DefaultInputHandler.SCROLL_AXIS_Y);
 
-		this.settings.setDefaultKeybind("cameraForward", Keys.W);
-		this.settings.setDefaultKeybind("cameraLeft", Keys.A);
-		this.settings.setDefaultKeybind("cameraBackward", Keys.S);
-		this.settings.setDefaultKeybind("cameraRight", Keys.D);
-		this.settings.setDefaultKeybind("speedUpTime", Keys.PLUS);
-		this.settings.setDefaultKeybind("speedDownTime", Keys.MINUS);
+		IInputHandler.registerBinaryBinding(settings,
+				GameMapBinaryBinding.INCREASE_SPEED, Keys.NUMPAD_ADD, -2,
+				false);
+		IInputHandler.registerBinaryBinding(settings,
+				GameMapBinaryBinding.DECREASE_SPEED, Keys.NUMPAD_SUBTRACT, -2,
+				false);
+		IInputHandler.registerBinaryBinding(settings,
+				GameMapBinaryBinding.ROTATE_CAMERA_BUTTON, -2, Buttons.RIGHT,
+				false);
+		IInputHandler.registerBinaryBinding(settings,
+				GameMapBinaryBinding.SELECT_BUILDING, -2, Buttons.LEFT, false);
 
 		// Add screens
 		screenManager.addScreen("credits", new CreditsScreen(this));
@@ -131,20 +134,7 @@ public class ProjektGGApplication extends EskalonApplication {
 		screenManager.addScreenTransition("longBlendingTransition",
 				longBlendingTransition);
 
-		// Event Bus 2
-		eventBus2.register(new EventBusLogger());
-
 		return "loading";
-	}
-
-	@Override
-	public void render() {
-		eventBus2.distributeEvents();
-		super.render();
-	}
-
-	public GGSettings getSettings() {
-		return settings;
 	}
 
 	/**
@@ -183,12 +173,6 @@ public class ProjektGGApplication extends EskalonApplication {
 			ThreadHandler.getInstance().executeRunnable(() -> server.stop());
 
 		super.dispose();
-	}
-
-	private EventQueueBus eventBus2 = new EventQueueBus();
-
-	public EventBus getEventBus2() {
-		return eventBus2;
 	}
 
 }

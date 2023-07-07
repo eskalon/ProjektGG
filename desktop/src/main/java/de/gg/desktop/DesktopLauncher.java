@@ -15,7 +15,7 @@ public class DesktopLauncher {
 	public static void main(String[] args) {
 		StartOnFirstThreadHelper.executeIfJVMValid(() -> {
 			Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-			config.setTitle(ProjektGGApplication.NAME);
+			config.setTitle(ProjektGGApplication.GAME_NAME);
 			config.setWindowedMode(1280, 720);
 			config.setResizable(false);
 			config.useVsync(false);

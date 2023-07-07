@@ -1,0 +1,11 @@
+{
+  name: "duell",
+  shuffle: true,
+  repeat: true,
+  music: [
+    [
+      "Castelbuild",
+      "duell/castelbuild.wav"
+    ]
+  ]
+}

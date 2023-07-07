@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
 import de.eskalon.commons.lang.Lang;
-import de.gg.engine.ui.components.OffsettableTextField;
 import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.UIRefreshEvent;
 import de.gg.game.input.ButtonClickListener;
@@ -20,13 +19,14 @@ import de.gg.game.misc.PlayerUtils;
 import de.gg.game.model.types.PlayerIcon;
 import de.gg.game.model.types.ProfessionType;
 import de.gg.game.model.types.Religion;
-import de.gg.game.network.LobbyPlayer;
+import de.gg.game.network.PlayerData;
 import de.gg.game.ui.components.BasicDialog;
+import de.gg.game.ui.components.OffsettableTextField;
 
 public class PlayerLobbyConfigDialog extends BasicDialog {
 
-	private HashMap<Short, LobbyPlayer> players;
-	private LobbyPlayer localPlayer;
+	private HashMap<Short, PlayerData> players;
+	private PlayerData localPlayer;
 
 	private boolean selectedSex;
 	private Religion selectedReligion;
@@ -125,7 +125,7 @@ public class PlayerLobbyConfigDialog extends BasicDialog {
 				iconTable.clear();
 
 				// Only currently unused icons can be selected
-				List<LobbyPlayer> tmpPlayers = new ArrayList<>(
+				List<PlayerData> tmpPlayers = new ArrayList<>(
 						players.values());
 				tmpPlayers.remove(localPlayer);
 
@@ -161,7 +161,7 @@ public class PlayerLobbyConfigDialog extends BasicDialog {
 						professionTable.clear();
 
 						// Only currently unused professions can be selected
-						List<LobbyPlayer> tmpPlayers = new ArrayList<>(
+						List<PlayerData> tmpPlayers = new ArrayList<>(
 								players.values());
 						tmpPlayers.remove(localPlayer);
 
@@ -205,7 +205,7 @@ public class PlayerLobbyConfigDialog extends BasicDialog {
 								selectedProfessionIndex);
 
 						// To update the ui
-						game.getEventBus2().post(new UIRefreshEvent());
+						game.getEventBus().post(new UIRefreshEvent());
 
 						// Inform the server
 						game.getClient().getActionHandler()
@@ -257,8 +257,8 @@ public class PlayerLobbyConfigDialog extends BasicDialog {
 	 * @param players
 	 * @param localPlayer
 	 */
-	public void initUIValues(HashMap<Short, LobbyPlayer> players,
-			LobbyPlayer localPlayer) {
+	public void initUIValues(HashMap<Short, PlayerData> players,
+			PlayerData localPlayer) {
 		this.players = players;
 		this.localPlayer = localPlayer;
 

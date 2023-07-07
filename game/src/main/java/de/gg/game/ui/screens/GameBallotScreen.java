@@ -9,10 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.google.common.eventbus.Subscribe;
 
+import de.eskalon.commons.event.Subscribe;
 import de.eskalon.commons.lang.Lang;
-import de.gg.engine.ui.components.OffsettableImageTextButton;
 import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.BallotFinishedEvent;
 import de.gg.game.events.NewBallotEvent;
@@ -21,6 +20,7 @@ import de.gg.game.model.World;
 import de.gg.game.model.entities.Player;
 import de.gg.game.model.votes.BallotOption;
 import de.gg.game.ui.components.CharacterComponent;
+import de.gg.game.ui.components.OffsettableImageTextButton;
 
 /**
  * This screen is responsible for the votes cast at the beginning of a round.
@@ -48,7 +48,7 @@ public class GameBallotScreen extends AbstractGameScreen {
 		buttonTable = new Table();
 
 		buttonTable.setSkin(skin);
-		//mainTable.padTop(-250);
+		// mainTable.padTop(-250);
 		labelTable.add(infoText).center().width(700).padLeft(180).padRight(180);
 		mainTable.add(labelTable).padBottom(80).top().center().row();
 		buttonTable.add(voterTable).left();

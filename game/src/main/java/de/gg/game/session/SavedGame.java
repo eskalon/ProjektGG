@@ -2,7 +2,7 @@ package de.gg.game.session;
 
 import java.util.HashMap;
 
-import de.gg.engine.network.ServerSetup;
+import de.gg.engine.network.ServerSettings;
 import de.gg.game.model.World;
 
 /**
@@ -11,7 +11,7 @@ import de.gg.game.model.World;
 public class SavedGame {
 
 	public GameSessionSetup gameSessionSetup;
-	public ServerSetup serverSetup;
+	public ServerSettings serverSetup;
 	public HashMap<Short, String> clientIdentifiers = new HashMap<>();
 
 	public World world;

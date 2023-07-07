@@ -10,16 +10,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.crashinvaders.vfx.effects.ChainVfxEffect;
 import com.crashinvaders.vfx.effects.GaussianBlurEffect;
-import com.google.common.eventbus.Subscribe;
 
 import de.damios.guacamole.concurrent.ThreadHandler;
 import de.damios.guacamole.gdx.assets.Text;
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
+import de.eskalon.commons.event.Subscribe;
 import de.eskalon.commons.graphics.PostProcessingPipeline;
+import de.eskalon.commons.input.DefaultInputHandler;
+import de.eskalon.commons.input.IInputHandler;
 import de.eskalon.commons.lang.Lang;
-import de.gg.engine.ui.rendering.CameraWrapper;
 import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.FullHourEvent;
 import de.gg.game.events.HouseEnterEvent;
@@ -28,7 +29,6 @@ import de.gg.game.input.ButtonClickListener;
 import de.gg.game.input.GameSpeedInputProcessor;
 import de.gg.game.input.MapMovementInputController;
 import de.gg.game.input.MapSelectionInputController;
-import de.gg.game.misc.DiscordGGHandler;
 import de.gg.game.misc.GameClock;
 import de.gg.game.model.World;
 import de.gg.game.model.entities.Player;
@@ -37,8 +37,10 @@ import de.gg.game.model.types.PositionType;
 import de.gg.game.network.GameClient;
 import de.gg.game.network.GameServer;
 import de.gg.game.session.GameSession;
+import de.gg.game.thirdparty.DiscordGGHandler;
 import de.gg.game.ui.components.BasicDialog;
 import de.gg.game.ui.components.SimpleTextDialog;
+import de.gg.game.ui.rendering.CameraWrapper;
 import de.gg.game.ui.rendering.GameRenderer;
 
 /**
@@ -46,6 +48,14 @@ import de.gg.game.ui.rendering.GameRenderer;
  * city view.
  */
 public class GameMapScreen extends AbstractGameScreen {
+
+	public enum GameMapAxisBinding {
+		MOVE_LEFT_RIGHT, MOVE_FORWARDS_BACKWARDS, ZOOM;
+	}
+
+	public enum GameMapBinaryBinding {
+		INCREASE_SPEED, DECREASE_SPEED, ROTATE_CAMERA_BUTTON, SELECT_BUILDING;
+	}
 
 	private static final Logger LOG = LoggerService
 			.getLogger(GameMapScreen.class);
@@ -55,6 +65,8 @@ public class GameMapScreen extends AbstractGameScreen {
 
 	private CameraWrapper camera;
 	private GameRenderer gameRenderer;
+
+	private IInputHandler<GameMapAxisBinding, GameMapBinaryBinding> inputHandler;
 
 	private MapSelectionInputController selectionInputController;
 	private MapMovementInputController movementInputController;
@@ -81,6 +93,9 @@ public class GameMapScreen extends AbstractGameScreen {
 	protected void create() {
 		super.create();
 
+		/*
+		 * RENDERING
+		 */
 		camera = new CameraWrapper(67, application.getWidth(),
 				application.getHeight());
 		camera.setPosition(application.getWidth() / 2,
@@ -93,16 +108,30 @@ public class GameMapScreen extends AbstractGameScreen {
 		gameRenderer = new GameRenderer(camera.getCamera(),
 				fragmentShader.getString());
 
+		/*
+		 * INPUT
+		 */
+		inputHandler = new DefaultInputHandler<>(application.getSettings(),
+				GameMapAxisBinding.class, GameMapBinaryBinding.class);
+		addInputProcessor((DefaultInputHandler) inputHandler);
+
+		// Object selection
 		selectionInputController = new MapSelectionInputController(
-				application.getEventBus2(), camera.getCamera());
-		addInputProcessor(selectionInputController);
+				application.getEventBus(), camera.getCamera());
+		inputHandler.addListener(selectionInputController);
+
+		// Game speed
+		gameSpeedInputProcessor = new GameSpeedInputProcessor();
+		inputHandler.addListener(gameSpeedInputProcessor);
+
+		// Map movement
 		movementInputController = new MapMovementInputController(camera,
 				application.getSettings());
-		addInputProcessor(movementInputController);
-		gameSpeedInputProcessor = new GameSpeedInputProcessor(
-				application.getSettings());
-		addInputProcessor(gameSpeedInputProcessor);
+		inputHandler.addListener(movementInputController);
 
+		/*
+		 * UI
+		 */
 		// CHARACTER DIALOG
 		BasicDialog characterMenuDialog = new BasicDialog(
 				Lang.get("screen.map.character_config"), skin, "big");
@@ -371,7 +400,8 @@ public class GameMapScreen extends AbstractGameScreen {
 					.getDrawable(player.getIcon().getShieldDrawableName());
 		}
 
-		selectionInputController.resetSelection();
+		inputHandler.reset();
+		selectionInputController.resetInput();
 		movementInputController.resetInput();
 
 		dateLabel.setText(Lang.get("screen.map.time",
@@ -382,7 +412,6 @@ public class GameMapScreen extends AbstractGameScreen {
 	@Override
 	public void renderGame(float delta) {
 		movementInputController.update(delta);
-		selectionInputController.update();
 
 		// Render city
 		if (application.getClient() != null) {// Null while disconnecting

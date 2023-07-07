@@ -8,12 +8,12 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.google.common.eventbus.Subscribe;
 
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.core.EskalonApplication;
+import de.eskalon.commons.event.Subscribe;
 import de.eskalon.commons.screens.AbstractAssetLoadingScreen;
 import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.ServerReadyEvent;
@@ -51,7 +51,7 @@ public class GameLoadingScreen extends AbstractAssetLoadingScreen {
 	public void show() {
 		super.show();
 
-		((ProjektGGApplication) application).getEventBus2().register(this);
+		((ProjektGGApplication) application).getEventBus().register(this);
 
 		// Load game assets
 		application.getAssetManager().load(
@@ -69,7 +69,7 @@ public class GameLoadingScreen extends AbstractAssetLoadingScreen {
 	@Override
 	public void hide() {
 		super.hide();
-		((ProjektGGApplication) application).getEventBus2().unregister(this);
+		((ProjektGGApplication) application).getEventBus().unregister(this);
 	}
 
 	@Override

@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 
-import de.gg.engine.ui.rendering.BaseRenderData;
 import de.gg.game.model.entities.BuildingSlot;
 import de.gg.game.model.entities.Cart;
 import de.gg.game.model.entities.Character;
@@ -18,8 +17,9 @@ import de.gg.game.model.types.ItemType;
 import de.gg.game.model.types.LawType;
 import de.gg.game.model.types.PositionType;
 import de.gg.game.model.votes.Ballot;
-import de.gg.game.network.LobbyPlayer;
+import de.gg.game.network.PlayerData;
 import de.gg.game.session.GameSessionSetup;
+import de.gg.game.ui.rendering.BaseRenderData;
 
 public final class World {
 
@@ -49,7 +49,7 @@ public final class World {
 	}
 
 	public synchronized void generate(GameSessionSetup setup,
-			HashMap<Short, LobbyPlayer> players) {
+			HashMap<Short, PlayerData> players) {
 		WorldGenerator gen = new WorldGenerator(this, setup, players);
 		gen.generate();
 	}

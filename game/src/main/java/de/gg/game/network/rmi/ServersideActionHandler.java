@@ -1,5 +1,6 @@
 package de.gg.game.network.rmi;
 
+import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.rmi.ObjectSpace;
 import com.esotericsoftware.kryonet.rmi.RemoteObject;
 
@@ -7,7 +8,7 @@ import de.damios.guacamole.Preconditions;
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
 import de.gg.engine.network.BaseGameServer;
-import de.gg.engine.utils.CollectionUtils;
+import de.gg.game.misc.CollectionUtils;
 import de.gg.game.misc.PlayerUtils;
 import de.gg.game.model.World;
 import de.gg.game.model.entities.Position;
@@ -17,7 +18,7 @@ import de.gg.game.model.votes.BallotResults;
 import de.gg.game.model.votes.BallotUtils;
 import de.gg.game.model.votes.ImpeachmentBallot;
 import de.gg.game.network.GameServer;
-import de.gg.game.network.LobbyPlayer;
+import de.gg.game.network.PlayerData;
 import de.gg.game.session.AuthoritativeSession;
 
 public class ServersideActionHandler implements SlaveActionListener {
@@ -51,11 +52,16 @@ public class ServersideActionHandler implements SlaveActionListener {
 	public void requestGameData(short clientId) {
 		// The client established the RMI connection -> now establish it on the
 		// server as well
-		AuthoritativeResultListener resultListener = ObjectSpace
-				.getRemoteObject(
-						CollectionUtils.getKeyByValue(server.getConnections(),
-								clientId),
-						clientId, AuthoritativeResultListener.class);
+		AuthoritativeResultListener resultListener = null;
+
+		for (Connection con : server.getConnections()) {
+			if (((short) con.getArbitraryData()) == clientId) {
+				resultListener = ObjectSpace.getRemoteObject(con, clientId,
+						AuthoritativeResultListener.class);
+				break;
+			}
+		}
+
 		if (resultListener == null) {
 			LOG.error("[SERVER] Der resultListener des Spielers %d ist null",
 					clientId);
@@ -107,7 +113,7 @@ public class ServersideActionHandler implements SlaveActionListener {
 	private synchronized void startNextRoundForEveryone() {
 		LOG.info("[SERVER] Alle Spieler sind für die Runde bereit");
 
-		for (LobbyPlayer player : server.getPlayers().values()) {
+		for (PlayerData player : server.getPlayers().values()) {
 			player.setReady(false);
 		}
 
@@ -187,7 +193,7 @@ public class ServersideActionHandler implements SlaveActionListener {
 	}
 
 	@Override
-	public void onPlayerChanged(short clientId, LobbyPlayer player) {
+	public void onPlayerChanged(short clientId, PlayerData player) {
 		LOG.debug("[SERVER] Die Konfiguration von Spieler %d hat sich geändert",
 				clientId);
 		server.getPlayers().put(clientId, player);

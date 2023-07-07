@@ -42,7 +42,7 @@ public enum PlayerTaskType implements ILocalizable {
 		 */
 		private int basicDuration;
 		/**
-		 * The {@linkplain Player#getAvailableAp() AP} it costs to perform this
+		 * The {@linkplain Player#getAvailableAP() AP} it costs to perform this
 		 * task in its basic form.
 		 */
 		private int basicApCost;

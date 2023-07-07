@@ -14,16 +14,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.google.common.eventbus.Subscribe;
 
 import de.damios.guacamole.ICallback;
 import de.damios.guacamole.concurrent.ThreadHandler;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
+import de.eskalon.commons.event.Subscribe;
 import de.eskalon.commons.lang.Lang;
 import de.gg.engine.network.BaseGameServer;
 import de.gg.engine.network.ServerDiscoveryHandler;
 import de.gg.engine.network.message.DiscoveryResponsePacket;
-import de.gg.engine.ui.components.OffsettableTextField;
 import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.LobbyDataReceivedEvent;
 import de.gg.game.input.BackInputProcessor;
@@ -31,6 +30,7 @@ import de.gg.game.input.BackInputProcessor.BackInputActorListener;
 import de.gg.game.input.ButtonClickListener;
 import de.gg.game.network.GameClient;
 import de.gg.game.ui.components.BasicDialog;
+import de.gg.game.ui.components.OffsettableTextField;
 import de.gg.game.ui.components.SimpleTextDialog;
 
 public class ServerBrowserScreen extends AbstractGGUIScreen {
@@ -130,7 +130,7 @@ public class ServerBrowserScreen extends AbstractGGUIScreen {
 								if ((Boolean) obj) {
 									// Connect to client
 									application.setClient(new GameClient(
-											application.getEventBus2()));
+											application.getEventBus()));
 									application.getClient().connect(
 											connectionCallback,
 											application.VERSION,
@@ -253,7 +253,7 @@ public class ServerBrowserScreen extends AbstractGGUIScreen {
 					@Override
 					protected void onClick() {
 						application.setClient(
-								new GameClient(application.getEventBus2()));
+								new GameClient(application.getEventBus()));
 						application.getClient().connect(connectionCallback,
 								application.VERSION, address, packet.getPort());
 						connectingDialog = SimpleTextDialog.createAndShow(stage,

@@ -1,5 +1,6 @@
 package de.gg.game.network;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -11,22 +12,20 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.rmi.ObjectSpace;
-import com.google.common.base.Stopwatch;
 import com.google.gson.JsonSyntaxException;
 
 import de.damios.guacamole.Preconditions;
+import de.damios.guacamole.Stopwatch;
 import de.damios.guacamole.concurrent.ThreadHandler;
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.lang.Lang;
 import de.gg.engine.network.BaseGameServer;
-import de.gg.engine.network.ServerSetup;
-import de.gg.engine.network.message.ClientHandshakeRequest;
-import de.gg.engine.network.message.FailedHandshakeResponse;
-import de.gg.engine.network.message.SuccessfulHandshakeResponse;
+import de.gg.engine.network.ServerSettings;
+import de.gg.engine.network.message.LobbyJoinRequestMessage;
 import de.gg.game.asset.SimpleJSONParser;
 import de.gg.game.misc.PlayerUtils;
-import de.gg.game.misc.PlayerUtils.PlayerStub;
+import de.gg.game.misc.PlayerUtils.PlayerTemplate;
 import de.gg.game.model.entities.Character;
 import de.gg.game.model.entities.Player;
 import de.gg.game.network.rmi.AuthoritativeResultListener;
@@ -37,7 +36,7 @@ import de.gg.game.session.GameSession;
 import de.gg.game.session.GameSessionSetup;
 import de.gg.game.session.SavedGame;
 
-public class GameServer extends BaseGameServer<LobbyPlayer> {
+public class GameServer extends BaseGameServer<PlayerData> {
 
 	private static final Logger LOG = LoggerService.getLogger(GameServer.class);
 
@@ -51,40 +50,38 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 	private ServersideResultListenerStub resultListener;
 	private HashMap<Short, AuthoritativeResultListener> resultListeners = new HashMap<>();
 
-	private List<PlayerStub> playerStubs;
+	private List<PlayerTemplate> playerTemplates;
 
 	/**
-	 * <i>Not</i> <code>null</code> if the server hosts a previously saved game.
+	 * <i>Not</i> {@code null} if the server hosts a previously saved game.
 	 */
 	private @Nullable SavedGame savedGame;
 
 	/**
 	 * Creates a server object with the specified settings.
 	 *
-	 * @param serverSetup
+	 * @param serverSettings
 	 *            The server's settings, especially containing the port.
 	 * @param sessionSetup
 	 *            The game session's setup.
 	 * @param savedGame
-	 *            The saved game session to host. Can be <code>null</code>.
+	 *            The saved game session to host. Can be {@code null}.
 	 * @param playerStubs
 	 */
-	public GameServer(ServerSetup serverSetup, GameSessionSetup sessionSetup,
-			@Nullable SavedGame savedGame, List<PlayerStub> playerStubs) {
-		super(serverSetup);
+	public GameServer(ServerSettings serverSettings,
+			GameSessionSetup sessionSetup, @Nullable SavedGame savedGame,
+			List<PlayerTemplate> playerTemplates) {
+		super(serverSettings);
+
 		Preconditions.checkNotNull(sessionSetup,
 				"session setup cannot be null");
-		Preconditions.checkArgument(
-				playerStubs.size() >= serverSetup.getMaxPlayerCount(),
-				"there have to be enough player stubs for the max player size");
+		Preconditions.checkArgument(playerTemplates.size() >= 1);
 
 		this.sessionSetup = sessionSetup;
 		this.savedGame = savedGame;
-		this.playerStubs = playerStubs;
-	}
+		this.playerTemplates = playerTemplates;
 
-	@Override
-	protected void onCreation() {
+		/* Network Stuff */
 		NetworkRegisterer.registerClasses(server.getKryo());
 		ObjectSpace.registerClasses(server.getKryo());
 
@@ -158,23 +155,23 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 	private void saveGame() {
 		Stopwatch timer = Stopwatch.createStarted();
 		SavedGame save = session.createSaveGame();
-		save.serverSetup = this.serverSetup;
+		save.serverSetup = this.serverSettings;
 
 		// Save the client identifiers
-		for (Entry<Short, LobbyPlayer> e : players.entrySet()) {
+		for (Entry<Short, PlayerData> e : players.entrySet()) {
 			save.clientIdentifiers.put(e.getKey(), e.getValue().getHostname());
 		}
 
 		// Save as file
 		FileHandle savesFile = Gdx.files
-				.external(SAVES_DIR + serverSetup.getGameName());
+				.external(SAVES_DIR + serverSettings.getGameName());
 
 		try {
 			// Rename existing save game file
 			if (savesFile.exists())
-				savesFile.moveTo(
-						Gdx.files.external(SAVES_DIR + serverSetup.getGameName()
-								+ "_" + (System.currentTimeMillis() / 1000)));
+				savesFile.moveTo(Gdx.files
+						.external(SAVES_DIR + serverSettings.getGameName() + "_"
+								+ (System.currentTimeMillis() / 1000)));
 
 			// Save new one
 			savesFile.writeString(new SimpleJSONParser().parseToJson(save),
@@ -184,11 +181,11 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 		}
 
 		LOG.info("[SERVER] Game was saved at '%s' (took %d ms)!",
-				savesFile.path(), timer.elapsed(TimeUnit.MILLISECONDS));
+				savesFile.path(), timer.getTime(TimeUnit.MILLISECONDS));
 	}
 
 	@Override
-	protected void onPlayerDisconnected(Connection con, short id) {
+	protected void onPlayerDisconnected(short id) {
 		if (session != null)
 			resultListeners.remove(id);
 
@@ -196,18 +193,13 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 	}
 
 	@Override
-	protected synchronized void onClientHandshake(Connection con,
-			ClientHandshakeRequest msg) {
-		Short id = connections.get(con);
+	protected synchronized String handleLobbyJoinRequest(short id,
+			LobbyJoinRequestMessage msg) {
+		PlayerData p;
 
-		LobbyPlayer p;
-
-		if (!serverSetup.getVersion().equals(msg.getVersion())) {
+		if (!serverSettings.getVersion().equals(msg.getVersion())) {
 			LOG.info("[SERVER] Kick: Version mismatch (%s)", msg.getVersion());
-			con.sendTCP(new FailedHandshakeResponse(
-					Lang.get("dialog.connecting_failed.version_mismatch")));
-			con.close();
-			return;
+			return Lang.get("dialog.connecting_failed.version_mismatch");
 		}
 
 		if (savedGame != null) {
@@ -223,37 +215,31 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 			if (foundId == -1) {
 				LOG.info(
 						"[SERVER] Kick: Client isn't part of this loaded save game");
-				con.sendTCP(new FailedHandshakeResponse(
-						Lang.get("dialog.connecting_failed.not_in_save")));
-				con.close();
-				return;
+				return Lang.get("dialog.connecting_failed.not_in_save");
 			} else {
-				if ((id == HOST_PLAYER_NETWORK_ID
-						&& foundId != HOST_PLAYER_NETWORK_ID)
-						|| (foundId == HOST_PLAYER_NETWORK_ID
-								&& id != HOST_PLAYER_NETWORK_ID)) {
-					// Host has hanged changed
+				if (id == HOST_PLAYER_NETWORK_ID
+						&& foundId != HOST_PLAYER_NETWORK_ID) { // i.e., the
+																// host has
+																// changed
 					LOG.info(
 							"[SERVER] Kick: The host of a loaded save game cannot be changed");
-					con.sendTCP(new FailedHandshakeResponse(Lang.get(
-							"dialog.connecting_failed.cannot_change_host")));
-					con.close();
-					// Server gets closed if need be
-					return;
+					// The server will get closed by the client
+					return Lang
+							.get("dialog.connecting_failed.cannot_change_host");
 				}
 				LOG.info(
 						"[SERVER] Client was recognized as part of this loaded save game");
 				Player oldPlayer = savedGame.world.getPlayer(foundId);
 				Character oldCharacter = savedGame.world.getCharacter(
 						oldPlayer.getCurrentlyPlayedCharacterId());
-				p = new LobbyPlayer(oldCharacter.getName(),
+				p = new PlayerData(oldCharacter.getName(),
 						oldCharacter.getSurname(), oldPlayer.getIcon(), -1,
 						oldCharacter.isMale());
 			}
 		} else {
 			LOG.info("[SERVER] Client %d was registered as new player", id);
 
-			p = PlayerUtils.getRandomPlayerWithUnusedProperties(playerStubs,
+			p = PlayerUtils.getRandomPlayerWithUnusedProperties(playerTemplates,
 					players.values());
 		}
 
@@ -263,26 +249,25 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 		resultListener.onPlayerJoined(id, p);
 
 		// Establish RMI connection (part 1)
-		objectSpace.addConnection(con);
-		LOG.info("[SERVER] RMI connection to client established");
+		for (Connection con : server.getConnections()) {
+			if (((short) con.getArbitraryData()) == id) {
+				objectSpace.addConnection(con);
+				LOG.info("[SERVER] RMI connection to client established");
+			}
+		}
 
-		// Perform the handshake
-		con.sendTCP(new SuccessfulHandshakeResponse(id));
+		return null; // player will join the lobby successfully
 	}
 
 	/**
 	 * @return all players currently connected to the server.
 	 */
-	public HashMap<Short, LobbyPlayer> getPlayers() {
+	public HashMap<Short, PlayerData> getPlayers() {
 		return players;
 	}
 
 	public HashMap<Short, AuthoritativeResultListener> getResultListeners() {
 		return resultListeners;
-	}
-
-	public HashMap<Connection, Short> getConnections() {
-		return connections;
 	}
 
 	public GameSessionSetup getSessionSetup() {
@@ -291,6 +276,11 @@ public class GameServer extends BaseGameServer<LobbyPlayer> {
 
 	public SavedGame getSavedGame() {
 		return savedGame;
+	}
+
+	// TODO remove?
+	public Collection<Connection> getConnections() {
+		return server.getConnections();
 	}
 
 }

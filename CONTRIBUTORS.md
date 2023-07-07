@@ -12,6 +12,46 @@
 Thanks to Everyone That Created the Following Assets!
 
 ### UI
+- **Backpack**\
+  Path: ui/skin/skin.png\
+  Based on the work of: [Sevarihk](https://opengameart.org/content/basic-backpack-ui)\
+  License: [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/legalcode)
+  
+- **Cursor Image**\
+  Path: ui/cursor.png\
+  Based on the "Pointers part 5" by [yd](https://opengameart.org/content/pointers-part-5)\
+  License: [CC0](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
+  
+- **Dark wooden background**\
+  Path: ui/backgrounds/table.jpg\
+  Based on: [Vintage Wood Table Top Background](http://www.wildtextures.com/wp-content/uploads/wildtextures_vintage-pine-table-top.jpg) by Tomasz Grabowiecki\
+  License: [Free for personal and commercial use](http://www.wildtextures.com/terms-of-use/) 
+
+- **Gold coin**\
+  Path: ui/skin/skin.png\
+  Based on the work of: [morgan3d](https://opengameart.org/content/spinning-gold-coin)\
+  License: [CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/legalcode)
+  
+- **Kick icon**\
+  Path: ui/skin/skin.png\
+  Based on the work of: [Lorc](https://opengameart.org/content/700-rpg-icons)\
+  License: [CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/legalcode)
+
+- **Minimap background**\
+  Path: ui/minimap/background.jpeg\
+  Author: [liz west](https://www.flickr.com/photos/53133240@N00/5409800774)\
+  License: [CC-BY 2.0](https://creativecommons.org/licenses/by/2.0/legalcode)
+  
+- **Open Book**\
+  Path: ui/skin/skin.png\
+  Author: [Sevarihk](https://opengameart.org/content/pixel-art-documents)\
+  License: [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/legalcode)
+  
+- **Open book background**\
+  Path: ui/skin/skin.png\
+  Author: [jd](https://opengameart.org/content/old-pagesflip-with-sound)\
+  License: [CC0](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
+  
 - **The check button textures, the scroll bar and slider, the textfield and the dialog window background**\
   Path: ui/skin/skin.png\
   Based on the works of: [Lamoon](https://opengameart.org/content/rpg-gui-construction-kit-v10)\
@@ -28,78 +68,77 @@ Thanks to Everyone That Created the Following Assets!
   - [Beschreibung der Reise von Konstanz nach Jerusalem - Blatt 15-16](https://commons.wikimedia.org/wiki/File:Konrad_von_Gr%C3%BCnenberg_-_Beschreibung_der_Reise_von_Konstanz_nach_Jerusalem_-_Blatt_15v-16r.jpg)
   - [Weiditz Trachtenbuch - Blatt 29-30](https://commons.wikimedia.org/wiki/File:Weiditz_Trachtenbuch_029-030.jpg)
   
-- **Open book background**\
-  Path: ui/skin/skin.png\
-  Author: [jd](https://opengameart.org/content/old-pagesflip-with-sound)\
-  License: [CC0](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
-  
-- **Dark wooden background**\
-  Path: ui/backgrounds/table.jpg\
-  Based on: [Vintage Wood Table Top Background](http://www.wildtextures.com/wp-content/uploads/wildtextures_vintage-pine-table-top.jpg) by Tomasz Grabowiecki\
-  License: [Free for personal and commercial use](http://www.wildtextures.com/terms-of-use/) 
-  
-- **Minimap background**\
-  Path: ui/minimap/background.jpeg\
-  Author: [liz west](https://www.flickr.com/photos/53133240@N00/5409800774)\
-  License: [CC-BY 2.0](https://creativecommons.org/licenses/by/2.0/legalcode)
-  
-- **Gold coin**\
-  Path: ui/skin/skin.png\
-  Based on the work of: [morgan3d](https://opengameart.org/content/spinning-gold-coin)\
-  License: [CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/legalcode)
-  
-- **Leaning Book**\
-  Path: ui/skin/skin.png\
-  A render of the 3D model by: [Aare](https://opengameart.org/content/old-book)\
-  License: [CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/legalcode)
-  
-- **Inventory Pouch**\
-  Path: ui/skin/skin.png\
-  A modified render of the 3D model by: [yd](https://opengameart.org/content/bag-of-coins)\
-  License: [CC0](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
-  
-- **Cursor Image**\
-  Path: ui/cursor.png\
-  Based on the "Pointers part 5" by [yd](https://opengameart.org/content/pointers-part-5)\
-  License: [CC0](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
-  
 ### Audio
 - **Clock Tick**\
   Path: audio/clock_tick.mp3\
   Author: [cemkalyoncu](https://opengameart.org/content/tick-and-tock)
   License: [CC0](https://creativecommons.org/publicdomain/zero/1.0/)
   
+- **Fanfare**
+  Path: audio/fanfare.wav\
+  Author: [Alexandr Zhelanov](https://www.youtube.com/c/AlexandrZhelanovsMusic)
+  License: [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+  
 ### Music
-The work of 
+- **Castlebuild**\
+  Path: music/default/castlebuild.wav\
+  Author: [Alexandr Zhelanov](https://www.youtube.com/channel/UCxmng6_DMIayDwkiWGVzVRQ)
+  License: [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+  
+- **For the King**\
+  Path: music/default/for_the_king.wav\
+  Author: [Alexandr Zhelanov](https://soundcloud.com/alexandr-zhelanov)
+  License: [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+
 - **King's Feast**\
-  Path: music/kings_feast.mp3\
+  Path: music/default/kings_feast.mp3\
   Author: [RandomMind](https://opengameart.org/users/randommind)
   License: [Public Domain/CC0](https://creativecommons.org/publicdomain/zero/1.0/)
   
+- **Land of Fearless**\
+  Path: music/default/land_of_fearless.mp3\
+  Author: [Alexandr Zhelanov](https://soundcloud.com/alexandr-zhelanov)
+  License: [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+  
 - **Market Day**\
-  Path: music/market_day.mp3\
+  Path: music/default/market_day.mp3\
   Author: [RandomMind](https://opengameart.org/users/randommind)
   License: [Public Domain/CC0](https://creativecommons.org/publicdomain/zero/1.0/)
   
 - **Minstrel Dance**\
-  Path: music/minstrel_dance.mp3\
+  Path: music/default/minstrel_dance.mp3\
   Author: [RandomMind](https://opengameart.org/users/randommind)
   License: [Public Domain/CC0](https://creativecommons.org/publicdomain/zero/1.0/)
   
+- **Open the Gate**\
+  Path: music/epic/open_the_gate.mp3\
+  Author: [Alexandr Zhelanov](https://soundcloud.com/alexandr-zhelanov)
+  License: [CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/)
+  
 - **Rejoicing**\
-  Path: music/rejoicing.mp3\
+  Path: music/default/rejoicing.mp3\
   Author: [RandomMind](https://opengameart.org/users/randommind)
   License: [Public Domain/CC0](https://creativecommons.org/publicdomain/zero/1.0/)
   
 - **The Bard's Tale**\
-  Path: music/the_bards_tale.mp3\
+  Path: music/default/the_bards_tale.mp3\
   Author: [RandomMind](https://opengameart.org/users/randommind)
   License: [Public Domain/CC0](https://creativecommons.org/publicdomain/zero/1.0/)
   
 - **The Old Tower Inn**\
-  Path: music/the_old_tower_inn.mp3\
+  Path: music/default/the_old_tower_inn.mp3\
   Author: [RandomMind](https://opengameart.org/users/randommind)
   License: [Public Domain/CC0](https://creativecommons.org/publicdomain/zero/1.0/)
+  
+- **Time to Buy a New Sword**\
+  Path: music/default/time_to_buy_a_new_sword.mp3\
+  Author: [Alexandr Zhelanov](https://soundcloud.com/alexandr-zhelanov)
+  License: [CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/)
+  
+- **Tower of Great Lords**\
+  Path: music/default/tower_of_great_lords.wav\
+  Author: [Alexandr Zhelanov](https://soundcloud.com/alexandr-zhelanov)
+  License: [CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/)
   
 ### Textures
 - **Skybox**\

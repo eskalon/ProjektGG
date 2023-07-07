@@ -1,9 +1,9 @@
 package de.gg.game.ui.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.google.common.eventbus.Subscribe;
 
 import de.damios.guacamole.concurrent.ThreadHandler;
+import de.eskalon.commons.event.Subscribe;
 import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.events.ConnectionLostEvent;
 import de.gg.game.events.RoundEndEvent;

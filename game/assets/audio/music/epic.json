@@ -1,0 +1,11 @@
+{
+  name: "epic",
+  shuffle: true,
+  repeat: true,
+  music: [
+    [
+      "Open the Gate",
+      "epic/open_the_gate.wav"
+    ]
+  ]
+}

@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -87,8 +88,7 @@ public class MainMenuScreen extends AbstractGGUIScreen {
 
 		githubRepoButton.padLeft(3).padBottom(3).bottom().left();
 		stage.addActor(githubRepoButton);
-
-		stageInputWrapper.setEnabled(false);
+		stage.addAction(Actions.touchable(Touchable.disabled));
 	}
 
 	@Override
@@ -96,8 +96,7 @@ public class MainMenuScreen extends AbstractGGUIScreen {
 		// Fade in the UI & enable the input
 		SequenceAction sequence2 = new SequenceAction();
 		sequence2.addAction(Actions.delay(1.1F));
-		sequence2.addAction(
-				Actions.run(() -> stageInputWrapper.setEnabled(true)));
+		sequence2.addAction(Actions.touchable(Touchable.enabled));
 
 		SequenceAction sequence = new SequenceAction();
 		sequence.addAction(Actions.delay(shownForFirstTime ? 0.85F : 0.17F));
@@ -127,11 +126,11 @@ public class MainMenuScreen extends AbstractGGUIScreen {
 		@Override
 		protected void onClick() {
 			SequenceAction sequence2 = new SequenceAction();
+			sequence2.addAction(Actions.touchable(Touchable.disabled));
 			sequence2.addAction(Actions.delay(0.35F));
 			sequence2.addAction(Actions.run(() -> application.getScreenManager()
 					.pushScreen(nextScreen, transition)));
 
-			stageInputWrapper.setEnabled(false);
 			stageToFadeOut.addAction(Actions.parallel(
 					Actions.alpha(0F, 0.45F, Interpolation.pow2In), sequence2));
 		}

@@ -1,7 +1,7 @@
 package de.gg.game.network.rmi;
 
 import de.gg.game.model.types.PositionType;
-import de.gg.game.network.LobbyPlayer;
+import de.gg.game.network.PlayerData;
 
 /**
  * This interface takes care of a player's actions. Those are mainly triggered
@@ -22,7 +22,7 @@ public interface SlaveActionListener {
 
 	public void onChatmessageSent(short clientId, String msg);
 
-	public void onPlayerChanged(short clientId, LobbyPlayer player);
+	public void onPlayerChanged(short clientId, PlayerData player);
 
 	/* --- ROUND SETUP --- */
 	public boolean readyUp(short networkId);

@@ -3,8 +3,8 @@ package de.gg.game.model.types;
 import java.util.List;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
-import com.google.common.collect.Range;
 
+import de.damios.guacamole.IntRange;
 import de.eskalon.commons.lang.ILocalizable;
 import de.gg.game.asset.JSON;
 import de.gg.game.asset.JSONLoader.JSONLoaderParameter;
@@ -40,11 +40,12 @@ public enum LawType implements ILocalizable {
 	 * @return If this is an integer law, the range whithin which the value can
 	 *         be, otherwise {@code null}.
 	 */
-	public Range<Integer> getRange() {
+	public IntRange getRange() {
 		if (!(getData().defaultValue instanceof Integer))
 			return null;
 
-		return Range.closed(getData().lowerBound, getData().upperBound);
+		return IntRange.createInclusive(getData().lowerBound,
+				getData().upperBound);
 	}
 
 	/**

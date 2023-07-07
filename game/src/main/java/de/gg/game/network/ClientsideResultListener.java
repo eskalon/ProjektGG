@@ -2,11 +2,10 @@ package de.gg.game.network;
 
 import java.util.HashMap;
 
-import com.google.common.eventbus.EventBus;
-
 import de.damios.guacamole.Preconditions;
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
+import de.eskalon.commons.event.EventBus;
 import de.eskalon.commons.lang.Lang;
 import de.gg.game.events.AllPlayersReadyEvent;
 import de.gg.game.events.BallotFinishedEvent;
@@ -96,7 +95,7 @@ public class ClientsideResultListener implements AuthoritativeResultListener {
 	}
 
 	@Override
-	public void onGameSetup(HashMap<Short, LobbyPlayer> players,
+	public void onGameSetup(HashMap<Short, PlayerData> players,
 			GameSessionSetup sessionSetup, SavedGame savedGame) {
 		LOG.info("[CLIENT] Received lobby data");
 
@@ -107,7 +106,7 @@ public class ClientsideResultListener implements AuthoritativeResultListener {
 	}
 
 	@Override
-	public void onPlayerJoined(short id, LobbyPlayer player) {
+	public void onPlayerJoined(short id, PlayerData player) {
 		client.lobbyPlayers.put(id, player);
 		client.chatMessages.add(new ChatMessage(
 				Lang.get("screen.lobby.player_joined", player)));
@@ -115,8 +114,8 @@ public class ClientsideResultListener implements AuthoritativeResultListener {
 	}
 
 	@Override
-	public void onLobbyPlayerChanged(short playerId, LobbyPlayer player) {
-		LobbyPlayer local = client.lobbyPlayers.get(playerId);
+	public void onLobbyPlayerChanged(short playerId, PlayerData player) {
+		PlayerData local = client.lobbyPlayers.get(playerId);
 		local.setName(player.getName());
 		local.setSurname(player.getSurname());
 		local.setMale(player.isMale());

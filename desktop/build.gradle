@@ -1,6 +1,7 @@
 apply plugin: "java"
 
-sourceCompatibility = 1.9
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 
 project.ext.mainClassName = "de.gg.desktop.DesktopLauncher"
 project.ext.assetsDir = new File("../game/assets");

@@ -20,7 +20,6 @@ import de.eskalon.commons.screen.transition.impl.GLTransitionsShaderTransition;
 import de.eskalon.commons.screens.AbstractAssetLoadingScreen;
 import de.eskalon.commons.screens.AbstractEskalonScreen;
 import de.gg.game.core.ProjektGGApplication;
-import de.gg.game.misc.DiscordGGHandler;
 import de.gg.game.model.factories.CharacterFactory;
 import de.gg.game.model.types.BuildingType;
 import de.gg.game.model.types.GameMap;
@@ -31,6 +30,7 @@ import de.gg.game.model.types.PositionType;
 import de.gg.game.model.types.ProfessionType;
 import de.gg.game.model.types.SocialStatus;
 import de.gg.game.model.types.TypeRegistry;
+import de.gg.game.thirdparty.DiscordGGHandler;
 
 /**
  * This screen takes care of loading the game's assets.

@@ -1,36 +1,28 @@
 package de.gg.game.input;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 
-import de.damios.guacamole.gdx.DefaultInputProcessor;
+import de.eskalon.commons.input.DefaultInputListener;
 import de.eskalon.commons.settings.EskalonSettings;
-import de.eskalon.commons.settings.KeyBinding;
-import de.gg.engine.ui.rendering.CameraWrapper;
+import de.gg.game.ui.rendering.CameraWrapper;
+import de.gg.game.ui.screens.GameMapScreen.GameMapAxisBinding;
+import de.gg.game.ui.screens.GameMapScreen.GameMapBinaryBinding;
 
 /**
  * @see CameraInputController The libgdx class this is based on.
  */
-public class MapMovementInputController implements DefaultInputProcessor {
+public class MapMovementInputController implements
+		DefaultInputListener<GameMapAxisBinding, GameMapBinaryBinding> {
 
 	public CameraWrapper camera;
 
 	// Key binds
-	public int rotateButton = Buttons.RIGHT;
-	public KeyBinding forwardKey;
-	public KeyBinding backwardKey;
-	public KeyBinding rightKey;
-	public KeyBinding leftKey;
+	private int xAxis, yAxis;
 
-	protected boolean forwardPressed;
-	protected boolean backwardPressed;
-	protected boolean rightPressed;
-	protected boolean leftPressed;
-	/** The current (first) button being pressed. */
-	protected int button = -1;
-
-	private float startX, startY;
+	private boolean start;
+	private boolean isTouchDown;
+	private int startX, startY;
 
 	public float rotationSpeed = 360f;
 	public float translateUnits = 10f;
@@ -41,107 +33,87 @@ public class MapMovementInputController implements DefaultInputProcessor {
 		this.camera = camera;
 
 		resetInput();
-		this.forwardKey = settings.getKeybind("cameraForward");
-		this.backwardKey = settings.getKeybind("cameraBackward");
-		this.rightKey = settings.getKeybind("cameraRight");
-		this.leftKey = settings.getKeybind("cameraLeft");
 	}
 
 	public void update(float delta) {
-		if (rightPressed || leftPressed || forwardPressed || backwardPressed) {
-			if (rightPressed) {
-				camera.translateOnXZPlane(270, delta * translateUnits);
-			}
-			if (leftPressed) {
-				camera.translateOnXZPlane(90, delta * translateUnits);
-			}
-			if (forwardPressed) {
-				camera.translateOnXZPlane(0, delta * translateUnits);
-			}
-			if (backwardPressed) {
-				camera.translateOnXZPlane(180, delta * translateUnits);
-			}
+		if (xAxis != 0)
+			camera.translateOnXZPlane(270, delta * translateUnits * xAxis);
 
+		if (yAxis != 0)
+			camera.translateOnXZPlane(0, delta * translateUnits * yAxis);
+
+		if (xAxis != 0 || yAxis != 0)
 			camera.update();
-		}
 	}
 
 	public void resetInput() {
-		rightPressed = false;
-		leftPressed = false;
-		forwardPressed = false;
-		backwardPressed = false;
-
-		button = -1;
+		xAxis = 0;
+		yAxis = 0;
+		start = false;
+		isTouchDown = false;
 	}
 
 	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer,
-			int button) {
-		startX = screenX;
-		startY = screenY;
-		this.button = button;
-
-		return rotateButton == button;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		if (button == this.button)
-			this.button = -1;
-		return rotateButton == button;
-	}
-
-	protected boolean process(float deltaX, float deltaY, int button) {
-		if (button == rotateButton) {
-			camera.rotateAroundTargetOnXZPlane(deltaX * -rotationSpeed,
-					deltaY * rotationSpeed);
-			camera.update();
+	public boolean on(GameMapBinaryBinding id) {
+		if (id == GameMapBinaryBinding.ROTATE_CAMERA_BUTTON) {
+			isTouchDown = true;
+			start = true;
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		final float deltaX = (screenX - startX) / Gdx.graphics.getWidth();
-		final float deltaY = (startY - screenY) / Gdx.graphics.getHeight();
-		startX = screenX;
-		startY = screenY;
-		return process(deltaX, deltaY, button);
-	}
-
-	@Override
-	public boolean scrolled(float amountX, float amountY) {
-		camera.zoom(amountY * scrollFactor * translateUnits);
-		camera.update();
-
-		return true;
-	}
-
-	@Override
-	public boolean keyDown(int keycode) {
-		if (forwardKey.isTriggered(keycode))
-			forwardPressed = true;
-		else if (backwardKey.isTriggered(keycode))
-			backwardPressed = true;
-		else if (rightKey.isTriggered(keycode))
-			rightPressed = true;
-		else if (leftKey.isTriggered(keycode))
-			leftPressed = true;
+	public boolean off(GameMapBinaryBinding id) {
+		if (id == GameMapBinaryBinding.ROTATE_CAMERA_BUTTON) {
+			isTouchDown = false;
+			start = false;
+			return true;
+		}
 		return false;
 	}
 
 	@Override
-	public boolean keyUp(int keycode) {
-		if (forwardKey.isTriggered(keycode))
-			forwardPressed = false;
-		else if (backwardKey.isTriggered(keycode))
-			backwardPressed = false;
-		else if (rightKey.isTriggered(keycode))
-			rightPressed = false;
-		else if (leftKey.isTriggered(keycode))
-			leftPressed = false;
+	public boolean moved(int screenX, int screenY) {
+		if (start) {
+			startX = screenX;
+			startY = screenY;
+			start = false;
+			return true;
+		} else if (isTouchDown) {
+			final float deltaX = (screenX - startX)
+					/ (float) Gdx.graphics.getWidth();
+			final float deltaY = (startY - screenY)
+					/ (float) Gdx.graphics.getHeight();
+
+			// TODO: fix this!
+			camera.rotateAroundTargetOnXZPlane(deltaX * -rotationSpeed,
+					deltaY * rotationSpeed);
+			camera.update();
+
+			startX = screenX;
+			startY = screenY;
+
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean axisChanged(GameMapAxisBinding id, float value) {
+		if (id == GameMapAxisBinding.MOVE_LEFT_RIGHT) {
+			xAxis = (int) value;
+			return true;
+		}
+		if (id == GameMapAxisBinding.MOVE_FORWARDS_BACKWARDS) {
+			yAxis = (int) value;
+			return true;
+		}
+		if (id == GameMapAxisBinding.ZOOM) {
+			camera.zoom(value * scrollFactor * translateUnits);
+			camera.update();
+			return true;
+		}
 		return false;
 	}
 

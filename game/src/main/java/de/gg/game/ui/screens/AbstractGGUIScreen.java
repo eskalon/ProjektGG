@@ -21,13 +21,13 @@ public abstract class AbstractGGUIScreen extends AbstractEskalonUIScreen {
 	@Override
 	public void show() {
 		super.show();
-		application.getEventBus2().register(this);
+		application.getEventBus().register(this);
 	}
 
 	@Override
 	public void hide() {
 		super.hide();
-		application.getEventBus2().unregister(this);
+		application.getEventBus().unregister(this);
 	}
 
 }

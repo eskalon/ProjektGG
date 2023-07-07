@@ -9,7 +9,7 @@ import de.gg.game.model.types.PlayerTaskType;
 
 public final class Player {
 
-	private int availableAp;
+	private int availableAP;
 	private short currentlyPlayedCharacterId;
 	private List<Profession> learnedProfessions = new ArrayList<>();
 	private PlayerIcon icon;
@@ -32,12 +32,12 @@ public final class Player {
 		// default public constructor
 	}
 
-	public int getAvailableAp() {
-		return availableAp;
+	public int getAvailableAP() {
+		return availableAP;
 	}
 
-	public void setAvailableAp(int availableAp) {
-		this.availableAp = availableAp;
+	public void setAvailableAP(int availableAP) {
+		this.availableAP = availableAP;
 	}
 
 	public List<Profession> getLearnedProfessions() {

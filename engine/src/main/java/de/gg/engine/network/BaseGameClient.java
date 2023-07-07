@@ -15,15 +15,13 @@ import de.damios.guacamole.concurrent.ThreadHandler;
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.utils.MachineIdentificationUtils;
-import de.gg.engine.network.message.ClientHandshakeRequest;
-import de.gg.engine.network.message.FailedHandshakeResponse;
-import de.gg.engine.network.message.ServerAcceptanceResponse;
-import de.gg.engine.network.message.ServerRejectionResponse;
-import de.gg.engine.network.message.SuccessfulHandshakeResponse;
+import de.gg.engine.network.message.LobbyJoinRequestMessage;
+import de.gg.engine.network.message.LobbyJoinedMessage;
+import de.gg.engine.network.message.ConnectionRejectedMessage;
+import de.gg.engine.network.message.ConnectionEstablishedMessage;
 
 /**
- * This class takes care of handling the networking part for a basic game
- * client.
+ * A basic game client.
  * 
  * @see #connect(ICallback, String, String, int)
  * @see #disconnect()
@@ -32,21 +30,23 @@ public abstract class BaseGameClient {
 
 	private static final Logger LOG = LoggerService
 			.getLogger(BaseGameClient.class);
+
 	protected Client client;
 	/**
 	 * The network ID of the local player.
 	 */
 	protected short localClientId;
 
-	private float timeSinceLastPingUpdate = 0;
 	/**
 	 * The interval after which the ping gets updated again (in seconds).
 	 */
-	private final int PING_UPDATE_INTERVAL = 10;
-	/**
-	 * The last measured ping.
-	 */
+	private final float PING_UPDATE_INTERVAL = 10F; // 2F
+	private float timeSinceLastPingUpdate = 0;
 	private int ping;
+
+	public BaseGameClient() {
+		this.client = new Client();
+	}
 
 	/**
 	 * Tries to connect the client to the server asynchronously. After it is
@@ -67,63 +67,54 @@ public abstract class BaseGameClient {
 		Preconditions.checkNotNull(gameVersion, "game version cannot be null.");
 		Preconditions.checkNotNull(ip, "ip cannot be null.");
 
-		LOG.info("[CLIENT] --- Connecting to Server ---");
-
-		client = new Client();
-		client.start();
-
+		/* Listeners */
 		TypeListener listener = new TypeListener();
-		// CLIENT CONNECTION
-		// On Server acceptance (stage 1 of connection)
-		listener.addTypeHandler(ServerAcceptanceResponse.class, (con, msg) -> {
-			client.sendTCP(new ClientHandshakeRequest(
-					MachineIdentificationUtils.getHostname(), gameVersion));
+		// Connection established (= step 1)
+		listener.addTypeHandler(ConnectionEstablishedMessage.class,
+				(con, msg) -> {
+					client.sendTCP(new LobbyJoinRequestMessage(
+							MachineIdentificationUtils.getHostname(),
+							gameVersion));
+				});
+		// Lobby joined (= step 2)
+		listener.addTypeHandler(LobbyJoinedMessage.class, (con, msg) -> {
+			localClientId = msg.getClientNetworkId();
+			LOG.info("[CLIENT] Connection established. Local network ID is: %d",
+					localClientId);
+			onLobbyJoined();
+			client.addListener(new Listener() {
+				@Override
+				public void disconnected(Connection connection) {
+					LOG.info("[CLIENT] Connection closed!");
+					onConnectionClosed();
+				}
+			});
+			callback.onSuccess(null);
 		});
-		// Server full
-		listener.addTypeHandler(ServerRejectionResponse.class, (con, msg) -> {
+		// Connection rejected
+		listener.addTypeHandler(ConnectionRejectedMessage.class, (con, msg) -> {
 			LOG.info("[CLIENT] Couldn't connect: Client was rejected (%s)",
 					msg.getMessage());
 			callback.onFailure(msg.getMessage());
-		});
-		// Server handshake (stage 2 of connection)
-		listener.addTypeHandler(SuccessfulHandshakeResponse.class,
-				(con, msg) -> {
-					LOG.info(
-							"[CLIENT] Connection established. Local network ID is: %d",
-							localClientId);
-					localClientId = msg.getClientNetworkId();
-					onSuccessfulHandshake();
-					client.addListener(new Listener() {
-						@Override
-						public void disconnected(Connection connection) {
-							LOG.info("[CLIENT] Connection closed!");
-							onDisconnection();
-						}
-					});
-					callback.onSuccess(null);
-				});
-		listener.addTypeHandler(FailedHandshakeResponse.class, (con, msg) -> {
-			LOG.info(
-					"[CLIENT] Couldn't connect: Handshake was not successful (%s)",
-					msg.getMsg());
-			callback.onFailure(msg.getMsg());
 		});
 		// Ping
 		listener.addTypeHandler(Ping.class, (con, msg) -> {
 			if (msg.isReply) {
 				this.ping = con.getReturnTripTime();
-				LOG.info("[CLIENT] Ping: %d", ping);
+				LOG.debug("[CLIENT] Ping: %d", ping);
 			}
 		});
-
-		onCreation();
-
 		client.addListener(listener);
+
+		LOG.info("[CLIENT] --- Connecting to Server ---");
 
 		ThreadHandler.getInstance().executeRunnable(() -> {
 			try {
+				client.start();
 				client.connect(6000, ip, port);
-				// A successful connection further requires a proper handshake
+				// The client now tries to establish a connection
+				// (ConnectionEstablishedMessage) and to join the lobby
+				// (LobbyJoinRequestMessage, LobbyJoinedMessage)
 			} catch (IOException e) {
 				LOG.error("[CLIENT] Couldn't connect: %s", e);
 				callback.onFailure("Couldn't connect: " + e.getMessage());
@@ -171,18 +162,10 @@ public abstract class BaseGameClient {
 
 	/* --- Methods for child classes --- */
 	/**
-	 * This method is called when the {@link #client} is created. This is the
-	 * place to register the networked classes with the {@linkplain Kryo
-	 * serializer}.
+	 * This method is called when the client has successfully joined a lobby.
 	 */
-	protected abstract void onCreation();
+	protected abstract void onLobbyJoined();
 
-	/**
-	 * This method is called when the server handshake is successful and
-	 * therefore the connection is fully established.
-	 */
-	protected abstract void onSuccessfulHandshake();
-
-	protected abstract void onDisconnection();
+	protected abstract void onConnectionClosed();
 
 }

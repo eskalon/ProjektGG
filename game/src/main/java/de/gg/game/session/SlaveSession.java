@@ -4,15 +4,14 @@ import java.util.HashMap;
 
 import javax.annotation.Nullable;
 
-import com.google.common.eventbus.EventBus;
-
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
+import de.eskalon.commons.event.EventBus;
 import de.gg.game.events.NewBallotEvent;
 import de.gg.game.misc.GameClock;
 import de.gg.game.model.entities.Player;
 import de.gg.game.model.votes.Ballot;
-import de.gg.game.network.LobbyPlayer;
+import de.gg.game.network.PlayerData;
 import de.gg.game.systems.ProcessingSystem;
 import de.gg.game.systems.client.FirstEventWaveClientSystem;
 
@@ -48,7 +47,7 @@ public class SlaveSession extends GameSession {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void init(HashMap<Short, LobbyPlayer> players,
+	public void init(HashMap<Short, PlayerData> players,
 			@Nullable SavedGame savedGame) {
 		super.init(players, savedGame);
 

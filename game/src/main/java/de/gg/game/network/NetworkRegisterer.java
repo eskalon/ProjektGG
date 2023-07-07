@@ -5,10 +5,10 @@ import java.util.HashMap;
 
 import com.esotericsoftware.kryo.Kryo;
 
-import de.gg.engine.network.message.ClientHandshakeRequest;
-import de.gg.engine.network.message.ServerAcceptanceResponse;
-import de.gg.engine.network.message.SuccessfulHandshakeResponse;
-import de.gg.engine.network.message.ServerRejectionResponse;
+import de.gg.engine.network.message.LobbyJoinRequestMessage;
+import de.gg.engine.network.message.LobbyJoinedMessage;
+import de.gg.engine.network.message.ConnectionEstablishedMessage;
+import de.gg.engine.network.message.ConnectionRejectedMessage;
 import de.gg.game.model.types.GameDifficulty;
 import de.gg.game.model.types.GameMap;
 import de.gg.game.model.types.GameSpeed;
@@ -34,10 +34,10 @@ public class NetworkRegisterer {
 	}
 
 	/**
-	 * Registers all needed classes to the given kryo serialization manager.
+	 * Registers all needed classes to the given Kryo serialization manager.
 	 *
 	 * @param kryo
-	 *            The kryo serialization manager.
+	 *            The Kryo serialization manager.
 	 */
 	public static void registerClasses(Kryo kryo) {
 		// Basic classes
@@ -45,16 +45,16 @@ public class NetworkRegisterer {
 		kryo.register(HashMap.class);
 
 		// Lobby (Player) Stuff
-		kryo.register(LobbyPlayer.class);
+		kryo.register(PlayerData.class);
 		kryo.register(PlayerIcon.class);
 		kryo.register(Religion.class);
 		kryo.register(ProfessionType.class);
 
 		// Messages
-		kryo.register(SuccessfulHandshakeResponse.class);
-		kryo.register(ClientHandshakeRequest.class);
-		kryo.register(ServerAcceptanceResponse.class);
-		kryo.register(ServerRejectionResponse.class);
+		kryo.register(ConnectionEstablishedMessage.class);
+		kryo.register(ConnectionRejectedMessage.class);
+		kryo.register(LobbyJoinRequestMessage.class);
+		kryo.register(LobbyJoinedMessage.class);
 
 		// Map Stuff
 		kryo.register(GameDifficulty.class);

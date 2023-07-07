@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 
 import de.gg.game.model.types.PositionType;
 import de.gg.game.model.votes.BallotResults;
-import de.gg.game.network.LobbyPlayer;
+import de.gg.game.network.PlayerData;
 import de.gg.game.session.GameSessionSetup;
 import de.gg.game.session.SavedGame;
 
@@ -33,14 +33,14 @@ public interface AuthoritativeResultListener {
 	 *            The loaded game session. <code>Null</code> if this match isn't
 	 *            loaded.
 	 */
-	public void onGameSetup(HashMap<Short, LobbyPlayer> players,
+	public void onGameSetup(HashMap<Short, PlayerData> players,
 			GameSessionSetup sessionSetup, @Nullable SavedGame savedGame);
 
 	public void onPlayerLeft(short senderId);
 
-	public void onPlayerJoined(short senderId, LobbyPlayer lobbyPlayer);
+	public void onPlayerJoined(short senderId, PlayerData lobbyPlayer);
 
-	public void onLobbyPlayerChanged(short senderId, LobbyPlayer lobbyPlayer);
+	public void onLobbyPlayerChanged(short senderId, PlayerData lobbyPlayer);
 
 	public void onChatMessage(short senderId, String message);
 

@@ -1,5 +1,7 @@
 package de.gg.game.ui.components;
 
+import javax.swing.text.JTextComponent.KeyBinding;
+
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -8,9 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.eskalon.commons.audio.ISoundManager;
+import de.eskalon.commons.input.IInputHandler;
 import de.eskalon.commons.lang.Lang;
 import de.eskalon.commons.settings.EskalonSettings;
-import de.eskalon.commons.settings.KeyBinding;
 import de.gg.game.input.ButtonClickListener;
 
 /**
@@ -19,9 +21,26 @@ import de.gg.game.input.ButtonClickListener;
  */
 public class KeySelectionInputField extends ImageTextButton {
 
-	public KeySelectionInputField(EskalonSettings settings, String keybindName,
-			Skin skin, Stage stage, ISoundManager soundManager) {
-		super(settings.getKeybind(keybindName).toString(), skin);
+	public enum BindingType {
+		AXIS_MIN("keycode_min"), AXIS_MAX("keycode_max"), BINARY("keycode");
+
+		private String settingsName;
+
+		private BindingType(String settingsName) {
+			this.settingsName = settingsName;
+		}
+
+		String getSettingsName() {
+			return settingsName;
+		}
+	}
+
+	public KeySelectionInputField(EskalonSettings settings, Enum id,
+			BindingType bindingType, Skin skin, Stage stage,
+			ISoundManager soundManager) {
+		super(Keys.toString(settings.getIntProperty(IInputHandler
+				.getPropertyName(id, bindingType.getSettingsName())).get()),
+				skin);
 
 		addListener(new ButtonClickListener(soundManager) {
 			@Override
@@ -35,7 +54,10 @@ public class KeySelectionInputField extends ImageTextButton {
 					@Override
 					public boolean keyDown(InputEvent event, int keycode) {
 						if (keycode != Keys.ESCAPE) {
-							settings.setKeybind(keybindName, keycode);
+							settings.setIntProperty(
+									IInputHandler.getPropertyName(id,
+											bindingType.getSettingsName()),
+									keycode);
 
 							setText(Keys.toString(keycode));
 							dialog.hide();

@@ -10,12 +10,9 @@ public class HouseSelectionEvent {
 	 * object.
 	 */
 	private short id;
-	private int clickX, clickY;
 
-	public HouseSelectionEvent(short id, int clickX, int clickY) {
+	public HouseSelectionEvent(short id) {
 		this.id = id;
-		this.clickX = clickX;
-		this.clickY = clickY;
 	}
 
 	/**
@@ -24,20 +21,6 @@ public class HouseSelectionEvent {
 	 */
 	public short getId() {
 		return id;
-	}
-
-	/**
-	 * @return the x position of the user's click on the screen.
-	 */
-	public int getClickX() {
-		return clickX;
-	}
-
-	/**
-	 * @return the y position of the user's click on the screen.
-	 */
-	public int getClickY() {
-		return clickY;
 	}
 
 }

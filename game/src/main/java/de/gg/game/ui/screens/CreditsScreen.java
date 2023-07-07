@@ -124,6 +124,11 @@ public class CreditsScreen extends AbstractEskalonScreen {
 					app.getWidth(), Align.center, false);
 		}
 	}
+	
+	@Override
+	public void resize(int width, int height) {
+		viewport.update(width, height, true);
+	}
 
 	@Override
 	protected EskalonApplication getApplication() {
