@@ -32,17 +32,10 @@ public class MapSelectionInputController implements
 
 	@Override
 	public boolean on(GameMapBinaryBinding id) {
-		System.out.println("on");
 		if (id == GameMapBinaryBinding.SELECT_BUILDING) {
 			selectionTriggered = true;
 			return true;
 		}
-		return false;
-	}
-
-	@Override
-	public boolean off(GameMapBinaryBinding id) {
-		System.out.println("off");
 		return false;
 	}
 

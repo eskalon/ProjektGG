@@ -32,9 +32,4 @@ public class GameSpeedInputProcessor implements
 		return false;
 	}
 
-	@Override
-	public boolean off(GameMapBinaryBinding id) {
-		return false;
-	}
-
 }
