@@ -86,7 +86,6 @@ public class MapMovementInputController implements
 			final float deltaY = (startY - screenY)
 					/ (float) Gdx.graphics.getHeight();
 
-			// TODO: fix this!
 			camera.rotateAroundTargetOnXZPlane(deltaX * -rotationSpeed,
 					deltaY * rotationSpeed);
 			camera.update();

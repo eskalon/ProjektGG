@@ -1,7 +1,9 @@
 package de.gg.game.ui.rendering;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
 
 /**
  * A wrapper for the game camera to easily allow transformations, etc.
@@ -12,6 +14,12 @@ public class CameraWrapper {
 	 * The actual camera.
 	 */
 	private PerspectiveCamera camera;
+	/**
+	 * Offsets the look at vector of the camera from which the rotation point is
+	 * calculated. The offset can manipulate the look at to be at the bottom of
+	 * the screen (-1.0f), the top of the screen (1.0f) or something in between.
+	 */
+	private final float ROTATION_OFFSET_Y = -0.5f;
 	private final Vector3 tmp = new Vector3();
 	private final Vector3 tmp2 = new Vector3();
 	/**
@@ -148,7 +156,16 @@ public class CameraWrapper {
 		tmp2.set(camera.direction).crs(camera.up);
 		tmp2.y = 0;
 
-		rotateAround(target, tmp2.nor(), angleY);
+		// Intersection of the camera direction with the ground floor.
+		// Also adds some offset in screen-space Y direction to make the
+		// rotation feel more intuitive.
+		Ray ray = camera.getPickRay(Gdx.graphics.getWidth() / 2.0f,
+				Gdx.graphics.getHeight() / (2.0f + ROTATION_OFFSET_Y));
+		// calculating like this: origin.y + t * direction.y = 0 => intersection with ground floor
+		float t = -ray.origin.y / ray.direction.y;
+		// target now contains the intersection of the ray and the ground plane
+		target.set(ray.origin.add(ray.direction.scl(t)));
+
 		rotateAround(target, Vector3.Y, angleX);
 	}
 
