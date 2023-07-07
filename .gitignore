@@ -112,6 +112,9 @@ gradle-app.setting
 /ios/build/
 /ios-moe/build/
 
+## VSCode
+/.vscode/
+
 ## OS Specific
 .DS_Store
 Thumbs.db
