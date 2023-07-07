@@ -22,7 +22,7 @@ allprojects {
         gsonVersion = "2.10.1"
         guacamoleVersion = "1b0dd58494" // TODO: remove, when the proper version is pulled in via screenmanager
         kryonetVersion = "c767618c5d" // = 2.22.9
-        pancakeVersion = "e12e728db4" // = 0.1.2
+        pancakeVersion = "509e41398a" // = 0.1.2
         //quakemonkeyVersion = "master-SNAPSHOT"
         vfxVersion = "0.6.1"
         
