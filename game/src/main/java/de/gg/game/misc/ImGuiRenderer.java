@@ -15,6 +15,7 @@ public class ImGuiRenderer {
 	private static ImGuiImplGlfw imGuiGlfw;
 	private static ImGuiImplGl3 imGuiGl3;
 
+	private static boolean drawing;
 	private static InputProcessor tmpProcessor;
 
 	private ImGuiRenderer() {
@@ -23,7 +24,7 @@ public class ImGuiRenderer {
 
 	public static void init() {
 		Preconditions.checkState(imGuiGlfw == null && imGuiGl3 == null,
-				"ImGuiRenderer was already initialised!");
+				"ImGuiRenderer was already initialised. Call dispose() first!");
 
 		imGuiGlfw = new ImGuiImplGlfw();
 		imGuiGl3 = new ImGuiImplGl3();
@@ -37,19 +38,25 @@ public class ImGuiRenderer {
 		 * null); Object window = getWindow.invoke(Gdx.graphics); Object
 		 * windowHandle = getWindowHandle.invoke(window, null);
 		 */
-		long windowHandle = ((Lwjgl3Graphics) Gdx.graphics).getWindow()
-				.getWindowHandle();
 		ImGui.createContext();
 		ImGuiIO io = ImGui.getIO();
 		io.setIniFilename(null);
 		io.getFonts().addFontDefault();
 		io.getFonts().build();
 
-		imGuiGlfw.init(windowHandle, true);
+		imGuiGlfw.init(
+				((Lwjgl3Graphics) Gdx.graphics).getWindow().getWindowHandle(),
+				true);
 		imGuiGl3.init("#version 150");
 	}
 
 	public static void start() {
+		Preconditions.checkState(imGuiGlfw != null && imGuiGl3 != null,
+				"ImGuiRenderer needs to be initialised first!");
+		Preconditions.checkState(!drawing, "You need to call end() first!");
+
+		drawing = true;
+
 		if (tmpProcessor != null) {
 			Gdx.input.setInputProcessor(tmpProcessor);
 			tmpProcessor = null;
@@ -60,6 +67,10 @@ public class ImGuiRenderer {
 	}
 
 	public static void end() {
+		Preconditions.checkState(drawing, "You need to call start() first!");
+
+		drawing = false;
+
 		ImGui.render();
 		imGuiGl3.renderDrawData(ImGui.getDrawData());
 
