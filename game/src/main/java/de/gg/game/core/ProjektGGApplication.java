@@ -23,6 +23,7 @@ import de.eskalon.commons.screens.EskalonSplashScreen;
 import de.gg.game.asset.JSON;
 import de.gg.game.asset.JSONLoader;
 import de.gg.game.asset.JSONLoader.JSONLoaderParameter;
+import de.gg.game.misc.ImGuiRenderer;
 import de.gg.game.misc.PlayerUtils.PlayerTemplate;
 import de.gg.game.network.GameClient;
 import de.gg.game.network.GameServer;
@@ -134,6 +135,9 @@ public class ProjektGGApplication extends EskalonApplication {
 		screenManager.addScreenTransition("longBlendingTransition",
 				longBlendingTransition);
 
+		// ImGui
+		ImGuiRenderer.init();
+
 		return "loading";
 	}
 
@@ -166,6 +170,8 @@ public class ProjektGGApplication extends EskalonApplication {
 
 	@Override
 	public void dispose() {
+		ImGuiRenderer.dispose();
+
 		if (client != null)
 			client.disconnect();
 

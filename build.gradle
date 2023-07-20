@@ -21,6 +21,7 @@ allprojects {
         gdxVersion = "1.12.0"
         gsonVersion = "2.10.1"
         guacamoleVersion = "631bdc0ae7" // TODO: remove, when the proper version is pulled in via screenmanager
+        imguiVersion = "1.86.10";
         kryonetVersion = "c767618c5d" // = 2.22.9
         pancakeVersion = "9706e72262" // = 0.1.2
         //quakemonkeyVersion = "master-SNAPSHOT"
@@ -84,6 +85,13 @@ project(":game") {
         api "com.github.crykn.gdx-vfx:gdx-vfx-effects:$vfxVersion"
         api "com.github.crykn.guacamole:gdx:$guacamoleVersion"
         //api "com.github.crykn:quakemonkey:$quakemonkeyVersion"
+        
+        api "io.github.spair:imgui-java-binding:$imguiVersion"
+        api "io.github.spair:imgui-java-lwjgl3:$imguiVersion"
+        api "io.github.spair:imgui-java-natives-linux:$imguiVersion"
+        api "io.github.spair:imgui-java-natives-macos:$imguiVersion"
+        api "io.github.spair:imgui-java-natives-windows:$imguiVersion"
+        api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         
         //testImplementation project(':engine').sourceSets.test.output
         testImplementation "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
