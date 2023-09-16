@@ -11,7 +11,6 @@ import de.damios.guacamole.gdx.assets.Text;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.core.EskalonApplication;
 import de.eskalon.commons.screens.AbstractEskalonScreen;
-import de.eskalon.commons.screens.AbstractImageScreen;
 import de.eskalon.commons.screens.EskalonSplashScreen.EskalonCommonsAssets;
 import de.gg.game.core.ProjektGGApplication;
 import de.gg.game.input.BackInputProcessor;
@@ -124,7 +123,7 @@ public class CreditsScreen extends AbstractEskalonScreen {
 					app.getWidth(), Align.center, false);
 		}
 	}
-	
+
 	@Override
 	public void resize(int width, int height) {
 		viewport.update(width, height, true);
