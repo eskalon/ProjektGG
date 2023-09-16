@@ -14,6 +14,7 @@ import com.esotericsoftware.kryonet.Listener.TypeListener;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.kryonet.ServerDiscoveryHandler;
 
+import de.damios.guacamole.Exceptions;
 import de.damios.guacamole.ICallback;
 import de.damios.guacamole.Preconditions;
 import de.damios.guacamole.concurrent.ThreadHandler;
@@ -114,7 +115,8 @@ public abstract class BaseGameServer<D> {
 				}
 				callback.onSuccess(null); // Host successfully started
 			} catch (IOException | IllegalArgumentException e2) {
-				LOG.error("[Server] Server could not be started: %s", e2);
+				LOG.error("[Server] Server could not be started: %s",
+						Exceptions.getStackTraceAsString(e2));
 				callback.onFailure(e2); // Something went wrong
 			}
 		});
@@ -146,7 +148,8 @@ public abstract class BaseGameServer<D> {
 			broadcastServer.start();
 			LOG.info("[SERVER] Broadcast server started");
 		} catch (IOException e1) {
-			LOG.error("[SERVER] Broadcast server couldn't be started: %s", e1);
+			LOG.error("[SERVER] Broadcast server couldn't be started: %s",
+					Exceptions.getStackTraceAsString(e1));
 		}
 	}
 

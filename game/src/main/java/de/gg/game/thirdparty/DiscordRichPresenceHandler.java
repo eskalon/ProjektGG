@@ -7,6 +7,7 @@ import com.jagrosh.discordipc.IPCListener;
 import com.jagrosh.discordipc.entities.RichPresence;
 import com.jagrosh.discordipc.exceptions.NoDiscordClientException;
 
+import de.damios.guacamole.Exceptions;
 import de.damios.guacamole.Preconditions;
 import de.damios.guacamole.concurrent.ThreadHandler;
 import de.damios.guacamole.gdx.log.Logger;
@@ -71,7 +72,8 @@ public abstract class DiscordRichPresenceHandler {
 				});
 				client.connect();
 			} catch (NoDiscordClientException e) {
-				LOG.error("[DISCORD] Couldn't connect to the ipc: %s", e);
+				LOG.error("[DISCORD] Couldn't connect to the ipc: %s",
+						Exceptions.getStackTraceAsString(e));
 			}
 		});
 	}

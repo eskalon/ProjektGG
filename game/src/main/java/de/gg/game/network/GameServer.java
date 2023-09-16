@@ -14,6 +14,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.rmi.ObjectSpace;
 import com.google.gson.JsonSyntaxException;
 
+import de.damios.guacamole.Exceptions;
 import de.damios.guacamole.Preconditions;
 import de.damios.guacamole.Stopwatch;
 import de.damios.guacamole.concurrent.ThreadHandler;
@@ -177,7 +178,8 @@ public class GameServer extends BaseGameServer<PlayerData> {
 			savesFile.writeString(new SimpleJSONParser().parseToJson(save),
 					false);
 		} catch (JsonSyntaxException e) {
-			LOG.error("[SERVER] Game couldn't be saved: %s", e.getMessage());
+			LOG.error("[SERVER] Game couldn't be saved: %s",
+					Exceptions.getStackTraceAsString(e));
 		}
 
 		LOG.info("[SERVER] Game was saved at '%s' (took %d ms)!",
