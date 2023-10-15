@@ -1,2 +1,3 @@
 rootProject.name = 'ProjektGG'
 include 'desktop', 'game', 'engine'
+includeBuild("pancake")

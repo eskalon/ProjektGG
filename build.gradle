@@ -12,18 +12,19 @@ buildscript {
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
+    apply plugin: "java-library"
 
     version = "0.1.0"
+    
     ext {
         appName = "Projekt GG"
         //aiVersion = "1.8.2"
         discordIPCVersion = "a8d6631cc9" // = 0.5
         gdxVersion = "1.12.0"
         gsonVersion = "2.10.1"
-        guacamoleVersion = "631bdc0ae7" // TODO: remove, when the proper version is pulled in via screenmanager
+        guacamoleVersion = "ea44078d6b" // TODO: remove, when the proper version is pulled in via screenmanager
         imguiVersion = "1.86.10";
-        kryonetVersion = "c767618c5d" // = 2.22.9
-        pancakeVersion = "9706e72262" // = 0.1.2
+        kryonetVersion = "2.22.9"
         //quakemonkeyVersion = "master-SNAPSHOT"
         vfxVersion = "0.6.1"
         
@@ -42,8 +43,6 @@ allprojects {
 }
 
 project(":desktop") {
-    apply plugin: "java-library"
-
     dependencies {
         api project(":game")
         implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
@@ -57,13 +56,11 @@ project(":desktop") {
 }
 
 project(":engine") {
-    apply plugin: "java-library"
-
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        api "com.github.eskalon.pancake:core:$pancakeVersion"
-        api "com.github.eskalon.pancake:desktop:$pancakeVersion"
+        api "com.github.eskalon.pancake:core"
+        api "com.github.eskalon.pancake:lwjgl3"
         api "com.github.crykn:kryonet:$kryonetVersion"
         api "com.google.code.gson:gson:$gsonVersion"
         api "com.github.jagrosh:DiscordIPC:$discordIPCVersion"
@@ -78,12 +75,12 @@ project(":engine") {
 }
 
 project(":game") {
-    apply plugin: "java-library"
-
     dependencies {
         api project(":engine")
         api "com.github.crykn.gdx-vfx:gdx-vfx-effects:$vfxVersion"
-        api "com.github.crykn.guacamole:gdx:$guacamoleVersion"
+		api ("com.github.crykn.guacamole:gdx:$guacamoleVersion") {
+  			force = true
+		}
         //api "com.github.crykn:quakemonkey:$quakemonkeyVersion"
         
         api "io.github.spair:imgui-java-binding:$imguiVersion"
