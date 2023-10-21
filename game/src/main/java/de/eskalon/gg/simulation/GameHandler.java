@@ -1,19 +1,19 @@
 package de.eskalon.gg.simulation;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 import de.damios.guacamole.Stopwatch;
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.inject.annotations.Inject;
 import de.eskalon.commons.net.packets.data.IPlayerAction;
-import de.eskalon.gg.simulation.ai.CharacterBehaviour;
+import de.eskalon.commons.net.packets.data.LobbyData;
+import de.eskalon.commons.net.packets.data.PlayerActionsWrapper;
+import de.eskalon.gg.net.GameClient;
+import de.eskalon.gg.net.PlayerData;
 import de.eskalon.gg.simulation.model.entities.Player;
 import de.eskalon.gg.simulation.model.types.GameSpeed;
-import de.eskalon.gg.simulation.model.votes.Ballot;
 
 public class GameHandler {
 
@@ -21,35 +21,40 @@ public class GameHandler {
 			.getLogger(GameHandler.class);
 
 	public static final int ROUND_DURATION_IN_SECONDS = 35; // 8*60
-	private static final int TICKS_PER_SECOND = 10;
-	public static final int TICKS_PER_ROUND = ROUND_DURATION_IN_SECONDS
-			* TICKS_PER_SECOND;
-	private static final int TICK_DURATION = 1000
-			* GameSpeed.NORMAL.getDeltaTimeMultiplied() / TICKS_PER_SECOND;
+	public static final int TICKS_PER_ROUND = ROUND_DURATION_IN_SECONDS * 1000
+			/ GameSpeed.NORMAL.getTickDuration();
 
 	private float timeAccumulator = 0;
 	private int currentRound = -1;
 	private int tickCountForRound = TICKS_PER_ROUND;
-	// private GameSpeed gameSpeed = GameSpeed.NORMAL;
 
-	private SlaveSimulation simulation;
+	private GameSimulation simulation;
 	private @Inject GameClock clock;
 	private List<IPlayerAction> queuedActions = new ArrayList<>();
-	private Queue<Ballot> mattersToVoteOn = new LinkedList<>();
-	private short localPlayerId;
+
+	private GameClient client;
 
 	private Stopwatch stopwatch = Stopwatch.createUnstarted();
 
-	public GameHandler() {
-		simulation = new SlaveSimulation(null, null); // TODO
+	public void init(GameClient client,
+			LobbyData<GameSetup, GameState, PlayerData> lobbyData) {
+		simulation = new GameSimulation(lobbyData.getSessionSetup(),
+				lobbyData.getPlayers(), lobbyData.getGameState(),
+				client.getLocalNetworkID());
+		startNextRound();
+	}
+
+	public void setClient(GameClient client) {
+		this.client = client;
 	}
 
 	public boolean update(float delta) {
 		timeAccumulator += delta;
 
-		while (timeAccumulator >= TICK_DURATION
-				&& tickCountForRound < TICKS_PER_ROUND) {
-			timeAccumulator -= TICK_DURATION;
+		while (timeAccumulator >= simulation.getWorld().getGameSpeed()
+				.getTickDuration() && tickCountForRound < TICKS_PER_ROUND) {
+			timeAccumulator -= simulation.getWorld().getGameSpeed()
+					.getTickDuration();
 
 			clock.update();
 
@@ -58,10 +63,20 @@ public class GameHandler {
 						clock.getMinute());
 			}
 
-			// TODO GameClient#sendCommandsToServer() for currentTick + 2
+			List<PlayerActionsWrapper> actions = client
+					.retrieveActionsForTurn(tickCountForRound);
 
-			simulation.onSimulationTick(tickCountForRound); // TODO poll
-			// client.getActionsForTurn()
+			if (actions == null) {
+				LOG.error(
+						"[CLIENT] Actions for turn %d have not been received yet. The local simulation is lagging behind the server. ");
+				return false; // Wait until we receive the actions for the
+								// current turn
+			}
+
+			client.sendActions(tickCountForRound + 2, queuedActions);
+			queuedActions.clear();
+
+			simulation.onSimulationTick(tickCountForRound, actions);
 
 			if (tickCountForRound == TICKS_PER_ROUND) {
 				return true;
@@ -99,42 +114,23 @@ public class GameHandler {
 		//
 	}
 
-	public void setLocalPlayerId(short id) {
-		this.localPlayerId = id;
-	}
-
 	public Player getLocalPlayer() {
-		return simulation.getWorld().getPlayers().get(localPlayerId);
+		return simulation.getWorld().getPlayers()
+				.get(client.getLocalNetworkID());
 	}
 
 	public de.eskalon.gg.simulation.model.entities.Character getLocalPlayerCharacter() {
-		return simulation.getWorld().getPlayers().get(localPlayerId)
+		return simulation.getWorld().getPlayers()
+				.get(client.getLocalNetworkID())
 				.getCurrentlyPlayedCharacter(simulation.getWorld());
 	}
 
-	public SlaveSimulation getSimulation() {
+	public GameSimulation getSimulation() {
 		return simulation;
 	}
 
 	public GameClock getClock() {
 		return clock;
-	}
-
-	/**
-	 * @return matters on which a vote is held on after this round.
-	 */
-	public Queue<Ballot> getMattersToHoldVoteOn() {
-		return mattersToVoteOn;
-	}
-
-	/**
-	 * @param otherCharacterId
-	 * @return the opinion another character has about the player.
-	 */
-	public int getOpinionOfOtherCharacter(short otherCharacterId) {
-		return CharacterBehaviour.getOpinionOfAnotherCharacter(
-				getLocalPlayer().getCurrentlyPlayedCharacterId(),
-				otherCharacterId, session);
 	}
 
 	// @formatter:off

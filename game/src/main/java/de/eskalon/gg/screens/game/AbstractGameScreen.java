@@ -1,7 +1,6 @@
 package de.eskalon.gg.screens.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import de.eskalon.commons.event.Subscribe;
 import de.eskalon.commons.inject.EskalonInjector;
@@ -21,13 +20,12 @@ public abstract class AbstractGameScreen extends AbstractEskalonUIScreen {
 
 	private final boolean updateSession;
 
-	public AbstractGameScreen(SpriteBatch batch, boolean updateSession) {
-		super(batch);
+	public AbstractGameScreen(boolean updateSession) {
 		this.updateSession = updateSession;
 	}
 
-	public AbstractGameScreen(SpriteBatch batch) {
-		this(batch, true);
+	public AbstractGameScreen() {
+		this(true);
 	}
 
 	@Override
@@ -70,12 +68,19 @@ public abstract class AbstractGameScreen extends AbstractEskalonUIScreen {
 
 	@Subscribe
 	public void onConnectionLost(ConnectionLostEvent ev) {
-		appContext.handleDisconnection();
+		if (this == screenManager.getCurrentScreen()) { // If this screen is
+														// rendered as part of a
+														// transition, the next
+														// screen is responsible
+														// for handling the
+														// lost connection
+			appContext.handleDisconnection();
 
-		ServerBrowserScreen screen = EskalonInjector.instance()
-				.getInstance(ServerBrowserScreen.class);
-		screen.setJustDisconnectedFromServer(true);
-		screenManager.pushScreen(screen, null);
+			ServerBrowserScreen screen = EskalonInjector.instance()
+					.getInstance(ServerBrowserScreen.class);
+			screen.setJustDisconnectedFromServer(true);
+			screenManager.pushScreen(screen, null);
+		}
 	}
 
 	public abstract void renderGame(float delta);

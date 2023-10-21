@@ -17,6 +17,7 @@ import de.eskalon.gg.simulation.model.entities.Player;
 import de.eskalon.gg.simulation.model.entities.Position;
 import de.eskalon.gg.simulation.model.types.GameDifficulty;
 import de.eskalon.gg.simulation.model.types.GameMap;
+import de.eskalon.gg.simulation.model.types.GameSpeed;
 import de.eskalon.gg.simulation.model.types.ItemType;
 import de.eskalon.gg.simulation.model.types.LawType;
 import de.eskalon.gg.simulation.model.types.PositionType;
@@ -26,6 +27,8 @@ public final class World {
 	private long seed;
 	private GameDifficulty difficulty;
 	private GameMap map;
+
+	private GameSpeed speed;
 
 	private ModelInstance skyBox;
 	List<BaseRenderData> staticProps = new ArrayList<>();
@@ -154,6 +157,14 @@ public final class World {
 
 	public GameMap getMap() {
 		return map;
+	}
+
+	public GameSpeed getGameSpeed() {
+		return speed;
+	}
+
+	public void setGameSpeed(GameSpeed speed) {
+		this.speed = speed;
 	}
 
 }

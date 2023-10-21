@@ -41,8 +41,10 @@ import de.eskalon.gg.simulation.model.types.GameMap;
 
 public class LobbyCreationScreen extends AbstractEskalonUIScreen {
 
-	private ProjektGGApplicationContext appContext;
-	private Skin skin;
+	private @Inject ProjektGGApplicationContext appContext;
+	private @Inject EskalonScreenManager screenManager;
+	private @Inject ISoundManager soundManager;
+	private @Inject Skin skin;
 
 	@Asset("ui/backgrounds/server_browser_screen.jpg")
 	private @Inject Texture backgroundTexture;
@@ -52,13 +54,9 @@ public class LobbyCreationScreen extends AbstractEskalonUIScreen {
 	private SimpleTextDialog connectingDialog;
 	private List<PlayerTemplate> playerStubs;
 
-	public LobbyCreationScreen(SpriteBatch batch,
-			EskalonScreenManager screenManager, Skin skin,
-			ISoundManager soundManager,
-			ProjektGGApplicationContext appContext) {
-		super(batch);
-		this.appContext = appContext;
-		this.skin = skin;
+	@Override
+	public void show() {
+		super.show();
 
 		setImage(backgroundTexture);
 
@@ -141,9 +139,8 @@ public class LobbyCreationScreen extends AbstractEskalonUIScreen {
 							nameField.getText(), 7,
 							Integer.valueOf(portField.getText()), true,
 							appContext.getVersion(), true);
-					GameSetup sessionSetup = new GameSetup(
-							difficulty, GameMap.BAMBERG,
-							System.currentTimeMillis());
+					GameSetup sessionSetup = new GameSetup(difficulty,
+							GameMap.BAMBERG, System.currentTimeMillis());
 					appContext.setServer(new GameServer(serverSetup,
 							sessionSetup, null, playerStubs));
 					appContext.getServer().start(new ICallback() {

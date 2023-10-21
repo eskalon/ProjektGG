@@ -37,7 +37,7 @@ public abstract class LockstepGameServer<G, S, P extends IReadyable>
 					list.add(actionsWrapper);
 
 					if (list.size() == lobbyData.getPlayers().size()) {
-						onAllActionsReceived(list);
+						onAllActionsReceived(msg.getTurn(), list);
 						server.sendToAllTCP(new ActionsDistributionPacket(
 								msg.getTurn(), list));
 						commandsForTurn.remove(msg.getTurn());
@@ -47,6 +47,7 @@ public abstract class LockstepGameServer<G, S, P extends IReadyable>
 	}
 
 	/* --- METHODS FOR CHILD CLASSES --- */
-	public abstract void onAllActionsReceived(List<PlayerActionsWrapper> list);
+	public abstract void onAllActionsReceived(int turn,
+			List<PlayerActionsWrapper> list);
 
 }

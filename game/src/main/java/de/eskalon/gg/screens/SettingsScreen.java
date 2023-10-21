@@ -2,7 +2,6 @@ package de.eskalon.gg.screens;
 
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -37,21 +36,19 @@ import de.eskalon.gg.screens.game.RoundEndScreen;
 public class SettingsScreen extends AbstractEskalonUIScreen {
 
 	private @Inject ProjektGGApplicationContext appContext;
-	private EskalonScreenManager screenManager;
+	private @Inject EskalonScreenManager screenManager;
+	private @Inject Skin skin;
+	private @Inject EskalonSettings settings;
+	private @Inject ISoundManager soundManager;
 
 	@Asset("ui/backgrounds/settings_screen.jpg")
-	private Texture backgroundImage1;
+	private @Inject Texture backgroundImage1;
 	@Asset("ui/backgrounds/main_menu_screen.png")
-	private Texture backgroundImage2;
+	private @Inject Texture backgroundImage2;
 
-	@Inject
-	public SettingsScreen(SpriteBatch batch, Skin skin,
-			EskalonScreenManager screenManager,
-			ProjektGGApplicationContext appContext, EskalonSettings settings,
-			ISoundManager soundManager) {
-		super(batch);
-
-		this.screenManager = screenManager;
+	@Override
+	public void show() {
+		super.show();
 
 		setImage(appContext.isInGame() ? backgroundImage1 : backgroundImage2);
 
@@ -227,12 +224,19 @@ public class SettingsScreen extends AbstractEskalonUIScreen {
 
 	@Subscribe
 	public void onConnectionLost(ConnectionLostEvent ev) {
-		appContext.handleDisconnection();
+		if (this == screenManager.getCurrentScreen()) { // If this screen is
+														// rendered as part of a
+														// transition, the next
+														// screen is responsible
+														// for handling the lost
+														// connection
+			appContext.handleDisconnection();
 
-		ServerBrowserScreen screen = EskalonInjector.instance()
-				.getInstance(ServerBrowserScreen.class);
-		screen.setJustDisconnectedFromServer(true);
-		screenManager.pushScreen(screen, null);
+			ServerBrowserScreen screen = EskalonInjector.instance()
+					.getInstance(ServerBrowserScreen.class);
+			screen.setJustDisconnectedFromServer(true);
+			screenManager.pushScreen(screen, null);
+		}
 	}
 
 }

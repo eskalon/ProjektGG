@@ -22,6 +22,9 @@ import de.eskalon.gg.input.BackInputProcessor;
 public class CreditsScreen extends AbstractEskalonScreen {
 
 	private @Inject SpriteBatch batch;
+	private @Inject Skin skin;
+	private @Inject AssetManager assetManager;
+	private @Inject EskalonScreenManager screenManager;
 	private Viewport viewport;
 
 	@Asset("CONTRIBUTORS.md")
@@ -36,9 +39,10 @@ public class CreditsScreen extends AbstractEskalonScreen {
 
 	private float posY = -180;
 
-	@Inject
-	public CreditsScreen(AssetManager assetManager, Skin skin,
-			EskalonScreenManager screenManager) {
+	@Override
+	public void show() {
+		super.show();
+
 		this.viewport = new ScreenViewport();
 
 		String text = "PROJEKT GG\n" + "\n"

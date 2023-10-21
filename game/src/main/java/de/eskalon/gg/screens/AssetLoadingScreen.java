@@ -90,7 +90,7 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 
 	@Inject
 	public AssetLoadingScreen(AnnotationAssetManager assetManager) {
-		super(assetManager, "de.gg.game");
+		super(assetManager, "de.eskalon.gg");
 		this.viewport = new ScreenViewport();
 	}
 
@@ -111,14 +111,14 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 
 	@Override
 	public void show() {
-		// Add other stuff to loading queue
+		super.show();
+
+		// Add game data to loading queue
 		for (GameMap t : GameMap.values()) {
 			assetManager.load(t.getJSONAssetDescriptor());
-			assetManager.load(t.getSkyboxPath(), Model.class);
 		}
 		for (BuildingType t : BuildingType.values()) {
 			assetManager.load(t.getJSONAssetDescriptor());
-			assetManager.load(t.getModelPath(), Model.class);
 		}
 		for (PositionType t : PositionType.values()) {
 			assetManager.load(t.getJSONAssetDescriptor());
@@ -154,9 +154,18 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 				.getData().markupEnabled = true;
 		skin.get("ui-text-20", BitmapFont.class).getData().markupEnabled = true;
 
-		// Set some data
+		// Init the game data
 		TypeRegistry.instance().initialize(assetManager);
 		CharacterFactory.initialize(assetManager);
+
+		// Load the game assets
+		// TODO: Integrate this into the progress bar
+		for (GameMap t : GameMap.values()) {
+			assetManager.load(t.getSkyboxPath(), Model.class);
+		}
+		for (BuildingType t : BuildingType.values()) {
+			assetManager.load(t.getModelPath(), Model.class);
+		}
 
 		// Transitions
 		GLTransitionsShaderTransition simpleZoomShader = new GLTransitionsShaderTransition(

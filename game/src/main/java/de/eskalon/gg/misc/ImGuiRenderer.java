@@ -82,9 +82,11 @@ public class ImGuiRenderer {
 	}
 
 	public static void dispose() {
-		imGuiGl3.dispose();
+		if (imGuiGl3 != null)
+			imGuiGl3.dispose();
 		imGuiGl3 = null;
-		imGuiGlfw.dispose();
+		if (imGuiGlfw != null)
+			imGuiGlfw.dispose();
 		imGuiGlfw = null;
 		ImGui.destroyContext();
 	}

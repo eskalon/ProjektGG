@@ -36,6 +36,7 @@ public class GameLoadingScreen extends AbstractEskalonUIScreen {
 	private static final Logger LOG = LoggerService
 			.getLogger(GameLoadingScreen.class);
 
+	private @Inject AssetManager assetManager;
 	private @Inject EskalonScreenManager screenManager;
 	private @Inject ProjektGGApplicationContext appContext;
 
@@ -53,9 +54,9 @@ public class GameLoadingScreen extends AbstractEskalonUIScreen {
 	private Queue<Runnable> taskQueue = new LinkedList<>();
 	private int taskCount;
 
-	@Inject
-	public GameLoadingScreen(SpriteBatch batch, AssetManager assetManager) {
-		super(batch);
+	@Override
+	public void show() {
+		super.show();
 
 		World world = appContext.getGameHandler().getSimulation().getWorld();
 

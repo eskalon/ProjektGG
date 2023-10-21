@@ -36,20 +36,17 @@ import de.eskalon.gg.graphics.ui.actors.OffsettableTextField;
 import de.eskalon.gg.graphics.ui.actors.dialogs.BasicDialog;
 import de.eskalon.gg.graphics.ui.actors.dialogs.SimpleTextDialog;
 import de.eskalon.gg.input.BackInputProcessor;
-import de.eskalon.gg.input.ButtonClickListener;
 import de.eskalon.gg.input.BackInputProcessor.BackInputActorListener;
+import de.eskalon.gg.input.ButtonClickListener;
 import de.eskalon.gg.net.GameClient;
-import de.eskalon.gg.net.PlayerData;
-import de.eskalon.gg.simulation.GameSetup;
-import de.eskalon.gg.simulation.GameState;
 
 public class ServerBrowserScreen extends AbstractEskalonUIScreen {
 
-	private EskalonScreenManager screenManager;
-	private EventBus eventBus;
-	private ISoundManager soundManager;
-	private Skin skin;
-	private ProjektGGApplicationContext appContext;
+	private @Inject EskalonScreenManager screenManager;
+	private @Inject EventBus eventBus;
+	private @Inject ISoundManager soundManager;
+	private @Inject Skin skin;
+	private @Inject ProjektGGApplicationContext appContext;
 
 	@Asset("ui/backgrounds/server_browser_screen.jpg")
 	private @Inject Texture backgroundTexture;
@@ -66,17 +63,9 @@ public class ServerBrowserScreen extends AbstractEskalonUIScreen {
 
 	private boolean justDisconnectedFromServer = false;
 
-	@Inject
-	public ServerBrowserScreen(SpriteBatch batch,
-			EskalonScreenManager screenManager, EventBus eventBus,
-			ISoundManager soundManager, Skin skin,
-			ProjektGGApplicationContext appContext) {
-		super(batch);
-		this.screenManager = screenManager;
-		this.eventBus = eventBus;
-		this.soundManager = soundManager;
-		this.skin = skin;
-		this.appContext = appContext;
+	@Override
+	public void show() {
+		super.show();
 
 		setImage(backgroundTexture);
 

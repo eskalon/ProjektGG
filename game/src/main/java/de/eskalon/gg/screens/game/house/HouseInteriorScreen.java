@@ -1,17 +1,14 @@
 package de.eskalon.gg.screens.game.house;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-import de.eskalon.commons.screens.EskalonScreenManager;
 import de.eskalon.gg.input.BackInputProcessor;
 import de.eskalon.gg.screens.game.AbstractGameScreen;
 import de.eskalon.gg.screens.game.MapScreen;
 
 public abstract class HouseInteriorScreen extends AbstractGameScreen {
 
-	public HouseInteriorScreen(SpriteBatch batch,
-			EskalonScreenManager screenManager) {
-		super(batch);
+	@Override
+	public void show() {
+		super.show();
 
 		addInputProcessor(new BackInputProcessor() {
 			@Override

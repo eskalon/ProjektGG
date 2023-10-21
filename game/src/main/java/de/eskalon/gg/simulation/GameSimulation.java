@@ -2,6 +2,7 @@ package de.eskalon.gg.simulation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
@@ -10,10 +11,18 @@ import javax.annotation.Nullable;
 import de.damios.guacamole.Stopwatch;
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
+import de.eskalon.commons.net.packets.data.IPlayerAction;
+import de.eskalon.commons.net.packets.data.PlayerActionsWrapper;
 import de.eskalon.gg.net.PlayerData;
+import de.eskalon.gg.simulation.actions.GameSpeedChangeAction;
+import de.eskalon.gg.simulation.actions.handlers.GameSpeedChangeActionHandler;
+import de.eskalon.gg.simulation.actions.handlers.IPlayerActionHandler;
+import de.eskalon.gg.simulation.ai.CharacterBehaviour;
 import de.eskalon.gg.simulation.model.World;
 import de.eskalon.gg.simulation.model.entities.Character;
 import de.eskalon.gg.simulation.model.entities.Player;
+import de.eskalon.gg.simulation.model.votes.Ballot;
+import de.eskalon.gg.simulation.model.votes.BallotUtils;
 import de.eskalon.gg.simulation.systems.IProcessingSystem;
 import de.eskalon.gg.simulation.systems.character.FirstEventWaveCharacterSystem;
 import de.eskalon.gg.simulation.systems.character.RoundStartCharacterSystem;
@@ -21,21 +30,23 @@ import de.eskalon.gg.simulation.systems.player.FirstEventWavePlayerSystem;
 import de.eskalon.gg.simulation.systems.player.PlayerTickSystem;
 import de.eskalon.gg.simulation.systems.player.RoundStartPlayerSystem;
 
-public class SlaveSimulation {
+public class GameSimulation {
 
 	private static final Logger LOG = LoggerService
-			.getLogger(SlaveSimulation.class);
+			.getLogger(GameSimulation.class);
 
 	protected World world;
 	protected ArrayList<IProcessingSystem<Character>> characterSystems = new ArrayList<>();
 	protected ArrayList<IProcessingSystem<Player>> playerSystems = new ArrayList<>();
 
+	protected HashMap<Class<?>, IPlayerActionHandler<?>> actionHandlers = new HashMap<>();
+
 	private Stopwatch logTimer = Stopwatch.createUnstarted();
 
-	public SlaveSimulation(GameSetup setup, HashMap<Short, PlayerData> players,
-			@Nullable SavedGame savedGame, short localPlayerId) {
+	public GameSimulation(GameSetup setup, HashMap<Short, PlayerData> players,
+			@Nullable GameState savedGameState, short localPlayerId) {
 		/* Generate world */
-		if (savedGame == null) {
+		if (savedGameState == null) {
 			this.world = new World();
 			this.world.generate(setup, players);
 		} else {
@@ -94,17 +105,26 @@ public class SlaveSimulation {
 //			}
 //		}
 		//@formatter:on
+
+		/* Initialize action handlers */
+		actionHandlers.put(GameSpeedChangeAction.class,
+				new GameSpeedChangeActionHandler());
 	}
 
 	public World getWorld() {
 		return world;
 	}
 
-	public void onSimulationTick(int tick) {
+	public void onSimulationTick(int tick, List<PlayerActionsWrapper> actions) {
 		logTimer.reset().start();
 
 		/* Execute received commands */
-		// TODO poll client.getActionsForTurn()
+		for (PlayerActionsWrapper actionWrapper : actions) {
+			for (IPlayerAction action : actionWrapper.getActions()) {
+				((IPlayerActionHandler) actionHandlers.get(action.getClass()))
+						.handle(world, actionWrapper.getPlayerId(), action);
+			}
+		}
 
 		/* Process stuff for this tick */
 		// Character
@@ -129,8 +149,27 @@ public class SlaveSimulation {
 	}
 
 	public void onRoundStart() {
-		// TODO fake the actions for the first two ticks!
+		// not needed?
+	}
 
+	public int processVotes(Ballot matterToVoteOn,
+			HashMap<Short, Integer> receivedVotes) {
+		// Take care of the votes which weren't cast
+		if (receivedVotes.size() != matterToVoteOn.getVoters().size()) {
+			for (short charId : matterToVoteOn.getVoters()) {
+				if (!receivedVotes.containsKey(charId)) {
+					receivedVotes.put(charId, CharacterBehaviour
+							.getVoteOption(charId, matterToVoteOn, world));
+				}
+			}
+		}
+
+		// Calculate results & process them
+		int result = BallotUtils.getBallotResult(matterToVoteOn, receivedVotes,
+				world.getSeed());
+		matterToVoteOn.processVoteResult(receivedVotes, result, world);
+
+		return result;
 	}
 
 	//@formatter:off

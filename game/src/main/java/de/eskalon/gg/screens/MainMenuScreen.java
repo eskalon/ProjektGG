@@ -32,14 +32,15 @@ public class MainMenuScreen extends AbstractEskalonUIScreen {
 
 	private @Inject ProjektGGApplicationContext appContext;
 	private @Inject EskalonScreenManager screenManager;
+	private @Inject ISoundManager soundManager;
+	private @Inject Skin skin;
 
 	@Asset("ui/backgrounds/main_menu_screen.png")
 	private @Inject Texture backgroundImage;
 
-	@Inject
-	public MainMenuScreen(SpriteBatch batch, Skin skin,
-			ISoundManager soundManager) {
-		super(batch);
+	@Override
+	public void show() {
+		super.show();
 
 		setImage(backgroundImage);
 
@@ -89,10 +90,7 @@ public class MainMenuScreen extends AbstractEskalonUIScreen {
 		githubRepoButton.padLeft(3).padBottom(3).bottom().left();
 		stage.addActor(githubRepoButton);
 		stage.addAction(Actions.touchable(Touchable.disabled));
-	}
 
-	@Override
-	public void show() {
 		// Fade in the UI & enable the input
 		SequenceAction sequence2 = new SequenceAction();
 		sequence2.addAction(Actions.delay(1.1F));

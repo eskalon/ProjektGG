@@ -2,7 +2,6 @@ package de.eskalon.gg.screens.game;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
@@ -18,9 +17,7 @@ import de.eskalon.commons.audio.ISoundManager;
 import de.eskalon.commons.event.Subscribe;
 import de.eskalon.commons.inject.annotations.Inject;
 import de.eskalon.commons.lang.Lang;
-import de.eskalon.gg.core.ProjektGGApplicationContext;
 import de.eskalon.gg.events.AllPlayersReadyEvent;
-import de.eskalon.gg.simulation.GameClock;
 import de.eskalon.gg.thirdparty.DiscordGGHandler;
 
 /**
@@ -33,6 +30,10 @@ public class RoundEndScreen extends AbstractGameScreen {
 	private static final Logger LOG = LoggerService
 			.getLogger(RoundEndScreen.class);
 
+	private @Inject Skin skin;
+	private @Inject ISoundManager soundManager;
+
+	@Asset("ui/backgrounds/round_end_screen.jpg")
 	private @Inject Texture backgroundTexture;
 	@Asset("audio/page_flip.mp3")
 	private @Inject Sound flipSound;
@@ -40,11 +41,13 @@ public class RoundEndScreen extends AbstractGameScreen {
 	private ImageTextButton nextButton;
 	private Label lastYearTitle, comingYearTitle, lastYearData, comingYearData;
 
-	@Inject
-	public RoundEndScreen(SpriteBatch batch, Skin skin,
-			ISoundManager soundManager,
-			ProjektGGApplicationContext appContext) {
-		super(batch, false);
+	public RoundEndScreen() {
+		super(false);
+	}
+
+	@Override
+	public void show() {
+		super.show();
 
 		setImage(backgroundTexture);
 
@@ -120,7 +123,7 @@ public class RoundEndScreen extends AbstractGameScreen {
 
 		LOG.info("[CLIENT] All players ready.");
 
-		if (!appContext.getGameHandler().getMattersToHoldVoteOn().isEmpty()) {
+		if (!appContext.getClient().getMattersToHoldVoteOn().isEmpty()) {
 			screenManager.pushScreen(VoteScreen.class, "blendingTransition");
 		} else {
 			screenManager.pushScreen(MapScreen.class, "circle_open");

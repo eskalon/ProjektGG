@@ -5,19 +5,16 @@ package de.eskalon.gg.simulation.model.types;
  */
 public enum GameSpeed {
 
-	SLOW(1), NORMAL(2), SPEED_2(4), SPEED_3(8), SPEED_4(16);
+	VERY_SLOW(500), SLOW(200), NORMAL(100), FAST(60), FASTER(40);
 
-	/**
-	 * This value is multiplied with the delta time to simulate the game speed.
-	 */
-	private int deltaTimeMultiplied;
+	private int tickDuration;
 
-	GameSpeed(int deltaTimeMultiplied) {
-		this.deltaTimeMultiplied = deltaTimeMultiplied;
+	GameSpeed(int tickDuration) {
+		this.tickDuration = tickDuration;
 	}
 
-	public int getDeltaTimeMultiplied() {
-		return deltaTimeMultiplied;
+	public int getTickDuration() {
+		return tickDuration;
 	}
 
 }

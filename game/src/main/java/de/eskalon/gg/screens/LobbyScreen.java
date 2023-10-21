@@ -2,7 +2,6 @@ package de.eskalon.gg.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -20,22 +19,23 @@ import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.audio.ISoundManager;
-import de.eskalon.commons.core.AbstractEskalonApplication;
+import de.eskalon.commons.core.EskalonApplicationStarter;
 import de.eskalon.commons.event.EventBus;
 import de.eskalon.commons.event.Subscribe;
 import de.eskalon.commons.inject.EskalonInjector;
+import de.eskalon.commons.inject.annotations.Inject;
 import de.eskalon.commons.lang.Lang;
 import de.eskalon.commons.net.ChatMessage;
 import de.eskalon.commons.net.packets.data.LobbyData;
 import de.eskalon.commons.screens.AbstractEskalonUIScreen;
 import de.eskalon.commons.screens.EskalonScreenManager;
 import de.eskalon.gg.core.ProjektGGApplicationContext;
+import de.eskalon.gg.events.AllPlayersReadyEvent;
 import de.eskalon.gg.events.ChatMessageEvent;
 import de.eskalon.gg.events.ConnectionLostEvent;
 import de.eskalon.gg.events.LobbyDataChangedEvent;
 import de.eskalon.gg.graphics.ui.actors.OffsettableTextField;
 import de.eskalon.gg.graphics.ui.actors.dialogs.PlayerLobbyConfigDialog;
-import de.eskalon.gg.events.AllPlayersReadyEvent;
 import de.eskalon.gg.input.ButtonClickListener;
 import de.eskalon.gg.misc.PlayerUtils;
 import de.eskalon.gg.net.GameClient;
@@ -54,13 +54,14 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 	private static final Logger LOG = LoggerService
 			.getLogger(LobbyScreen.class);
 
-	private Skin skin;
-	private EskalonScreenManager screenManager;
-	private ProjektGGApplicationContext appContext;
-	private ISoundManager soundManager;
+	private @Inject Skin skin;
+	private @Inject EskalonScreenManager screenManager;
+	private @Inject ProjektGGApplicationContext appContext;
+	private @Inject ISoundManager soundManager;
+	private @Inject EventBus eventBus;
 
 	@Asset("ui/backgrounds/lobby_screen.jpg")
-	private Texture backgroundTexture;
+	private @Inject Texture backgroundTexture;
 
 	private final int maxPlayerCount = 7;
 	private Label messagesArea, settingsArea;
@@ -71,14 +72,9 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 
 	private LobbyData<GameSetup, GameState, PlayerData> lobbyData;
 
-	public LobbyScreen(SpriteBatch batch, Skin skin, ISoundManager soundManager,
-			ProjektGGApplicationContext appContext,
-			EskalonScreenManager screenManager, EventBus eventBus) {
-		super(batch);
-		this.soundManager = soundManager;
-		this.appContext = appContext;
-		this.screenManager = screenManager;
-		this.skin = skin;
+	@Override
+	public void show() {
+		super.show();
 
 		setImage(backgroundTexture);
 
@@ -216,10 +212,7 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 		mTable.add(buttonTable).height(185);
 
 		mainTable.add(mTable);
-	}
 
-	@Override
-	public void show() {
 		updateLobbyUI();
 	}
 
@@ -347,13 +340,13 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 	public void onAllPlayersReadyEvent(AllPlayersReadyEvent event) {
 		addChatMessageToUI(
 				new ChatMessage(Lang.get("screen.lobby.game_starting")));
-		((AbstractEskalonApplication) Gdx.app.getApplicationListener())
-				.getInputMultiplexer().removeProcessor(stage);
+		((EskalonApplicationStarter) Gdx.app.getApplicationListener())
+				.getApplication().getInputMultiplexer().removeProcessor(stage);
 
 		// Set up the game on the client side
 		GameHandler handler = EskalonInjector.instance()
 				.getInstance(GameHandler.class);
-		handler.startNextRound();
+		handler.init(appContext.getClient(), lobbyData);
 		appContext.setGameHandler(handler);
 		appContext.getObjectStorage().put("game_has_just_started", "");
 

@@ -24,7 +24,6 @@ import de.eskalon.commons.inject.annotations.Inject;
 import de.eskalon.commons.input.DefaultInputHandler;
 import de.eskalon.commons.input.IInputHandler;
 import de.eskalon.commons.lang.Lang;
-import de.eskalon.commons.screens.EskalonScreenManager;
 import de.eskalon.commons.settings.EskalonSettings;
 import de.eskalon.gg.core.ProjektGGApplicationContext;
 import de.eskalon.gg.events.ConnectionLostEvent;
@@ -33,11 +32,11 @@ import de.eskalon.gg.events.HouseEnterEvent;
 import de.eskalon.gg.events.HouseSelectionEvent;
 import de.eskalon.gg.graphics.rendering.CameraWrapper;
 import de.eskalon.gg.graphics.ui.actors.dialogs.BasicDialog;
-import de.eskalon.gg.graphics.ui.actors.dialogs.SimpleTextDialog;
 import de.eskalon.gg.input.ButtonClickListener;
 import de.eskalon.gg.input.GameSpeedInputProcessor;
 import de.eskalon.gg.input.MapMovementInputController;
 import de.eskalon.gg.input.MapSelectionInputController;
+import de.eskalon.gg.net.packets.data.VoteType;
 import de.eskalon.gg.screens.MainMenuScreen;
 import de.eskalon.gg.screens.SettingsScreen;
 import de.eskalon.gg.screens.game.house.TownHallInteriorScreen;
@@ -59,7 +58,10 @@ public class MapScreen extends AbstractGameScreen {
 
 	private static final Logger LOG = LoggerService.getLogger(MapScreen.class);
 
-	private ISoundManager soundManager;
+	private @Inject ISoundManager soundManager;
+	private @Inject Skin skin;
+	private @Inject EskalonSettings settings;
+	private @Inject EventBus eventBus;
 
 	private CameraWrapper camera;
 
@@ -79,15 +81,9 @@ public class MapScreen extends AbstractGameScreen {
 	private @Inject PostProcessingPipeline postProcessor;
 	private ChainVfxEffect pausePostProcessingEffect;
 
-	@Inject
-	public MapScreen(SpriteBatch batch, Skin skin,
-			EskalonScreenManager screenManager, ISoundManager soundManager,
-			EskalonSettings settings, EventBus eventBus,
-			ProjektGGApplicationContext appContext) {
-		super(batch);
-
-		this.soundManager = soundManager;
-		this.screenManager = screenManager;
+	@Override
+	public void show() {
+		super.show();
 
 		/*
 		 * RENDERING
@@ -173,9 +169,6 @@ public class MapScreen extends AbstractGameScreen {
 						if (appContext.getGameHandler()
 								.getLocalPlayerCharacter()
 								.getPosition() != null) {
-							// TODO Position privileges
-
-							// TODO Impeachment
 							ImageTextButton kickButton = new ImageTextButton(
 									Lang.get(
 											"screen.map.character_config.privilege.impeach"),
@@ -191,36 +184,31 @@ public class MapScreen extends AbstractGameScreen {
 															PositionType.MAYOR)
 													.getCurrentHolder();
 
-											if (mayor != -1)
+											if (mayor != -1) {
+												// TODO check whether there
+												// already is an impeachment
+												// vote for this person
 												appContext.getClient()
-														.getActionHandler()
-														.arrangeImpeachmentVote(
-																mayor,
-																(param) -> {
-																	if ((Boolean) param == true) {
-																		SimpleTextDialog
-																				.createAndShow(
-																						stage,
-																						skin,
-																						Lang.get(
-																								"screen.map.character_config.privilege.success"),
-																						Lang.get(
-																								"ui.generic.wip"));
-																	} else {
-																		SimpleTextDialog
-																				.createAndShow(
-																						stage,
-																						skin,
-																						Lang.get(
-																								"ui.generic.error"),
-																						Lang.get(
-																								"ui.generic.rmi_error"));
-																	}
-																});
+														.arrangeVote(
+																VoteType.IMPEACHMENT,
+																appContext
+																		.getGameHandler()
+																		.getLocalPlayer()
+																		.getCurrentlyPlayedCharacterId(),
+																mayor);
+											}
 										}
 									});
 							changeableCharacterMenuTable.add(kickButton);
 						}
+
+						// TODO: ELECTIONS
+				// @formatter:off
+//						if (pos.getCurrentHolder() == (short) -1
+//								&& pos.getApplicants().size() < 4) {
+//							// ...
+//						}
+						// @formatter:on	
 					}
 				});
 

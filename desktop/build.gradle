@@ -3,7 +3,7 @@ apply plugin: "java"
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
-project.ext.mainClassName = "de.gg.desktop.DesktopLauncher"
+project.ext.mainClassName = "de.eskalon.gg.desktop.DesktopLauncher"
 project.ext.assetsDir = new File("../game/assets");
 
 task run(dependsOn: classes, type: JavaExec) {

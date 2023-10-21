@@ -10,6 +10,10 @@ public class LobbyData<G, S, P> {
 	private @Nullable S gameState;
 	private HashMap<Short, P> players;
 
+	public LobbyData() {
+		// default public constructor
+	}
+
 	public LobbyData(G sessionSetup, @Nullable S gameState) {
 		this.sessionSetup = sessionSetup;
 		this.gameState = gameState;

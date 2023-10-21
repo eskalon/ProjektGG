@@ -9,6 +9,7 @@ import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.math.Interpolation;
 import com.google.gson.reflect.TypeToken;
 
+import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.asset.AnnotationAssetManager.AssetLoaderParametersFactory;
 import de.eskalon.commons.core.AbstractEskalonApplication;
 import de.eskalon.commons.core.EskalonApplicationConfiguration;
@@ -21,13 +22,13 @@ import de.eskalon.commons.screen.transition.impl.BlendingTransition;
 import de.eskalon.commons.screens.AbstractAssetLoadingScreen;
 import de.eskalon.commons.screens.AbstractEskalonScreen;
 import de.eskalon.gg.asset.JSON;
+import de.eskalon.gg.asset.JSONAssetProvider;
 import de.eskalon.gg.asset.JSONLoader;
 import de.eskalon.gg.asset.JSONLoader.JSONLoaderParameter;
 import de.eskalon.gg.graphics.rendering.GameRenderer;
 import de.eskalon.gg.misc.ImGuiRenderer;
 import de.eskalon.gg.misc.PlayerUtils.PlayerTemplate;
 import de.eskalon.gg.net.GameClient;
-import de.eskalon.gg.net.GameServer;
 import de.eskalon.gg.screens.AssetLoadingScreen;
 import de.eskalon.gg.screens.CreditsScreen;
 import de.eskalon.gg.screens.LobbyCreationScreen;
@@ -35,13 +36,13 @@ import de.eskalon.gg.screens.LobbyScreen;
 import de.eskalon.gg.screens.MainMenuScreen;
 import de.eskalon.gg.screens.ServerBrowserScreen;
 import de.eskalon.gg.screens.SettingsScreen;
-import de.eskalon.gg.screens.game.VoteScreen;
 import de.eskalon.gg.screens.game.GameLoadingScreen;
 import de.eskalon.gg.screens.game.MapScreen;
 import de.eskalon.gg.screens.game.MapScreen.GameMapAxisBinding;
 import de.eskalon.gg.screens.game.MapScreen.GameMapBinaryBinding;
-import de.eskalon.gg.screens.game.house.TownHallInteriorScreen;
 import de.eskalon.gg.screens.game.RoundEndScreen;
+import de.eskalon.gg.screens.game.VoteScreen;
+import de.eskalon.gg.screens.game.house.TownHallInteriorScreen;
 import de.eskalon.gg.simulation.GameClock;
 import de.eskalon.gg.simulation.GameHandler;
 
@@ -81,6 +82,9 @@ public class ProjektGGApplication extends AbstractEskalonApplication {
 						return null;
 					}
 				});
+		IInjector injector = EskalonInjector.instance();
+		injector.bindToQualifiedProvider(JSON.class, Asset.class,
+				JSONAssetProvider.class);
 
 		// Default keybinds
 		IInputHandler.registerAxisBinding(settings,
@@ -103,7 +107,6 @@ public class ProjektGGApplication extends AbstractEskalonApplication {
 				GameMapBinaryBinding.SELECT_BUILDING, -2, Buttons.LEFT, false);
 
 		// Register screens
-		IInjector injector = EskalonInjector.instance();
 		injector.bindToConstructor(CreditsScreen.class);
 		injector.bindToConstructor(MainMenuScreen.class);
 		injector.bindToConstructor(AssetLoadingScreen.class);
@@ -133,7 +136,6 @@ public class ProjektGGApplication extends AbstractEskalonApplication {
 
 		// Register basic game stuff
 		injector.bindToConstructor(GameClient.class);
-		injector.bindToConstructor(GameServer.class);
 		injector.bindToConstructor(GameHandler.class);
 		injector.bindToConstructor(GameRenderer.class);
 		injector.bindToConstructor(GameClock.class);

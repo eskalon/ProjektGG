@@ -21,9 +21,12 @@ import de.eskalon.commons.net.packets.lockstep.SendPlayerActionsPacket;
 import de.eskalon.commons.net.packets.sync.ChangeGameSetupPacket;
 import de.eskalon.commons.net.packets.sync.ChangePlayerPacket;
 import de.eskalon.commons.net.packets.sync.LobbyDataChangedPacket;
+import de.eskalon.commons.net.packets.sync.LobbyDataChangedPacket.ChangeType;
+import de.eskalon.gg.net.packets.ArrangeVotePacket;
 import de.eskalon.gg.net.packets.CastVotePacket;
 import de.eskalon.gg.net.packets.InitVotingPacket;
 import de.eskalon.gg.net.packets.VoteFinishedPacket;
+import de.eskalon.gg.net.packets.data.VoteType;
 import de.eskalon.gg.simulation.GameSetup;
 import de.eskalon.gg.simulation.actions.GameSpeedChangeAction;
 import de.eskalon.gg.simulation.model.types.GameDifficulty;
@@ -77,11 +80,16 @@ public class NetworkRegisterer {
 
 		kryo.register(ChangeGameSetupPacket.class);
 		kryo.register(LobbyDataChangedPacket.class);
+		kryo.register(ChangeType.class);
 		kryo.register(ChangePlayerPacket.class);
 
 		kryo.register(AllPlayersReadyMessage.class);
 
+		// GG packet data
+		kryo.register(VoteType.class);
+
 		// GG packets
+		kryo.register(ArrangeVotePacket.class);
 		kryo.register(VoteFinishedPacket.class);
 		kryo.register(CastVotePacket.class);
 		kryo.register(InitVotingPacket.class);

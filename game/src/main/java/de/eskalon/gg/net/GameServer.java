@@ -1,5 +1,6 @@
 package de.eskalon.gg.net;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,12 +17,13 @@ import de.eskalon.commons.net.packets.data.LobbyData;
 import de.eskalon.commons.net.packets.data.PlayerActionsWrapper;
 import de.eskalon.gg.misc.PlayerUtils;
 import de.eskalon.gg.misc.PlayerUtils.PlayerTemplate;
+import de.eskalon.gg.net.packets.ArrangeVotePacket;
 import de.eskalon.gg.net.packets.CastVotePacket;
 import de.eskalon.gg.net.packets.InitVotingPacket;
 import de.eskalon.gg.net.packets.VoteFinishedPacket;
 import de.eskalon.gg.simulation.GameSetup;
+import de.eskalon.gg.simulation.GameSimulation;
 import de.eskalon.gg.simulation.GameState;
-import de.eskalon.gg.simulation.MasterSimulation;
 import de.eskalon.gg.simulation.SavedGame;
 import de.eskalon.gg.simulation.model.votes.Ballot;
 
@@ -32,23 +34,32 @@ public class GameServer
 
 	private List<PlayerTemplate> playerTemplates;
 
-	private MasterSimulation simulation;
+	private boolean gameStarted = false;
 
+	private GameSimulation simulation;
 	private @Nullable Ballot matterToVoteOn = null;
 	private HashMap<Short, Integer> receivedVotes = new HashMap<>();
 	private Timer timer = new Timer();
 
-	public GameServer(ServerSettings serverSettings,
-			GameSetup sessionSetup, @Nullable SavedGame savedGame,
+	public GameServer(ServerSettings serverSettings, GameSetup sessionSetup,
+			@Nullable SavedGame savedGame,
 			List<PlayerTemplate> playerTemplates) {
-		super(serverSettings,
-				new LobbyData<GameSetup, GameState, PlayerData>(
-						sessionSetup, savedGame.state));
+		super(serverSettings, new LobbyData<GameSetup, GameState, PlayerData>(
+				sessionSetup, /* TODO: savedGame.state */ null));
 		this.playerTemplates = playerTemplates;
 
 		NetworkRegisterer.registerClasses(server.getKryo());
 
 		TypeListener typeListener = new TypeListener();
+		typeListener.addTypeHandler(ArrangeVotePacket.class, (con, msg) -> {
+			// TODO check whether the player is allowed to arrange the vote; if
+			// not send an OutOfSyncMessage(crash = false) to the client!
+			server.sendToAllTCP(msg);
+
+			// TODO: for applications, also send an IPlayerAction, which does
+			// the following:
+			// pos.getApplicants().add(world.getPlayer(clientId).getCurrentlyPlayedCharacterId());
+		});
 		typeListener.addTypeHandler(InitVotingPacket.class, (con, msg) -> {
 			if (matterToVoteOn != null)
 				LOG.error(
@@ -59,8 +70,8 @@ public class GameServer
 			timer.scheduleTask(new Timer.Task() {
 				@Override
 				public void run() {
-					// TODO masterSim#processVoteResults & generate the uncast
-					// votes
+					simulation.processVotes(matterToVoteOn, receivedVotes);
+
 					server.sendToAllTCP(new VoteFinishedPacket(receivedVotes));
 					receivedVotes.clear();
 					matterToVoteOn = null;
@@ -74,14 +85,24 @@ public class GameServer
 	}
 
 	@Override
-	public void onAllActionsReceived(List<PlayerActionsWrapper> list) {
-		// MasterSimulation#provideActions??
-		// MasterSimulation#onSimulationTurn()
+	public void onAllActionsReceived(int turn,
+			List<PlayerActionsWrapper> list) {
+		simulation.onSimulationTick(turn, list);
 	}
 
 	@Override
 	protected void onAllPlayersReady() {
-		// MasterSim#nextRoundStuff?
+		if (!gameStarted) {
+			gameStarted = true;
+
+			simulation = new GameSimulation(lobbyData.getSessionSetup(),
+					lobbyData.getPlayers(), lobbyData.getGameState(),
+					(short) -1);
+		}
+
+		// Fake first two ticks
+		simulation.onSimulationTick(0, new ArrayList<>());
+		simulation.onSimulationTick(1, new ArrayList<>());
 	}
 
 	@Override

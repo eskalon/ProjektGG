@@ -1,9 +1,7 @@
 
 package com.esotericsoftware.minlog;
 
-import java.util.concurrent.TimeUnit;
-
-import de.damios.guacamole.gdx.log.Logger;
+import de.damios.guacamole.Exceptions;
 import de.damios.guacamole.gdx.log.LoggerService;
 
 /**
@@ -209,20 +207,42 @@ public class Log {
 
 			switch (level) {
 			case LEVEL_ERROR:
-				LOG.error("[" + category + "] " + message, ex);
+				if (ex == null)
+					LOG.error("[" + category + "] " + message);
+				else
+					LOG.error("[" + category + "] " + message + ": %s",
+							Exceptions.getStackTraceAsString(ex));
 				break;
 			case LEVEL_WARN:
-				LOG.info("[" + category + "] " + message, ex);
+				if (ex == null)
+					LOG.info("[" + category + "] " + message);
+				else
+					LOG.info("[" + category + "] " + message + ": %s",
+							Exceptions.getStackTraceAsString(ex));
 				break;
 			case LEVEL_INFO:
-				LOG.debug("[" + category + "] " + message, ex);
+				if (ex == null)
+					LOG.debug("[" + category + "] " + message);
+				else
+					LOG.debug("[" + category + "] " + message + ": %s",
+							Exceptions.getStackTraceAsString(ex));
 				break;
 			case LEVEL_DEBUG:
-				LOG.debug("[" + category + "] " + message, ex);
+				if (ex == null)
+					LOG.debug("[" + category + "] " + message);
+				else
+					LOG.debug("[" + category + "] " + message + ": %s",
+							Exceptions.getStackTraceAsString(ex));
 				break;
 			case LEVEL_TRACE:
-				LOG.debug("[" + category + "] " + message, ex);
-				break;
+				//@formatter:off
+//				if (ex == null)
+//					LOG.debug("[" + category + "] " + message);
+//				else
+//					LOG.debug("[" + category + "] " + message + ": %s",
+//							Exceptions.getStackTraceAsString(ex));
+//				break;
+				//@formatter:on
 			}
 		}
 	}

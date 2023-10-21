@@ -26,12 +26,13 @@ import de.eskalon.gg.graphics.ui.actors.CharacterComponent;
 import de.eskalon.gg.graphics.ui.actors.OffsettableImageTextButton;
 import de.eskalon.gg.input.ButtonClickListener;
 import de.eskalon.gg.misc.CountdownTimer;
+import de.eskalon.gg.net.packets.ArrangeVotePacket;
 import de.eskalon.gg.simulation.ai.CharacterBehaviour;
 import de.eskalon.gg.simulation.model.World;
 import de.eskalon.gg.simulation.model.entities.Player;
 import de.eskalon.gg.simulation.model.votes.Ballot;
 import de.eskalon.gg.simulation.model.votes.BallotOption;
-import de.eskalon.gg.simulation.model.votes.BallotUtils;
+import de.eskalon.gg.simulation.model.votes.ImpeachmentBallot;
 
 /**
  * This screen is responsible for the votes cast at the beginning of a round.
@@ -41,8 +42,7 @@ public class VoteScreen extends AbstractGameScreen {
 	private static final Logger LOG = LoggerService.getLogger(VoteScreen.class);
 
 	private @Inject ISoundManager soundManager;
-	private @Inject ProjektGGApplicationContext appContext;
-	private Skin skin;
+	private @Inject Skin skin;
 
 	private Label infoText;
 	private Table optionTable, voterTable, labelTable, buttonTable;
@@ -51,9 +51,13 @@ public class VoteScreen extends AbstractGameScreen {
 	private @Nullable Ballot matterToVoteOn = null;
 	private CountdownTimer voteTimer = new CountdownTimer();
 
-	public VoteScreen(SpriteBatch batch, Skin skin) {
-		super(batch, false);
-		this.skin = skin;
+	public VoteScreen() {
+		super(false);
+	}
+
+	@Override
+	public void show() {
+		super.show();
 
 		labelTable = new Table();
 		infoText = new Label(Lang.get("ui.generic.loading"), skin, "text");
@@ -77,21 +81,39 @@ public class VoteScreen extends AbstractGameScreen {
 	public void renderGame(float delta) {
 		// PROCESS VOTES
 		if (matterToVoteOn == null) {
-			matterToVoteOn = appContext.getGameHandler()
+			ArrangeVotePacket msg = appContext.getClient()
 					.getMattersToHoldVoteOn().poll();
 
-			if (matterToVoteOn == null) {
+			if (msg == null) {
 				LOG.info("[CLIENT] No vote remaining");
 				screenManager.pushScreen(MapScreen.class, "circle_open");
 				appContext.getGameHandler().startNextRound();
 			} else {
 				LOG.info("[CLIENT] Preparing next vote");
+				matterToVoteOn = createBallot(msg);
 				prepareNextBallot(matterToVoteOn);
 			}
 		} else if (voteTimer.isRunning() && voteTimer.update()) {
 			voteTimer.reset();
 			matterToVoteOn = null;
 		}
+	}
+
+	private Ballot createBallot(ArrangeVotePacket msg) {
+		switch (msg.getType()) {
+		case IMPEACHMENT:
+			return new ImpeachmentBallot(
+					appContext.getGameHandler().getSimulation().getWorld(),
+					appContext.getGameHandler().getSimulation().getWorld()
+							.getCharacters().get(msg.getTarget()).getPosition(),
+					msg.getCaller());
+		case ELECTION:
+			// return new
+			// ElectionBallot(appContext.getGameHandler().getSimulation().getWorld(),
+			// CollectionUtils.getKeyByValue(appContext.getGameHandler().getSimulation().getWorld().getPositions(),
+			// p)
+		}
+		return null;
 	}
 
 	private void prepareNextBallot(Ballot newBallot) {
@@ -112,11 +134,11 @@ public class VoteScreen extends AbstractGameScreen {
 			boolean isLocalPlayer = s == localPlayer
 					.getCurrentlyPlayedCharacterId();
 
-			voterTable
-					.add(new CharacterComponent(skin, world.getCharacter(s),
-							isLocalPlayer ? -1
-									: appContext.getGameHandler()
-											.getOpinionOfOtherCharacter(s)))
+			voterTable.add(new CharacterComponent(skin, world.getCharacter(s),
+					isLocalPlayer ? -1
+							: CharacterBehaviour.getOpinionOfAnotherCharacter(
+									localPlayer.getCurrentlyPlayedCharacterId(),
+									s, world)))
 					.left().padBottom(25).row();
 		}
 
@@ -144,9 +166,9 @@ public class VoteScreen extends AbstractGameScreen {
 
 					optionTable.add(new CharacterComponent(skin,
 							world.getCharacter((short) option.getValue()),
-							appContext.getGameHandler()
-									.getOpinionOfOtherCharacter(
-											(short) option.getValue())))
+							CharacterBehaviour.getOpinionOfAnotherCharacter(
+									localPlayer.getCurrentlyPlayedCharacterId(),
+									(short) option.getValue(), world)))
 							.right().padBottom(8).row();
 				}
 				optionTable.add(button).right().padBottom(15).row();
@@ -162,25 +184,8 @@ public class VoteScreen extends AbstractGameScreen {
 	private void onVoteFinished(VoteFinishedEvent ev) {
 		LOG.info("[CLIENT] Vote result received");
 
-		// Take care of the votes which weren't cast
-		if (ev.getIndividualVotes().size() != matterToVoteOn.getVoters()
-				.size()) {
-			for (short charId : matterToVoteOn.getVoters()) {
-				if (!ev.getIndividualVotes().containsKey(charId)) {
-					ev.getIndividualVotes().put(charId,
-							CharacterBehaviour.getVoteOption(charId,
-									matterToVoteOn, appContext.getGameHandler()
-											.getSimulation().getWorld()));
-				}
-			}
-		}
-
-		// Calculate results & process them
-		int result = BallotUtils.getBallotResult(matterToVoteOn,
-				ev.getIndividualVotes(), appContext.getGameHandler()
-						.getSimulation().getWorld().getSeed());
-		matterToVoteOn.processVoteResult(ev.getIndividualVotes(), result,
-				appContext.getGameHandler().getSimulation().getWorld());
+		int result = appContext.getGameHandler().getSimulation()
+				.processVotes(matterToVoteOn, ev.getIndividualVotes());
 
 		// Display the results
 		optionTable.clear();

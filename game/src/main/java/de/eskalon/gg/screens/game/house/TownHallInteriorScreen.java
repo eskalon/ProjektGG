@@ -1,15 +1,12 @@
 package de.eskalon.gg.screens.game.house;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.eskalon.commons.audio.ISoundManager;
 import de.eskalon.commons.inject.annotations.Inject;
 import de.eskalon.commons.lang.Lang;
-import de.eskalon.commons.screens.EskalonScreenManager;
-import de.eskalon.gg.core.ProjektGGApplicationContext;
 import de.eskalon.gg.input.ButtonClickListener;
 import de.eskalon.gg.simulation.model.types.SocialStatus;
 
@@ -18,12 +15,13 @@ import de.eskalon.gg.simulation.model.types.SocialStatus;
  */
 public class TownHallInteriorScreen extends HouseInteriorScreen {
 
-	@Inject
-	public TownHallInteriorScreen(SpriteBatch batch,
-			ProjektGGApplicationContext appContext, Skin skin,
-			ISoundManager soundManager, EskalonScreenManager screenManager) {
-		super(batch, screenManager);
+	private @Inject Skin skin;
+	private @Inject ISoundManager soundManager;
 
+	@Override
+	public void show() {
+		super.show();
+		
 		// Buy citizenship
 		ImageTextButton applyForCitizenshipButton = new ImageTextButton(
 				Lang.get("screen.house.town_hall.apply_for_citizenship"), skin);
