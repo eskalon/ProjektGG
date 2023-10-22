@@ -89,7 +89,7 @@ public class ProjektGGApplicationContext extends EskalonApplicationContext {
 		final GameServer server = this.server;
 		this.server = null;
 
-		ThreadHandler.getInstance().executeRunnable(() -> {
+		ThreadHandler.instance().executeRunnable(() -> {
 			client.stop();
 
 			if (server != null) {

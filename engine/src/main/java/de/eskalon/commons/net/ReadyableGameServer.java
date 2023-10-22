@@ -40,7 +40,7 @@ public abstract class ReadyableGameServer<G, S, P extends IReadyable>
 		LOG.info("[SERVER] All players are ready. Initialising next round!");
 
 		if (broadcastServer != null)
-			ThreadHandler.getInstance().executeRunnable(() -> {
+			ThreadHandler.instance().executeRunnable(() -> {
 				stopBroadcastServer();
 				LOG.info("[SERVER] Broadcast server closed");
 			});

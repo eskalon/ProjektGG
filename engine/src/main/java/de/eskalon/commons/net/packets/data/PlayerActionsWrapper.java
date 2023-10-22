@@ -7,6 +7,10 @@ public class PlayerActionsWrapper {
 	private short playerId;
 	private List<IPlayerAction> actions;
 
+	public PlayerActionsWrapper() {
+		// default public constructor
+	}
+
 	public PlayerActionsWrapper(short playerId, List<IPlayerAction> actions) {
 		this.playerId = playerId;
 		this.actions = actions;

@@ -228,12 +228,14 @@ public class Log {
 							Exceptions.getStackTraceAsString(ex));
 				break;
 			case LEVEL_DEBUG:
-				if (ex == null)
-					LOG.debug("[" + category + "] " + message);
-				else
-					LOG.debug("[" + category + "] " + message + ": %s",
-							Exceptions.getStackTraceAsString(ex));
-				break;
+				//@formatter:off
+//				if (ex == null)
+//					LOG.debug("[" + category + "] " + message);
+//				else
+//					LOG.debug("[" + category + "] " + message + ": %s",
+//							Exceptions.getStackTraceAsString(ex));
+//				break;
+				//@formatter:on
 			case LEVEL_TRACE:
 				//@formatter:off
 //				if (ex == null)

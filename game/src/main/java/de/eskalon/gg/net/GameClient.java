@@ -3,10 +3,10 @@ package de.eskalon.gg.net;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Queue;
 
 import com.badlogic.gdx.utils.IntMap;
+import com.badlogic.gdx.utils.IntMap.Entry;
 import com.esotericsoftware.kryonet.Listener.TypeListener;
 
 import de.damios.guacamole.gdx.log.Logger;
@@ -85,29 +85,31 @@ public class GameClient
 
 	@Override
 	protected void onLobbyDataChanged(
-			LobbyData<GameSetup, GameState, PlayerData> lobbyData,
+			LobbyData<GameSetup, GameState, PlayerData> oldData,
+			LobbyData<GameSetup, GameState, PlayerData> newData,
 			ChangeType changeType) {
-		eventBus.post(new LobbyDataChangedEvent(this.lobbyData, lobbyData,
-				changeType));
+		eventBus.post(new LobbyDataChangedEvent(oldData, newData, changeType));
 
 		if (changeType == ChangeType.PLAYER_JOINED) {
-			for (Entry<Short, PlayerData> e : lobbyData.getPlayers()
-					.entrySet()) {
-				if (!this.lobbyData.getPlayers().containsKey(e.getKey())) {
-					eventBus.post(new ChatMessageEvent<>(new ChatMessage<>(Lang
-							.get("screen.lobby.player_joined", e.getValue()))));
+			for (Entry<PlayerData> e : lobbyData.getPlayers().entries()) {
+				if (!this.lobbyData.getPlayers().containsKey(e.key)) {
+					eventBus.post(new ChatMessageEvent<>(new ChatMessage<>(
+							Lang.get("screen.lobby.player_joined", e.value))));
 					break;
 				}
 			}
 		} else if (changeType == ChangeType.PLAYER_LEFT) {
 			// TODO chatMessages.add(new ChatMessage<>(""));
 		}
-
 	}
 
 	@Override
 	protected void onConnectionLost() {
 		eventBus.post(new ConnectionLostEvent());
+	}
+
+	public LobbyData<GameSetup, GameState, PlayerData> getLobbyData() {
+		return lobbyData;
 	}
 
 	public PlayerData getLocalLobbyPlayer() {

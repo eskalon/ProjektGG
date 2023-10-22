@@ -1,14 +1,14 @@
 package de.eskalon.commons.net.packets.data;
 
-import java.util.HashMap;
-
 import javax.annotation.Nullable;
+
+import com.badlogic.gdx.utils.IntMap;
 
 public class LobbyData<G, S, P> {
 
 	private G sessionSetup;
 	private @Nullable S gameState;
-	private HashMap<Short, P> players;
+	private IntMap<P> players;
 
 	public LobbyData() {
 		// default public constructor
@@ -17,7 +17,7 @@ public class LobbyData<G, S, P> {
 	public LobbyData(G sessionSetup, @Nullable S gameState) {
 		this.sessionSetup = sessionSetup;
 		this.gameState = gameState;
-		this.players = new HashMap<>();
+		this.players = new IntMap<>();
 	}
 
 	public void setSessionSetup(G sessionSetup) {
@@ -36,7 +36,7 @@ public class LobbyData<G, S, P> {
 		return gameState;
 	}
 
-	public HashMap<Short, P> getPlayers() {
+	public IntMap<P> getPlayers() {
 		return players;
 	}
 

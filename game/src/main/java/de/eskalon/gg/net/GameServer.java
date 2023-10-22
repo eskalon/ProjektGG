@@ -85,9 +85,10 @@ public class GameServer
 	}
 
 	@Override
-	public void onAllActionsReceived(int turn,
+	public void onAllActionsReceived(int tick,
 			List<PlayerActionsWrapper> list) {
-		simulation.onSimulationTick(turn, list);
+		LOG.debug("[SERVER] Processing tick %d", tick);
+		simulation.onSimulationTick(tick, list);
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import java.util.concurrent.Future;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -61,7 +60,7 @@ public class ServerBrowserScreen extends AbstractEskalonUIScreen {
 	private List<String> dicoveredServers = new ArrayList<>();
 	private Future<Void> discoveryFuture;
 
-	private boolean justDisconnectedFromServer = false;
+	private boolean connectionLost = false;
 
 	@Override
 	public void show() {
@@ -213,8 +212,8 @@ public class ServerBrowserScreen extends AbstractEskalonUIScreen {
 
 		mainTable.add(mTable);
 
-		if (justDisconnectedFromServer) { // i.e., connection to previous game
-											// was lost
+		if (connectionLost) { // i.e., connection to previous game
+								// was lost
 			SimpleTextDialog.createAndShow(stage, skin,
 					Lang.get("ui.generic.error"),
 					Lang.get("ui.generic.disconnected"));
@@ -227,25 +226,23 @@ public class ServerBrowserScreen extends AbstractEskalonUIScreen {
 		serverTable.clearChildren();
 		dicoveredServers.clear();
 		if (discoveryFuture == null || discoveryFuture.isDone())
-			discoveryFuture = ThreadHandler.getInstance()
-					.executeRunnable(() -> {
-						ServerDiscoveryHandler<DiscoveryResponsePacket> serverDiscoveryHandler = new ServerDiscoveryHandler<>(
-								DiscoveryResponsePacket.class, 4500);
-						serverDiscoveryHandler.discoverHosts(
-								SimpleGameServer.UDP_DISCOVER_PORT,
-								(address, datagramPacket) -> {
-									if (!dicoveredServers.contains(
-											datagramPacket.getGameName()
-													+ datagramPacket
-															.getPort())) {
-										dicoveredServers.add(datagramPacket
-												.getGameName()
+			discoveryFuture = ThreadHandler.instance().executeRunnable(() -> {
+				ServerDiscoveryHandler<DiscoveryResponsePacket> serverDiscoveryHandler = new ServerDiscoveryHandler<>(
+						DiscoveryResponsePacket.class, 4500);
+				serverDiscoveryHandler.discoverHosts(
+						SimpleGameServer.UDP_DISCOVER_PORT,
+						(address, datagramPacket) -> {
+							if (!dicoveredServers
+									.contains(datagramPacket.getGameName()
+											+ datagramPacket.getPort())) {
+								dicoveredServers
+										.add(datagramPacket.getGameName()
 												+ datagramPacket.getPort());
-										addServerToUI(serverTable, address,
-												datagramPacket);
-									}
-								});
-					});
+								addServerToUI(serverTable, address,
+										datagramPacket);
+							}
+						});
+			});
 	}
 
 	private void addServerToUI(Table serverTable, String address,
@@ -281,9 +278,8 @@ public class ServerBrowserScreen extends AbstractEskalonUIScreen {
 		serverTable.row().padTop(20);
 	}
 
-	public void setJustDisconnectedFromServer(
-			boolean justDisconnectedFromServer) {
-		this.justDisconnectedFromServer = justDisconnectedFromServer;
+	public void setConnectionLost(boolean connectionLost) {
+		this.connectionLost = connectionLost;
 	}
 
 }

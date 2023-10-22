@@ -125,7 +125,7 @@ public abstract class SimpleGameServer<G, S, P> {
 		Preconditions.checkNotNull(callback, "callback cannot be null");
 
 		LOG.info("[SERVER] --- Server is starting ---");
-		ThreadHandler.getInstance().executeRunnable(() -> {
+		ThreadHandler.instance().executeRunnable(() -> {
 			try {
 				// Start the server
 				server.bind(serverSettings.getPort());
@@ -137,10 +137,10 @@ public abstract class SimpleGameServer<G, S, P> {
 					startBroadcastServer();
 				}
 				callback.onSuccess(null); // Host successfully started
-			} catch (IOException | IllegalArgumentException e2) {
+			} catch (IOException | IllegalArgumentException e) {
 				LOG.error("[SERVER] Server could not be started: %s",
-						Exceptions.getStackTraceAsString(e2));
-				callback.onFailure(e2); // Something went wrong
+						Exceptions.getStackTraceAsString(e));
+				callback.onFailure(e); // Something went wrong
 			}
 		});
 	}

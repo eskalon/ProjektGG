@@ -22,7 +22,7 @@ allprojects {
         discordIPCVersion = "a8d6631cc9" // = 0.5
         gdxVersion = "1.12.0"
         gsonVersion = "2.10.1"
-        guacamoleVersion = "ea44078d6b" // TODO: remove, when the proper version is pulled in via screenmanager
+        guacamoleVersion = "9c55fa3f05" // TODO: remove, when the proper version is pulled in via screenmanager
         imguiVersion = "1.86.10";
         kryonetVersion = "2.22.9"
         //quakemonkeyVersion = "master-SNAPSHOT"

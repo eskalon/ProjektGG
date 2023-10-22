@@ -2,10 +2,13 @@ package de.eskalon.commons.net;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.badlogic.gdx.utils.IntMap;
 import com.esotericsoftware.kryonet.Listener.TypeListener;
 
+import de.damios.guacamole.gdx.log.Logger;
+import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.net.packets.data.IReadyable;
 import de.eskalon.commons.net.packets.data.LobbyData;
 import de.eskalon.commons.net.packets.data.PlayerActionsWrapper;
@@ -14,6 +17,9 @@ import de.eskalon.commons.net.packets.lockstep.SendPlayerActionsPacket;
 
 public abstract class LockstepGameServer<G, S, P extends IReadyable>
 		extends ReadyableGameServer<G, S, P> {
+
+	private static final Logger LOG = LoggerService
+			.getLogger(LockstepGameServer.class);
 
 	IntMap<List<PlayerActionsWrapper>> commandsForTurn = new IntMap<>();
 
@@ -36,10 +42,22 @@ public abstract class LockstepGameServer<G, S, P extends IReadyable>
 
 					list.add(actionsWrapper);
 
-					if (list.size() == lobbyData.getPlayers().size()) {
-						onAllActionsReceived(msg.getTurn(), list);
+					if (LoggerService.isDebugEnabled()) {
+						LOG.debug(
+								"[SERVER] Received actions of player %d for turn %d: %s",
+								actionsWrapper.getPlayerId(), msg.getTurn(),
+								actionsWrapper.getActions().stream().map(
+										(o) -> o.getClass().getSimpleName())
+										.collect(Collectors.joining(", ")));
+					}
+
+					if (list.size() == lobbyData.getPlayers().size) {
+						LOG.debug("[SERVER] All actions received for turn %d",
+								msg.getTurn());
+
 						server.sendToAllTCP(new ActionsDistributionPacket(
 								msg.getTurn(), list));
+						onAllActionsReceived(msg.getTurn(), list);
 						commandsForTurn.remove(msg.getTurn());
 					}
 				});

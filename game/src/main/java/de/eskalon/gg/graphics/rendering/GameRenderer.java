@@ -30,7 +30,7 @@ public class GameRenderer implements Disposable {
 	private ModelBatch modelBatch, outlineModelBatch;
 	public Environment environment;
 
-	public GameRenderer() {
+	public void init() {
 		Config config = new Config();
 		config.fragmentShader = tmpFragmentShader.getString();
 		outlineModelBatch = new CullingModelBatch(

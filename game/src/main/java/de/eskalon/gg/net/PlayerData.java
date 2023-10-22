@@ -115,4 +115,58 @@ public class PlayerData implements ILocalized, IReadyable {
 		return name + " " + surname;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((hostname == null) ? 0 : hostname.hashCode());
+		result = prime * result + ((icon == null) ? 0 : icon.hashCode());
+		result = prime * result + (male ? 1231 : 1237);
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + professionTypeIndex;
+		result = prime * result + (ready ? 1231 : 1237);
+		result = prime * result
+				+ ((religion == null) ? 0 : religion.hashCode());
+		result = prime * result + ((surname == null) ? 0 : surname.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PlayerData other = (PlayerData) obj;
+		if (hostname == null) {
+			if (other.hostname != null)
+				return false;
+		} else if (!hostname.equals(other.hostname))
+			return false;
+		if (icon != other.icon)
+			return false;
+		if (male != other.male)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (professionTypeIndex != other.professionTypeIndex)
+			return false;
+		if (ready != other.ready)
+			return false;
+		if (religion != other.religion)
+			return false;
+		if (surname == null) {
+			if (other.surname != null)
+				return false;
+		} else if (!surname.equals(other.surname))
+			return false;
+		return true;
+	}
+
 }

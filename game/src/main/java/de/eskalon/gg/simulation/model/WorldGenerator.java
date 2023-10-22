@@ -1,7 +1,9 @@
 package de.eskalon.gg.simulation.model;
 
-import java.util.HashMap;
-import java.util.Map.Entry;
+import java.util.Random;
+
+import com.badlogic.gdx.utils.IntMap;
+import com.badlogic.gdx.utils.IntMap.Entry;
 
 import de.eskalon.gg.net.PlayerData;
 import de.eskalon.gg.simulation.GameSetup;
@@ -18,18 +20,16 @@ import de.eskalon.gg.simulation.model.types.GameMap;
 import de.eskalon.gg.simulation.model.types.PositionType;
 import de.eskalon.gg.simulation.model.types.ProfessionType;
 
-import java.util.Random;
-
 public class WorldGenerator {
 
 	protected World world;
 	protected GameSetup setup;
-	protected HashMap<Short, PlayerData> players;
+	protected IntMap<PlayerData> players;
 	protected Random random;
 	protected GameMap map;
 
 	public WorldGenerator(World world, GameSetup setup,
-			HashMap<Short, PlayerData> players) {
+			IntMap<PlayerData> players) {
 		this.world = world;
 		this.setup = setup;
 		this.players = players;
@@ -77,7 +77,7 @@ public class WorldGenerator {
 		}
 
 		// Add the other characters
-		for (short i = (short) (29 + players.size()); i <= 100; i++) {
+		for (short i = (short) (29 + players.size); i <= 100; i++) {
 			world.characters.put(world.characterIndex,
 					CharacterFactory.createRandomCharacter(random));
 			world.characterIndex++;
@@ -85,8 +85,8 @@ public class WorldGenerator {
 	}
 
 	private void generatePlayers() {
-		for (Entry<Short, PlayerData> entry : players.entrySet()) {
-			PlayerData lp = entry.getValue();
+		for (Entry<PlayerData> entry : players.entries()) {
+			PlayerData lp = entry.value;
 
 			Profession profession = new Profession(
 					ProfessionType.values()[lp.getProfessionTypeIndex()]);
@@ -104,7 +104,7 @@ public class WorldGenerator {
 					world.characterIndex, lp.getIcon(), profession, (short) 0,
 					(short) 0, 1, 1, 1, 1, 1, 1);
 
-			world.players.put(entry.getKey(), player);
+			world.players.put(entry.key, player);
 
 			world.characterIndex++;
 		}

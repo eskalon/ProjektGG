@@ -8,10 +8,8 @@ import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.inject.annotations.Inject;
 import de.eskalon.commons.net.packets.data.IPlayerAction;
-import de.eskalon.commons.net.packets.data.LobbyData;
 import de.eskalon.commons.net.packets.data.PlayerActionsWrapper;
 import de.eskalon.gg.net.GameClient;
-import de.eskalon.gg.net.PlayerData;
 import de.eskalon.gg.simulation.model.entities.Player;
 import de.eskalon.gg.simulation.model.types.GameSpeed;
 
@@ -24,7 +22,8 @@ public class GameHandler {
 	public static final int TICKS_PER_ROUND = ROUND_DURATION_IN_SECONDS * 1000
 			/ GameSpeed.NORMAL.getTickDuration();
 
-	private float timeAccumulator = 0;
+	private long lastFrameTime = -1;
+	private long timeAccumulator = 0;
 	private int currentRound = -1;
 	private int tickCountForRound = TICKS_PER_ROUND;
 
@@ -36,25 +35,33 @@ public class GameHandler {
 
 	private Stopwatch stopwatch = Stopwatch.createUnstarted();
 
-	public void init(GameClient client,
-			LobbyData<GameSetup, GameState, PlayerData> lobbyData) {
-		simulation = new GameSimulation(lobbyData.getSessionSetup(),
-				lobbyData.getPlayers(), lobbyData.getGameState(),
+	public void init(GameClient client) {
+		this.client = client;
+		this.simulation = new GameSimulation(
+				client.getLobbyData().getSessionSetup(),
+				client.getLobbyData().getPlayers(),
+				client.getLobbyData().getGameState(),
 				client.getLocalNetworkID());
 		startNextRound();
 	}
 
-	public void setClient(GameClient client) {
-		this.client = client;
-	}
+	public boolean update() {
+		long time = System.nanoTime();
+		if (lastFrameTime == -1)
+			lastFrameTime = time;
 
-	public boolean update(float delta) {
+		long delta = time - lastFrameTime;
+		lastFrameTime = time;
+
 		timeAccumulator += delta;
 
 		while (timeAccumulator >= simulation.getWorld().getGameSpeed()
-				.getTickDuration() && tickCountForRound < TICKS_PER_ROUND) {
+				.getTickDuration() * 1_000_000
+				&& tickCountForRound < TICKS_PER_ROUND) {
+			// NOTE: first tick is 0, last tick is TICKS_PER_ROUND - 1
+
 			timeAccumulator -= simulation.getWorld().getGameSpeed()
-					.getTickDuration();
+					.getTickDuration() * 1_000_000;
 
 			clock.update();
 
@@ -68,25 +75,29 @@ public class GameHandler {
 
 			if (actions == null) {
 				LOG.error(
-						"[CLIENT] Actions for turn %d have not been received yet. The local simulation is lagging behind the server. ");
-				return false; // Wait until we receive the actions for the
-								// current turn
+						"[CLIENT] Actions for turn %d have not been received yet. The local simulation is lagging behind the server.",
+						tickCountForRound);
+				break; // Wait until we receive the actions for the current turn
 			}
 
-			client.sendActions(tickCountForRound + 2, queuedActions);
-			queuedActions.clear();
+			// Don't send actions for turn 348 & 349
+			if (TICKS_PER_ROUND - tickCountForRound >= 2) {
+				client.sendActions(tickCountForRound + 2, queuedActions);
+				queuedActions.clear();
+			}
 
+			LOG.debug("[CLIENT] Processing tick %d", tickCountForRound);
 			simulation.onSimulationTick(tickCountForRound, actions);
+
+			tickCountForRound++;
 
 			if (tickCountForRound == TICKS_PER_ROUND) {
 				return true;
 			}
-
-			tickCountForRound++;
 		}
 
 		if (tickCountForRound < TICKS_PER_ROUND)
-			updateVisualStuff(delta);
+			updateVisualStuff(delta / 1_000_000_000F);
 
 		return false;
 	}
@@ -107,6 +118,8 @@ public class GameHandler {
 	}
 
 	public void executeAction(IPlayerAction action) {
+		LOG.debug("[CLIENT] Action %s was queued",
+				action.getClass().getSimpleName());
 		queuedActions.add(action);
 	}
 

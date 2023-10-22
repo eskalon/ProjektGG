@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.utils.IntMap;
 
 import de.eskalon.gg.graphics.rendering.BaseRenderData;
 import de.eskalon.gg.net.PlayerData;
@@ -34,8 +35,8 @@ public final class World {
 	List<BaseRenderData> staticProps = new ArrayList<>();
 	BuildingSlot[] buildingSlots;
 
-	HashMap<Short, Character> characters = new HashMap<>();
-	HashMap<Short, Player> players = new HashMap<>();
+	IntMap<Character> characters = new IntMap<>();
+	IntMap<Player> players = new IntMap<>();
 	List<Short> prisonPopulation = new ArrayList<>();
 
 	/**
@@ -54,10 +55,11 @@ public final class World {
 	}
 
 	public synchronized void generate(GameSetup setup,
-			HashMap<Short, PlayerData> players) {
+			IntMap<PlayerData> players) {
 		this.difficulty = setup.getDifficulty();
 		this.seed = setup.getSeed();
 		this.map = setup.getMap();
+		this.speed = GameSpeed.NORMAL;
 
 		WorldGenerator gen = new WorldGenerator(this, setup, players);
 		gen.generate();
@@ -95,7 +97,7 @@ public final class World {
 		return staticProps;
 	}
 
-	public HashMap<Short, Character> getCharacters() {
+	public IntMap<Character> getCharacters() {
 		return characters;
 	}
 
@@ -103,7 +105,7 @@ public final class World {
 		return characters.get(charId);
 	}
 
-	public HashMap<Short, Player> getPlayers() {
+	public IntMap<Player> getPlayers() {
 		return players;
 	}
 

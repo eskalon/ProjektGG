@@ -49,7 +49,7 @@ public abstract class AbstractGameScreen extends AbstractEskalonUIScreen {
 			return;
 
 		if (updateSession) {
-			if (appContext.getGameHandler().update(delta))
+			if (appContext.getGameHandler().update())
 				screenManager.pushScreen(RoundEndScreen.class, "circle_crop");
 		}
 
@@ -78,7 +78,7 @@ public abstract class AbstractGameScreen extends AbstractEskalonUIScreen {
 
 			ServerBrowserScreen screen = EskalonInjector.instance()
 					.getInstance(ServerBrowserScreen.class);
-			screen.setJustDisconnectedFromServer(true);
+			screen.setConnectionLost(true);
 			screenManager.pushScreen(screen, null);
 		}
 	}

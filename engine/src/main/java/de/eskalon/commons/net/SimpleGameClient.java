@@ -120,8 +120,10 @@ public abstract class SimpleGameClient<G, S, P> {
 		});
 		// Lobby data syncing
 		listener.addTypeHandler(LobbyDataChangedPacket.class, (con, msg) -> {
-			onLobbyDataChanged(msg.getLobbyData(), msg.getChangeType());
+			LobbyData<G, S, P> tmp = this.lobbyData;
 			this.lobbyData = msg.getLobbyData();
+
+			onLobbyDataChanged(tmp, msg.getLobbyData(), msg.getChangeType());
 		});
 		// Chat messages
 		listener.addTypeHandler(ChatMessageReceivedPacket.class, (con, msg) -> {
@@ -142,7 +144,7 @@ public abstract class SimpleGameClient<G, S, P> {
 
 		LOG.info("[CLIENT] --- Connecting to Server ---");
 
-		ThreadHandler.getInstance().executeRunnable(() -> {
+		ThreadHandler.instance().executeRunnable(() -> {
 			try {
 				client.start();
 				client.connect(6000, ip, port);
@@ -222,8 +224,8 @@ public abstract class SimpleGameClient<G, S, P> {
 	/* --- METHODS FOR CHILD CLASSES --- */
 	protected abstract void onChatMessageReceived(ChatMessage msg);
 
-	protected abstract void onLobbyDataChanged(LobbyData<G, S, P> lobbyData,
-			ChangeType changeType);
+	protected abstract void onLobbyDataChanged(LobbyData<G, S, P> oldData,
+			LobbyData<G, S, P> newData, ChangeType changeType);
 
 	protected abstract void onConnectionLost();
 

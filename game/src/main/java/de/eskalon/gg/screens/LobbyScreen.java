@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.IntMap.Entry;
 
 import de.damios.guacamole.concurrent.ThreadHandler;
 import de.damios.guacamole.gdx.log.Logger;
@@ -37,6 +38,7 @@ import de.eskalon.gg.events.LobbyDataChangedEvent;
 import de.eskalon.gg.graphics.ui.actors.OffsettableTextField;
 import de.eskalon.gg.graphics.ui.actors.dialogs.PlayerLobbyConfigDialog;
 import de.eskalon.gg.input.ButtonClickListener;
+import de.eskalon.gg.misc.ObjectCopyUtils;
 import de.eskalon.gg.misc.PlayerUtils;
 import de.eskalon.gg.net.GameClient;
 import de.eskalon.gg.net.GameServer;
@@ -70,7 +72,13 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 	private ScrollPane messagesPane;
 	private OffsettableTextField chatInputField;
 
-	private LobbyData<GameSetup, GameState, PlayerData> lobbyData;
+	private LobbyData<GameSetup, GameState, PlayerData> lobbyDataCopy;
+
+	public void setLobbyData(
+			LobbyData<GameSetup, GameState, PlayerData> lobbyData) {
+
+		this.lobbyDataCopy = ObjectCopyUtils.instance().copy(lobbyData);
+	}
 
 	@Override
 	public void show() {
@@ -86,7 +94,7 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 		playerSettingsButton.addListener(new ButtonClickListener(soundManager) {
 			@Override
 			protected void onClick() {
-				playerConfigDialog.initUIValues(lobbyData.getPlayers(),
+				playerConfigDialog.initUIValues(lobbyDataCopy.getPlayers(),
 						appContext.getClient().getLocalLobbyPlayer());
 				playerConfigDialog.show(stage);
 			}
@@ -103,7 +111,7 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 				appContext.setClient(null);
 				appContext.setServer(null);
 
-				ThreadHandler.getInstance().executeRunnable(() -> {
+				ThreadHandler.instance().executeRunnable(() -> {
 					client.disconnect();
 					LOG.info("[CLIENT] Client disconnected");
 					if (server != null) {
@@ -185,7 +193,8 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 		messagesArea.setWrap(true);
 
 		Table messagesTable = new Table();
-		messagesTable.add(messagesArea).padLeft(10).left().top().expand();
+		messagesTable.add(messagesArea).padLeft(10).left().top().expand()
+				.fill();
 
 		messagesPane = new ScrollPane(messagesTable, skin, "with-background");
 		messagesPane.setForceScroll(false, true);
@@ -221,17 +230,21 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 	 */
 	private void updateLobbyUI() {
 		settingsArea.setText(Lang.get("screen.lobby.map",
-				lobbyData.getSessionSetup().getMap()) + " \n"
+				lobbyDataCopy.getSessionSetup().getMap()) + " \n"
 				+ Lang.get("screen.lobby.difficulty",
-						lobbyData.getSessionSetup().getDifficulty()));
+						lobbyDataCopy.getSessionSetup().getDifficulty()));
 
-		Object[] playersArray = lobbyData.getPlayers().values().toArray();
+		int i = 0;
 
-		for (int i = 0; i < playerSlots.length; i++) {
-			updatePlayerSlot(playerSlots[i],
-					(playersArray.length >= (i + 1)
-							? (PlayerData) playersArray[i]
-							: null));
+		for (Entry<PlayerData> e : lobbyDataCopy.getPlayers().entries()) {
+			updatePlayerSlot(playerSlots[i], e.value,
+					e.key == appContext.getClient().getLocalNetworkID());
+			i++;
+		}
+
+		// Fill in the empty slots
+		for (int j = 0; i < playerSlots.length; i++) {
+			updatePlayerSlot(playerSlots[i], null, false);
 		}
 
 		messagesArea.setText("");
@@ -241,7 +254,7 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 
 		if (appContext.isHost()) {
 			if (PlayerUtils.areAllPlayersReadyExcept(
-					lobbyData.getPlayers().values(),
+					lobbyDataCopy.getPlayers().values(),
 					appContext.getClient().getLocalLobbyPlayer())) {
 				readyUpLobbyButton.setDisabled(false);
 				readyUpLobbyButton.setTouchable(Touchable.enabled);
@@ -258,7 +271,8 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 		}
 	}
 
-	private Table updatePlayerSlot(Table t, PlayerData p) {
+	private Table updatePlayerSlot(Table t, PlayerData p,
+			boolean isLocalPlayer) {
 		t.clear();
 		if (p == null) {
 			t.add().width(33);
@@ -280,7 +294,7 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 					: skin.getDrawable("icon_off"))).padRight(9);
 			// Host / Kick
 			if (appContext.isHost()) {
-				if (p != appContext.getClient().getLocalLobbyPlayer()) {
+				if (!isLocalPlayer) {
 					ImageButton kickButton = new ImageButton(skin, "kick");
 					kickButton
 							.addListener(new ButtonClickListener(soundManager) {
@@ -321,13 +335,9 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 		messagesPane.scrollTo(0, 0, 0, 0);
 	}
 
-	public void setLobbyData(
-			LobbyData<GameSetup, GameState, PlayerData> lobbyData) {
-		this.lobbyData = lobbyData;
-	}
-
 	@Subscribe
 	public void onLobbyDataChangedEvent(LobbyDataChangedEvent ev) {
+		this.lobbyDataCopy = ObjectCopyUtils.instance().copy(ev.getNewData());
 		updateLobbyUI();
 	}
 
@@ -338,6 +348,14 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 
 	@Subscribe
 	public void onAllPlayersReadyEvent(AllPlayersReadyEvent event) {
+		for (PlayerData p : lobbyDataCopy.getPlayers().values()) {
+			// The client has already unreadied its players objects, but for the
+			// UI we need them to stay ready
+			p.setReady(true);
+		}
+
+		updateLobbyUI();
+
 		addChatMessageToUI(
 				new ChatMessage(Lang.get("screen.lobby.game_starting")));
 		((EskalonApplicationStarter) Gdx.app.getApplicationListener())
@@ -346,7 +364,7 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 		// Set up the game on the client side
 		GameHandler handler = EskalonInjector.instance()
 				.getInstance(GameHandler.class);
-		handler.init(appContext.getClient(), lobbyData);
+		handler.init(appContext.getClient());
 		appContext.setGameHandler(handler);
 		appContext.getObjectStorage().put("game_has_just_started", "");
 
@@ -360,7 +378,7 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 
 		ServerBrowserScreen screen = EskalonInjector.instance()
 				.getInstance(ServerBrowserScreen.class);
-		screen.setJustDisconnectedFromServer(true);
+		screen.setConnectionLost(true);
 		screenManager.pushScreen(screen, null);
 	}
 

@@ -6,7 +6,6 @@ import java.util.Queue;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
@@ -53,6 +52,7 @@ public class GameLoadingScreen extends AbstractEskalonUIScreen {
 
 	private Queue<Runnable> taskQueue = new LinkedList<>();
 	private int taskCount;
+	private boolean once = false;
 
 	@Override
 	public void show() {
@@ -86,7 +86,7 @@ public class GameLoadingScreen extends AbstractEskalonUIScreen {
 					.getSimulation().getWorld().getMap().getSkyboxPath(),
 					Model.class);
 			for (Material m : skyboxModel.materials) {
-				// fixes a bug related to changes in gdx 1.9.9, see
+				// Fixes a bug related to changes in gdx 1.9.9, see
 				// https://github.com/libgdx/libgdx/issues/5529
 				m.remove(ColorAttribute.Emissive);
 			}
@@ -97,6 +97,7 @@ public class GameLoadingScreen extends AbstractEskalonUIScreen {
 		taskQueue.add(() -> {
 			appContext.setGameRenderer(
 					EskalonInjector.instance().getInstance(GameRenderer.class));
+			appContext.getGameRenderer().init();
 		});
 
 		taskCount = taskQueue.size();
@@ -113,7 +114,8 @@ public class GameLoadingScreen extends AbstractEskalonUIScreen {
 		if ((task = taskQueue.poll()) != null) {
 			// FIXME this only executes one task per frame!
 			task.run();
-		} else {
+		} else if (!once) {
+			once = true;
 			LOG.info("[CLIENT] Game assets loaded");
 			screenManager.pushScreen(RoundEndScreen.class, "simple_zoom");
 		}

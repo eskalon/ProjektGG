@@ -2,7 +2,6 @@ package de.eskalon.gg.screens.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -14,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.crashinvaders.vfx.effects.ChainVfxEffect;
 import com.crashinvaders.vfx.effects.GaussianBlurEffect;
 
+import de.damios.guacamole.concurrent.ThreadHandler;
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.audio.ISoundManager;
@@ -25,8 +25,6 @@ import de.eskalon.commons.input.DefaultInputHandler;
 import de.eskalon.commons.input.IInputHandler;
 import de.eskalon.commons.lang.Lang;
 import de.eskalon.commons.settings.EskalonSettings;
-import de.eskalon.gg.core.ProjektGGApplicationContext;
-import de.eskalon.gg.events.ConnectionLostEvent;
 import de.eskalon.gg.events.FullHourEvent;
 import de.eskalon.gg.events.HouseEnterEvent;
 import de.eskalon.gg.events.HouseSelectionEvent;
@@ -37,7 +35,6 @@ import de.eskalon.gg.input.GameSpeedInputProcessor;
 import de.eskalon.gg.input.MapMovementInputController;
 import de.eskalon.gg.input.MapSelectionInputController;
 import de.eskalon.gg.net.packets.data.VoteType;
-import de.eskalon.gg.screens.MainMenuScreen;
 import de.eskalon.gg.screens.SettingsScreen;
 import de.eskalon.gg.screens.game.house.TownHallInteriorScreen;
 import de.eskalon.gg.simulation.model.types.PositionType;
@@ -325,8 +322,8 @@ public class MapScreen extends AbstractGameScreen {
 							"blendingTransition");
 				} else {
 					LOG.info("[CLIENT] Disconnecting from the server");
-					appContext.getClient().disconnect();
-
+					ThreadHandler.instance().executeRunnable(
+							() -> appContext.getClient().disconnect());
 				}
 			};
 		};
@@ -411,13 +408,6 @@ public class MapScreen extends AbstractGameScreen {
 	@Subscribe
 	public void onFullHour(FullHourEvent ev) {
 		soundManager.playSoundEffect("clock_tick");
-	}
-
-	@Subscribe
-	@Override
-	public void onConnectionLost(ConnectionLostEvent ev) {
-		appContext.handleDisconnection();
-		screenManager.pushScreen(MainMenuScreen.class);
 	}
 
 }

@@ -60,7 +60,7 @@ public abstract class DiscordRichPresenceHandler {
 		Preconditions.checkState(!connected,
 				"Can't connect twice to the discord ipc");
 
-		ThreadHandler.getInstance().executeRunnable(() -> {
+		ThreadHandler.instance().executeRunnable(() -> {
 			try {
 				client.setListener(new IPCListener() {
 					@Override

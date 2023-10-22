@@ -21,7 +21,7 @@ public class TownHallInteriorScreen extends HouseInteriorScreen {
 	@Override
 	public void show() {
 		super.show();
-		
+
 		// Buy citizenship
 		ImageTextButton applyForCitizenshipButton = new ImageTextButton(
 				Lang.get("screen.house.town_hall.apply_for_citizenship"), skin);

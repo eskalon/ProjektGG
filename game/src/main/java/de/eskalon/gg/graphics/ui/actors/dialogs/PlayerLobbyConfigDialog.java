@@ -1,7 +1,5 @@
 package de.eskalon.gg.graphics.ui.actors.dialogs;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -10,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntMap;
 
 import de.eskalon.commons.audio.ISoundManager;
 import de.eskalon.commons.event.EventBus;
@@ -25,7 +25,7 @@ import de.eskalon.gg.simulation.model.types.Religion;
 
 public class PlayerLobbyConfigDialog extends BasicDialog {
 
-	private HashMap<Short, PlayerData> players;
+	private IntMap<PlayerData> players;
 	private PlayerData localPlayer;
 
 	private boolean selectedSex;
@@ -123,8 +123,8 @@ public class PlayerLobbyConfigDialog extends BasicDialog {
 				iconTable.clear();
 
 				// Only currently unused icons can be selected
-				List<PlayerData> tmpPlayers = new ArrayList<>(players.values());
-				tmpPlayers.remove(localPlayer);
+				Array<PlayerData> tmpPlayers = players.values().toArray();
+				tmpPlayers.removeValue(localPlayer, true);
 
 				List<PlayerIcon> availableIcons = PlayerUtils
 						.getAvailableIcons(tmpPlayers);
@@ -157,8 +157,8 @@ public class PlayerLobbyConfigDialog extends BasicDialog {
 				professionTable.clear();
 
 				// Only currently unused professions can be selected
-				List<PlayerData> tmpPlayers = new ArrayList<>(players.values());
-				tmpPlayers.remove(localPlayer);
+				Array<PlayerData> tmpPlayers = players.values().toArray();
+				tmpPlayers.removeValue(localPlayer, true);
 
 				List<Integer> availableProfessions = PlayerUtils
 						.getAvailableProfessionIndices(tmpPlayers);
@@ -246,7 +246,7 @@ public class PlayerLobbyConfigDialog extends BasicDialog {
 	 * @param players
 	 * @param localPlayer
 	 */
-	public void initUIValues(HashMap<Short, PlayerData> players,
+	public void initUIValues(IntMap<PlayerData> players,
 			PlayerData localPlayer) {
 		this.players = players;
 		this.localPlayer = localPlayer;

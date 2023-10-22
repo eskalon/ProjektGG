@@ -9,4 +9,5 @@ public enum Religion implements ILocalizable {
 	public String getUnlocalizedName() {
 		return "type.religion." + this.name().toLowerCase() + ".name";
 	}
+
 }

@@ -3,10 +3,12 @@ package de.eskalon.gg.simulation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
+
+import com.badlogic.gdx.utils.IntMap;
+import com.badlogic.gdx.utils.IntMap.Entry;
 
 import de.damios.guacamole.Stopwatch;
 import de.damios.guacamole.gdx.log.Logger;
@@ -34,6 +36,7 @@ public class GameSimulation {
 
 	private static final Logger LOG = LoggerService
 			.getLogger(GameSimulation.class);
+	private String logTag;
 
 	protected World world;
 	protected ArrayList<IProcessingSystem<Character>> characterSystems = new ArrayList<>();
@@ -43,8 +46,10 @@ public class GameSimulation {
 
 	private Stopwatch logTimer = Stopwatch.createUnstarted();
 
-	public GameSimulation(GameSetup setup, HashMap<Short, PlayerData> players,
+	public GameSimulation(GameSetup setup, IntMap<PlayerData> players,
 			@Nullable GameState savedGameState, short localPlayerId) {
+		logTag = localPlayerId == -1 ? "[SERVER]" : "[CLIENT]";
+
 		/* Generate world */
 		if (savedGameState == null) {
 			this.world = new World();
@@ -128,24 +133,25 @@ public class GameSimulation {
 
 		/* Process stuff for this tick */
 		// Character
-		for (Entry<Short, Character> e : world.getCharacters().entrySet()) {
+		for (Entry<Character> e : world.getCharacters().entries()) {
 			for (IProcessingSystem<Character> s : characterSystems) {
 				if (s.doProcess(tick))
-					s.process(e.getKey(), e.getValue());
+					s.process((short) e.key, e.value);
 			}
 		}
 
 		// Player
-		for (Entry<Short, Player> e : world.getPlayers().entrySet()) {
+		for (Entry<Player> e : world.getPlayers().entries()) {
 			for (IProcessingSystem<Player> s : playerSystems) {
 				if (s.doProcess(tick))
-					s.process(e.getKey(), e.getValue());
+					s.process((short) e.key, e.value);
 			}
 		}
 
 		long time = logTimer.getTime(TimeUnit.MILLISECONDS);
 		if (time > 1)
-			LOG.info("Simulation tick %d processed in %d ms", tick, time);
+			LOG.info("%s Simulation tick %d processed in %d ms", logTag, tick,
+					time);
 	}
 
 	public void onRoundStart() {
@@ -174,7 +180,7 @@ public class GameSimulation {
 
 	//@formatter:off
 //	public SavedGame createSaveGame() {
-//		LOG.info("[SERVER] Spiel speichern...");
+//		LOG.info("%s Spiel speichern...", logTag);
 //
 //		SavedGame save = new SavedGame();
 //		save.world = this.world;

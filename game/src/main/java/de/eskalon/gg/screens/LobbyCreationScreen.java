@@ -3,8 +3,8 @@ package de.eskalon.gg.screens;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
@@ -152,6 +152,7 @@ public class LobbyCreationScreen extends AbstractEskalonUIScreen {
 									.getInstance(GameClient.class));
 							appContext.getClient().connect(new ICallback() {
 								// Sucessfully connected
+								@Override
 								public void onSuccess(Object param) {
 									connectingDialog.hide();
 									LobbyScreen screen = EskalonInjector
@@ -163,6 +164,7 @@ public class LobbyCreationScreen extends AbstractEskalonUIScreen {
 													.get("blendingTransition"));
 								};
 
+								@Override
 								public void onFailure(Object param) {
 									onHostStartingFailed(
 											((Exception) param).getMessage());
@@ -171,6 +173,7 @@ public class LobbyCreationScreen extends AbstractEskalonUIScreen {
 									serverSetup.getPort());
 						}
 
+						@Override
 						public void onFailure(Object param) {
 							onHostStartingFailed(
 									((Exception) param).getMessage());
@@ -233,13 +236,12 @@ public class LobbyCreationScreen extends AbstractEskalonUIScreen {
 	}
 
 	public void onHostStartingFailed(String msg) {
-		appContext.getServer().stop();
-		appContext.setServer(null);
-		appContext.setClient(null);
-
-		connectingDialog.setVisible(false);
-		SimpleTextDialog.createAndShow(stage, skin,
-				Lang.get("ui.generic.error"), msg);
+		appContext.handleDisconnection();
+		Gdx.app.postRunnable(() -> {
+			connectingDialog.hide();
+			SimpleTextDialog.createAndShow(stage, skin,
+					Lang.get("ui.generic.error"), msg);
+		});
 	}
 
 }

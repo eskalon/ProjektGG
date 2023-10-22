@@ -3,6 +3,7 @@ package de.eskalon.gg.net;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.badlogic.gdx.utils.IntMap;
 import com.esotericsoftware.kryo.Kryo;
 
 import de.eskalon.commons.net.packets.AllPlayersReadyMessage;
@@ -36,6 +37,7 @@ import de.eskalon.gg.simulation.model.types.PositionType;
 import de.eskalon.gg.simulation.model.types.ProfessionType;
 import de.eskalon.gg.simulation.model.types.Religion;
 import de.eskalon.gg.simulation.model.votes.Ballot;
+import de.eskalon.gg.simulation.model.votes.ImpeachmentBallot;
 
 /**
  * This class takes care of registering all classes needed by the multiplayer
@@ -59,6 +61,9 @@ public class NetworkRegisterer {
 		// Basic classes
 		kryo.register(ArrayList.class);
 		kryo.register(HashMap.class);
+		kryo.register(IntMap.class);
+		kryo.register(Object[].class);
+		kryo.register(int[].class);
 
 		// Engine packet data
 		kryo.register(IPlayerAction.class);
@@ -111,6 +116,7 @@ public class NetworkRegisterer {
 		// Elections
 		kryo.register(PositionType.class);
 		kryo.register(Ballot.class);
+		//kryo.register(ImpeachmentBallot.class);
 	}
 
 }

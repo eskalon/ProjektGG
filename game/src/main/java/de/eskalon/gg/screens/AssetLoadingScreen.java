@@ -15,8 +15,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.damios.guacamole.gdx.assets.Text;
 import de.eskalon.commons.asset.AnnotationAssetManager;
-import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.asset.PlaylistDefinition;
+import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.audio.ISoundManager;
 import de.eskalon.commons.inject.EskalonInjector;
 import de.eskalon.commons.inject.annotations.Inject;
@@ -138,6 +138,20 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 		for (NPCCharacterTrait t : NPCCharacterTrait.values()) {
 			assetManager.load(t.getJSONAssetDescriptor());
 		}
+
+		// Load the game assets
+		// TODO: Rework this, because the game data isn't loaded yet
+		assetManager.load("models/skybox/skybox.g3db", Model.class);
+		assetManager.load("models/buildings/test_houses/house1.g3db",
+				Model.class);
+		//@formatter:off
+//		for (GameMap t : GameMap.values()) {
+//			assetManager.load(t.getSkyboxPath(), Model.class);
+//		}
+//		for (BuildingType t : BuildingType.values()) {
+//			assetManager.load(t.getModelPath(), Model.class);
+//		}
+		//@formatter:on
 	}
 
 	@Override
@@ -157,15 +171,6 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 		// Init the game data
 		TypeRegistry.instance().initialize(assetManager);
 		CharacterFactory.initialize(assetManager);
-
-		// Load the game assets
-		// TODO: Integrate this into the progress bar
-		for (GameMap t : GameMap.values()) {
-			assetManager.load(t.getSkyboxPath(), Model.class);
-		}
-		for (BuildingType t : BuildingType.values()) {
-			assetManager.load(t.getModelPath(), Model.class);
-		}
 
 		// Transitions
 		GLTransitionsShaderTransition simpleZoomShader = new GLTransitionsShaderTransition(
@@ -230,6 +235,12 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 				Math.round(imageWidth * progress), (int) imageHeight);
 
 		spriteBatch.end();
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
+		viewport.update(width, height, true);
 	}
 
 	@Override

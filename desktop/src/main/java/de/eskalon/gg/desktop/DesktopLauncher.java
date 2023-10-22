@@ -16,7 +16,7 @@ import de.eskalon.gg.core.ProjektGGApplication;
 public class DesktopLauncher {
 
 	public static void main(String[] args) {
-		StartOnFirstThreadHelper.executeIfJVMValid(() -> {
+		StartOnFirstThreadHelper.executeOnValidJVM(() -> {
 			/* Start arguments */
 			StartArgumentsBuilder startArgs = StartArguments.create();
 

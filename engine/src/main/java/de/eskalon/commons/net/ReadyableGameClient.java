@@ -12,13 +12,14 @@ public abstract class ReadyableGameClient<G, S, P extends IReadyable>
 		super();
 
 		TypeListener typeListener = new TypeListener();
-		typeListener.addTypeHandler(AllPlayersReadyMessage.class, (con, msg) -> {
-			onNextRound();
+		typeListener.addTypeHandler(AllPlayersReadyMessage.class,
+				(con, msg) -> {
+					onNextRound();
 
-			for (P p : lobbyData.getPlayers().values()) {
-				p.setReady(false);
-			}
-		});
+					for (P p : lobbyData.getPlayers().values()) {
+						p.setReady(false);
+					}
+				});
 		client.addListener(typeListener);
 	}
 

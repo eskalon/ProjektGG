@@ -1,5 +1,6 @@
 package de.eskalon.gg.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -144,7 +145,7 @@ public class SettingsScreen extends AbstractEskalonUIScreen {
 		backButton.addListener(new ButtonClickListener(soundManager) {
 			@Override
 			protected void onClick() {
-				if (screenManager.getLastScreen() instanceof MapScreen)
+				if (appContext.isInGame())
 					screenManager.pushScreen(MapScreen.class,
 							"blendingTransition");
 				else
@@ -206,8 +207,11 @@ public class SettingsScreen extends AbstractEskalonUIScreen {
 	public void render(float delta) {
 		// If the settings are open while a game is running keep on updating it
 		if (appContext.isInGame()) {
-			if (appContext.getGameHandler().update(delta))
+			// See AbstractGameScreen#updateGame
+			if (appContext.getGameHandler().update())
 				screenManager.pushScreen(RoundEndScreen.class, "circle_crop");
+
+			appContext.getClient().updatePing(Gdx.graphics.getDeltaTime());
 		}
 		super.render(delta);
 	}
@@ -224,6 +228,7 @@ public class SettingsScreen extends AbstractEskalonUIScreen {
 
 	@Subscribe
 	public void onConnectionLost(ConnectionLostEvent ev) {
+		// See AbstractGameScreen#onConnectionLost
 		if (this == screenManager.getCurrentScreen()) { // If this screen is
 														// rendered as part of a
 														// transition, the next
@@ -234,7 +239,7 @@ public class SettingsScreen extends AbstractEskalonUIScreen {
 
 			ServerBrowserScreen screen = EskalonInjector.instance()
 					.getInstance(ServerBrowserScreen.class);
-			screen.setJustDisconnectedFromServer(true);
+			screen.setConnectionLost(true);
 			screenManager.pushScreen(screen, null);
 		}
 	}

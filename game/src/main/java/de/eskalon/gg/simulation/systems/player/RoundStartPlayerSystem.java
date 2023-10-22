@@ -39,7 +39,7 @@ public class RoundStartPlayerSystem
 			if (p.getFortune(world) >= superiorStatus.getFortuneRequirement()
 					&& c.getHighestPositionLevel() >= superiorStatus
 							.getPositionLevelRequirement()) {
-				c.setStatus(superiorStatus);//
+				// c.setStatus(superiorStatus);
 
 				if (localPlayerId == id) {
 					// TODO notification!

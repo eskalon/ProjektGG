@@ -1,7 +1,6 @@
 package de.eskalon.gg.misc;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import de.eskalon.commons.utils.RandomUtils;
@@ -23,7 +22,7 @@ public class PlayerUtils {
 	 * @return A list of all unused icons.
 	 */
 	public static List<PlayerIcon> getAvailableIcons(
-			Collection<PlayerData> players) {
+			Iterable<PlayerData> players) {
 		List<PlayerIcon> tmp = new ArrayList<>();
 
 		for (PlayerIcon i : PlayerIcon.values()) {
@@ -47,7 +46,7 @@ public class PlayerUtils {
 	 * @return A list of all unused professions indices.
 	 */
 	public static List<Integer> getAvailableProfessionIndices(
-			Collection<PlayerData> players) {
+			Iterable<PlayerData> players) {
 		List<Integer> tmp = new ArrayList<>();
 
 		for (int i = 0; i < ProfessionType.values().length; i++) {
@@ -74,7 +73,7 @@ public class PlayerUtils {
 	 *            The players.
 	 * @return The overall ready status.
 	 */
-	public static boolean areAllPlayersReady(Collection<PlayerData> players) {
+	public static boolean areAllPlayersReady(Iterable<PlayerData> players) {
 		boolean allReady = true;
 
 		for (PlayerData p : players) {
@@ -97,12 +96,12 @@ public class PlayerUtils {
 	 *            The exempt player.
 	 * @return The overall ready status.
 	 */
-	public static boolean areAllPlayersReadyExcept(
-			Collection<PlayerData> players, PlayerData player) {
+	public static boolean areAllPlayersReadyExcept(Iterable<PlayerData> players,
+			PlayerData player) {
 		boolean allReady = true;
 
 		for (PlayerData p : players) {
-			if (p != player) {
+			if (!p.equals(player)) {
 				if (!p.isReady()) {
 					allReady = false;
 					break;
@@ -124,7 +123,7 @@ public class PlayerUtils {
 	 * @return The random player.
 	 */
 	public static PlayerData getRandomPlayerWithUnusedProperties(
-			List<PlayerTemplate> playerStubs, Collection<PlayerData> players) {
+			List<PlayerTemplate> playerStubs, Iterable<PlayerData> players) {
 		PlayerTemplate stub = RandomUtils.getElement(playerStubs);
 
 		return new PlayerData(stub.name, stub.surname,
