@@ -97,9 +97,9 @@ public class WorldGenerator {
 					lp.getSurname());
 			world.characters.put(world.characterIndex, character);
 
-			// TODO 1. Skill-Werte aus LobbyPlayer hinzufügen (Reihenfolge:
+			// TODO 1. Add skill values from the lobby data (there order is:
 			// agility, bargain, combat, crafting, rhetorical, stealth)
-			// TODO 2. House-IDS setzen
+			// TODO 2. Set house IDs
 			Player player = PlayerFactory.createPlayerCharacter(
 					world.characterIndex, lp.getIcon(), profession, (short) 0,
 					(short) 0, 1, 1, 1, 1, 1, 1);

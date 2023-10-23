@@ -2,7 +2,9 @@ package de.eskalon.gg.net;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import javax.annotation.Nullable;
 
@@ -19,7 +21,6 @@ import de.eskalon.gg.misc.PlayerUtils;
 import de.eskalon.gg.misc.PlayerUtils.PlayerTemplate;
 import de.eskalon.gg.net.packets.ArrangeVotePacket;
 import de.eskalon.gg.net.packets.CastVotePacket;
-import de.eskalon.gg.net.packets.InitVotingPacket;
 import de.eskalon.gg.net.packets.VoteFinishedPacket;
 import de.eskalon.gg.simulation.GameSetup;
 import de.eskalon.gg.simulation.GameSimulation;
@@ -41,6 +42,8 @@ public class GameServer
 	private HashMap<Short, Integer> receivedVotes = new HashMap<>();
 	private Timer timer = new Timer();
 
+	private Queue<ArrangeVotePacket> mattersToVoteOn = new LinkedList<>();
+
 	public GameServer(ServerSettings serverSettings, GameSetup sessionSetup,
 			@Nullable SavedGame savedGame,
 			List<PlayerTemplate> playerTemplates) {
@@ -55,31 +58,23 @@ public class GameServer
 			// TODO check whether the player is allowed to arrange the vote; if
 			// not send an OutOfSyncMessage(crash = false) to the client!
 			server.sendToAllTCP(msg);
+			mattersToVoteOn.add(msg);
+
+			LOG.debug("[SERVER] Player %d has arranged a vote",
+					(short) con.getArbitraryData());
 
 			// TODO: for applications, also send an IPlayerAction, which does
 			// the following:
 			// pos.getApplicants().add(world.getPlayer(clientId).getCurrentlyPlayedCharacterId());
 		});
-		typeListener.addTypeHandler(InitVotingPacket.class, (con, msg) -> {
-			if (matterToVoteOn != null)
-				LOG.error(
-						"[SERVER] A second vote was started while the first one was still running");
-
-			matterToVoteOn = msg.getMatterToVoteOn();
-
-			timer.scheduleTask(new Timer.Task() {
-				@Override
-				public void run() {
-					simulation.processVotes(matterToVoteOn, receivedVotes);
-
-					server.sendToAllTCP(new VoteFinishedPacket(receivedVotes));
-					receivedVotes.clear();
-					matterToVoteOn = null;
-				}
-			}, 10);
-		});
 		typeListener.addTypeHandler(CastVotePacket.class, (con, msg) -> {
-			receivedVotes.put((short) con.getArbitraryData(), msg.getOption());
+			// TODO check whether player is allowed to vote; if not send an
+			// OutOfSyncMessage(crash = false) to the client!
+			LOG.debug("[SERVER] Player %d has cast a vote",
+					(short) con.getArbitraryData());
+			receivedVotes.put(simulation.getWorld()
+					.getPlayer((short) con.getArbitraryData())
+					.getCurrentlyPlayedCharacterId(), msg.getOption());
 		});
 		server.addListener(typeListener);
 	}
@@ -101,9 +96,33 @@ public class GameServer
 					(short) -1);
 		}
 
-		// Fake first two ticks
-		simulation.onSimulationTick(0, new ArrayList<>());
-		simulation.onSimulationTick(1, new ArrayList<>());
+		if (!mattersToVoteOn.isEmpty()) {
+			matterToVoteOn = ArrangeVotePacket.createBallot(
+					mattersToVoteOn.poll(), simulation.getWorld());
+			timer.scheduleTask(new Timer.Task() {
+				@Override
+				public void run() {
+					processMatterToVoteOn();
+				}
+			}, 10);
+		} else {
+			// Fake first two ticks
+			simulation.onSimulationTick(0, new ArrayList<>());
+			simulation.onSimulationTick(1, new ArrayList<>());
+		}
+	}
+
+	private void processMatterToVoteOn() {
+		LOG.debug(
+				"[SERVER] Voting on the current matter was closed. %d votes were received.",
+				receivedVotes.size());
+
+		server.sendToAllTCP(new VoteFinishedPacket(receivedVotes));
+		simulation.processVotes(matterToVoteOn, receivedVotes);
+		receivedVotes.clear();
+		matterToVoteOn = null;
+
+		onAllPlayersReady(); // either start next ballot or begin processing
 	}
 
 	@Override

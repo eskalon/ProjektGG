@@ -25,7 +25,6 @@ import de.eskalon.commons.net.packets.sync.LobbyDataChangedPacket;
 import de.eskalon.commons.net.packets.sync.LobbyDataChangedPacket.ChangeType;
 import de.eskalon.gg.net.packets.ArrangeVotePacket;
 import de.eskalon.gg.net.packets.CastVotePacket;
-import de.eskalon.gg.net.packets.InitVotingPacket;
 import de.eskalon.gg.net.packets.VoteFinishedPacket;
 import de.eskalon.gg.net.packets.data.VoteType;
 import de.eskalon.gg.simulation.GameSetup;
@@ -37,7 +36,6 @@ import de.eskalon.gg.simulation.model.types.PositionType;
 import de.eskalon.gg.simulation.model.types.ProfessionType;
 import de.eskalon.gg.simulation.model.types.Religion;
 import de.eskalon.gg.simulation.model.votes.Ballot;
-import de.eskalon.gg.simulation.model.votes.ImpeachmentBallot;
 
 /**
  * This class takes care of registering all classes needed by the multiplayer
@@ -61,9 +59,9 @@ public class NetworkRegisterer {
 		// Basic classes
 		kryo.register(ArrayList.class);
 		kryo.register(HashMap.class);
-		kryo.register(IntMap.class);
 		kryo.register(Object[].class);
 		kryo.register(int[].class);
+		kryo.register(IntMap.class);
 
 		// Engine packet data
 		kryo.register(IPlayerAction.class);
@@ -97,7 +95,6 @@ public class NetworkRegisterer {
 		kryo.register(ArrangeVotePacket.class);
 		kryo.register(VoteFinishedPacket.class);
 		kryo.register(CastVotePacket.class);
-		kryo.register(InitVotingPacket.class);
 
 		// Lobby (Player) Stuff
 		kryo.register(PlayerData.class);
@@ -116,7 +113,6 @@ public class NetworkRegisterer {
 		// Elections
 		kryo.register(PositionType.class);
 		kryo.register(Ballot.class);
-		//kryo.register(ImpeachmentBallot.class);
 	}
 
 }

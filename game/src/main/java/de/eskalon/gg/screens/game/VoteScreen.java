@@ -6,7 +6,6 @@ import java.util.Map.Entry;
 
 import javax.annotation.Nullable;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
@@ -20,7 +19,6 @@ import de.eskalon.commons.audio.ISoundManager;
 import de.eskalon.commons.event.Subscribe;
 import de.eskalon.commons.inject.annotations.Inject;
 import de.eskalon.commons.lang.Lang;
-import de.eskalon.gg.core.ProjektGGApplicationContext;
 import de.eskalon.gg.events.VoteFinishedEvent;
 import de.eskalon.gg.graphics.ui.actors.CharacterComponent;
 import de.eskalon.gg.graphics.ui.actors.OffsettableImageTextButton;
@@ -32,7 +30,6 @@ import de.eskalon.gg.simulation.model.World;
 import de.eskalon.gg.simulation.model.entities.Player;
 import de.eskalon.gg.simulation.model.votes.Ballot;
 import de.eskalon.gg.simulation.model.votes.BallotOption;
-import de.eskalon.gg.simulation.model.votes.ImpeachmentBallot;
 
 /**
  * This screen is responsible for the votes cast at the beginning of a round.
@@ -90,30 +87,14 @@ public class VoteScreen extends AbstractGameScreen {
 				appContext.getGameHandler().startNextRound();
 			} else {
 				LOG.info("[CLIENT] Preparing next vote");
-				matterToVoteOn = createBallot(msg);
+				matterToVoteOn = ArrangeVotePacket.createBallot(msg,
+						appContext.getGameHandler().getSimulation().getWorld());
 				prepareNextBallot(matterToVoteOn);
 			}
 		} else if (voteTimer.isRunning() && voteTimer.update()) {
 			voteTimer.reset();
 			matterToVoteOn = null;
 		}
-	}
-
-	private Ballot createBallot(ArrangeVotePacket msg) {
-		switch (msg.getType()) {
-		case IMPEACHMENT:
-			return new ImpeachmentBallot(
-					appContext.getGameHandler().getSimulation().getWorld(),
-					appContext.getGameHandler().getSimulation().getWorld()
-							.getCharacters().get(msg.getTarget()).getPosition(),
-					msg.getCaller());
-		case ELECTION:
-			// return new
-			// ElectionBallot(appContext.getGameHandler().getSimulation().getWorld(),
-			// CollectionUtils.getKeyByValue(appContext.getGameHandler().getSimulation().getWorld().getPositions(),
-			// p)
-		}
-		return null;
 	}
 
 	private void prepareNextBallot(Ballot newBallot) {
@@ -173,10 +154,6 @@ public class VoteScreen extends AbstractGameScreen {
 				}
 				optionTable.add(button).right().padBottom(15).row();
 			}
-		}
-
-		if (appContext.isHost()) {
-			appContext.getClient().initVoting(matterToVoteOn);
 		}
 	}
 

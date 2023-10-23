@@ -90,9 +90,7 @@ public class GameRenderer implements Disposable {
 			if (slot.isBuiltOn()) {
 				Building building = slot.getBuilding();
 
-				if (!building.getRenderData().isSelected) {// diese Bedingung
-															// nur
-															// testweise
+				if (!building.getRenderData().isSelected) { // tmp
 					modelBatch.render(building.getRenderData(), environment);
 				}
 			}
@@ -100,7 +98,6 @@ public class GameRenderer implements Disposable {
 	}
 
 	public void renderOutlines(BuildingSlot[] buildings) {
-		// TODO scale models
 		for (final BuildingSlot slot : buildings) {
 			if (slot.isBuiltOn()) {
 				Building building = slot.getBuilding();

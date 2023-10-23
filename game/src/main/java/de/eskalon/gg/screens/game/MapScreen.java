@@ -322,6 +322,8 @@ public class MapScreen extends AbstractGameScreen {
 							"blendingTransition");
 				} else {
 					LOG.info("[CLIENT] Disconnecting from the server");
+					// FIXME: properly differentiate between forced and
+					// voluntary disconnects
 					ThreadHandler.instance().executeRunnable(
 							() -> appContext.getClient().disconnect());
 				}
@@ -359,10 +361,6 @@ public class MapScreen extends AbstractGameScreen {
 			appContext.getObjectStorage().remove("game_has_just_started");
 			// TODO show welcome message, tutorial hints, etc.
 		}
-
-		// selectionInputController.resetInput();
-		// inputHandler.reset();
-		// movementInputController.resetInput();
 	}
 
 	@Override

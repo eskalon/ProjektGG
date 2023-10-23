@@ -91,10 +91,6 @@ public class MapSelectionInputController implements
 		eventBus.post(new HouseSelectionEvent(selectedObjectId));
 	}
 
-	public void resetInput() {
-		onSingleSelection((short) -1);
-	}
-
 	private short getObjectAtPositon(int screenX, int screenY) {
 		Ray ray = camera.getPickRay(screenX, screenY);
 		short result = -1;

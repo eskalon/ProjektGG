@@ -15,8 +15,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.damios.guacamole.gdx.assets.Text;
 import de.eskalon.commons.asset.AnnotationAssetManager;
-import de.eskalon.commons.asset.PlaylistDefinition;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
+import de.eskalon.commons.asset.PlaylistDefinition;
 import de.eskalon.commons.audio.ISoundManager;
 import de.eskalon.commons.inject.EskalonInjector;
 import de.eskalon.commons.inject.annotations.Inject;
@@ -140,7 +140,7 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 		}
 
 		// Load the game assets
-		// TODO: Rework this, because the game data isn't loaded yet
+		// FIXME: Rework this, because the game data isn't loaded yet
 		assetManager.load("models/skybox/skybox.g3db", Model.class);
 		assetManager.load("models/buildings/test_houses/house1.g3db",
 				Model.class);

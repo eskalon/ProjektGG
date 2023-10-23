@@ -82,8 +82,6 @@ public class GameSimulation {
 //				}
 //			}
 //
-//			// TODO in den Konstruktoren die Setups setzen
-//			// TODO in der Lobby das Setup disablen
 			//@formatter:on
 		}
 

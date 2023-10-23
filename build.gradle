@@ -78,9 +78,9 @@ project(":game") {
     dependencies {
         api project(":engine")
         api "com.github.crykn.gdx-vfx:gdx-vfx-effects:$vfxVersion"
-		api ("com.github.crykn.guacamole:gdx:$guacamoleVersion") {
-  			force = true
-		}
+		//api ("com.github.crykn.guacamole:gdx:$guacamoleVersion") {
+  		//	force = true
+		//}
         //api "com.github.crykn:quakemonkey:$quakemonkeyVersion"
         
         api "io.github.spair:imgui-java-binding:$imguiVersion"

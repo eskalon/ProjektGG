@@ -56,19 +56,9 @@ public class GameHandler {
 		timeAccumulator += delta;
 
 		while (timeAccumulator >= simulation.getWorld().getGameSpeed()
-				.getTickDuration() * 1_000_000
+				.getTickDuration() * 1_000_000L
 				&& tickCountForRound < TICKS_PER_ROUND) {
 			// NOTE: first tick is 0, last tick is TICKS_PER_ROUND - 1
-
-			timeAccumulator -= simulation.getWorld().getGameSpeed()
-					.getTickDuration() * 1_000_000;
-
-			clock.update();
-
-			if (tickCountForRound % 15 == 0) {
-				LOG.debug("[CLOCK] %02d:%02d", clock.getHour(),
-						clock.getMinute());
-			}
 
 			List<PlayerActionsWrapper> actions = client
 					.retrieveActionsForTurn(tickCountForRound);
@@ -78,6 +68,20 @@ public class GameHandler {
 						"[CLIENT] Actions for turn %d have not been received yet. The local simulation is lagging behind the server.",
 						tickCountForRound);
 				break; // Wait until we receive the actions for the current turn
+			}
+
+			timeAccumulator -= simulation.getWorld().getGameSpeed()
+					.getTickDuration() * 1_000_000L; // TODO: is it correct to
+														// skip this until
+														// actions
+														// are received when the
+														// client is lagging?
+
+			clock.update();
+
+			if (tickCountForRound % 15 == 0) {
+				LOG.debug("[CLOCK] %02d:%02d", clock.getHour(),
+						clock.getMinute());
 			}
 
 			// Don't send actions for turn 348 & 349
@@ -95,7 +99,6 @@ public class GameHandler {
 				return true;
 			}
 		}
-
 		if (tickCountForRound < TICKS_PER_ROUND)
 			updateVisualStuff(delta / 1_000_000_000F);
 

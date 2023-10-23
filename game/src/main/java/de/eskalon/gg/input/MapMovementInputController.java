@@ -18,10 +18,10 @@ public class MapMovementInputController implements
 	public CameraWrapper camera;
 
 	// Key binds
-	private int xAxis, yAxis;
+	private int xAxis = 0, yAxis = 0;
 
-	private boolean start;
-	private boolean isTouchDown;
+	private boolean start = false;
+	private boolean isTouchDown = false;
 	private int startX, startY;
 
 	public float rotationSpeed = 360f;
@@ -31,8 +31,6 @@ public class MapMovementInputController implements
 	public MapMovementInputController(CameraWrapper camera,
 			EskalonSettings settings) {
 		this.camera = camera;
-
-		resetInput();
 	}
 
 	public void update(float delta) {
@@ -44,13 +42,6 @@ public class MapMovementInputController implements
 
 		if (xAxis != 0 || yAxis != 0)
 			camera.update();
-	}
-
-	public void resetInput() {
-		xAxis = 0;
-		yAxis = 0;
-		start = false;
-		isTouchDown = false;
 	}
 
 	@Override
