@@ -46,6 +46,10 @@ public class GameHandler {
 	}
 
 	public boolean update() {
+		// TODO: Separate this into another thread so it works better when the
+		// window is moved/resized
+		// This shouldn't be an issue if this was implemented:
+		// https://github.com/libgdx/libgdx/issues/4419
 		long time = System.nanoTime();
 		if (lastFrameTime == -1)
 			lastFrameTime = time;
@@ -110,6 +114,7 @@ public class GameHandler {
 		simulation.onRoundStart();
 		timeAccumulator = 0;
 		tickCountForRound = 0;
+		lastFrameTime = -1;
 		clock.resetClock();
 		clock.setRound(currentRound);
 

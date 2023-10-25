@@ -188,12 +188,12 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 			}
 		});
 
-		messagesArea = new Label("", skin, "text");
+		messagesArea = new Label("\n\n\n\n\n", skin, "text");
 		messagesArea.setWidth(425);
 		messagesArea.setWrap(true);
 
 		Table messagesTable = new Table();
-		messagesTable.add(messagesArea).padLeft(10).left().top().expand()
+		messagesTable.add(messagesArea).padLeft(10).padBottom(1).left().top().expand()
 				.fill();
 
 		messagesPane = new ScrollPane(messagesTable, skin, "with-background");
@@ -247,7 +247,7 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 			updatePlayerSlot(playerSlots[i], null, false);
 		}
 
-		messagesArea.setText("");
+		messagesArea.setText("\n\n\n\n\n");
 		for (ChatMessage c : appContext.getClient().getChatMessages()) {
 			addChatMessageToUI(c);
 		}
@@ -317,21 +317,14 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 	}
 
 	private void addChatMessageToUI(ChatMessage message) {
-		messagesArea
-				.setText(
-						messagesArea.getText()
-								+ (message.isSystemMessage() ? "[#EFE22DFF]"
-										: ("[#" + ((PlayerData) message
-												.getSender())
-														.getIcon().getColor()
-												+ "]"
-												+ Lang.get((PlayerData) message
-														.getSender())
-												+ ": []"))
-								+ message.getMessage()
-								+ (message.isSystemMessage() ? "[]" : "")
-								+ " \n");
-		messagesPane.layout();
+		messagesArea.setText(messagesArea.getText() + " \n"
+				+ (message.isSystemMessage() ? "[#EFE22DFF]"
+						: ("[#" + ((PlayerData) message.getSender()).getIcon()
+								.getColor() + "]"
+								+ Lang.get((PlayerData) message.getSender())
+								+ ": []"))
+				+ message.getMessage()
+				+ (message.isSystemMessage() ? "[]" : ""));
 		messagesPane.scrollTo(0, 0, 0, 0);
 	}
 

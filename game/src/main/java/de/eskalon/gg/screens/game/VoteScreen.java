@@ -2,7 +2,6 @@ package de.eskalon.gg.screens.game;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 
 import javax.annotation.Nullable;
 
@@ -48,6 +47,8 @@ public class VoteScreen extends AbstractGameScreen {
 	private @Nullable Ballot matterToVoteOn = null;
 	private CountdownTimer voteTimer = new CountdownTimer();
 
+	private boolean once;
+
 	public VoteScreen() {
 		super(false);
 	}
@@ -82,9 +83,12 @@ public class VoteScreen extends AbstractGameScreen {
 					.getMattersToHoldVoteOn().poll();
 
 			if (msg == null) {
-				LOG.info("[CLIENT] No vote remaining");
-				screenManager.pushScreen(MapScreen.class, "circle_open");
-				appContext.getGameHandler().startNextRound();
+				if (!once) {
+					once = true;
+					LOG.info("[CLIENT] No vote remaining");
+					screenManager.pushScreen(MapScreen.class, "circle_open");
+					appContext.getGameHandler().startNextRound();
+				}
 			} else {
 				LOG.info("[CLIENT] Preparing next vote");
 				matterToVoteOn = ArrangeVotePacket.createBallot(msg,
@@ -167,17 +171,42 @@ public class VoteScreen extends AbstractGameScreen {
 		// Display the results
 		optionTable.clear();
 		infoText.setText(matterToVoteOn.getResultText(result));
-		// TODO display individual votes (voterTable)
-		// voterTable.clear();
-		System.out.println("Abgestimmt wurde wie folgt:");
-		for (Entry<Short, Integer> e : ev.getIndividualVotes().entrySet()) {
-			System.out.println(String.format(" - %s: %d",
-					Lang.get(appContext.getGameHandler().getSimulation()
-							.getWorld().getCharacter(e.getKey())),
-					e.getValue()));
+		voterTable.clear();
+
+		World world = appContext.getGameHandler().getSimulation().getWorld();
+		Player localPlayer = appContext.getGameHandler().getLocalPlayer();
+
+		voterTable.add(
+				new Label(Lang.get("screen.vote.voters_done"), skin, "title"))
+				.padBottom(12).row();
+		for (short s : matterToVoteOn.getVoters()) {
+			// FIXME: the voters list no longer contains the impeached person
+			// PositionType posT = world.getCharacter(s).getPosition();
+			boolean isLocalPlayer = s == localPlayer
+					.getCurrentlyPlayedCharacterId();
+
+			voterTable.add(new CharacterComponent(skin, world.getCharacter(s),
+					isLocalPlayer ? -1
+							: CharacterBehaviour.getOpinionOfAnotherCharacter(
+									localPlayer.getCurrentlyPlayedCharacterId(),
+									s, world)))
+					.left().padBottom(25);
+
+			voterTable.add(
+					new Label(getOptionString(ev.getIndividualVotes().get(s)),
+							skin, "text"))
+					.left().top().row();
 		}
 
 		voteTimer.start(7000); // display the result for 7 seconds
+	}
+
+	private String getOptionString(int option) {
+		for (BallotOption o : matterToVoteOn.getOptions()) {
+			if (o.getValue() == option)
+				return Lang.get(o.getUnlocalizedName());
+		}
+		return "";
 	}
 
 }

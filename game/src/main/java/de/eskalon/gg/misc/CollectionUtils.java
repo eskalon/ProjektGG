@@ -51,7 +51,9 @@ public final class CollectionUtils {
 		Preconditions.checkNotNull(map, "The map cannot be null");
 
 		List<Entry<K, V>> list = new ArrayList<>(map.entrySet());
-		list.sort(Entry.comparingByValue());
+		list.sort(Entry.comparingByValue((v1, v2) -> v2.compareTo(v1))); // biggest
+																			// element
+																			// first
 
 		Map<K, V> result = new LinkedHashMap<>();
 		for (Entry<K, V> entry : list) {
