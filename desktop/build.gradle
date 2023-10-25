@@ -3,19 +3,27 @@ apply plugin: "java"
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
+import org.gradle.internal.os.OperatingSystem
+
 project.ext.mainClassName = "de.eskalon.gg.desktop.DesktopLauncher"
 project.ext.assetsDir = new File("../game/assets");
 
-task run(dependsOn: classes, type: JavaExec) {
-    main = project.mainClassName
+tasks.register('run', JavaExec) {
+    dependsOn classes
+    mainClass = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
     workingDir = project.assetsDir
     ignoreExitValue = true
+
+    if (OperatingSystem.current() == OperatingSystem.MAC_OS) {
+        jvmArgs += "-XstartOnFirstThread"
+    }
 }
 
-task debug(dependsOn: classes, type: JavaExec) {
-    main = project.mainClassName
+tasks.register('debug', JavaExec) {
+    dependsOn classes
+    mainClass = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
     workingDir = project.assetsDir
@@ -23,10 +31,11 @@ task debug(dependsOn: classes, type: JavaExec) {
     debug = true
 }
 
-jar {
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+// Generate a fat jar
+jar { 
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-
+	
     manifest {
         attributes (
         	"Main-Class": project.mainClassName,
@@ -34,37 +43,25 @@ jar {
         )
     }
 }
-jar.dependsOn classes
+jar.dependsOn configurations.runtimeClasspath
 
-
-task dist(type: Zip){
-	archiveName appName+"_"+version+".zip"
-
-	from fileTree(project.assetsDir) {
-		exclude("CONTRIBUTORS.md")
-	}
-	from file("../LICENSE");
-	from file("../CONTRIBUTORS.md");
-	from jar.outputs.files
+tasks.register('dist', Jar) {
+    archiveName appName + "_" + version + ".zip"
+    
+    //duplicatesStrategy(DuplicatesStrategy.INCLUDE)
+	
+    from fileTree(project.assetsDir) {
+        exclude("CONTRIBUTORS.md")
+    }
+    from file("../LICENSE");
+    from file("../CONTRIBUTORS.md");
+    from jar.outputs.files
 }
-
 dist.dependsOn jar
-
 
 eclipse {
     project {
         name = appName + "-desktop"
         linkedResource name: "assets", type: "2", location: "PARENT-1-PROJECT_LOC/game/assets"
     }
-}
-
-task afterEclipseImport(description: "Post processing after project generation", group: "IDE") {
-  doLast {
-    def classpath = new XmlParser().parse(file(".classpath"))
-    new Node(classpath, "classpathentry", [ kind: "src", path: "assets" ]);
-    def writer = new FileWriter(file(".classpath"))
-    def printer = new XmlNodePrinter(new PrintWriter(writer))
-    printer.setPreserveWhitespace(true)
-    printer.print(classpath)
-  }
 }
