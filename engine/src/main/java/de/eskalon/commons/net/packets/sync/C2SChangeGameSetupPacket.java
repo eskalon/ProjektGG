@@ -9,16 +9,16 @@ import javax.annotation.Nullable;
  * @param <G>
  * @param <S>
  */
-public final class ChangeGameSetupPacket<G, S> {
+public final class C2SChangeGameSetupPacket<G, S> {
 
 	private G sessionSetup;
 	private @Nullable S gameState;
 
-	public ChangeGameSetupPacket() {
+	public C2SChangeGameSetupPacket() {
 		// default public constructor
 	}
 
-	public ChangeGameSetupPacket(G sessionSetup, @Nullable S gameState) {
+	public C2SChangeGameSetupPacket(G sessionSetup, @Nullable S gameState) {
 		this.sessionSetup = sessionSetup;
 		this.gameState = gameState;
 	}

@@ -27,6 +27,11 @@ public class DesktopLauncher {
 						continue;
 					}
 
+					if (args[i].equalsIgnoreCase("--trace")) {
+						startArgs.enableTraceLogging();
+						continue;
+					}
+
 					if (args[i].equalsIgnoreCase("--skip")) {
 						startArgs.skipSplashScreen();
 						continue;

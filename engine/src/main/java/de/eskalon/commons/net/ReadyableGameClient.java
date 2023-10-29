@@ -2,8 +2,8 @@ package de.eskalon.commons.net;
 
 import com.esotericsoftware.kryonet.Listener.TypeListener;
 
-import de.eskalon.commons.net.packets.AllPlayersReadyMessage;
 import de.eskalon.commons.net.packets.data.IReadyable;
+import de.eskalon.commons.net.packets.sync.S2CAllPlayersReadyMessage;
 
 public abstract class ReadyableGameClient<G, S, P extends IReadyable>
 		extends SimpleGameClient<G, S, P> {
@@ -12,7 +12,7 @@ public abstract class ReadyableGameClient<G, S, P extends IReadyable>
 		super();
 
 		TypeListener typeListener = new TypeListener();
-		typeListener.addTypeHandler(AllPlayersReadyMessage.class,
+		typeListener.addTypeHandler(S2CAllPlayersReadyMessage.class,
 				(con, msg) -> {
 					onNextRound();
 

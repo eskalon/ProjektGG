@@ -68,7 +68,7 @@ public class GameHandler {
 					.retrieveActionsForTurn(tickCountForRound);
 
 			if (actions == null) {
-				LOG.error(
+				LOG.warn(
 						"[CLIENT] Actions for turn %d have not been received yet. The local simulation is lagging behind the server.",
 						tickCountForRound);
 				break; // Wait until we receive the actions for the current turn
@@ -94,7 +94,7 @@ public class GameHandler {
 				queuedActions.clear();
 			}
 
-			LOG.debug("[CLIENT] Processing tick %d", tickCountForRound);
+			LOG.trace("[CLIENT] Processing tick %d", tickCountForRound);
 			simulation.onSimulationTick(tickCountForRound, actions);
 
 			tickCountForRound++;

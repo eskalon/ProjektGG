@@ -148,7 +148,7 @@ public class GameSimulation {
 
 		long time = logTimer.getTime(TimeUnit.MILLISECONDS);
 		if (time > 1)
-			LOG.info("%s Simulation tick %d processed in %d ms", logTag, tick,
+			LOG.debug("%s Simulation tick %d processed in %d ms", logTag, tick,
 					time);
 	}
 
@@ -178,7 +178,7 @@ public class GameSimulation {
 
 	//@formatter:off
 //	public SavedGame createSaveGame() {
-//		LOG.info("%s Spiel speichern...", logTag);
+//		LOG.info("%s Saving the game...", logTag);
 //
 //		SavedGame save = new SavedGame();
 //		save.world = this.world;

@@ -3,7 +3,7 @@ package de.eskalon.commons.net.packets;
 /**
  * This packet is sent to the client by a discovered game server.
  */
-public class DiscoveryResponsePacket {
+public class S2CDiscoveryResponsePacket {
 
 	/**
 	 * The TCP port the server is running on.
@@ -22,11 +22,11 @@ public class DiscoveryResponsePacket {
 	 */
 	private String gameName;
 
-	public DiscoveryResponsePacket() {
+	public S2CDiscoveryResponsePacket() {
 		// default public constructor
 	}
 
-	public DiscoveryResponsePacket(int port, String gameName, int playerCount,
+	public S2CDiscoveryResponsePacket(int port, String gameName, int playerCount,
 			int maxPlayerCount) {
 		this.port = port;
 		this.gameName = gameName;

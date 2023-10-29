@@ -5,10 +5,11 @@ import com.esotericsoftware.kryonet.Connection;
 import de.damios.guacamole.concurrent.ThreadHandler;
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
-import de.eskalon.commons.net.packets.AllPlayersReadyMessage;
+import de.eskalon.commons.net.data.ServerSettings;
 import de.eskalon.commons.net.packets.data.IReadyable;
 import de.eskalon.commons.net.packets.data.LobbyData;
-import de.eskalon.commons.net.packets.sync.ChangePlayerPacket;
+import de.eskalon.commons.net.packets.sync.C2SChangePlayerPacket;
+import de.eskalon.commons.net.packets.sync.S2CAllPlayersReadyMessage;
 
 /**
  * This server makes sure that every client is ready before a round can begin.
@@ -29,7 +30,7 @@ public abstract class ReadyableGameServer<G, S, P extends IReadyable>
 	}
 
 	@Override
-	protected void onPlayerChange(Connection con, ChangePlayerPacket msg) {
+	protected void onPlayerChange(Connection con, C2SChangePlayerPacket msg) {
 		super.onPlayerChange(con, msg);
 
 		for (P p : lobbyData.getPlayers().values()) {
@@ -42,10 +43,10 @@ public abstract class ReadyableGameServer<G, S, P extends IReadyable>
 		if (broadcastServer != null)
 			ThreadHandler.instance().executeRunnable(() -> {
 				stopBroadcastServer();
-				LOG.info("[SERVER] Broadcast server closed");
+				LOG.debug("[SERVER] Broadcast server closed");
 			});
 
-		server.sendToAllTCP(new AllPlayersReadyMessage());
+		server.sendToAllTCP(new S2CAllPlayersReadyMessage());
 		onAllPlayersReady();
 
 		for (P p : lobbyData.getPlayers().values()) {

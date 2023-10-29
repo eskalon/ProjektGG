@@ -1,7 +1,7 @@
 package de.eskalon.gg.events;
 
 import de.eskalon.commons.net.packets.data.LobbyData;
-import de.eskalon.commons.net.packets.sync.LobbyDataChangedPacket.ChangeType;
+import de.eskalon.commons.net.packets.sync.S2CLobbyDataChangedPacket.ChangeType;
 
 public final class LobbyDataChangedEvent {
 

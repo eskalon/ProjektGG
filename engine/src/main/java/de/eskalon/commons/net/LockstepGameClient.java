@@ -7,8 +7,8 @@ import com.esotericsoftware.kryonet.Listener.TypeListener;
 import de.eskalon.commons.net.packets.data.IPlayerAction;
 import de.eskalon.commons.net.packets.data.IReadyable;
 import de.eskalon.commons.net.packets.data.PlayerActionsWrapper;
-import de.eskalon.commons.net.packets.lockstep.ActionsDistributionPacket;
-import de.eskalon.commons.net.packets.lockstep.SendPlayerActionsPacket;
+import de.eskalon.commons.net.packets.lockstep.S2CActionsDistributionPacket;
+import de.eskalon.commons.net.packets.lockstep.C2SSendPlayerActionsPacket;
 
 public abstract class LockstepGameClient<G, S, P extends IReadyable>
 		extends ReadyableGameClient<G, S, P> {
@@ -17,7 +17,7 @@ public abstract class LockstepGameClient<G, S, P extends IReadyable>
 		super();
 
 		TypeListener typeListener = new TypeListener();
-		typeListener.addTypeHandler(ActionsDistributionPacket.class,
+		typeListener.addTypeHandler(S2CActionsDistributionPacket.class,
 				(con, msg) -> {
 					onAllActionsReceived(msg.getTurn(), msg.getActions());
 				});
@@ -25,7 +25,7 @@ public abstract class LockstepGameClient<G, S, P extends IReadyable>
 	}
 
 	public void sendActions(int turn, List<IPlayerAction> actions) {
-		client.sendTCP(new SendPlayerActionsPacket(turn, actions));
+		client.sendTCP(new C2SSendPlayerActionsPacket(turn, actions));
 	}
 
 	/* --- METHODS FOR CHILD CLASSES --- */

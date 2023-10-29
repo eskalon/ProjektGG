@@ -7,12 +7,12 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.ClientDiscoveryHandler;
 
 import de.damios.guacamole.Preconditions;
-import de.eskalon.commons.net.packets.DiscoveryResponsePacket;
+import de.eskalon.commons.net.packets.S2CDiscoveryResponsePacket;
 
 /**
  * This class takes care of discovering available game servers.
  */
-public class ServerDiscoveryHandler<P extends DiscoveryResponsePacket> {
+public class ServerDiscoveryHandler<P extends S2CDiscoveryResponsePacket> {
 
 	private final int timeout;
 	private final Class<P> packetClass;
@@ -59,13 +59,13 @@ public class ServerDiscoveryHandler<P extends DiscoveryResponsePacket> {
 		c.close();
 	}
 
-	public interface HostDiscoveryListener<P extends DiscoveryResponsePacket> {
+	public interface HostDiscoveryListener<P extends S2CDiscoveryResponsePacket> {
 		/**
 		 * Is called when the {@linkplain ServerDiscoveryHandler} finds a host.
 		 *
 		 * @param address
 		 * @param datagramPacket
-		 * @see DiscoveryResponsePacket
+		 * @see S2CDiscoveryResponsePacket
 		 */
 		public void onHostDiscovered(String address, P datagramPacket);
 	}

@@ -215,33 +215,31 @@ public class Log {
 				break;
 			case LEVEL_WARN:
 				if (ex == null)
+					LOG.warn("[" + category + "] " + message);
+				else
+					LOG.warn("[" + category + "] " + message + ": %s",
+							Exceptions.getStackTraceAsString(ex));
+				break;
+			case LEVEL_INFO:
+				if (ex == null)
 					LOG.info("[" + category + "] " + message);
 				else
 					LOG.info("[" + category + "] " + message + ": %s",
 							Exceptions.getStackTraceAsString(ex));
 				break;
-			case LEVEL_INFO:
+			case LEVEL_DEBUG: // log this to TRACE to avoid spamming the log
 				if (ex == null)
-					LOG.debug("[" + category + "] " + message);
+					LOG.trace("[" + category + "] " + message);
 				else
-					LOG.debug("[" + category + "] " + message + ": %s",
+					LOG.trace("[" + category + "] " + message + ": %s",
 							Exceptions.getStackTraceAsString(ex));
 				break;
-			case LEVEL_DEBUG:
-				//@formatter:off
-//				if (ex == null)
-//					LOG.debug("[" + category + "] " + message);
-//				else
-//					LOG.debug("[" + category + "] " + message + ": %s",
-//							Exceptions.getStackTraceAsString(ex));
-//				break;
-				//@formatter:on
 			case LEVEL_TRACE:
 				//@formatter:off
 //				if (ex == null)
-//					LOG.debug("[" + category + "] " + message);
+//					LOG.trace("[" + category + "] " + message);
 //				else
-//					LOG.debug("[" + category + "] " + message + ": %s",
+//					LOG.trace("[" + category + "] " + message + ": %s",
 //							Exceptions.getStackTraceAsString(ex));
 //				break;
 				//@formatter:on

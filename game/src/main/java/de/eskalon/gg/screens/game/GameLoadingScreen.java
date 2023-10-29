@@ -116,7 +116,7 @@ public class GameLoadingScreen extends AbstractEskalonUIScreen {
 			task.run();
 		} else if (!once) {
 			once = true;
-			LOG.info("[CLIENT] Game assets loaded");
+			LOG.info("[CLIENT] Game loading finished");
 			screenManager.pushScreen(RoundEndScreen.class, "simple_zoom");
 		}
 

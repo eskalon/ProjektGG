@@ -6,15 +6,15 @@ package de.eskalon.commons.net.packets.sync;
  * 
  * @param <P>
  */
-public final class ChangePlayerPacket<P> {
+public final class C2SChangePlayerPacket<P> {
 
 	private P playerData;
 
-	public ChangePlayerPacket() {
+	public C2SChangePlayerPacket() {
 		// default public constructor
 	}
 
-	public ChangePlayerPacket(P playerData) {
+	public C2SChangePlayerPacket(P playerData) {
 		this.playerData = playerData;
 	}
 

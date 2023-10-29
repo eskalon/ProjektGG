@@ -26,7 +26,7 @@ import de.eskalon.commons.event.Subscribe;
 import de.eskalon.commons.inject.EskalonInjector;
 import de.eskalon.commons.inject.annotations.Inject;
 import de.eskalon.commons.lang.Lang;
-import de.eskalon.commons.net.ChatMessage;
+import de.eskalon.commons.net.data.ChatMessage;
 import de.eskalon.commons.net.packets.data.LobbyData;
 import de.eskalon.commons.screens.AbstractEskalonUIScreen;
 import de.eskalon.commons.screens.EskalonScreenManager;

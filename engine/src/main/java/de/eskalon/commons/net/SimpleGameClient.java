@@ -16,17 +16,18 @@ import de.damios.guacamole.Preconditions;
 import de.damios.guacamole.concurrent.ThreadHandler;
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
-import de.eskalon.commons.net.packets.chat.ChatMessageReceivedPacket;
-import de.eskalon.commons.net.packets.chat.SendChatMessagePacke;
+import de.eskalon.commons.net.packets.chat.S2CChatMessageReceivedPacket;
+import de.eskalon.commons.net.data.ChatMessage;
+import de.eskalon.commons.net.packets.chat.C2SSendChatMessagePacke;
 import de.eskalon.commons.net.packets.data.LobbyData;
-import de.eskalon.commons.net.packets.handshake.ConnectionEstablishedPacket;
-import de.eskalon.commons.net.packets.handshake.ConnectionRejectedPacket;
-import de.eskalon.commons.net.packets.handshake.LobbyJoinedPacket;
-import de.eskalon.commons.net.packets.handshake.RequestJoiningLobbyPacket;
-import de.eskalon.commons.net.packets.sync.ChangeGameSetupPacket;
-import de.eskalon.commons.net.packets.sync.ChangePlayerPacket;
-import de.eskalon.commons.net.packets.sync.LobbyDataChangedPacket;
-import de.eskalon.commons.net.packets.sync.LobbyDataChangedPacket.ChangeType;
+import de.eskalon.commons.net.packets.handshake.S2CConnectionEstablishedPacket;
+import de.eskalon.commons.net.packets.handshake.S2CConnectionRejectedPacket;
+import de.eskalon.commons.net.packets.handshake.S2CLobbyJoinedPacket;
+import de.eskalon.commons.net.packets.handshake.C2SRequestJoiningLobbyPacket;
+import de.eskalon.commons.net.packets.sync.C2SChangeGameSetupPacket;
+import de.eskalon.commons.net.packets.sync.C2SChangePlayerPacket;
+import de.eskalon.commons.net.packets.sync.S2CLobbyDataChangedPacket;
+import de.eskalon.commons.net.packets.sync.S2CLobbyDataChangedPacket.ChangeType;
 import de.eskalon.commons.utils.MachineIdentificationUtils;
 
 /**
@@ -83,16 +84,16 @@ public abstract class SimpleGameClient<G, S, P> {
 		/* Listeners */
 		TypeListener listener = new TypeListener();
 		// Connection established (= step 1)
-		listener.addTypeHandler(ConnectionEstablishedPacket.class,
+		listener.addTypeHandler(S2CConnectionEstablishedPacket.class,
 				(con, msg) -> {
-					client.sendTCP(new RequestJoiningLobbyPacket(
+					client.sendTCP(new C2SRequestJoiningLobbyPacket(
 							MachineIdentificationUtils.getHostname(),
 							gameVersion));
 				});
 		// Lobby joined (= step 2)
-		listener.addTypeHandler(LobbyJoinedPacket.class, (con, msg) -> {
+		listener.addTypeHandler(S2CLobbyJoinedPacket.class, (con, msg) -> {
 			localClientId = msg.getClientNetworkId();
-			LOG.info("[CLIENT] Connection established. Local network ID is: %d",
+			LOG.info("[CLIENT] Lobby joined. Local network ID is: %d",
 					localClientId);
 			this.lobbyData = msg.getLobbyData();
 			callback.onSuccess(msg.getLobbyData());
@@ -106,33 +107,36 @@ public abstract class SimpleGameClient<G, S, P> {
 //					try {
 //						client.dispose();
 //					} catch (IOException e) {
-//						LOG.error(Exceptions.getStackTraceAsString(e));
+//						LOG.warn(Exceptions.getStackTraceAsString(e));
 //					}
 					//@formatter:on
 				}
 			});
 		});
 		// Connection rejected
-		listener.addTypeHandler(ConnectionRejectedPacket.class, (con, msg) -> {
-			LOG.info("[CLIENT] Couldn't connect: Client was rejected (%s)",
-					msg.getMessage());
-			callback.onFailure(msg.getMessage());
-		});
+		listener.addTypeHandler(S2CConnectionRejectedPacket.class,
+				(con, msg) -> {
+					LOG.info(
+							"[CLIENT] Couldn't connect: Client was rejected (%s)",
+							msg.getMessage());
+					callback.onFailure(msg.getMessage());
+				});
 		// Lobby data syncing
-		listener.addTypeHandler(LobbyDataChangedPacket.class, (con, msg) -> {
+		listener.addTypeHandler(S2CLobbyDataChangedPacket.class, (con, msg) -> {
 			LobbyData<G, S, P> tmp = this.lobbyData;
 			this.lobbyData = msg.getLobbyData();
 
 			onLobbyDataChanged(tmp, msg.getLobbyData(), msg.getChangeType());
 		});
 		// Chat messages
-		listener.addTypeHandler(ChatMessageReceivedPacket.class, (con, msg) -> {
-			ChatMessage chatMessage = new ChatMessage<>(
-					lobbyData.getPlayers().get(msg.getSender()),
-					msg.getMessage());
-			chatMessages.add(chatMessage);
-			onChatMessageReceived(chatMessage);
-		});
+		listener.addTypeHandler(S2CChatMessageReceivedPacket.class,
+				(con, msg) -> {
+					ChatMessage chatMessage = new ChatMessage<>(
+							lobbyData.getPlayers().get(msg.getSender()),
+							msg.getMessage());
+					chatMessages.add(chatMessage);
+					onChatMessageReceived(chatMessage);
+				});
 		// Ping
 		listener.addTypeHandler(Ping.class, (con, msg) -> {
 			if (msg.isReply) {
@@ -207,18 +211,18 @@ public abstract class SimpleGameClient<G, S, P> {
 	}
 
 	public void sendChatMessage(String message) {
-		client.sendTCP(new SendChatMessagePacke(message));
+		client.sendTCP(new C2SSendChatMessagePacke(message));
 		chatMessages.add(new ChatMessage(
 				lobbyData.getPlayers().get(localClientId), message));
 	}
 
 	public void changeLocalPlayerData(P d) {
-		client.sendTCP(new ChangePlayerPacket<P>(d));
+		client.sendTCP(new C2SChangePlayerPacket<P>(d));
 	}
 
 	public void changeGameSetup(G sessionSetup, @Nullable S gameState) {
 		client.sendTCP(
-				new ChangeGameSetupPacket<G, S>(sessionSetup, gameState));
+				new C2SChangeGameSetupPacket<G, S>(sessionSetup, gameState));
 	}
 
 	/* --- METHODS FOR CHILD CLASSES --- */

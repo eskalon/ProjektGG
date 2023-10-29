@@ -1,6 +1,6 @@
 package de.eskalon.gg.events;
 
-import de.eskalon.commons.net.ChatMessage;
+import de.eskalon.commons.net.data.ChatMessage;
 
 public final class ChatMessageEvent<P> {
 

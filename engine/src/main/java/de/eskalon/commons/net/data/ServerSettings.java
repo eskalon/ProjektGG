@@ -1,4 +1,4 @@
-package de.eskalon.commons.net;
+package de.eskalon.commons.net.data;
 
 import java.util.HashMap;
 

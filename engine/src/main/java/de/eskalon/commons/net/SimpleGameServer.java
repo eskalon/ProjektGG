@@ -18,18 +18,19 @@ import de.damios.guacamole.concurrent.ThreadHandler;
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.lang.Lang;
-import de.eskalon.commons.net.packets.DiscoveryResponsePacket;
-import de.eskalon.commons.net.packets.chat.ChatMessageReceivedPacket;
-import de.eskalon.commons.net.packets.chat.SendChatMessagePacke;
+import de.eskalon.commons.net.data.ServerSettings;
+import de.eskalon.commons.net.packets.S2CDiscoveryResponsePacket;
+import de.eskalon.commons.net.packets.chat.S2CChatMessageReceivedPacket;
+import de.eskalon.commons.net.packets.chat.C2SSendChatMessagePacke;
 import de.eskalon.commons.net.packets.data.LobbyData;
-import de.eskalon.commons.net.packets.handshake.ConnectionEstablishedPacket;
-import de.eskalon.commons.net.packets.handshake.ConnectionRejectedPacket;
-import de.eskalon.commons.net.packets.handshake.LobbyJoinedPacket;
-import de.eskalon.commons.net.packets.handshake.RequestJoiningLobbyPacket;
-import de.eskalon.commons.net.packets.sync.ChangeGameSetupPacket;
-import de.eskalon.commons.net.packets.sync.ChangePlayerPacket;
-import de.eskalon.commons.net.packets.sync.LobbyDataChangedPacket;
-import de.eskalon.commons.net.packets.sync.LobbyDataChangedPacket.ChangeType;
+import de.eskalon.commons.net.packets.handshake.S2CConnectionEstablishedPacket;
+import de.eskalon.commons.net.packets.handshake.S2CConnectionRejectedPacket;
+import de.eskalon.commons.net.packets.handshake.S2CLobbyJoinedPacket;
+import de.eskalon.commons.net.packets.handshake.C2SRequestJoiningLobbyPacket;
+import de.eskalon.commons.net.packets.sync.C2SChangeGameSetupPacket;
+import de.eskalon.commons.net.packets.sync.C2SChangePlayerPacket;
+import de.eskalon.commons.net.packets.sync.S2CLobbyDataChangedPacket;
+import de.eskalon.commons.net.packets.sync.S2CLobbyDataChangedPacket.ChangeType;
 
 /**
  * A basic game server.
@@ -89,27 +90,27 @@ public abstract class SimpleGameServer<G, S, P> {
 		});
 		TypeListener typeListener = new TypeListener();
 		// Lobby joining
-		typeListener.addTypeHandler(RequestJoiningLobbyPacket.class,
+		typeListener.addTypeHandler(C2SRequestJoiningLobbyPacket.class,
 				(con, msg) -> onLobbyJoinRequest(con, msg));
 		// Lobby data syncing
-		typeListener.addTypeHandler(ChangePlayerPacket.class,
+		typeListener.addTypeHandler(C2SChangePlayerPacket.class,
 				(con, msg) -> onPlayerChange(con, msg));
-		typeListener.addTypeHandler(ChangeGameSetupPacket.class, (con, msg) -> {
+		typeListener.addTypeHandler(C2SChangeGameSetupPacket.class, (con, msg) -> {
 			if ((short) con.getArbitraryData() == HOST_PLAYER_NETWORK_ID) {
 				lobbyData.setGameState(msg.getGameState());
 				lobbyData.setSessionSetup(msg.getSessionSetup());
-				server.sendToAllTCP(new LobbyDataChangedPacket(lobbyData,
+				server.sendToAllTCP(new S2CLobbyDataChangedPacket(lobbyData,
 						ChangeType.DATA_CHANGE));
 			} else {
-				LOG.error(
+				LOG.warn(
 						"[SERVER] Non-host player %d tried to change the lobby data!",
 						(short) con.getArbitraryData());
 			}
 		});
 		// Chat messages
-		typeListener.addTypeHandler(SendChatMessagePacke.class, (con, msg) -> {
+		typeListener.addTypeHandler(C2SSendChatMessagePacke.class, (con, msg) -> {
 			server.sendToAllExceptTCP(con.getID(),
-					new ChatMessageReceivedPacket(
+					new S2CChatMessageReceivedPacket(
 							(short) con.getArbitraryData(), msg.getMessage()));
 		});
 		server.addListener(typeListener);
@@ -130,7 +131,7 @@ public abstract class SimpleGameServer<G, S, P> {
 				// Start the server
 				server.bind(serverSettings.getPort());
 				server.start();
-				LOG.info("[SERVER] Server started");
+				LOG.info("[SERVER] Server started!");
 
 				// Create & start the broadcast server
 				if (serverSettings.isPublic()) {
@@ -147,12 +148,12 @@ public abstract class SimpleGameServer<G, S, P> {
 
 	private void startBroadcastServer() {
 		broadcastServer = new Server();
-		broadcastServer.getKryo().register(DiscoveryResponsePacket.class);
+		broadcastServer.getKryo().register(S2CDiscoveryResponsePacket.class);
 		broadcastServer.setDiscoveryHandler(new ServerDiscoveryHandler() {
 			@Override
 			public boolean onDiscoverHost(DatagramChannel datagramChannel,
 					InetSocketAddress fromAddress) throws IOException {
-				DiscoveryResponsePacket packet = new DiscoveryResponsePacket(
+				S2CDiscoveryResponsePacket packet = new S2CDiscoveryResponsePacket(
 						serverSettings.getPort(), serverSettings.getGameName(),
 						server.getConnections().size(),
 						serverSettings.getMaxPlayerCount());
@@ -170,7 +171,7 @@ public abstract class SimpleGameServer<G, S, P> {
 		try {
 			broadcastServer.bind(0, UDP_DISCOVER_PORT);
 			broadcastServer.start();
-			LOG.info("[SERVER] Broadcast server started");
+			LOG.info("[SERVER] Broadcast server started!");
 		} catch (IOException e1) {
 			LOG.error("[SERVER] Broadcast server couldn't be started: %s",
 					Exceptions.getStackTraceAsString(e1));
@@ -183,13 +184,13 @@ public abstract class SimpleGameServer<G, S, P> {
 			LOG.info("[SERVER] Client was rejected for want of capacity");
 
 			con.sendTCP(
-					new ConnectionRejectedPacket(Lang.get("server.is_full")));
+					new S2CConnectionRejectedPacket(Lang.get("server.is_full")));
 			con.close();
 		} else { // Still free slots
 			LOG.info("[SERVER] Client accepted");
 
 			con.setArbitraryData(playerIdIterator);
-			con.sendTCP(new ConnectionEstablishedPacket());
+			con.sendTCP(new S2CConnectionEstablishedPacket());
 			playerIdIterator++;
 		}
 	}
@@ -202,19 +203,19 @@ public abstract class SimpleGameServer<G, S, P> {
 
 			if (lobbyData.getPlayers().containsKey(id)) {
 				lobbyData.getPlayers().remove(id);
-				server.sendToAllTCP(new LobbyDataChangedPacket(lobbyData,
+				server.sendToAllTCP(new S2CLobbyDataChangedPacket(lobbyData,
 						ChangeType.PLAYER_LEFT));
 			}
 		}
 	}
 
 	private synchronized void onLobbyJoinRequest(Connection con,
-			RequestJoiningLobbyPacket msg) {
+			C2SRequestJoiningLobbyPacket msg) {
 		short id = (short) con.getArbitraryData();
 
 		if (!serverSettings.getVersion().equals(msg.getVersion())) {
 			LOG.info("[SERVER] Kick: Version mismatch (%s)", msg.getVersion());
-			con.sendTCP(new ConnectionRejectedPacket(
+			con.sendTCP(new S2CConnectionRejectedPacket(
 					Lang.get("dialog.connecting_failed.version_mismatch")));
 			con.close();
 			return;
@@ -225,16 +226,16 @@ public abstract class SimpleGameServer<G, S, P> {
 
 		LOG.info("[SERVER] Client %d was registered as new player", id);
 
-		con.sendTCP(new LobbyJoinedPacket(id, lobbyData));
-		server.sendToAllExceptTCP(con.getID(), new LobbyDataChangedPacket(
+		con.sendTCP(new S2CLobbyJoinedPacket(id, lobbyData));
+		server.sendToAllExceptTCP(con.getID(), new S2CLobbyDataChangedPacket(
 				lobbyData, ChangeType.PLAYER_JOINED));
 	}
 
-	protected void onPlayerChange(Connection con, ChangePlayerPacket msg) {
+	protected void onPlayerChange(Connection con, C2SChangePlayerPacket msg) {
 		lobbyData.getPlayers().put((short) con.getArbitraryData(),
 				(P) msg.getPlayerData());
 		server.sendToAllTCP(
-				new LobbyDataChangedPacket(lobbyData, ChangeType.DATA_CHANGE));
+				new S2CLobbyDataChangedPacket(lobbyData, ChangeType.DATA_CHANGE));
 	}
 
 	/**
@@ -261,8 +262,8 @@ public abstract class SimpleGameServer<G, S, P> {
 	/* --- METHODS FOR CHILD CLASSES --- */
 	/**
 	 * This method is called to set up a new player. It is called upon receiving
-	 * a {@link RequestJoiningLobbyPacket} which is sent after a
-	 * {@link ConnectionEstablishedPacket connection with a client was
+	 * a {@link C2SRequestJoiningLobbyPacket} which is sent after a
+	 * {@link S2CConnectionEstablishedPacket connection with a client was
 	 * established}.
 	 * 
 	 * @param id

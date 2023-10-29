@@ -2,9 +2,9 @@ package de.eskalon.commons.net.packets.handshake;
 
 /**
  * This message is sent by a client after a
- * {@linkplain ConnectionEstablishedPacket connection was established}.
+ * {@linkplain S2CConnectionEstablishedPacket connection was established}.
  */
-public final class RequestJoiningLobbyPacket {
+public final class C2SRequestJoiningLobbyPacket {
 
 	/**
 	 * The hostname of the client's machine.
@@ -15,11 +15,11 @@ public final class RequestJoiningLobbyPacket {
 	 */
 	public String appVersion;
 
-	public RequestJoiningLobbyPacket() {
+	public C2SRequestJoiningLobbyPacket() {
 		// default public constructor
 	}
 
-	public RequestJoiningLobbyPacket(String hostname, String version) {
+	public C2SRequestJoiningLobbyPacket(String hostname, String version) {
 		this.hostname = hostname;
 		this.appVersion = version;
 	}

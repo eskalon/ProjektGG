@@ -17,6 +17,7 @@ import de.eskalon.commons.audio.ISoundManager;
 import de.eskalon.commons.event.Subscribe;
 import de.eskalon.commons.inject.annotations.Inject;
 import de.eskalon.commons.lang.Lang;
+import de.eskalon.commons.screens.AbstractImageScreen.ImageScreenMode;
 import de.eskalon.gg.events.AllPlayersReadyEvent;
 import de.eskalon.gg.thirdparty.DiscordGGHandler;
 
@@ -50,6 +51,7 @@ public class RoundEndScreen extends AbstractGameScreen {
 		super.show();
 
 		setImage(backgroundTexture);
+		setMode(ImageScreenMode.CENTERED_ORIGINAL_SIZE);
 
 		lastYearTitle = new Label(Lang.get("screen.round_end.last_year"), skin,
 				"ink_title");
@@ -121,7 +123,7 @@ public class RoundEndScreen extends AbstractGameScreen {
 				appContext.getGameHandler().getClock().getYear(), 1, 6);
 		// TODO use real player & max player counts
 
-		LOG.info("[CLIENT] All players ready.");
+		LOG.debug("[CLIENT] All players ready.");
 
 		if (!appContext.getClient().getMattersToHoldVoteOn().isEmpty()) {
 			screenManager.pushScreen(VoteScreen.class, "blendingTransition");

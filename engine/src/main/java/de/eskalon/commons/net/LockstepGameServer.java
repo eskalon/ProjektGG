@@ -9,11 +9,12 @@ import com.esotericsoftware.kryonet.Listener.TypeListener;
 
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
+import de.eskalon.commons.net.data.ServerSettings;
 import de.eskalon.commons.net.packets.data.IReadyable;
 import de.eskalon.commons.net.packets.data.LobbyData;
 import de.eskalon.commons.net.packets.data.PlayerActionsWrapper;
-import de.eskalon.commons.net.packets.lockstep.ActionsDistributionPacket;
-import de.eskalon.commons.net.packets.lockstep.SendPlayerActionsPacket;
+import de.eskalon.commons.net.packets.lockstep.S2CActionsDistributionPacket;
+import de.eskalon.commons.net.packets.lockstep.C2SSendPlayerActionsPacket;
 
 public abstract class LockstepGameServer<G, S, P extends IReadyable>
 		extends ReadyableGameServer<G, S, P> {
@@ -28,7 +29,7 @@ public abstract class LockstepGameServer<G, S, P extends IReadyable>
 		super(serverSettings, lobbyData);
 
 		TypeListener typeListener = new TypeListener();
-		typeListener.addTypeHandler(SendPlayerActionsPacket.class,
+		typeListener.addTypeHandler(C2SSendPlayerActionsPacket.class,
 				(con, msg) -> {
 					PlayerActionsWrapper actionsWrapper = new PlayerActionsWrapper(
 							(short) con.getArbitraryData(), msg.getCommands());
@@ -42,8 +43,8 @@ public abstract class LockstepGameServer<G, S, P extends IReadyable>
 
 					list.add(actionsWrapper);
 
-					if (LoggerService.isDebugEnabled()) {
-						LOG.debug(
+					if (LoggerService.isTraceEnabled()) {
+						LOG.trace(
 								"[SERVER] Received actions of player %d for turn %d: %s",
 								actionsWrapper.getPlayerId(), msg.getTurn(),
 								actionsWrapper.getActions().stream().map(
@@ -52,10 +53,10 @@ public abstract class LockstepGameServer<G, S, P extends IReadyable>
 					}
 
 					if (list.size() == lobbyData.getPlayers().size) {
-						LOG.debug("[SERVER] All actions received for turn %d",
+						LOG.trace("[SERVER] All actions received for turn %d",
 								msg.getTurn());
 
-						server.sendToAllTCP(new ActionsDistributionPacket(
+						server.sendToAllTCP(new S2CActionsDistributionPacket(
 								msg.getTurn(), list));
 						onAllActionsReceived(msg.getTurn(), list);
 						commandsForTurn.remove(msg.getTurn());

@@ -85,12 +85,12 @@ public class VoteScreen extends AbstractGameScreen {
 			if (msg == null) {
 				if (!once) {
 					once = true;
-					LOG.info("[CLIENT] No vote remaining");
+					LOG.debug("[CLIENT] No vote remaining");
 					screenManager.pushScreen(MapScreen.class, "circle_open");
 					appContext.getGameHandler().startNextRound();
 				}
 			} else {
-				LOG.info("[CLIENT] Preparing next vote");
+				LOG.debug("[CLIENT] Preparing next vote");
 				matterToVoteOn = ArrangeVotePacket.createBallot(msg,
 						appContext.getGameHandler().getSimulation().getWorld());
 				prepareNextBallot(matterToVoteOn);
@@ -163,7 +163,7 @@ public class VoteScreen extends AbstractGameScreen {
 
 	@Subscribe
 	private void onVoteFinished(VoteFinishedEvent ev) {
-		LOG.info("[CLIENT] Vote result received");
+		LOG.debug("[CLIENT] Vote result received");
 
 		int result = appContext.getGameHandler().getSimulation()
 				.processVotes(matterToVoteOn, ev.getIndividualVotes());

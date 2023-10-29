@@ -4,15 +4,15 @@ package de.eskalon.commons.net.packets.handshake;
  * This message is sent if the server rejects a client, e.g. when the server is
  * full or the game versions do not match.
  */
-public final class ConnectionRejectedPacket {
+public final class S2CConnectionRejectedPacket {
 
 	private String message;
 
-	public ConnectionRejectedPacket() {
+	public S2CConnectionRejectedPacket() {
 		// default public constructor
 	}
 
-	public ConnectionRejectedPacket(String message) {
+	public S2CConnectionRejectedPacket(String message) {
 		this.message = message;
 	}
 

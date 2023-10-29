@@ -14,7 +14,7 @@ import com.esotericsoftware.kryonet.Listener.TypeListener;
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.net.LockstepGameServer;
-import de.eskalon.commons.net.ServerSettings;
+import de.eskalon.commons.net.data.ServerSettings;
 import de.eskalon.commons.net.packets.data.LobbyData;
 import de.eskalon.commons.net.packets.data.PlayerActionsWrapper;
 import de.eskalon.gg.misc.PlayerUtils;
@@ -82,7 +82,7 @@ public class GameServer
 	@Override
 	public void onAllActionsReceived(int tick,
 			List<PlayerActionsWrapper> list) {
-		LOG.debug("[SERVER] Processing tick %d", tick);
+		LOG.trace("[SERVER] Processing tick %d", tick);
 		simulation.onSimulationTick(tick, list);
 	}
 

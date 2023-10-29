@@ -6,23 +6,23 @@ import java.util.HashMap;
 import com.badlogic.gdx.utils.IntMap;
 import com.esotericsoftware.kryo.Kryo;
 
-import de.eskalon.commons.net.packets.AllPlayersReadyMessage;
-import de.eskalon.commons.net.packets.chat.ChatMessageReceivedPacket;
-import de.eskalon.commons.net.packets.chat.SendChatMessagePacke;
+import de.eskalon.commons.net.packets.chat.S2CChatMessageReceivedPacket;
+import de.eskalon.commons.net.packets.chat.C2SSendChatMessagePacke;
 import de.eskalon.commons.net.packets.data.IPlayerAction;
 import de.eskalon.commons.net.packets.data.IReadyable;
 import de.eskalon.commons.net.packets.data.LobbyData;
 import de.eskalon.commons.net.packets.data.PlayerActionsWrapper;
-import de.eskalon.commons.net.packets.handshake.ConnectionEstablishedPacket;
-import de.eskalon.commons.net.packets.handshake.ConnectionRejectedPacket;
-import de.eskalon.commons.net.packets.handshake.LobbyJoinedPacket;
-import de.eskalon.commons.net.packets.handshake.RequestJoiningLobbyPacket;
-import de.eskalon.commons.net.packets.lockstep.ActionsDistributionPacket;
-import de.eskalon.commons.net.packets.lockstep.SendPlayerActionsPacket;
-import de.eskalon.commons.net.packets.sync.ChangeGameSetupPacket;
-import de.eskalon.commons.net.packets.sync.ChangePlayerPacket;
-import de.eskalon.commons.net.packets.sync.LobbyDataChangedPacket;
-import de.eskalon.commons.net.packets.sync.LobbyDataChangedPacket.ChangeType;
+import de.eskalon.commons.net.packets.handshake.S2CConnectionEstablishedPacket;
+import de.eskalon.commons.net.packets.handshake.S2CConnectionRejectedPacket;
+import de.eskalon.commons.net.packets.handshake.S2CLobbyJoinedPacket;
+import de.eskalon.commons.net.packets.handshake.C2SRequestJoiningLobbyPacket;
+import de.eskalon.commons.net.packets.lockstep.S2CActionsDistributionPacket;
+import de.eskalon.commons.net.packets.lockstep.C2SSendPlayerActionsPacket;
+import de.eskalon.commons.net.packets.sync.C2SChangeGameSetupPacket;
+import de.eskalon.commons.net.packets.sync.C2SChangePlayerPacket;
+import de.eskalon.commons.net.packets.sync.S2CAllPlayersReadyMessage;
+import de.eskalon.commons.net.packets.sync.S2CLobbyDataChangedPacket;
+import de.eskalon.commons.net.packets.sync.S2CLobbyDataChangedPacket.ChangeType;
 import de.eskalon.gg.net.packets.ArrangeVotePacket;
 import de.eskalon.gg.net.packets.CastVotePacket;
 import de.eskalon.gg.net.packets.VoteFinishedPacket;
@@ -70,23 +70,23 @@ public class NetworkRegisterer {
 		kryo.register(PlayerActionsWrapper.class);
 
 		// Engine packets
-		kryo.register(ChatMessageReceivedPacket.class);
-		kryo.register(SendChatMessagePacke.class);
+		kryo.register(S2CChatMessageReceivedPacket.class);
+		kryo.register(C2SSendChatMessagePacke.class);
 
-		kryo.register(ConnectionEstablishedPacket.class);
-		kryo.register(ConnectionRejectedPacket.class);
-		kryo.register(RequestJoiningLobbyPacket.class);
-		kryo.register(LobbyJoinedPacket.class);
+		kryo.register(S2CConnectionEstablishedPacket.class);
+		kryo.register(S2CConnectionRejectedPacket.class);
+		kryo.register(C2SRequestJoiningLobbyPacket.class);
+		kryo.register(S2CLobbyJoinedPacket.class);
 
-		kryo.register(ActionsDistributionPacket.class);
-		kryo.register(SendPlayerActionsPacket.class);
+		kryo.register(S2CActionsDistributionPacket.class);
+		kryo.register(C2SSendPlayerActionsPacket.class);
 
-		kryo.register(ChangeGameSetupPacket.class);
-		kryo.register(LobbyDataChangedPacket.class);
+		kryo.register(C2SChangeGameSetupPacket.class);
+		kryo.register(S2CLobbyDataChangedPacket.class);
 		kryo.register(ChangeType.class);
-		kryo.register(ChangePlayerPacket.class);
+		kryo.register(C2SChangePlayerPacket.class);
 
-		kryo.register(AllPlayersReadyMessage.class);
+		kryo.register(S2CAllPlayersReadyMessage.class);
 
 		// GG packet data
 		kryo.register(VoteType.class);

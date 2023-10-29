@@ -4,16 +4,16 @@ import java.util.List;
 
 import de.eskalon.commons.net.packets.data.IPlayerAction;
 
-public final class SendPlayerActionsPacket {
+public final class C2SSendPlayerActionsPacket {
 
 	private List<IPlayerAction> commands;
 	private int turn;
 
-	public SendPlayerActionsPacket() {
+	public C2SSendPlayerActionsPacket() {
 		// default public constructor
 	}
 
-	public SendPlayerActionsPacket(int turn, List<IPlayerAction> commands) {
+	public C2SSendPlayerActionsPacket(int turn, List<IPlayerAction> commands) {
 		this.turn = turn;
 		this.commands = commands;
 	}

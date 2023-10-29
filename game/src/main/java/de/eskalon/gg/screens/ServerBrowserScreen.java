@@ -26,7 +26,7 @@ import de.eskalon.commons.inject.annotations.Inject;
 import de.eskalon.commons.lang.Lang;
 import de.eskalon.commons.net.ServerDiscoveryHandler;
 import de.eskalon.commons.net.SimpleGameServer;
-import de.eskalon.commons.net.packets.DiscoveryResponsePacket;
+import de.eskalon.commons.net.packets.S2CDiscoveryResponsePacket;
 import de.eskalon.commons.net.packets.data.LobbyData;
 import de.eskalon.commons.screens.AbstractEskalonUIScreen;
 import de.eskalon.commons.screens.EskalonScreenManager;
@@ -59,6 +59,7 @@ public class ServerBrowserScreen extends AbstractEskalonUIScreen {
 	 */
 	private List<String> dicoveredServers = new ArrayList<>();
 	private Future<Void> discoveryFuture;
+	private long lastRefreshTime = -1;
 
 	private boolean connectionLost = false;
 
@@ -67,6 +68,7 @@ public class ServerBrowserScreen extends AbstractEskalonUIScreen {
 		super.show();
 
 		setImage(backgroundTexture);
+		setMode(ImageScreenMode.CENTERED_ORIGINAL_SIZE);
 
 		BackInputProcessor backInput = new BackInputProcessor() {
 			@Override
@@ -223,30 +225,36 @@ public class ServerBrowserScreen extends AbstractEskalonUIScreen {
 	}
 
 	private void discoverServers() {
+		if (discoveryFuture != null && !discoveryFuture.isDone()
+				&& System.currentTimeMillis() - lastRefreshTime < 750)
+			return;
+
+		lastRefreshTime = System.currentTimeMillis();
+
 		serverTable.clearChildren();
 		dicoveredServers.clear();
-		if (discoveryFuture == null || discoveryFuture.isDone())
-			discoveryFuture = ThreadHandler.instance().executeRunnable(() -> {
-				ServerDiscoveryHandler<DiscoveryResponsePacket> serverDiscoveryHandler = new ServerDiscoveryHandler<>(
-						DiscoveryResponsePacket.class, 4500);
-				serverDiscoveryHandler.discoverHosts(
-						SimpleGameServer.UDP_DISCOVER_PORT,
-						(address, datagramPacket) -> {
-							if (!dicoveredServers
-									.contains(datagramPacket.getGameName()
-											+ datagramPacket.getPort())) {
-								dicoveredServers
-										.add(datagramPacket.getGameName()
-												+ datagramPacket.getPort());
-								addServerToUI(serverTable, address,
-										datagramPacket);
-							}
-						});
-			});
+
+		discoveryFuture = ThreadHandler.instance().executeRunnable(() -> {
+			ServerDiscoveryHandler<S2CDiscoveryResponsePacket> serverDiscoveryHandler = new ServerDiscoveryHandler<>(
+					S2CDiscoveryResponsePacket.class, 4500);
+			serverDiscoveryHandler.discoverHosts(
+					SimpleGameServer.UDP_DISCOVER_PORT,
+					(address, datagramPacket) -> {
+						if (!dicoveredServers
+								.contains(datagramPacket.getGameName()
+										+ datagramPacket.getPort())) {
+							dicoveredServers.add(datagramPacket.getGameName()
+									+ datagramPacket.getPort());
+							addServerToUI(serverTable, address, datagramPacket);
+						}
+					});
+		});
+
+		System.out.println(ThreadHandler.instance().getActiveThreadCount());
 	}
 
 	private void addServerToUI(Table serverTable, String address,
-			DiscoveryResponsePacket packet) {
+			S2CDiscoveryResponsePacket packet) {
 		ImageTextButton joinButton = new ImageTextButton(
 				Lang.get("screen.server_browser.join"), skin);
 		joinButton.addListener(new ButtonClickListener(soundManager) {

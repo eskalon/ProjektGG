@@ -6,16 +6,16 @@ import de.eskalon.commons.net.packets.data.LobbyData;
  * This message is sent by the server to notify the clients of changes to the
  * lobby data.
  */
-public final class LobbyDataChangedPacket {
+public final class S2CLobbyDataChangedPacket {
 
 	private ChangeType changeType;
 	private LobbyData lobbyData;
 
-	public LobbyDataChangedPacket() {
+	public S2CLobbyDataChangedPacket() {
 		// default public constructor
 	}
 
-	public LobbyDataChangedPacket(LobbyData lobbyData, ChangeType changeType) {
+	public S2CLobbyDataChangedPacket(LobbyData lobbyData, ChangeType changeType) {
 		this.lobbyData = lobbyData;
 		this.changeType = changeType;
 	}

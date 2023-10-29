@@ -10,10 +10,10 @@ import org.mockito.Mock;
 
 import de.damios.guacamole.ICallback;
 import de.eskalon.commons.net.ServerDiscoveryHandler;
-import de.eskalon.commons.net.ServerSettings;
 import de.eskalon.commons.net.SimpleGameServer;
 import de.eskalon.commons.net.ServerDiscoveryHandler.HostDiscoveryListener;
-import de.eskalon.commons.net.packets.DiscoveryResponsePacket;
+import de.eskalon.commons.net.data.ServerSettings;
+import de.eskalon.commons.net.packets.S2CDiscoveryResponsePacket;
 import de.eskalon.gg.LibgdxUnitTest;
 import de.eskalon.gg.misc.PlayerUtils.PlayerTemplate;
 import de.eskalon.gg.net.GameServer;
@@ -24,7 +24,7 @@ import net.jodah.concurrentunit.Waiter;
 
 public class GameServerDiscoveryTest extends LibgdxUnitTest {
 
-	protected ServerDiscoveryHandler<DiscoveryResponsePacket> sdh;
+	protected ServerDiscoveryHandler<S2CDiscoveryResponsePacket> sdh;
 	protected GameServer server;
 	private Waiter waiter;
 
@@ -39,13 +39,13 @@ public class GameServerDiscoveryTest extends LibgdxUnitTest {
 	public void testServer() throws TimeoutException, InterruptedException {
 		com.esotericsoftware.minlog.Log.INFO();
 		waiter = new Waiter();
-		sdh = new ServerDiscoveryHandler<>(DiscoveryResponsePacket.class, 2500);
+		sdh = new ServerDiscoveryHandler<>(S2CDiscoveryResponsePacket.class, 2500);
 
 		assertThrows(IllegalArgumentException.class, () -> {
 			sdh.discoverHosts(-563, new HostDiscoveryListener<>() {
 				@Override
 				public void onHostDiscovered(String address,
-						DiscoveryResponsePacket datagramPacket) {
+						S2CDiscoveryResponsePacket datagramPacket) {
 				}
 			});
 		});
@@ -86,7 +86,7 @@ public class GameServerDiscoveryTest extends LibgdxUnitTest {
 				new HostDiscoveryListener<>() {
 					@Override
 					public void onHostDiscovered(String address,
-							DiscoveryResponsePacket datagramPacket) {
+							S2CDiscoveryResponsePacket datagramPacket) {
 						waiter.assertEquals(port, datagramPacket.getPort());
 						waiter.assertEquals(gameName,
 								datagramPacket.getGameName());
