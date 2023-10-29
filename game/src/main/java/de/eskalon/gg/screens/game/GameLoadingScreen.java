@@ -112,7 +112,7 @@ public class GameLoadingScreen extends AbstractEskalonUIScreen {
 		// Execute stuff
 		Runnable task;
 		if ((task = taskQueue.poll()) != null) {
-			// FIXME this only executes one task per frame!
+			// TODO: this only executes one task per frame!
 			task.run();
 		} else if (!once) {
 			once = true;

@@ -48,7 +48,7 @@ public class GameHandler {
 	public boolean update() {
 		// TODO: Separate this into another thread so it works better when the
 		// window is moved/resized
-		// This shouldn't be an issue if this was implemented:
+		// This probably wouldn't be an issue if this was implemented:
 		// https://github.com/libgdx/libgdx/issues/4419
 		long time = System.nanoTime();
 		if (lastFrameTime == -1)

@@ -45,6 +45,7 @@ public class VoteScreen extends AbstractGameScreen {
 	private List<Button> buttons = new ArrayList<>();
 
 	private @Nullable Ballot matterToVoteOn = null;
+	private @Nullable List<Short> pastVoters;
 	private CountdownTimer voteTimer = new CountdownTimer();
 
 	private boolean once;
@@ -104,6 +105,11 @@ public class VoteScreen extends AbstractGameScreen {
 	private void prepareNextBallot(Ballot newBallot) {
 		World world = appContext.getGameHandler().getSimulation().getWorld();
 		Player localPlayer = appContext.getGameHandler().getLocalPlayer();
+
+		pastVoters = newBallot.getVoters(); // this is needed because in
+											// #onVoteFinished, Ballot#getVoters
+											// no longer contains the impeached
+											// person
 
 		optionTable.clear();
 		voterTable.clear();
@@ -179,8 +185,7 @@ public class VoteScreen extends AbstractGameScreen {
 		voterTable.add(
 				new Label(Lang.get("screen.vote.voters_done"), skin, "title"))
 				.padBottom(12).row();
-		for (short s : matterToVoteOn.getVoters()) {
-			// FIXME: the voters list no longer contains the impeached person
+		for (short s : pastVoters) {
 			// PositionType posT = world.getCharacter(s).getPosition();
 			boolean isLocalPlayer = s == localPlayer
 					.getCurrentlyPlayedCharacterId();
@@ -192,10 +197,10 @@ public class VoteScreen extends AbstractGameScreen {
 									s, world)))
 					.left().padBottom(25);
 
-			voterTable.add(
-					new Label(getOptionString(ev.getIndividualVotes().get(s)),
-							skin, "text"))
-					.left().top().row();
+			voterTable.add(new Label(
+					"[#E1CA70FF]"
+							+ getOptionString(ev.getIndividualVotes().get(s)),
+					skin, "text")).left().top().row();
 		}
 
 		voteTimer.start(7000); // display the result for 7 seconds
