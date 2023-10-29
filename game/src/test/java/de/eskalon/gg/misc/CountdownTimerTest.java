@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import de.eskalon.gg.misc.CountdownTimer;
-
 public class CountdownTimerTest {
 
 	private CountdownTimer c;

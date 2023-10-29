@@ -13,7 +13,7 @@ import de.eskalon.gg.misc.CollectionUtils;
 public class BallotUtils {
 
 	private BallotUtils() {
-		// not used
+		throw new UnsupportedOperationException();
 	}
 
 	/**

@@ -2,33 +2,24 @@ package de.eskalon.commons.net.data;
 
 import javax.annotation.Nullable;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
 public final class ChatMessage<P> {
 
 	/**
 	 * {@code null} if this is a system message
 	 */
-	private P player;
-	private String message;
+	private @Getter @Nullable P sender;
+	private @Getter String message;
 
 	public ChatMessage(String systemMessage) {
 		this(null, systemMessage);
 	}
 
-	public ChatMessage(@Nullable P player, String message) {
-		this.player = player;
-		this.message = message;
-	}
-
-	public P getSender() {
-		return player;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
 	public boolean isSystemMessage() {
-		return player == null;
+		return sender == null;
 	}
 
 }

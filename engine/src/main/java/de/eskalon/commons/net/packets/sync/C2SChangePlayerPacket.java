@@ -1,25 +1,19 @@
 package de.eskalon.commons.net.packets.sync;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 /**
  * This message is sent by a client to indicate a change of their own player
  * data.
  * 
  * @param <P>
  */
+@AllArgsConstructor
+@NoArgsConstructor
 public final class C2SChangePlayerPacket<P> {
 
-	private P playerData;
-
-	public C2SChangePlayerPacket() {
-		// default public constructor
-	}
-
-	public C2SChangePlayerPacket(P playerData) {
-		this.playerData = playerData;
-	}
-
-	public P getPlayerData() {
-		return playerData;
-	}
+	private @Getter P playerData;
 
 }

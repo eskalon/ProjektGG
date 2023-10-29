@@ -65,14 +65,6 @@ public class ElectionBallot extends Ballot {
 				world.getCharacter((short) result), type);
 	}
 
-	public PositionType getType() {
-		return type;
-	}
-
-	public Position getPos() {
-		return pos;
-	}
-
 	@Override
 	public void processVoteResult(HashMap<Short, Integer> individualVotes,
 			int result, World world) {

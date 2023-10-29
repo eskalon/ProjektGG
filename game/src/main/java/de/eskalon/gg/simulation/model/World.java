@@ -22,33 +22,48 @@ import de.eskalon.gg.simulation.model.types.GameSpeed;
 import de.eskalon.gg.simulation.model.types.ItemType;
 import de.eskalon.gg.simulation.model.types.LawType;
 import de.eskalon.gg.simulation.model.types.PositionType;
+import lombok.Getter;
+import lombok.Setter;
 
 public final class World {
 
-	private long seed;
-	private GameDifficulty difficulty;
-	private GameMap map;
+	private @Getter long seed;
+	private @Getter GameDifficulty difficulty;
+	private @Getter GameMap map;
 
-	private GameSpeed speed;
+	private @Getter @Setter GameSpeed gameSpeed;
 
-	private ModelInstance skyBox;
-	List<BaseRenderData> staticProps = new ArrayList<>();
+	private @Getter @Setter ModelInstance skybox;
+	private @Getter List<BaseRenderData> staticProps = new ArrayList<>();
+	@Getter
 	BuildingSlot[] buildingSlots;
 
+	@Getter
 	IntMap<Character> characters = new IntMap<>();
+	@Getter
 	IntMap<Player> players = new IntMap<>();
+	@Getter
 	List<Short> prisonPopulation = new ArrayList<>();
 
 	/**
 	 * The currently highest used character index.
 	 */
+	@Getter
 	short characterIndex = 1;
 
+	@Getter
 	HashMap<PositionType, Position> positions = new HashMap<>();
 
+	/**
+	 * A hashmap with all laws. The value object is either a {@link Boolean} or
+	 * an {@link Integer}.
+	 */
+	@Getter
 	HashMap<LawType, Object> laws = new HashMap<>();
 
+	@Getter
 	HashMap<ItemType, ItemPrice> prices = new HashMap<>();
+	@Getter
 	List<Cart> cartsOnTour;
 
 	public World() {
@@ -59,7 +74,7 @@ public final class World {
 		this.difficulty = setup.getDifficulty();
 		this.seed = setup.getSeed();
 		this.map = setup.getMap();
-		this.speed = GameSpeed.NORMAL;
+		this.gameSpeed = GameSpeed.NORMAL;
 
 		WorldGenerator gen = new WorldGenerator(this, setup, players);
 		gen.generate();
@@ -81,92 +96,24 @@ public final class World {
 		return null;
 	}
 
-	public void setSkybox(ModelInstance skyBox) {
-		this.skyBox = skyBox;
-	}
-
-	public ModelInstance getSkybox() {
-		return skyBox;
-	}
-
-	public BuildingSlot[] getBuildingSlots() {
-		return buildingSlots;
-	}
-
-	public List<BaseRenderData> getStaticProps() {
-		return staticProps;
-	}
-
-	public IntMap<Character> getCharacters() {
-		return characters;
-	}
-
 	public Character getCharacter(short charId) {
 		return characters.get(charId);
-	}
-
-	public IntMap<Player> getPlayers() {
-		return players;
 	}
 
 	public Player getPlayer(short playerId) {
 		return players.get(playerId);
 	}
 
-	public List<Short> getPrisonPopulation() {
-		return prisonPopulation;
-	}
-
-	public HashMap<PositionType, Position> getPositions() {
-		return positions;
-	}
-
 	public Position getPosition(PositionType type) {
 		return positions.get(type);
 	}
 
-	/**
-	 * @return a hashmap with all laws. The value object is either a
-	 *         {@link Boolean} or an {@link Integer}.
-	 */
-	public HashMap<LawType, Object> getLaws() {
-		return laws;
-	}
-
-	public Object getLaws(LawType type) {
+	public Object getLaw(LawType type) {
 		return laws.get(type);
-	}
-
-	public HashMap<ItemType, ItemPrice> getPrices() {
-		return prices;
 	}
 
 	public ItemPrice getPrice(ItemType type) {
 		return prices.get(type);
-	}
-
-	public List<Cart> getCartsOnTour() {
-		return cartsOnTour;
-	}
-
-	public long getSeed() {
-		return seed;
-	}
-
-	public GameDifficulty getDifficulty() {
-		return difficulty;
-	}
-
-	public GameMap getMap() {
-		return map;
-	}
-
-	public GameSpeed getGameSpeed() {
-		return speed;
-	}
-
-	public void setGameSpeed(GameSpeed speed) {
-		this.speed = speed;
 	}
 
 }

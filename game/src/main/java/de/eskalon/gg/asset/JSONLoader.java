@@ -17,7 +17,7 @@ import de.eskalon.gg.asset.JSONLoader.JSONLoaderParameter;
  * A simple asset loader for {@linkplain JSON JSON} files.
  * <p>
  * Uses the UTF-8-encoding for the loaded files if supported by the local JVM.
- * 
+ *
  * @author damios
  */
 public class JSONLoader

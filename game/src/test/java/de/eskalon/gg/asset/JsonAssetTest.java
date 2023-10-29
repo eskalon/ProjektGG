@@ -16,8 +16,6 @@ import de.eskalon.commons.LibgdxUnitTest;
 import de.eskalon.commons.asset.AnnotationAssetManager;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.asset.AnnotationAssetManager.AssetLoaderParametersFactory;
-import de.eskalon.gg.asset.JSON;
-import de.eskalon.gg.asset.JSONLoader;
 import de.eskalon.gg.asset.JSONLoader.JSONLoaderParameter;
 
 public class JsonAssetTest extends LibgdxUnitTest {

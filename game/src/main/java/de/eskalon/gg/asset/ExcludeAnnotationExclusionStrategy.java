@@ -11,7 +11,7 @@ import com.google.gson.FieldAttributes;
 /**
  * Excludes fields marked with {@link ExcludeFromJSON} from the
  * {@linkplain SimpleJSONParser serialization}.
- * 
+ *
  * @author damios
  */
 public class ExcludeAnnotationExclusionStrategy implements ExclusionStrategy {

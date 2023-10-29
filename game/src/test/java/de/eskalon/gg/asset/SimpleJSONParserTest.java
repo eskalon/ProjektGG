@@ -9,9 +9,6 @@ import org.junit.jupiter.api.Test;
 
 import com.google.gson.reflect.TypeToken;
 
-import de.eskalon.gg.asset.SimpleJSONParser;
-
-
 public class SimpleJSONParserTest {
 
 	@SuppressWarnings("deprecation")

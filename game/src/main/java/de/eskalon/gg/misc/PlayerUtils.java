@@ -15,7 +15,7 @@ import de.eskalon.gg.simulation.model.types.ProfessionType;
 public class PlayerUtils {
 
 	private PlayerUtils() {
-		// not used
+		throw new UnsupportedOperationException();
 	}
 
 	/**

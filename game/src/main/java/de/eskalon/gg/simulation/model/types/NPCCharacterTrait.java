@@ -5,6 +5,8 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import de.eskalon.commons.lang.ILocalizable;
 import de.eskalon.gg.asset.JSON;
 import de.eskalon.gg.asset.JSONLoader.JSONLoaderParameter;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 /**
  * This class represents a trait npc characters have. Traits influence the
@@ -64,6 +66,7 @@ public enum NPCCharacterTrait implements ILocalizable {
 		return "type.trait." + this.name().toLowerCase() + ".name";
 	}
 
+	@NoArgsConstructor(access = AccessLevel.PACKAGE)
 	public class NPCCharacterTraitData {
 		/**
 		 * The base opinion modifier a character with this trait has of other
@@ -88,10 +91,6 @@ public enum NPCCharacterTrait implements ILocalizable {
 		 * Whether the religion of a character is important.
 		 */
 		private boolean religionIsImportant;
-
-		NPCCharacterTraitData() {
-			// default public constructor
-		}
 
 		// TODO modifiers for certain situations (bribery, blackmail, pressing
 		// charges, voting out of office, etc.)

@@ -6,6 +6,8 @@ import de.eskalon.commons.lang.ILocalizable;
 import de.eskalon.gg.asset.JSON;
 import de.eskalon.gg.asset.JSONLoader.JSONLoaderParameter;
 import de.eskalon.gg.simulation.model.entities.Player;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 public enum PlayerTaskType implements ILocalizable {
 	LEARNING_SKILL, UPGRADING_MASTER;
@@ -36,6 +38,7 @@ public enum PlayerTaskType implements ILocalizable {
 		return "type.task." + this.name().toLowerCase() + ".name";
 	}
 
+	@NoArgsConstructor(access = AccessLevel.PACKAGE)
 	public class PlayerTaskTypeData {
 		/**
 		 * The duration it takes to perform this task in its basic form.
@@ -46,10 +49,6 @@ public enum PlayerTaskType implements ILocalizable {
 		 * task in its basic form.
 		 */
 		private int basicApCost;
-
-		PlayerTaskTypeData() {
-			// default public constructor
-		}
 	}
 
 }

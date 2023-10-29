@@ -5,6 +5,8 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import de.eskalon.commons.lang.ILocalizable;
 import de.eskalon.gg.asset.JSON;
 import de.eskalon.gg.asset.JSONLoader.JSONLoaderParameter;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 public enum CartType implements ILocalizable {
 	BASIC;
@@ -47,6 +49,7 @@ public enum CartType implements ILocalizable {
 		return "type.cart." + this.name().toLowerCase() + ".name";
 	}
 
+	@NoArgsConstructor(access = AccessLevel.PACKAGE)
 	public class CartTypeData {
 		private int maxHP;
 		private int price;
@@ -56,9 +59,5 @@ public enum CartType implements ILocalizable {
 		private int accidentRate;
 		private int maxStackSize;
 		private int maxStackCount;
-
-		CartTypeData() {
-			// default public constructor
-		}
 	}
 }

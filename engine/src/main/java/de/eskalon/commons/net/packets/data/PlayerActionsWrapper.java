@@ -2,26 +2,15 @@ package de.eskalon.commons.net.packets.data;
 
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
 public class PlayerActionsWrapper {
 
-	private short playerId;
-	private List<IPlayerAction> actions;
-
-	public PlayerActionsWrapper() {
-		// default public constructor
-	}
-
-	public PlayerActionsWrapper(short playerId, List<IPlayerAction> actions) {
-		this.playerId = playerId;
-		this.actions = actions;
-	}
-
-	public short getPlayerId() {
-		return playerId;
-	}
-
-	public List<IPlayerAction> getActions() {
-		return actions;
-	}
+	private @Getter short playerId;
+	private @Getter List<IPlayerAction> actions;
 
 }

@@ -36,9 +36,9 @@ public class BaseRenderData extends ModelInstance {
 	}
 
 	/**
-	 * @return {@code -1} on no intersection; when there is an
-	 *         intersection: the squared distance between the center of this
-	 *         object and the point on the ray closest to this object.
+	 * @return {@code -1} on no intersection; when there is an intersection: the
+	 *         squared distance between the center of this object and the point
+	 *         on the ray closest to this object.
 	 */
 	public float intersects(Ray ray) {
 		transform.getTranslation(position).add(center);

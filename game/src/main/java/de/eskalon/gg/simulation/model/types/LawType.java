@@ -8,6 +8,9 @@ import de.damios.guacamole.IntRange;
 import de.eskalon.commons.lang.ILocalizable;
 import de.eskalon.gg.asset.JSON;
 import de.eskalon.gg.asset.JSONLoader.JSONLoaderParameter;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 public enum LawType implements ILocalizable {
 	// FINANCIAL LAWS
@@ -69,18 +72,11 @@ public enum LawType implements ILocalizable {
 		return "type.laws." + this.name().toLowerCase() + ".name";
 	}
 
+	@NoArgsConstructor(access = AccessLevel.PACKAGE)
 	public class LawTypeData {
 		private int upperBound;
 		private int lowerBound;
 		private Object defaultValue;
-		private List<PositionType> voters;
-
-		LawTypeData() {
-			// default public constructor
-		}
-
-		protected void setVoters(List<PositionType> voters) {
-			this.voters = voters;
-		}
+		private @Setter List<PositionType> voters;
 	}
 }

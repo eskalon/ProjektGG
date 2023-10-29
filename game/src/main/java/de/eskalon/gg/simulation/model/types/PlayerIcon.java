@@ -1,5 +1,7 @@
 package de.eskalon.gg.simulation.model.types;
 
+import lombok.Getter;
+
 public enum PlayerIcon {
 	BLUE_LIGHT("72A0C1FF", "shield_light_blue"), PINK("9F2B68FF",
 			"shield_pink"), YELLOW("FFBF00FF", "shield_yellow"), GREEN(
@@ -8,19 +10,15 @@ public enum PlayerIcon {
 									"shield_dark_blue"), PURPLE("4B0B61FF",
 											"shield_purple");
 
-	private String color;
+	/**
+	 * The (chat) color for the player with this icon.
+	 */
+	private @Getter String color;
 	private String iconFileName;
 
 	private PlayerIcon(String color, String iconFileName) {
 		this.color = color;
 		this.iconFileName = iconFileName;
-	}
-
-	/**
-	 * @return the (chat) color for the player with this icon.
-	 */
-	public String getColor() {
-		return color;
 	}
 
 	public String getIconDrawableName() {

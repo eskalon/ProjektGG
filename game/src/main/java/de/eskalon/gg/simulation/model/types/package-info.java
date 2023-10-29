@@ -1,5 +1,5 @@
 /**
- * Holds all classes that have a static content.
+ * Holds all classes that have static content.
  *
  * @see de.eskalon.gg.simulation.model.types.TypeRegistry
  */

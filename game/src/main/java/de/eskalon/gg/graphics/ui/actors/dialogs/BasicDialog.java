@@ -61,9 +61,10 @@ public class BasicDialog extends Dialog {
 	/**
 	 * Adds a label to the content table. The dialog must have been constructed
 	 * with a skin to use this method.
-	 * 
+	 *
 	 * @param text
 	 */
+	@Override
 	public Dialog text(String text) {
 		if (getSkin() == null)
 			throw new IllegalStateException(

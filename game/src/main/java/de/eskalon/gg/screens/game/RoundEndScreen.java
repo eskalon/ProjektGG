@@ -17,7 +17,6 @@ import de.eskalon.commons.audio.ISoundManager;
 import de.eskalon.commons.event.Subscribe;
 import de.eskalon.commons.inject.annotations.Inject;
 import de.eskalon.commons.lang.Lang;
-import de.eskalon.commons.screens.AbstractImageScreen.ImageScreenMode;
 import de.eskalon.gg.events.AllPlayersReadyEvent;
 import de.eskalon.gg.thirdparty.DiscordGGHandler;
 

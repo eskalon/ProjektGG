@@ -1,18 +1,14 @@
 package de.eskalon.gg.events;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
  * Is posted when the client disconnects unexpectedly from the server.
  */
+@AllArgsConstructor
 public final class ConnectionLostEvent {
 
-	private boolean disconnectedByChoice;
-
-	public ConnectionLostEvent(boolean disconnectedByChoice) {
-		this.disconnectedByChoice = disconnectedByChoice;
-	}
-
-	public boolean isDisconnectedByChoice() {
-		return disconnectedByChoice;
-	}
+	private @Getter boolean disconnectedByChoice;
 
 }

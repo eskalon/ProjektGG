@@ -20,13 +20,13 @@ import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.lang.Lang;
 import de.eskalon.commons.net.data.ServerSettings;
 import de.eskalon.commons.net.packets.S2CDiscoveryResponsePacket;
-import de.eskalon.commons.net.packets.chat.S2CChatMessageReceivedPacket;
 import de.eskalon.commons.net.packets.chat.C2SSendChatMessagePacke;
+import de.eskalon.commons.net.packets.chat.S2CChatMessageReceivedPacket;
 import de.eskalon.commons.net.packets.data.LobbyData;
+import de.eskalon.commons.net.packets.handshake.C2SRequestJoiningLobbyPacket;
 import de.eskalon.commons.net.packets.handshake.S2CConnectionEstablishedPacket;
 import de.eskalon.commons.net.packets.handshake.S2CConnectionRejectedPacket;
 import de.eskalon.commons.net.packets.handshake.S2CLobbyJoinedPacket;
-import de.eskalon.commons.net.packets.handshake.C2SRequestJoiningLobbyPacket;
 import de.eskalon.commons.net.packets.sync.C2SChangeGameSetupPacket;
 import de.eskalon.commons.net.packets.sync.C2SChangePlayerPacket;
 import de.eskalon.commons.net.packets.sync.S2CLobbyDataChangedPacket;
@@ -95,24 +95,28 @@ public abstract class SimpleGameServer<G, S, P> {
 		// Lobby data syncing
 		typeListener.addTypeHandler(C2SChangePlayerPacket.class,
 				(con, msg) -> onPlayerChange(con, msg));
-		typeListener.addTypeHandler(C2SChangeGameSetupPacket.class, (con, msg) -> {
-			if ((short) con.getArbitraryData() == HOST_PLAYER_NETWORK_ID) {
-				lobbyData.setGameState(msg.getGameState());
-				lobbyData.setSessionSetup(msg.getSessionSetup());
-				server.sendToAllTCP(new S2CLobbyDataChangedPacket(lobbyData,
-						ChangeType.DATA_CHANGE));
-			} else {
-				LOG.warn(
-						"[SERVER] Non-host player %d tried to change the lobby data!",
-						(short) con.getArbitraryData());
-			}
-		});
+		typeListener.addTypeHandler(C2SChangeGameSetupPacket.class,
+				(con, msg) -> {
+					if ((short) con
+							.getArbitraryData() == HOST_PLAYER_NETWORK_ID) {
+						lobbyData.setGameState(msg.getGameState());
+						lobbyData.setSessionSetup(msg.getSessionSetup());
+						server.sendToAllTCP(new S2CLobbyDataChangedPacket(
+								ChangeType.DATA_CHANGE, lobbyData));
+					} else {
+						LOG.warn(
+								"[SERVER] Non-host player %d tried to change the lobby data!",
+								(short) con.getArbitraryData());
+					}
+				});
 		// Chat messages
-		typeListener.addTypeHandler(C2SSendChatMessagePacke.class, (con, msg) -> {
-			server.sendToAllExceptTCP(con.getID(),
-					new S2CChatMessageReceivedPacket(
-							(short) con.getArbitraryData(), msg.getMessage()));
-		});
+		typeListener.addTypeHandler(C2SSendChatMessagePacke.class,
+				(con, msg) -> {
+					server.sendToAllExceptTCP(con.getID(),
+							new S2CChatMessageReceivedPacket(
+									(short) con.getArbitraryData(),
+									msg.getMessage()));
+				});
 		server.addListener(typeListener);
 	}
 
@@ -183,8 +187,8 @@ public abstract class SimpleGameServer<G, S, P> {
 				.getMaxPlayerCount()) { // Lobby is full
 			LOG.info("[SERVER] Client was rejected for want of capacity");
 
-			con.sendTCP(
-					new S2CConnectionRejectedPacket(Lang.get("server.is_full")));
+			con.sendTCP(new S2CConnectionRejectedPacket(
+					Lang.get("server.is_full")));
 			con.close();
 		} else { // Still free slots
 			LOG.info("[SERVER] Client accepted");
@@ -203,8 +207,8 @@ public abstract class SimpleGameServer<G, S, P> {
 
 			if (lobbyData.getPlayers().containsKey(id)) {
 				lobbyData.getPlayers().remove(id);
-				server.sendToAllTCP(new S2CLobbyDataChangedPacket(lobbyData,
-						ChangeType.PLAYER_LEFT));
+				server.sendToAllTCP(new S2CLobbyDataChangedPacket(
+						ChangeType.PLAYER_LEFT, lobbyData));
 			}
 		}
 	}
@@ -228,14 +232,14 @@ public abstract class SimpleGameServer<G, S, P> {
 
 		con.sendTCP(new S2CLobbyJoinedPacket(id, lobbyData));
 		server.sendToAllExceptTCP(con.getID(), new S2CLobbyDataChangedPacket(
-				lobbyData, ChangeType.PLAYER_JOINED));
+				ChangeType.PLAYER_JOINED, lobbyData));
 	}
 
 	protected void onPlayerChange(Connection con, C2SChangePlayerPacket msg) {
 		lobbyData.getPlayers().put((short) con.getArbitraryData(),
 				(P) msg.getPlayerData());
-		server.sendToAllTCP(
-				new S2CLobbyDataChangedPacket(lobbyData, ChangeType.DATA_CHANGE));
+		server.sendToAllTCP(new S2CLobbyDataChangedPacket(
+				ChangeType.DATA_CHANGE, lobbyData));
 	}
 
 	/**

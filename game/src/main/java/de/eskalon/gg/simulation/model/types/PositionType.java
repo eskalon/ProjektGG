@@ -8,6 +8,8 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import de.eskalon.commons.lang.ILocalizable;
 import de.eskalon.gg.asset.JSON;
 import de.eskalon.gg.asset.JSONLoader.JSONLoaderParameter;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 /**
  * Represents a position/post a character can take in the city or state.
@@ -173,6 +175,7 @@ public enum PositionType implements ILocalizable {
 		return list;
 	}
 
+	@NoArgsConstructor(access = AccessLevel.PACKAGE)
 	public class PositionTypeData {
 		private int level;
 		private int statusRequirementIndex;
@@ -180,10 +183,6 @@ public enum PositionType implements ILocalizable {
 		private int cabinet;
 		private List<Integer> lawsToVoteForIndices;
 		private boolean popularVote = false;
-
-		PositionTypeData() {
-			// default public constructor
-		}
 	}
 
 }

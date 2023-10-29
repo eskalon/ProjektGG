@@ -10,8 +10,6 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import de.eskalon.gg.misc.CollectionUtils;
-
 public class CollectionUtilsTest {
 
 	@Test

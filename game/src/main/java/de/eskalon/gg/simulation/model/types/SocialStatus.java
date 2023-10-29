@@ -5,6 +5,8 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import de.eskalon.commons.lang.ILocalizable;
 import de.eskalon.gg.asset.JSON;
 import de.eskalon.gg.asset.JSONLoader.JSONLoaderParameter;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 public enum SocialStatus implements ILocalizable {
 	NON_CITIZEN, CITIZEN, PATRICIAN, CAVALIER, BARON;
@@ -51,15 +53,12 @@ public enum SocialStatus implements ILocalizable {
 		return "type.profession." + this.name().toLowerCase() + ".name";
 	}
 
+	@NoArgsConstructor(access = AccessLevel.PACKAGE)
 	public class SocialStatusData {
 		private int level;
 		private int fortuneRequirement;
 		private int positionLevelRequirement = -1;
 		private boolean isTitle = false;
-
-		SocialStatusData() {
-			// default public constructor
-		}
 	}
 
 }

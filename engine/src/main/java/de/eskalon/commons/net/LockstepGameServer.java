@@ -13,8 +13,8 @@ import de.eskalon.commons.net.data.ServerSettings;
 import de.eskalon.commons.net.packets.data.IReadyable;
 import de.eskalon.commons.net.packets.data.LobbyData;
 import de.eskalon.commons.net.packets.data.PlayerActionsWrapper;
-import de.eskalon.commons.net.packets.lockstep.S2CActionsDistributionPacket;
 import de.eskalon.commons.net.packets.lockstep.C2SSendPlayerActionsPacket;
+import de.eskalon.commons.net.packets.lockstep.S2CActionsDistributionPacket;
 
 public abstract class LockstepGameServer<G, S, P extends IReadyable>
 		extends ReadyableGameServer<G, S, P> {

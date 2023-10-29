@@ -16,7 +16,7 @@ import de.eskalon.commons.lang.Lang;
 
 /**
  * A small dialog displaying a text, a button and nothing more.
- * 
+ *
  * @see #createAndShow(Stage, Skin, String, String)
  * @see #createAndShow(Stage, Skin, String, String, boolean, Consumer)
  */

@@ -10,8 +10,8 @@ import org.mockito.Mock;
 
 import de.damios.guacamole.ICallback;
 import de.eskalon.commons.net.ServerDiscoveryHandler;
-import de.eskalon.commons.net.SimpleGameServer;
 import de.eskalon.commons.net.ServerDiscoveryHandler.HostDiscoveryListener;
+import de.eskalon.commons.net.SimpleGameServer;
 import de.eskalon.commons.net.data.ServerSettings;
 import de.eskalon.commons.net.packets.S2CDiscoveryResponsePacket;
 import de.eskalon.gg.LibgdxUnitTest;
@@ -39,7 +39,8 @@ public class GameServerDiscoveryTest extends LibgdxUnitTest {
 	public void testServer() throws TimeoutException, InterruptedException {
 		com.esotericsoftware.minlog.Log.INFO();
 		waiter = new Waiter();
-		sdh = new ServerDiscoveryHandler<>(S2CDiscoveryResponsePacket.class, 2500);
+		sdh = new ServerDiscoveryHandler<>(S2CDiscoveryResponsePacket.class,
+				2500);
 
 		assertThrows(IllegalArgumentException.class, () -> {
 			sdh.discoverHosts(-563, new HostDiscoveryListener<>() {
@@ -55,9 +56,9 @@ public class GameServerDiscoveryTest extends LibgdxUnitTest {
 		});
 
 		ServerSettings serverSetup = new ServerSettings(gameName,
-				maxPlayerCount, port, true, serverVersion, true);
-		GameSetup sessionSetup = new GameSetup(
-				GameDifficulty.EASY, GameMap.BAMBERG, 25);
+				maxPlayerCount, port, true, serverVersion, true, null);
+		GameSetup sessionSetup = new GameSetup(GameDifficulty.EASY,
+				GameMap.BAMBERG, 25);
 
 		server = new GameServer(serverSetup, sessionSetup, null,
 				Arrays.asList(stub, stub, stub));

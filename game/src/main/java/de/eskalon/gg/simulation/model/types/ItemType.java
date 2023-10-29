@@ -6,6 +6,8 @@ import de.eskalon.commons.lang.ILocalizable;
 import de.eskalon.gg.asset.JSON;
 import de.eskalon.gg.asset.JSONLoader.JSONLoaderParameter;
 import de.eskalon.gg.simulation.model.entities.ItemPrice;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 public enum ItemType implements ILocalizable {
 	TEST;
@@ -47,13 +49,10 @@ public enum ItemType implements ILocalizable {
 		return "type.item." + this.name().toLowerCase() + ".name";
 	}
 
+	@NoArgsConstructor(access = AccessLevel.PACKAGE)
 	public class ItemTypeData {
 		private String iconPath;
 		private int basePrice;
 		private boolean equipableByPlayer = false;
-
-		ItemTypeData() {
-			// default public constructor
-		}
 	}
 }

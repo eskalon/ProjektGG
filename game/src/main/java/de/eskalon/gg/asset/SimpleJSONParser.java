@@ -7,9 +7,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
+import de.eskalon.gg.asset.ExcludeAnnotationExclusionStrategy.ExcludeFromJSON;
+
 /**
  * A simple JSON parser based on {@linkplain Gson Gson}.
- * 
+ *
  * @author damios
  */
 public class SimpleJSONParser {
@@ -32,7 +34,7 @@ public class SimpleJSONParser {
 	 * classes and fields from the serialization</li>
 	 * <li>the date format used is {@code yyyy-MM-dd HH:mm:ss}</li>
 	 * </ul>
-	 * 
+	 *
 	 * @param gsonBuilder
 	 */
 	protected SimpleJSONParser(GsonBuilder gsonBuilder) {
@@ -72,7 +74,7 @@ public class SimpleJSONParser {
 	 *
 	 * @param <T>
 	 *            Return Type.
-	 * 
+	 *
 	 * @param jsonInput
 	 *            The JSON input as string.
 	 * @param type

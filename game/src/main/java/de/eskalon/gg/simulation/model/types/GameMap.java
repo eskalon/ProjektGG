@@ -8,9 +8,11 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import de.eskalon.commons.lang.ILocalizable;
 import de.eskalon.gg.asset.JSON;
 import de.eskalon.gg.asset.JSONLoader.JSONLoaderParameter;
+import de.eskalon.gg.asset.SimpleJSONParser;
 import de.eskalon.gg.graphics.rendering.BaseRenderData;
 import de.eskalon.gg.simulation.model.entities.BuildingSlot;
-import de.eskalon.gg.asset.SimpleJSONParser;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 /**
  * This class holds all the information about the map's setup, e.g. the map
@@ -57,13 +59,10 @@ public enum GameMap implements ILocalizable {
 		return "type.map." + this.name().toLowerCase() + ".name";
 	}
 
+	@NoArgsConstructor(access = AccessLevel.PACKAGE)
 	public class GameMapData {
 		private String skyboxPath;
 		private List<BuildingSlot> buildingSlots;
 		private List<BaseRenderData> cityProps;
-
-		GameMapData() {
-			// default public constructor
-		}
 	}
 }

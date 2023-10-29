@@ -28,6 +28,7 @@ public class DiscordGGHandler extends DiscordRichPresenceHandler {
 						.setParty("--", playerCount, maxPlayerCount).build());
 	}
 
+	@Override
 	protected RichPresence.Builder createBasicBuilder(String details) {
 		return super.createBasicBuilder(details).setLargeImage("castle3", null);
 	}

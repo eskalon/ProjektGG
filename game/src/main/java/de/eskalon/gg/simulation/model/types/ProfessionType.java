@@ -5,6 +5,8 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import de.eskalon.commons.lang.ILocalizable;
 import de.eskalon.gg.asset.JSON;
 import de.eskalon.gg.asset.JSONLoader.JSONLoaderParameter;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 public enum ProfessionType implements ILocalizable {
 	SMITH, TEACHER;
@@ -39,13 +41,10 @@ public enum ProfessionType implements ILocalizable {
 		return "type.profession." + this.name().toLowerCase() + ".name";
 	}
 
+	@NoArgsConstructor(access = AccessLevel.PACKAGE)
 	public class ProfessionTypeData {
 		private int startingGold;
 		private int startingBuildingIndex;
 		private String iconFileName;
-
-		ProfessionTypeData() {
-			// default public constructor
-		}
 	}
 }

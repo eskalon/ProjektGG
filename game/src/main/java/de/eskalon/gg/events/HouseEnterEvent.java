@@ -1,21 +1,17 @@
 package de.eskalon.gg.events;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
  * Is posted when the local player enters a house.
  */
+@AllArgsConstructor
 public class HouseEnterEvent {
 
-	private short id;
-
-	public HouseEnterEvent(short id) {
-		this.id = id;
-	}
-
 	/**
-	 * @return the id of the entered house.
+	 * The id of the entered house.
 	 */
-	public short getId() {
-		return id;
-	}
+	private @Getter short id;
 
 }

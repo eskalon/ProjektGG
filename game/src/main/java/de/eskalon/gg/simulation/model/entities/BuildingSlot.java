@@ -1,64 +1,40 @@
 package de.eskalon.gg.simulation.model.entities;
 
 import de.eskalon.gg.simulation.model.types.BuildingSlotType;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
 public final class BuildingSlot {
 
-	private int posX, posZ;
-	private int rotationToStreet;
-	private BuildingSlotType type;
-
-	private Building building;
-
-	public BuildingSlot() {
-		// default public constructor
-	}
-
 	/**
-	 * @return the center x-position of this building slot.
+	 * The center x-position of this building slot.
 	 */
-	public int getPosX() {
-		return posX;
-	}
-
+	private @Getter int posX;
 	/**
-	 * @return the center z-position of this building slot.
+	 * The center z-position of this building slot.
 	 */
-	public int getPosZ() {
-		return posZ;
-	}
-
+	private @Getter int posZ;
 	/**
-	 * @return this rotation has to get applied to the model so that it faces
-	 *         the street.
+	 * This rotation has to get applied to the model so that it faces the
+	 * street.
 	 */
-	public int getRotationToStreet() {
-		return rotationToStreet;
-	}
-
+	private @Getter int rotationToStreet;
 	/**
-	 * @return the building standing on this slot.
+	 * The type of this building slot.
 	 */
-	public Building getBuilding() {
-		return building;
-	}
+	private @Getter BuildingSlotType type;
+	/**
+	 * The building standing on this slot.
+	 */
+	private @Getter @Setter Building building;
 
 	/**
 	 * @return whether a building is built on this slot.
 	 */
 	public boolean isBuiltOn() {
 		return building != null;
-	}
-
-	/**
-	 * @return the type of this building slot.
-	 */
-	public BuildingSlotType getType() {
-		return type;
-	}
-
-	public void setBuilding(Building building) {
-		this.building = building;
 	}
 
 }

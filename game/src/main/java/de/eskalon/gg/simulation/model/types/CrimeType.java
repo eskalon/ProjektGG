@@ -5,6 +5,8 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import de.eskalon.commons.lang.ILocalizable;
 import de.eskalon.gg.asset.JSON;
 import de.eskalon.gg.asset.JSONLoader.JSONLoaderParameter;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 public enum CrimeType implements ILocalizable {
 	TEST;
@@ -34,11 +36,8 @@ public enum CrimeType implements ILocalizable {
 		return "type.profession." + this.name().toLowerCase() + ".name";
 	}
 
+	@NoArgsConstructor(access = AccessLevel.PACKAGE)
 	public class CrimeTypeData {
 		private boolean captialCrime;
-
-		CrimeTypeData() {
-			// default public constructor
-		}
 	}
 }

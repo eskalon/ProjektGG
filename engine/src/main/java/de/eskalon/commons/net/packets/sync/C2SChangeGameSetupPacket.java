@@ -2,6 +2,10 @@ package de.eskalon.commons.net.packets.sync;
 
 import javax.annotation.Nullable;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 /**
  * This message is sent by the hosting client to indicate a change in the game
  * setup, e.g. a map change.
@@ -9,26 +13,11 @@ import javax.annotation.Nullable;
  * @param <G>
  * @param <S>
  */
+@AllArgsConstructor
+@NoArgsConstructor
 public final class C2SChangeGameSetupPacket<G, S> {
 
-	private G sessionSetup;
-	private @Nullable S gameState;
-
-	public C2SChangeGameSetupPacket() {
-		// default public constructor
-	}
-
-	public C2SChangeGameSetupPacket(G sessionSetup, @Nullable S gameState) {
-		this.sessionSetup = sessionSetup;
-		this.gameState = gameState;
-	}
-
-	public G getSessionSetup() {
-		return sessionSetup;
-	}
-
-	public S getGameState() {
-		return gameState;
-	}
+	private @Getter G sessionSetup;
+	private @Getter @Nullable S gameState;
 
 }

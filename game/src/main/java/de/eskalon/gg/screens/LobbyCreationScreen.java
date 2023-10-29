@@ -139,7 +139,7 @@ public class LobbyCreationScreen extends AbstractEskalonUIScreen {
 					ServerSettings serverSetup = new ServerSettings(
 							nameField.getText(), 7,
 							Integer.valueOf(portField.getText()), true,
-							appContext.getVersion(), true);
+							appContext.getVersion(), true, null);
 					GameSetup sessionSetup = new GameSetup(difficulty,
 							GameMap.BAMBERG, System.currentTimeMillis());
 					appContext.setServer(new GameServer(serverSetup,
@@ -163,13 +163,13 @@ public class LobbyCreationScreen extends AbstractEskalonUIScreen {
 									screenManager.pushScreen(screen,
 											appContext.getTransitions()
 													.get("blendingTransition"));
-								};
+								}
 
 								@Override
 								public void onFailure(Object param) {
 									onHostStartingFailed(
 											((Exception) param).getMessage());
-								};
+								}
 							}, appContext.getVersion(), "localhost",
 									serverSetup.getPort());
 						}
@@ -178,7 +178,7 @@ public class LobbyCreationScreen extends AbstractEskalonUIScreen {
 						public void onFailure(Object param) {
 							onHostStartingFailed(
 									((Exception) param).getMessage());
-						};
+						}
 					});
 
 					connectingDialog = SimpleTextDialog.createAndShow(stage,

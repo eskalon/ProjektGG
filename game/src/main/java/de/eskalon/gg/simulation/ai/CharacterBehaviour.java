@@ -57,8 +57,8 @@ public class CharacterBehaviour {
 		opinion += RandomUtils.getInt(r, -9, 20) + 23;
 
 		// NPC Opinion Modifier (0, 10)
-		if (otherCharacter.getNPCTrait() != null)
-			opinion += otherCharacter.getNPCTrait().getBaseOpinionModifier();
+		if (otherCharacter.getNpcTrait() != null)
+			opinion += otherCharacter.getNpcTrait().getBaseOpinionModifier();
 
 		// Reputation (0, 20)
 		opinion += thisCharacter.getReputation();
@@ -68,8 +68,8 @@ public class CharacterBehaviour {
 		// +8 for relatives of one's spouse
 
 		// Religion (5, 12)
-		if (otherCharacter.getNPCTrait() != null) {
-			boolean isReligionImportant = otherCharacter.getNPCTrait()
+		if (otherCharacter.getNpcTrait() != null) {
+			boolean isReligionImportant = otherCharacter.getNpcTrait()
 					.isReligionImportant();
 			if (thisCharacter.getReligion() == otherCharacter.getReligion())
 				opinion += isReligionImportant ? 16 : 11;
@@ -123,7 +123,7 @@ public class CharacterBehaviour {
 		int tmp = -20;
 		short characterToImpeachId = matter.getPos().getCurrentHolder();
 		Character character = world.getCharacter(characterId);
-		NPCCharacterTrait trait = character.getNPCTrait();
+		NPCCharacterTrait trait = character.getNpcTrait();
 
 		if (characterId == characterToImpeachId) {
 			tmp = 150;

@@ -1,6 +1,5 @@
 package de.eskalon.gg;
 
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.mockito.Mockito;

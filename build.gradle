@@ -25,6 +25,7 @@ allprojects {
         guacamoleVersion = "9c55fa3f05" // TODO: remove, when the proper version is pulled in via screenmanager
         imguiVersion = "1.86.10";
         kryonetVersion = "2.22.9"
+        lombok = "1.18.30"
         //quakemonkeyVersion = "master-SNAPSHOT"
         vfxVersion = "0.6.1"
         
@@ -65,6 +66,9 @@ project(":engine") {
         api "com.google.code.gson:gson:$gsonVersion"
         api "com.github.jagrosh:DiscordIPC:$discordIPCVersion"
         //api files('../libs/commons-0.1.0.jar')
+        
+        compileOnly "org.projectlombok:lombok:$lombok"
+        annotationProcessor "org.projectlombok:lombok:$lombok"
 
         testImplementation "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
     }
@@ -89,6 +93,9 @@ project(":game") {
         api "io.github.spair:imgui-java-natives-macos:$imguiVersion"
         api "io.github.spair:imgui-java-natives-windows:$imguiVersion"
         api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+        
+        compileOnly "org.projectlombok:lombok:$lombok"
+        annotationProcessor "org.projectlombok:lombok:$lombok"
         
         //testImplementation project(':engine').sourceSets.test.output
         testImplementation "org.junit.jupiter:junit-jupiter-engine:$junitVersion"

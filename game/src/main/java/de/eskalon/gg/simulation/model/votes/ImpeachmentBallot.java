@@ -10,6 +10,7 @@ import de.eskalon.gg.simulation.model.World;
 import de.eskalon.gg.simulation.model.entities.Character;
 import de.eskalon.gg.simulation.model.entities.Position;
 import de.eskalon.gg.simulation.model.types.PositionType;
+import lombok.Getter;
 
 /**
  * This class represents a vote held on impeaching an {@linkplain Position
@@ -19,8 +20,8 @@ public class ImpeachmentBallot extends Ballot {
 
 	public static final short DONT_IMPEACH_OPTION_INDEX = -1;
 	private World world;
-	private PositionType type;
-	private Position pos;
+	private @Getter PositionType type;
+	private @Getter Position pos;
 	/**
 	 * The person who called the impeachment vote.
 	 */
@@ -82,14 +83,6 @@ public class ImpeachmentBallot extends Ballot {
 			return Lang.get("vote.impeachment.result2", currentHolderC,
 					currentHolderC.isMale(), type);
 		}
-	}
-
-	public PositionType getType() {
-		return type;
-	}
-
-	public Position getPos() {
-		return pos;
 	}
 
 	@Override

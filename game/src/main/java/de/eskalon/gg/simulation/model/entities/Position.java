@@ -3,17 +3,21 @@ package de.eskalon.gg.simulation.model.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  * This class represents a position.
  */
+@NoArgsConstructor
 public final class Position {
 
-	private short currentHolder;
-	private List<Short> applicants = new ArrayList<>();
-
-	public Position() {
-		// default public constructor
-	}
+	/**
+	 * The id of the character this position is held by.
+	 */
+	private @Getter @Setter short currentHolder;
+	private @Getter List<Short> applicants = new ArrayList<>();
 
 	public Position(short currentHolder) {
 		this.currentHolder = currentHolder;
@@ -24,21 +28,6 @@ public final class Position {
 	 */
 	public boolean isHeld() {
 		return currentHolder != -1;
-	}
-
-	/**
-	 * @return the id of the character this position is held by.
-	 */
-	public short getCurrentHolder() {
-		return currentHolder;
-	}
-
-	public void setCurrentHolder(short currentHolder) {
-		this.currentHolder = currentHolder;
-	}
-
-	public List<Short> getApplicants() {
-		return applicants;
 	}
 
 	public boolean hasApplicants() {

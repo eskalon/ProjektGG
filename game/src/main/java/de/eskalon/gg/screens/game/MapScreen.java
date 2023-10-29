@@ -205,7 +205,7 @@ public class MapScreen extends AbstractGameScreen {
 //								&& pos.getApplicants().size() < 4) {
 //							// ...
 //						}
-						// @formatter:on	
+						// @formatter:on
 					}
 				});
 
@@ -325,7 +325,7 @@ public class MapScreen extends AbstractGameScreen {
 					ThreadHandler.instance().executeRunnable(
 							() -> appContext.getClient().disconnect());
 				}
-			};
+			}
 		};
 		pauseDialog.button(Lang.get("screen.map.pause.settings"), 1)
 				.button(Lang.get("screen.map.pause.disconnect"), 2);

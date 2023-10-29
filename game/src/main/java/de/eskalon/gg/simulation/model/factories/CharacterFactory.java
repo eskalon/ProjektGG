@@ -97,20 +97,20 @@ public class CharacterFactory {
 		case 1:
 		case 2:
 		case 3: {
-			c.setNPCTrait(NPCCharacterTrait.EVEN_TEMPERED);
+			c.setNpcTrait(NPCCharacterTrait.EVEN_TEMPERED);
 			break;
 		}
 		case 4:
 		case 5: {
-			c.setNPCTrait(NPCCharacterTrait.AMBITIOUS);
+			c.setNpcTrait(NPCCharacterTrait.AMBITIOUS);
 			break;
 		}
 		case 6: {
-			c.setNPCTrait(NPCCharacterTrait.EVEN_TEMPERED);
+			c.setNpcTrait(NPCCharacterTrait.EVEN_TEMPERED);
 			break;
 		}
 		case 7: {
-			c.setNPCTrait(NPCCharacterTrait.EVEN_TEMPERED);
+			c.setNpcTrait(NPCCharacterTrait.EVEN_TEMPERED);
 			break;
 		}
 		}
@@ -220,7 +220,7 @@ public class CharacterFactory {
 		c.setReligion(religion);
 		c.setStatus(SocialStatus.NON_CITIZEN);
 		c.setSurname(surname);
-		c.setNPCTrait(null);
+		c.setNpcTrait(null);
 
 		return c;
 	}

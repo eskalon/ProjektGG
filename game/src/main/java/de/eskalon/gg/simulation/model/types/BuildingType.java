@@ -8,6 +8,8 @@ import de.eskalon.commons.lang.ILocalizable;
 import de.eskalon.gg.asset.JSON;
 import de.eskalon.gg.asset.JSONLoader.JSONLoaderParameter;
 import de.eskalon.gg.simulation.model.entities.Building;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 public enum BuildingType implements ILocalizable {
 	TOWN_HALL, FORGE_1, FORGE_2;
@@ -111,6 +113,7 @@ public enum BuildingType implements ILocalizable {
 		return "type.building." + this.name().toLowerCase() + ".name";
 	}
 
+	@NoArgsConstructor(access = AccessLevel.PACKAGE)
 	public class BuildingTypeData {
 		private String modelPath;
 
@@ -131,9 +134,5 @@ public enum BuildingType implements ILocalizable {
 
 		private int itemSlotCount;
 		private int maxStackSize;
-
-		BuildingTypeData() {
-			// default public constructor
-		}
 	}
 }
