@@ -103,8 +103,8 @@ public class GameClient
 	}
 
 	@Override
-	protected void onConnectionLost() {
-		eventBus.post(new ConnectionLostEvent());
+	protected void onConnectionLost(boolean disconnectedByChoice) {
+		eventBus.post(new ConnectionLostEvent(disconnectedByChoice));
 	}
 
 	public LobbyData<GameSetup, GameState, PlayerData> getLobbyData() {

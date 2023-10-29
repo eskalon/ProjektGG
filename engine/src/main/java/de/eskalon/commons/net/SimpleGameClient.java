@@ -16,14 +16,14 @@ import de.damios.guacamole.Preconditions;
 import de.damios.guacamole.concurrent.ThreadHandler;
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
-import de.eskalon.commons.net.packets.chat.S2CChatMessageReceivedPacket;
 import de.eskalon.commons.net.data.ChatMessage;
 import de.eskalon.commons.net.packets.chat.C2SSendChatMessagePacke;
+import de.eskalon.commons.net.packets.chat.S2CChatMessageReceivedPacket;
 import de.eskalon.commons.net.packets.data.LobbyData;
+import de.eskalon.commons.net.packets.handshake.C2SRequestJoiningLobbyPacket;
 import de.eskalon.commons.net.packets.handshake.S2CConnectionEstablishedPacket;
 import de.eskalon.commons.net.packets.handshake.S2CConnectionRejectedPacket;
 import de.eskalon.commons.net.packets.handshake.S2CLobbyJoinedPacket;
-import de.eskalon.commons.net.packets.handshake.C2SRequestJoiningLobbyPacket;
 import de.eskalon.commons.net.packets.sync.C2SChangeGameSetupPacket;
 import de.eskalon.commons.net.packets.sync.C2SChangePlayerPacket;
 import de.eskalon.commons.net.packets.sync.S2CLobbyDataChangedPacket;
@@ -57,6 +57,8 @@ public abstract class SimpleGameClient<G, S, P> {
 	protected ArrayList<ChatMessage<P>> chatMessages = new ArrayList<>();
 
 	protected LobbyData<G, S, P> lobbyData;
+
+	private boolean disconnectedByChoice = false;
 
 	public SimpleGameClient() {
 		this.client = new Client();
@@ -101,7 +103,7 @@ public abstract class SimpleGameClient<G, S, P> {
 				@Override
 				public void disconnected(Connection connection) {
 					LOG.info("[CLIENT] Disconnected!");
-					onConnectionLost();
+					onConnectionLost(disconnectedByChoice);
 
 					//@formatter:off					
 //					try {
@@ -163,6 +165,7 @@ public abstract class SimpleGameClient<G, S, P> {
 	}
 
 	public void disconnect() {
+		disconnectedByChoice = true;
 		LOG.info("[CLIENT] Disconnecting...");
 		client.close();
 	}
@@ -231,6 +234,6 @@ public abstract class SimpleGameClient<G, S, P> {
 	protected abstract void onLobbyDataChanged(LobbyData<G, S, P> oldData,
 			LobbyData<G, S, P> newData, ChangeType changeType);
 
-	protected abstract void onConnectionLost();
+	protected abstract void onConnectionLost(boolean disconnectedByChoice);
 
 }

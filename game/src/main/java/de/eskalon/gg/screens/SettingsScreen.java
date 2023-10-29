@@ -235,11 +235,11 @@ public class SettingsScreen extends AbstractEskalonUIScreen {
 														// screen is responsible
 														// for handling the lost
 														// connection
-			appContext.handleDisconnection();
+			appContext.clearGame();
 
 			ServerBrowserScreen screen = EskalonInjector.instance()
 					.getInstance(ServerBrowserScreen.class);
-			screen.setConnectionLost(true);
+			screen.setConnectionLost(!ev.isDisconnectedByChoice());
 			screenManager.pushScreen(screen, null);
 		}
 	}

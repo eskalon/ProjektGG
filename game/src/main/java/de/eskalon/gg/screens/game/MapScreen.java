@@ -322,8 +322,6 @@ public class MapScreen extends AbstractGameScreen {
 							"blendingTransition");
 				} else {
 					LOG.info("[CLIENT] Disconnecting from the server");
-					// FIXME: properly differentiate between forced and
-					// voluntary disconnects
 					ThreadHandler.instance().executeRunnable(
 							() -> appContext.getClient().disconnect());
 				}

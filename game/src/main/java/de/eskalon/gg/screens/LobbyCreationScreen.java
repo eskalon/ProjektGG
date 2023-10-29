@@ -25,7 +25,6 @@ import de.eskalon.commons.net.data.ServerSettings;
 import de.eskalon.commons.net.packets.data.LobbyData;
 import de.eskalon.commons.screens.AbstractEskalonUIScreen;
 import de.eskalon.commons.screens.EskalonScreenManager;
-import de.eskalon.commons.screens.AbstractImageScreen.ImageScreenMode;
 import de.eskalon.gg.asset.JSON;
 import de.eskalon.gg.core.ProjektGGApplicationContext;
 import de.eskalon.gg.graphics.ui.actors.OffsettableTextField;
@@ -238,7 +237,7 @@ public class LobbyCreationScreen extends AbstractEskalonUIScreen {
 	}
 
 	public void onHostStartingFailed(String msg) {
-		appContext.handleDisconnection();
+		appContext.clearGame();
 		Gdx.app.postRunnable(() -> {
 			connectingDialog.hide();
 			SimpleTextDialog.createAndShow(stage, skin,

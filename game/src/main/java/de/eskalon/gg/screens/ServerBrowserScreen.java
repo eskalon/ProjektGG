@@ -249,8 +249,6 @@ public class ServerBrowserScreen extends AbstractEskalonUIScreen {
 						}
 					});
 		});
-
-		System.out.println(ThreadHandler.instance().getActiveThreadCount());
 	}
 
 	private void addServerToUI(Table serverTable, String address,

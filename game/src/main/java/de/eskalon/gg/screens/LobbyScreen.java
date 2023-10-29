@@ -71,6 +71,7 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 	private ImageTextButton readyUpLobbyButton;
 	private ScrollPane messagesPane;
 	private OffsettableTextField chatInputField;
+	private ImageTextButton playerSettingsButton;
 
 	private LobbyData<GameSetup, GameState, PlayerData> lobbyDataCopy;
 
@@ -89,7 +90,7 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 		PlayerLobbyConfigDialog playerConfigDialog = new PlayerLobbyConfigDialog(
 				skin, soundManager, eventBus, appContext.getClient());
 
-		ImageTextButton playerSettingsButton = new ImageTextButton(
+		playerSettingsButton = new ImageTextButton(
 				Lang.get("screen.lobby.configure"), skin);
 		playerSettingsButton.addListener(new ButtonClickListener(soundManager) {
 			@Override
@@ -132,6 +133,14 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 				appContext.getClient().getLocalLobbyPlayer().toggleReady();
 				appContext.getClient().changeLocalPlayerData(
 						appContext.getClient().getLocalLobbyPlayer());
+
+				if (appContext.getClient().getLocalLobbyPlayer().isReady()) {
+					playerSettingsButton.setDisabled(true);
+					playerSettingsButton.setTouchable(Touchable.disabled);
+				} else {
+					playerSettingsButton.setDisabled(false);
+					playerSettingsButton.setTouchable(Touchable.enabled);
+				}
 
 				updateLobbyUI();
 			}
@@ -193,8 +202,8 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 		messagesArea.setWrap(true);
 
 		Table messagesTable = new Table();
-		messagesTable.add(messagesArea).padLeft(10).padBottom(1).left().top().expand()
-				.fill();
+		messagesTable.add(messagesArea).padLeft(10).padBottom(1).left().top()
+				.expand().fill();
 
 		messagesPane = new ScrollPane(messagesTable, skin, "with-background");
 		messagesPane.setForceScroll(false, true);
@@ -367,7 +376,7 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 
 	@Subscribe
 	public void onConnectionLostEvent(ConnectionLostEvent ev) {
-		appContext.handleDisconnection();
+		appContext.clearGame();
 
 		ServerBrowserScreen screen = EskalonInjector.instance()
 				.getInstance(ServerBrowserScreen.class);

@@ -5,4 +5,14 @@ package de.eskalon.gg.events;
  */
 public final class ConnectionLostEvent {
 
+	private boolean disconnectedByChoice;
+
+	public ConnectionLostEvent(boolean disconnectedByChoice) {
+		this.disconnectedByChoice = disconnectedByChoice;
+	}
+
+	public boolean isDisconnectedByChoice() {
+		return disconnectedByChoice;
+	}
+
 }

@@ -74,7 +74,7 @@ public class ProjektGGApplicationContext extends EskalonApplicationContext {
 		this.gameRenderer = gameRenderer;
 	}
 
-	public void handleDisconnection() {
+	public void clearGame() {
 		if (gameHandler != null)
 			gameHandler.dispose();
 		gameHandler = null;
