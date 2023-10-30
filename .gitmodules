@@ -1,0 +1,3 @@
+[submodule "pancake"]
+	path = pancake
+	url = https://github.com/eskalon/pancake.git
