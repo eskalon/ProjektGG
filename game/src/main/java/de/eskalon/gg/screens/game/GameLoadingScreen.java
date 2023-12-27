@@ -1,7 +1,6 @@
 package de.eskalon.gg.screens.game;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.concurrent.TimeUnit;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -14,11 +13,13 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import de.damios.guacamole.Stopwatch;
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.asset.AnnotationAssetManager.Asset;
 import de.eskalon.commons.inject.EskalonInjector;
 import de.eskalon.commons.inject.annotations.Inject;
+import de.eskalon.commons.misc.TaskExecutor;
 import de.eskalon.commons.screens.AbstractEskalonUIScreen;
 import de.eskalon.commons.screens.EskalonScreenManager;
 import de.eskalon.gg.core.ProjektGGApplicationContext;
@@ -26,9 +27,11 @@ import de.eskalon.gg.graphics.rendering.GameRenderer;
 import de.eskalon.gg.graphics.rendering.SelectableRenderData;
 import de.eskalon.gg.simulation.model.World;
 import de.eskalon.gg.simulation.model.entities.BuildingSlot;
+import de.eskalon.gg.simulation.model.types.BuildingType;
 
 /**
- * This screen takes care of initializing the game world and the 3D scene.
+ * This screen takes care of loading the 3D models, initializing the game world
+ * and setting up the 3D scene.
  */
 public class GameLoadingScreen extends AbstractEskalonUIScreen {
 
@@ -50,20 +53,37 @@ public class GameLoadingScreen extends AbstractEskalonUIScreen {
 
 	private static final Vector3 Y_AXIS = new Vector3(0, 1, 0);
 
-	private Queue<Runnable> taskQueue = new LinkedList<>();
-	private int taskCount;
-	private boolean once = false;
+	private TaskExecutor taskExecutor;
+	private boolean isDone = false;
+	private int loadingTicksPerSecond = 30;
+
+	private Stopwatch stopwatch;
 
 	@Override
 	public void show() {
 		super.show();
 
+		setImage(backgroundTexture);
+
+		taskExecutor = new TaskExecutor();
+		stopwatch = Stopwatch.createStarted();
+
 		World world = appContext.getGameHandler().getSimulation().getWorld();
 
+		/* Load game assets */
+		// This has to be done here, because the game data isn't loaded yet at
+		// the start of AssetLoadingScreen
+		assetManager.load(world.getMap().getSkyboxPath(), Model.class);
+
+		for (BuildingType t : BuildingType.values()) {
+			assetManager.load(t.getModelPath(), Model.class);
+		}
+
+		/* Init 3D scene */
 		// Create ModelInstances for the buildings
 		for (BuildingSlot s : world.getBuildingSlots()) {
 			if (s.isBuiltOn()) {
-				taskQueue.add(() -> {
+				taskExecutor.execute(() -> {
 					s.getBuilding().setRenderData(
 							new SelectableRenderData(assetManager.get(
 									s.getBuilding().getType().getModelPath(),
@@ -81,7 +101,7 @@ public class GameLoadingScreen extends AbstractEskalonUIScreen {
 			}
 		}
 		// Skybox
-		taskQueue.add(() -> {
+		taskExecutor.execute(() -> {
 			Model skyboxModel = assetManager.get(appContext.getGameHandler()
 					.getSimulation().getWorld().getMap().getSkyboxPath(),
 					Model.class);
@@ -94,39 +114,36 @@ public class GameLoadingScreen extends AbstractEskalonUIScreen {
 		});
 
 		// Final task: create the game renderer
-		taskQueue.add(() -> {
+		taskExecutor.execute(() -> {
 			appContext.setGameRenderer(
 					EskalonInjector.instance().getInstance(GameRenderer.class));
 			appContext.getGameRenderer().init();
 		});
-
-		taskCount = taskQueue.size();
 	}
 
 	@Override
 	public void render(float delta) {
+		// Execute stuff
+		if (!isDone && assetManager.update(1000 / loadingTicksPerSecond)
+				&& taskExecutor.update(1000 / loadingTicksPerSecond)) {
+			isDone = true;
+			LOG.info("[CLIENT] Game loading finished in %d miliseconds",
+					stopwatch.getTime(TimeUnit.MILLISECONDS));
+			screenManager.pushScreen(RoundEndScreen.class, "simple_zoom");
+		}
+
+		float progress = (assetManager.getProgress()
+				+ taskExecutor.getProgress()) / 2; // TODO: introduce a better
+													// approximation of progress
+
+		// Render background
+		super.render(delta);
+
+		// Render Progress bar
 		viewport.apply();
 		batch.setProjectionMatrix(viewport.getCamera().combined);
 		batch.begin();
 
-		// Execute stuff
-		Runnable task;
-		if ((task = taskQueue.poll()) != null) {
-			// TODO: this only executes one task per frame!
-			task.run();
-		} else if (!once) {
-			once = true;
-			LOG.info("[CLIENT] Game loading finished");
-			screenManager.pushScreen(RoundEndScreen.class, "simple_zoom");
-		}
-
-		float progress = Math.round(taskCount * 100F / taskQueue.size());
-
-		// Draw the background
-		batch.draw(this.backgroundTexture, 0, 0, Gdx.graphics.getWidth(),
-				Gdx.graphics.getHeight());
-
-		// The actual drawing
 		batch.draw(bottomBarTexture,
 				(Gdx.graphics.getWidth() / 2) - (topBarTexture.getWidth() / 2)
 						+ 1,
@@ -138,6 +155,12 @@ public class GameLoadingScreen extends AbstractEskalonUIScreen {
 				(int) topBarTexture.getHeight());
 
 		batch.end();
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
+		viewport.update(width, height, true);
 	}
 
 }

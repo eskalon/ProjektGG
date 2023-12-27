@@ -98,6 +98,8 @@ public class ProjektGGApplicationContext extends EskalonApplicationContext {
 		});
 
 		DiscordGGHandler.instance().setMenuPresence();
+
+		// TODO: dispose the assets loaded in GameLoadingScreen?
 	}
 
 	@Override

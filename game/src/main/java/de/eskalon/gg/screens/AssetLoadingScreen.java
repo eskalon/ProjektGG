@@ -25,6 +25,7 @@ import de.eskalon.commons.screen.transition.impl.GLTransitionsShaderTransition;
 import de.eskalon.commons.screens.AbstractAssetLoadingScreen;
 import de.eskalon.commons.screens.EskalonScreenManager;
 import de.eskalon.gg.core.ProjektGGApplicationContext;
+import de.eskalon.gg.screens.game.GameLoadingScreen;
 import de.eskalon.gg.simulation.model.factories.CharacterFactory;
 import de.eskalon.gg.simulation.model.types.BuildingType;
 import de.eskalon.gg.simulation.model.types.GameMap;
@@ -38,7 +39,8 @@ import de.eskalon.gg.simulation.model.types.TypeRegistry;
 import de.eskalon.gg.thirdparty.DiscordGGHandler;
 
 /**
- * This screen takes care of loading the game's assets.
+ * This screen takes care of loading the game's assets with the exception of the
+ * 3D models. Those are loaded via the {@link GameLoadingScreen}.
  */
 public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 
@@ -138,20 +140,6 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 		for (NPCCharacterTrait t : NPCCharacterTrait.values()) {
 			assetManager.load(t.getJSONAssetDescriptor());
 		}
-
-		// Load the game assets
-		// FIXME: Rework this, because the game data isn't loaded yet
-		assetManager.load("models/skybox/skybox.g3db", Model.class);
-		assetManager.load("models/buildings/test_houses/house1.g3db",
-				Model.class);
-		//@formatter:off
-//		for (GameMap t : GameMap.values()) {
-//			assetManager.load(t.getSkyboxPath(), Model.class);
-//		}
-//		for (BuildingType t : BuildingType.values()) {
-//			assetManager.load(t.getModelPath(), Model.class);
-//		}
-		//@formatter:on
 	}
 
 	@Override
