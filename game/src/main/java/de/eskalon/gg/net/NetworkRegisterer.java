@@ -6,7 +6,7 @@ import java.util.HashMap;
 import com.badlogic.gdx.utils.IntMap;
 import com.esotericsoftware.kryo.Kryo;
 
-import de.eskalon.commons.net.packets.chat.C2SSendChatMessagePacke;
+import de.eskalon.commons.net.packets.chat.C2SSendChatMessagePacket;
 import de.eskalon.commons.net.packets.chat.S2CChatMessageReceivedPacket;
 import de.eskalon.commons.net.packets.data.IPlayerAction;
 import de.eskalon.commons.net.packets.data.IReadyable;
@@ -24,8 +24,8 @@ import de.eskalon.commons.net.packets.sync.S2CAllPlayersReadyMessage;
 import de.eskalon.commons.net.packets.sync.S2CLobbyDataChangedPacket;
 import de.eskalon.commons.net.packets.sync.S2CLobbyDataChangedPacket.ChangeType;
 import de.eskalon.gg.net.packets.ArrangeVotePacket;
-import de.eskalon.gg.net.packets.CastVotePacket;
-import de.eskalon.gg.net.packets.VoteFinishedPacket;
+import de.eskalon.gg.net.packets.C2SCastVotePacket;
+import de.eskalon.gg.net.packets.S2CVoteFinishedPacket;
 import de.eskalon.gg.net.packets.data.VoteType;
 import de.eskalon.gg.simulation.GameSetup;
 import de.eskalon.gg.simulation.actions.GameSpeedChangeAction;
@@ -71,7 +71,7 @@ public class NetworkRegisterer {
 
 		// Engine packets
 		kryo.register(S2CChatMessageReceivedPacket.class);
-		kryo.register(C2SSendChatMessagePacke.class);
+		kryo.register(C2SSendChatMessagePacket.class);
 
 		kryo.register(S2CConnectionEstablishedPacket.class);
 		kryo.register(S2CConnectionRejectedPacket.class);
@@ -93,8 +93,8 @@ public class NetworkRegisterer {
 
 		// GG packets
 		kryo.register(ArrangeVotePacket.class);
-		kryo.register(VoteFinishedPacket.class);
-		kryo.register(CastVotePacket.class);
+		kryo.register(S2CVoteFinishedPacket.class);
+		kryo.register(C2SCastVotePacket.class);
 
 		// Lobby (Player) Stuff
 		kryo.register(PlayerData.class);

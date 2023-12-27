@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public final class VoteFinishedPacket {
+public final class S2CVoteFinishedPacket {
 
 	private @Getter HashMap<Short, Integer> individualVotes;
 

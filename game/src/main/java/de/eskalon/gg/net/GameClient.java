@@ -25,8 +25,8 @@ import de.eskalon.gg.events.ConnectionLostEvent;
 import de.eskalon.gg.events.LobbyDataChangedEvent;
 import de.eskalon.gg.events.VoteFinishedEvent;
 import de.eskalon.gg.net.packets.ArrangeVotePacket;
-import de.eskalon.gg.net.packets.CastVotePacket;
-import de.eskalon.gg.net.packets.VoteFinishedPacket;
+import de.eskalon.gg.net.packets.C2SCastVotePacket;
+import de.eskalon.gg.net.packets.S2CVoteFinishedPacket;
 import de.eskalon.gg.net.packets.data.VoteType;
 import de.eskalon.gg.simulation.GameSetup;
 import de.eskalon.gg.simulation.GameState;
@@ -49,10 +49,12 @@ public class GameClient
 
 		TypeListener typeListener = new TypeListener();
 		typeListener.addTypeHandler(ArrangeVotePacket.class, (con, msg) -> {
-			LOG.debug("[CLIENT] A new vote was arranged");
-			mattersToVoteOn.add(msg);
+			synchronized (GameClient.this) {
+				LOG.debug("[CLIENT] A new vote was arranged");
+				mattersToVoteOn.add(msg);
+			}
 		});
-		typeListener.addTypeHandler(VoteFinishedPacket.class, (con, msg) -> {
+		typeListener.addTypeHandler(S2CVoteFinishedPacket.class, (con, msg) -> {
 			eventBus.post(new VoteFinishedEvent(msg.getIndividualVotes()));
 		});
 		client.addListener(typeListener);
@@ -83,7 +85,7 @@ public class GameClient
 	}
 
 	@Override
-	protected void onLobbyDataChanged(
+	protected synchronized void onLobbyDataChanged(
 			LobbyData<GameSetup, GameState, PlayerData> oldData,
 			LobbyData<GameSetup, GameState, PlayerData> newData,
 			ChangeType changeType) {
@@ -121,7 +123,7 @@ public class GameClient
 	}
 
 	public void castVote(int option) {
-		client.sendTCP(new CastVotePacket(option));
+		client.sendTCP(new C2SCastVotePacket(option));
 	}
 
 	/**

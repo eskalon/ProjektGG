@@ -17,7 +17,7 @@ import de.damios.guacamole.concurrent.ThreadHandler;
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.net.data.ChatMessage;
-import de.eskalon.commons.net.packets.chat.C2SSendChatMessagePacke;
+import de.eskalon.commons.net.packets.chat.C2SSendChatMessagePacket;
 import de.eskalon.commons.net.packets.chat.S2CChatMessageReceivedPacket;
 import de.eskalon.commons.net.packets.data.LobbyData;
 import de.eskalon.commons.net.packets.handshake.C2SRequestJoiningLobbyPacket;
@@ -125,19 +125,24 @@ public abstract class SimpleGameClient<G, S, P> {
 				});
 		// Lobby data syncing
 		listener.addTypeHandler(S2CLobbyDataChangedPacket.class, (con, msg) -> {
-			LobbyData<G, S, P> tmp = this.lobbyData;
-			this.lobbyData = msg.getLobbyData();
+			synchronized (SimpleGameClient.this) {
+				LobbyData<G, S, P> tmp = this.lobbyData;
+				this.lobbyData = msg.getLobbyData();
 
-			onLobbyDataChanged(tmp, msg.getLobbyData(), msg.getChangeType());
+				onLobbyDataChanged(tmp, msg.getLobbyData(),
+						msg.getChangeType());
+			}
 		});
 		// Chat messages
 		listener.addTypeHandler(S2CChatMessageReceivedPacket.class,
 				(con, msg) -> {
-					ChatMessage chatMessage = new ChatMessage<>(
-							lobbyData.getPlayers().get(msg.getSender()),
-							msg.getMessage());
-					chatMessages.add(chatMessage);
-					onChatMessageReceived(chatMessage);
+					synchronized (SimpleGameClient.this) {
+						ChatMessage chatMessage = new ChatMessage<>(
+								lobbyData.getPlayers().get(msg.getSender()),
+								msg.getMessage());
+						chatMessages.add(chatMessage);
+						onChatMessageReceived(chatMessage);
+					}
 				});
 		// Ping
 		listener.addTypeHandler(Ping.class, (con, msg) -> {
@@ -186,7 +191,7 @@ public abstract class SimpleGameClient<G, S, P> {
 	 *            The time delta in seconds.
 	 * @see #PING_UPDATE_INTERVAL
 	 */
-	public synchronized void updatePing(float delta) {
+	public void updatePing(float delta) {
 		timeSinceLastPingUpdate += delta;
 
 		if (timeSinceLastPingUpdate >= PING_UPDATE_INTERVAL) {
@@ -213,8 +218,8 @@ public abstract class SimpleGameClient<G, S, P> {
 		return chatMessages;
 	}
 
-	public void sendChatMessage(String message) {
-		client.sendTCP(new C2SSendChatMessagePacke(message));
+	public synchronized void sendChatMessage(String message) {
+		client.sendTCP(new C2SSendChatMessagePacket(message));
 		chatMessages.add(new ChatMessage(
 				lobbyData.getPlayers().get(localClientId), message));
 	}

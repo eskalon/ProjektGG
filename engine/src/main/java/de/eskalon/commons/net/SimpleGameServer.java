@@ -20,7 +20,7 @@ import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.lang.Lang;
 import de.eskalon.commons.net.data.ServerSettings;
 import de.eskalon.commons.net.packets.S2CDiscoveryResponsePacket;
-import de.eskalon.commons.net.packets.chat.C2SSendChatMessagePacke;
+import de.eskalon.commons.net.packets.chat.C2SSendChatMessagePacket;
 import de.eskalon.commons.net.packets.chat.S2CChatMessageReceivedPacket;
 import de.eskalon.commons.net.packets.data.LobbyData;
 import de.eskalon.commons.net.packets.handshake.C2SRequestJoiningLobbyPacket;
@@ -97,25 +97,29 @@ public abstract class SimpleGameServer<G, S, P> {
 				(con, msg) -> onPlayerChange(con, msg));
 		typeListener.addTypeHandler(C2SChangeGameSetupPacket.class,
 				(con, msg) -> {
-					if ((short) con
-							.getArbitraryData() == HOST_PLAYER_NETWORK_ID) {
-						lobbyData.setGameState(msg.getGameState());
-						lobbyData.setSessionSetup(msg.getSessionSetup());
-						server.sendToAllTCP(new S2CLobbyDataChangedPacket(
-								ChangeType.DATA_CHANGE, lobbyData));
-					} else {
-						LOG.warn(
-								"[SERVER] Non-host player %d tried to change the lobby data!",
-								(short) con.getArbitraryData());
+					synchronized (SimpleGameServer.this) {
+						if ((short) con
+								.getArbitraryData() == HOST_PLAYER_NETWORK_ID) {
+							lobbyData.setGameState(msg.getGameState());
+							lobbyData.setSessionSetup(msg.getSessionSetup());
+							server.sendToAllTCP(new S2CLobbyDataChangedPacket(
+									ChangeType.DATA_CHANGE, lobbyData));
+						} else {
+							LOG.warn(
+									"[SERVER] Non-host player %d tried to change the lobby data!",
+									(short) con.getArbitraryData());
+						}
 					}
 				});
 		// Chat messages
-		typeListener.addTypeHandler(C2SSendChatMessagePacke.class,
+		typeListener.addTypeHandler(C2SSendChatMessagePacket.class,
 				(con, msg) -> {
-					server.sendToAllExceptTCP(con.getID(),
-							new S2CChatMessageReceivedPacket(
-									(short) con.getArbitraryData(),
-									msg.getMessage()));
+					synchronized (SimpleGameServer.this) {
+						server.sendToAllExceptTCP(con.getID(),
+								new S2CChatMessageReceivedPacket(
+										(short) con.getArbitraryData(),
+										msg.getMessage()));
+					}
 				});
 		server.addListener(typeListener);
 	}
@@ -155,7 +159,8 @@ public abstract class SimpleGameServer<G, S, P> {
 		broadcastServer.getKryo().register(S2CDiscoveryResponsePacket.class);
 		broadcastServer.setDiscoveryHandler(new ServerDiscoveryHandler() {
 			@Override
-			public boolean onDiscoverHost(DatagramChannel datagramChannel,
+			public synchronized boolean onDiscoverHost(
+					DatagramChannel datagramChannel,
 					InetSocketAddress fromAddress) throws IOException {
 				S2CDiscoveryResponsePacket packet = new S2CDiscoveryResponsePacket(
 						serverSettings.getPort(), serverSettings.getGameName(),
@@ -235,7 +240,8 @@ public abstract class SimpleGameServer<G, S, P> {
 				ChangeType.PLAYER_JOINED, lobbyData));
 	}
 
-	protected void onPlayerChange(Connection con, C2SChangePlayerPacket msg) {
+	protected synchronized void onPlayerChange(Connection con,
+			C2SChangePlayerPacket msg) {
 		lobbyData.getPlayers().put((short) con.getArbitraryData(),
 				(P) msg.getPlayerData());
 		server.sendToAllTCP(new S2CLobbyDataChangedPacket(

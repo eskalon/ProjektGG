@@ -20,8 +20,8 @@ import de.eskalon.commons.net.packets.data.PlayerActionsWrapper;
 import de.eskalon.gg.misc.PlayerUtils;
 import de.eskalon.gg.misc.PlayerUtils.PlayerTemplate;
 import de.eskalon.gg.net.packets.ArrangeVotePacket;
-import de.eskalon.gg.net.packets.CastVotePacket;
-import de.eskalon.gg.net.packets.VoteFinishedPacket;
+import de.eskalon.gg.net.packets.C2SCastVotePacket;
+import de.eskalon.gg.net.packets.S2CVoteFinishedPacket;
 import de.eskalon.gg.simulation.GameSetup;
 import de.eskalon.gg.simulation.GameSimulation;
 import de.eskalon.gg.simulation.GameState;
@@ -55,19 +55,23 @@ public class GameServer
 
 		TypeListener typeListener = new TypeListener();
 		typeListener.addTypeHandler(ArrangeVotePacket.class, (con, msg) -> {
-			// TODO check whether the player is allowed to arrange the vote; if
-			// not send an OutOfSyncMessage(crash = false) to the client!
-			server.sendToAllTCP(msg);
-			mattersToVoteOn.add(msg);
+			synchronized (GameServer.this) {
+				// TODO check whether the player is allowed to arrange the vote;
+				// if
+				// not send an OutOfSyncMessage(crash = false) to the client!
+				server.sendToAllTCP(msg);
+				mattersToVoteOn.add(msg);
 
-			LOG.debug("[SERVER] Player %d has arranged a vote",
-					(short) con.getArbitraryData());
+				LOG.debug("[SERVER] Player %d has arranged a vote",
+						(short) con.getArbitraryData());
 
-			// TODO: for applications, also send an IPlayerAction, which does
-			// the following:
-			// pos.getApplicants().add(world.getPlayer(clientId).getCurrentlyPlayedCharacterId());
+				// TODO: for applications, also send an IPlayerAction, which
+				// does
+				// the following:
+				// pos.getApplicants().add(world.getPlayer(clientId).getCurrentlyPlayedCharacterId());
+			}
 		});
-		typeListener.addTypeHandler(CastVotePacket.class, (con, msg) -> {
+		typeListener.addTypeHandler(C2SCastVotePacket.class, (con, msg) -> {
 			// TODO check whether player is allowed to vote; if not send an
 			// OutOfSyncMessage(crash = false) to the client!
 			LOG.debug("[SERVER] Player %d has cast a vote",
@@ -80,7 +84,7 @@ public class GameServer
 	}
 
 	@Override
-	public void onAllActionsReceived(int tick,
+	public synchronized void onAllActionsReceived(int tick,
 			List<PlayerActionsWrapper> list) {
 		LOG.trace("[SERVER] Processing tick %d", tick);
 		simulation.onSimulationTick(tick, list);
@@ -117,7 +121,7 @@ public class GameServer
 				"[SERVER] Voting on the current matter was closed. %d votes were received.",
 				receivedVotes.size());
 
-		server.sendToAllTCP(new VoteFinishedPacket(receivedVotes));
+		server.sendToAllTCP(new S2CVoteFinishedPacket(receivedVotes));
 		simulation.processVotes(matterToVoteOn, receivedVotes);
 		receivedVotes.clear();
 		matterToVoteOn = null;

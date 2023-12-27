@@ -30,7 +30,8 @@ public abstract class ReadyableGameServer<G, S, P extends IReadyable>
 	}
 
 	@Override
-	protected void onPlayerChange(Connection con, C2SChangePlayerPacket msg) {
+	protected synchronized void onPlayerChange(Connection con,
+			C2SChangePlayerPacket msg) {
 		super.onPlayerChange(con, msg);
 
 		for (P p : lobbyData.getPlayers().values()) {

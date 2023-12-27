@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public final class CastVotePacket {
+public final class C2SCastVotePacket {
 
 	private @Getter int option;
 

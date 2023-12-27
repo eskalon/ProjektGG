@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public final class C2SSendChatMessagePacke {
+public final class C2SSendChatMessagePacket {
 
 	private @Getter String message;
 
