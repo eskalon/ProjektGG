@@ -20,9 +20,8 @@ allprojects {
         appName = "Projekt GG"
         //aiVersion = "1.8.2"
         discordIPCVersion = "a8d6631cc9" // = 0.5
-        gdxVersion = "1.12.0"
+        gdxVersion = "1.12.1"
         gsonVersion = "2.10.1"
-        guacamoleVersion = "9c55fa3f05" // TODO: remove, when the proper version is pulled in via screenmanager
         imguiVersion = "1.86.10";
         kryonetVersion = "2.22.9"
         lombok = "1.18.30"
@@ -82,9 +81,6 @@ project(":game") {
     dependencies {
         api project(":engine")
         api "com.github.crykn.gdx-vfx:gdx-vfx-effects:$vfxVersion"
-		//api ("com.github.crykn.guacamole:gdx:$guacamoleVersion") {
-  		//	force = true
-		//}
         //api "com.github.crykn:quakemonkey:$quakemonkeyVersion"
         
         api "io.github.spair:imgui-java-binding:$imguiVersion"
