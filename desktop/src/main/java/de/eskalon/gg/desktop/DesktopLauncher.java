@@ -3,6 +3,8 @@ package de.eskalon.gg.desktop;
 import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 
 import de.damios.guacamole.gdx.StartOnFirstThreadHelper;
 import de.eskalon.commons.core.EskalonApplicationStarter;
@@ -42,14 +44,21 @@ public class DesktopLauncher {
 			/* libGDX config */
 			Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 			config.setForegroundFPS(120);
-			config.setOpenGLEmulation(
-					Lwjgl3ApplicationConfiguration.GLEmulation.GL30, 3, 2);
 			config.setResizable(false);
 			config.setTitle(ProjektGGApplication.GAME_NAME);
 			config.useVsync(false);
 			config.setWindowedMode(1280, 720);
 			config.setWindowIcon(FileType.Internal, "icon16.png", "icon32.png",
 					"icon48.png");
+
+			if (UIUtils.isMac) {
+				// ImGuiRenderer requires OpenGL >= 3.0, so for macOs we'll have
+				// to switch to the 3.2 core profile...
+				ShaderProgram.prependVertexCode = "#version 150\n#define attribute in\n#define varying out\n";
+				ShaderProgram.prependFragmentCode = "#version 150\n#define varying in\nout vec4 fragColor;\n#define textureCube texture\n#define texture2D texture\n#define gl_FragColor fragColor\n";
+				config.setOpenGLEmulation(
+						Lwjgl3ApplicationConfiguration.GLEmulation.GL30, 3, 2);
+			}
 
 			/* Start the app */
 			try {

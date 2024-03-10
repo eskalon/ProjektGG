@@ -30,7 +30,7 @@ public class ImGuiRenderer {
 		Preconditions.checkState(!(Gdx.app.getType() == ApplicationType.Desktop
 				|| Gdx.app.getType() == ApplicationType.HeadlessDesktop)
 				|| !UIUtils.isMac || Gdx.gl30 != null,
-				"ImGUI requires OpenGL >= 3.0. Since the default OpenGL profile on macOS only supports 2.1, the 3.2 core profile needs to be enabled via Lwjgl3ApplicationConfiguration#setOpenGLEmulation(Lwjgl3ApplicationConfiguration.GLEmulation.GL30, 3, 2).");
+				"ImGui requires OpenGL >= 3.0. Since the default OpenGL profile on macOS only supports 2.1, the 3.2 core profile needs to be enabled via Lwjgl3ApplicationConfiguration#setOpenGLEmulation(Lwjgl3ApplicationConfiguration.GLEmulation.GL30, 3, 2).");
 
 		imGuiGlfw = new ImGuiImplGlfw();
 		imGuiGl3 = new ImGuiImplGl3();
