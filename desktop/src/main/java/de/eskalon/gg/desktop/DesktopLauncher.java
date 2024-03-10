@@ -41,11 +41,13 @@ public class DesktopLauncher {
 
 			/* libGDX config */
 			Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-			config.setTitle(ProjektGGApplication.GAME_NAME);
-			config.setWindowedMode(1280, 720);
-			config.setResizable(false);
-			config.useVsync(false);
 			config.setForegroundFPS(120);
+			config.setOpenGLEmulation(
+					Lwjgl3ApplicationConfiguration.GLEmulation.GL30, 3, 2);
+			config.setResizable(false);
+			config.setTitle(ProjektGGApplication.GAME_NAME);
+			config.useVsync(false);
+			config.setWindowedMode(1280, 720);
 			config.setWindowIcon(FileType.Internal, "icon16.png", "icon32.png",
 					"icon48.png");
 
@@ -62,7 +64,7 @@ public class DesktopLauncher {
 				e.printStackTrace();
 				System.exit(-1);
 			}
-		});
+		}, args);
 	}
 
 }
