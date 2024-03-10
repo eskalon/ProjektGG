@@ -1,6 +1,6 @@
 package de.eskalon.commons.net.packets.sync;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

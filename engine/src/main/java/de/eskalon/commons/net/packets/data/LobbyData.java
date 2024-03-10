@@ -1,6 +1,6 @@
 package de.eskalon.commons.net.packets.data;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.badlogic.gdx.utils.IntMap;
 

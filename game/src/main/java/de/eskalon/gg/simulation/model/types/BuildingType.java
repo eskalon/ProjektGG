@@ -1,6 +1,6 @@
 package de.eskalon.gg.simulation.model.types;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
 

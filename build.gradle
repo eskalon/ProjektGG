@@ -24,7 +24,7 @@ allprojects {
         gsonVersion = "2.10.1"
         imguiVersion = "1.86.10";
         kryonetVersion = "2.22.9"
-        lombok = "1.18.30"
+        lombok = "edge-SNAPSHOT" // = 1.18.31, needed for Eclipse 2023-12 (4.30.0)
         //quakemonkeyVersion = "master-SNAPSHOT"
         vfxVersion = "0.6.1"
         
@@ -39,6 +39,7 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
         maven { url "https://jitpack.io" }
+        maven { url 'https://projectlombok.org/edge-releases' }
     }
 }
 

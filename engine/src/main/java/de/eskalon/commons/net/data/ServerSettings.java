@@ -2,7 +2,7 @@ package de.eskalon.commons.net.data;
 
 import java.util.HashMap;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

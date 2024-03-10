@@ -3,7 +3,7 @@ package de.eskalon.commons.net;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;

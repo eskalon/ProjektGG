@@ -2,7 +2,7 @@ package de.eskalon.gg.graphics.ui.actors.dialogs;
 
 import java.util.function.Consumer;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.Stage;

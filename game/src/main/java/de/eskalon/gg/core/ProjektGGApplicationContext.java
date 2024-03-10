@@ -1,6 +1,6 @@
 package de.eskalon.gg.core;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import de.damios.guacamole.concurrent.ThreadHandler;
 import de.damios.guacamole.gdx.log.Logger;

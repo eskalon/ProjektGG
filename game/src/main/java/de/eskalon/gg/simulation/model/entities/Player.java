@@ -3,7 +3,7 @@ package de.eskalon.gg.simulation.model.entities;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import de.eskalon.gg.simulation.model.World;
 import de.eskalon.gg.simulation.model.types.PlayerIcon;

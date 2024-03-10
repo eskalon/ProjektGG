@@ -1,6 +1,6 @@
 package de.eskalon.gg.simulation.model.entities;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import de.eskalon.gg.simulation.model.types.ItemType;
 import lombok.Getter;
