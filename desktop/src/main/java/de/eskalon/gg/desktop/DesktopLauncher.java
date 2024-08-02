@@ -52,12 +52,12 @@ public class DesktopLauncher {
 					"icon48.png");
 
 			if (UIUtils.isMac) {
-				// ImGuiRenderer requires OpenGL >= 3.0, so for macOs we'll have
-				// to switch to the 3.2 core profile...
+				// ImGuiRenderer requires OpenGL >= 3.0, so for macOS we'll have
+				// to switch to a 3.2+ core profile...
 				ShaderProgram.prependVertexCode = "#version 150\n#define attribute in\n#define varying out\n";
 				ShaderProgram.prependFragmentCode = "#version 150\n#define varying in\nout vec4 fragColor;\n#define textureCube texture\n#define texture2D texture\n#define gl_FragColor fragColor\n";
 				config.setOpenGLEmulation(
-						Lwjgl3ApplicationConfiguration.GLEmulation.GL30, 3, 2);
+						Lwjgl3ApplicationConfiguration.GLEmulation.GL30, 4, 1);
 			}
 
 			/* Start the app */
