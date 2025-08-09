@@ -3,7 +3,6 @@ package de.eskalon.gg.simulation;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.damios.guacamole.Stopwatch;
 import de.damios.guacamole.gdx.log.Logger;
 import de.damios.guacamole.gdx.log.LoggerService;
 import de.eskalon.commons.inject.annotations.Inject;
@@ -32,8 +31,6 @@ public class GameHandler {
 	private List<IPlayerAction> queuedActions = new ArrayList<>();
 
 	private GameClient client;
-
-	private Stopwatch stopwatch = Stopwatch.createUnstarted();
 
 	public void init(GameClient client) {
 		this.client = client;
