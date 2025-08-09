@@ -59,7 +59,7 @@ public class FirstEventWavePlayerSystem
 								.getKey().getStatusRequirement()
 								.getLevel() <= c.getStatus().getLevel()) {
 
-							NotificationData not = new NotificationData(
+							NotificationData notificationData = new NotificationData(
 									Lang.get(
 											"notification.pos_available.title"),
 									Lang.get("notification.pos_available.text",
@@ -68,7 +68,7 @@ public class FirstEventWavePlayerSystem
 
 							// TODO create notification
 							// eventBus.post(new
-							// NotificationCreationEvent(not));
+							// NotificationCreationEvent(notificationData));
 						}
 					}
 				}
