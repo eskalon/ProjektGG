@@ -1,6 +1,5 @@
 package de.eskalon.gg.screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -211,7 +210,7 @@ public class SettingsScreen extends AbstractEskalonUIScreen {
 			if (appContext.getGameHandler().update())
 				screenManager.pushScreen(RoundEndScreen.class, "circle_crop");
 
-			appContext.getClient().updatePing(Gdx.graphics.getDeltaTime());
+			appContext.getClient().updatePing(delta);
 		}
 		super.render(delta);
 	}

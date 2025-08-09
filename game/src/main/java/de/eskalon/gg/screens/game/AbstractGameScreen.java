@@ -1,7 +1,5 @@
 package de.eskalon.gg.screens.game;
 
-import com.badlogic.gdx.Gdx;
-
 import de.eskalon.commons.event.Subscribe;
 import de.eskalon.commons.inject.EskalonInjector;
 import de.eskalon.commons.inject.annotations.Inject;
@@ -53,7 +51,7 @@ public abstract class AbstractGameScreen extends AbstractEskalonUIScreen {
 				screenManager.pushScreen(RoundEndScreen.class, "circle_crop");
 		}
 
-		appContext.getClient().updatePing(Gdx.graphics.getDeltaTime());
+		appContext.getClient().updatePing(delta);
 	}
 
 	@Subscribe
