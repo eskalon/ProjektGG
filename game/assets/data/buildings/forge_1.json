@@ -1,5 +1,5 @@
 {
 	"maxHealth": 100,
 	"upgradeOptionIndex": 2,
-	"modelPath" = "models/buildings/test_houses/house1.g3db"
+	"modelPath": "models/buildings/test_houses/house1.g3db"
 }

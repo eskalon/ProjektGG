@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public enum CrimeType implements ILocalizable {
 	TEST;
 
-	public final static String CRIME_JSON_DIR = "data/crimes";
+	public static final String CRIME_JSON_DIR = "data/crimes";
 
 	public AssetDescriptor<JSON> getJSONAssetDescriptor() {
 		return new AssetDescriptor<>(

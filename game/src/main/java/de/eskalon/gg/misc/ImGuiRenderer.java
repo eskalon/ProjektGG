@@ -81,7 +81,9 @@ public class ImGuiRenderer {
 		imGuiGl3.renderDrawData(ImGui.getDrawData());
 
 		if (ImGui.getIO().getWantCaptureKeyboard()
-				|| ImGui.getIO().getWantCaptureMouse()) {
+				|| ImGui.getIO().getWantCaptureMouse()) { // Temporarily disable
+															// the other input
+															// processors
 			tmpProcessor = Gdx.input.getInputProcessor();
 			Gdx.input.setInputProcessor(null);
 		}
@@ -95,6 +97,7 @@ public class ImGuiRenderer {
 			imGuiGlfw.dispose();
 		imGuiGlfw = null;
 		ImGui.destroyContext();
+		tmpProcessor = null;
 	}
 
 }

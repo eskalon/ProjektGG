@@ -31,7 +31,7 @@ public enum NPCCharacterTrait implements ILocalizable {
 	 */
 	RELIGIOUS_FANATIC;
 
-	public final static String TRAIT_JSON_DIR = "data/traits";
+	public static final String TRAIT_JSON_DIR = "data/traits";
 
 	public AssetDescriptor<JSON> getJSONAssetDescriptor() {
 		return new AssetDescriptor<>(

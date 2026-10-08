@@ -18,7 +18,7 @@ public enum LawType implements ILocalizable {
 	// CIRMINAL LAWS
 	// [...]
 
-	public final static String LAWS_JSON_DIR = "data/laws";
+	public static final String LAWS_JSON_DIR = "data/laws";
 
 	public AssetDescriptor<JSON> getJSONAssetDescriptor() {
 		return new AssetDescriptor<>(

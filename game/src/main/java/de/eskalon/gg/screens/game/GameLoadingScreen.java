@@ -5,13 +5,12 @@ import java.util.concurrent.TimeUnit;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.damios.guacamole.Stopwatch;
 import de.damios.guacamole.gdx.log.Logger;
@@ -48,8 +47,6 @@ public class GameLoadingScreen extends AbstractEskalonUIScreen {
 	private @Inject Texture topBarTexture;
 	@Asset("ui/loading_bar_bottom.png")
 	private @Inject Texture bottomBarTexture;
-
-	private Viewport viewport = new ScreenViewport();
 
 	private static final Vector3 Y_AXIS = new Vector3(0, 1, 0);
 
@@ -122,7 +119,7 @@ public class GameLoadingScreen extends AbstractEskalonUIScreen {
 	}
 
 	@Override
-	public void render(float delta) {
+	protected void renderWithinBatch(SpriteBatch batch, float delta) {
 		// Execute stuff
 		if (!isDone && assetManager.update(1000 / loadingTicksPerSecond)
 				&& taskExecutor.update(1000 / loadingTicksPerSecond)) {
@@ -136,14 +133,7 @@ public class GameLoadingScreen extends AbstractEskalonUIScreen {
 				+ taskExecutor.getProgress()) / 2; // TODO: introduce a better
 													// approximation of progress
 
-		// Render background
-		super.render(delta);
-
 		// Render Progress bar
-		viewport.apply();
-		batch.setProjectionMatrix(viewport.getCamera().combined);
-		batch.begin();
-
 		batch.draw(bottomBarTexture,
 				(Gdx.graphics.getWidth() / 2) - (topBarTexture.getWidth() / 2)
 						+ 1,
@@ -153,14 +143,6 @@ public class GameLoadingScreen extends AbstractEskalonUIScreen {
 				(Gdx.graphics.getHeight() / 4) - topBarTexture.getHeight() / 2,
 				0, 0, Math.round(topBarTexture.getWidth() * progress),
 				(int) topBarTexture.getHeight());
-
-		batch.end();
-	}
-
-	@Override
-	public void resize(int width, int height) {
-		super.resize(width, height);
-		viewport.update(width, height, true);
 	}
 
 }

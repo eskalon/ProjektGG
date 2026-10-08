@@ -25,10 +25,10 @@ public final class Player {
 	 */
 	private @Getter List<Short> ownedBuidings = new ArrayList<>();
 	/**
-	 * The monetary value of stuff inherited in this round. Is reseted after the
+	 * The monetary value of stuff inherited in this round. Is reset after the
 	 * end round tax calculations.
 	 */
-	private @Getter @Setter int previouslyInheritedValue = 0;
+	private @Getter @Setter int wealthInheritedThisRound = 0;
 
 	/**
 	 * Whether this character is currently ill.

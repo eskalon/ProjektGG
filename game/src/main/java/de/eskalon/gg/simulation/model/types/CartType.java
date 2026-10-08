@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public enum CartType implements ILocalizable {
 	BASIC;
 
-	public final static String CART_JSON_DIR = "data/carts";
+	public static final String CART_JSON_DIR = "data/carts";
 
 	public AssetDescriptor<JSON> getJSONAssetDescriptor() {
 		return new AssetDescriptor<>(

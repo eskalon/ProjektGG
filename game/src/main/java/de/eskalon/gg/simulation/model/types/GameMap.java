@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 public enum GameMap implements ILocalizable {
 	BAMBERG;
 
-	public final static String MAP_JSON_DIR = "data/maps";
+	public static final String MAP_JSON_DIR = "data/maps";
 
 	public AssetDescriptor<JSON> getJSONAssetDescriptor() {
 		return new AssetDescriptor<>(

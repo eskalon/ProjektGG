@@ -24,11 +24,11 @@ public class RoundStartPlayerSystem
 		Character c = p.getCurrentlyPlayedCharacter(world);
 
 		// INHERITANCE TAX
-		if (p.getPreviouslyInheritedValue() > 0) {
-			c.setGold(c.getGold() - Math.round(p.getPreviouslyInheritedValue()
+		if (p.getWealthInheritedThisRound() > 0) {
+			c.setGold(c.getGold() - Math.round(p.getWealthInheritedThisRound()
 					* ((Integer) world.getLaws().get(LawType.INHERITANCE_TAX)
 							/ 100F)));
-			p.setPreviouslyInheritedValue(0);
+			p.setWealthInheritedThisRound(0);
 		}
 
 		// SOCIAL STATUS

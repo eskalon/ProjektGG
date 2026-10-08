@@ -23,7 +23,7 @@ import de.eskalon.gg.simulation.model.types.SocialStatus;
  */
 public class CharacterFactory {
 
-	private static Type TYPE = new TypeToken<ArrayList<String>>() {
+	private static final Type TYPE = new TypeToken<ArrayList<String>>() {
 	}.getType();
 
 	@Asset(value = "data/misc/surnames.json", params = "array_list_string")

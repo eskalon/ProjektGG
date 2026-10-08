@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public enum BuildingType implements ILocalizable {
 	TOWN_HALL, FORGE_1, FORGE_2;
 
-	public final static String BUILDING_JSON_DIR = "data/buildings";
+	public static final String BUILDING_JSON_DIR = "data/buildings";
 
 	public AssetDescriptor<JSON> getJSONAssetDescriptor() {
 		return new AssetDescriptor<>(

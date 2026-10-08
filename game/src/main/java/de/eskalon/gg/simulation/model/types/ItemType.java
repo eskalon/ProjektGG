@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public enum ItemType implements ILocalizable {
 	TEST;
 
-	public final static String ITEM_JSON_DIR = "data/items";
+	public static final String ITEM_JSON_DIR = "data/items";
 
 	public AssetDescriptor<JSON> getJSONAssetDescriptor() {
 		return new AssetDescriptor<>(

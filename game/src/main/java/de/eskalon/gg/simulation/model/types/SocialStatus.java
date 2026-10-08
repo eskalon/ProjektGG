@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public enum SocialStatus implements ILocalizable {
 	NON_CITIZEN, CITIZEN, PATRICIAN, CAVALIER, BARON;
 
-	public final static String SOCIAL_STATUS_JSON_DIR = "data/social_status";
+	public static final String SOCIAL_STATUS_JSON_DIR = "data/social_status";
 
 	public AssetDescriptor<JSON> getJSONAssetDescriptor() {
 		return new AssetDescriptor<>(

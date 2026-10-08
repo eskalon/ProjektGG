@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public enum PlayerTaskType implements ILocalizable {
 	LEARNING_SKILL, UPGRADING_MASTER;
 
-	public final static String TASK_JSON_DIR = "data/misc/tasks";
+	public static final String TASK_JSON_DIR = "data/misc/tasks";
 
 	public AssetDescriptor<JSON> getJSONAssetDescriptor() {
 		return new AssetDescriptor<>(

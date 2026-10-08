@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public enum ProfessionType implements ILocalizable {
 	SMITH, TEACHER;
 
-	public final static String PROFESSION_JSON_DIR = "data/professions";
+	public static final String PROFESSION_JSON_DIR = "data/professions";
 
 	public AssetDescriptor<JSON> getJSONAssetDescriptor() {
 		return new AssetDescriptor<>(
