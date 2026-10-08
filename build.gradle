@@ -3,7 +3,6 @@ buildscript {
         mavenLocal()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        jcenter()
     }
     dependencies {
     }
@@ -19,7 +18,7 @@ allprojects {
     ext {
         appName = "Projekt GG"
         //aiVersion = "1.8.2"
-        discordIPCVersion = "a8d6631cc9" // = 0.5
+        discordIPCVersion = "4fce619f44" // = 0.5; commit a8d6631cc9 apparently isn't available via Jitpack
         gdxVersion = "1.12.1"
         gsonVersion = "2.10.1"
         imguiVersion = "1.86.10";
@@ -64,7 +63,6 @@ project(":engine") {
         api "com.github.eskalon.pancake:lwjgl3"
         api "com.github.crykn:kryonet:$kryonetVersion"
         api "com.google.code.gson:gson:$gsonVersion"
-        api "com.github.jagrosh:DiscordIPC:$discordIPCVersion"
         //api files('../libs/commons-0.1.0.jar')
         
         compileOnly "org.projectlombok:lombok:$lombok"
@@ -90,6 +88,7 @@ project(":game") {
         api "io.github.spair:imgui-java-natives-macos:$imguiVersion"
         api "io.github.spair:imgui-java-natives-windows:$imguiVersion"
         api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+        api "com.github.jagrosh:DiscordIPC:$discordIPCVersion"
         
         compileOnly "org.projectlombok:lombok:$lombok"
         annotationProcessor "org.projectlombok:lombok:$lombok"
