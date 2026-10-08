@@ -16,16 +16,6 @@ Thanks to Everyone That Created the Following Assets!
   Path: ui/skin/skin.png\
   Based on the work of: [Sevarihk](https://opengameart.org/content/basic-backpack-ui)\
   License: [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/legalcode)
-  
-- **Cursor Image**\
-  Path: ui/cursor.png\
-  Based on the "Pointers part 5" by [yd](https://opengameart.org/content/pointers-part-5)\
-  License: [CC0](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
-  
-- **Dark wooden background**\
-  Path: ui/backgrounds/table.jpg\
-  Based on: [Vintage Wood Table Top Background](http://www.wildtextures.com/wp-content/uploads/wildtextures_vintage-pine-table-top.jpg) by Tomasz Grabowiecki\
-  License: [Free for personal and commercial use](http://www.wildtextures.com/terms-of-use/) 
 
 - **Gold coin**\
   Path: ui/skin/skin.png\
@@ -57,16 +47,11 @@ Thanks to Everyone That Created the Following Assets!
   Based on the works of: [Lamoon](https://opengameart.org/content/rpg-gui-construction-kit-v10)\
   License: [CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/legalcode)
 
-- **The background images altar, baker, castle, ride, town, town2, town3**\
+- **The background images altar, town**\
   Path: ui/backgrounds/\
   Based on public domain works:
   - [Altar frontal from La Seu d'Urgell or of the Apostles](https://commons.wikimedia.org/wiki/File:Altar_frontal_from_La_Seu_d%27Urgell_or_of_the_Apostles_-_Google_Art_Project.jpg)
-  - [Medieval baker](https://commons.wikimedia.org/wiki/File:Medieval_baker.jpg)
-  - [Martellange Avignon](https://commons.wikimedia.org/wiki/File:Martellange_Avignon_165.jpg)
-  - [Beschreibung der Reise von Konstanz nach Jerusalem - Blatt 20-21](https://commons.wikimedia.org/wiki/File:Konrad_von_Gr%C3%BCnenberg_-_Beschreibung_der_Reise_von_Konstanz_nach_Jerusalem_-_Blatt_20v-21r.jpg)
   - [Nuremberga](https://commons.wikimedia.org/wiki/File:Nuremberg_chronicles_-_Nuremberga.png)
-  - [Beschreibung der Reise von Konstanz nach Jerusalem - Blatt 15-16](https://commons.wikimedia.org/wiki/File:Konrad_von_Gr%C3%BCnenberg_-_Beschreibung_der_Reise_von_Konstanz_nach_Jerusalem_-_Blatt_15v-16r.jpg)
-  - [Weiditz Trachtenbuch - Blatt 29-30](https://commons.wikimedia.org/wiki/File:Weiditz_Trachtenbuch_029-030.jpg)
   
 ### Audio
 - **Clock Tick**\

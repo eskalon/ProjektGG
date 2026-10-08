@@ -97,7 +97,7 @@ public class MainMenuScreen extends AbstractEskalonUIScreen {
 
 		SequenceAction sequence = new SequenceAction();
 		sequence.addAction(Actions.delay(!appContext.getObjectStorage()
-				.containsKey("mainmenu_already_shown") ? 0.85F : 0.17F));
+				.containsKey("mainmenu_already_shown") ? 1.35F : 0.45F));
 		sequence.addAction(Actions.parallel(
 				Actions.fadeIn(1.6F, Interpolation.pow2In), sequence2));
 
@@ -130,8 +130,6 @@ public class MainMenuScreen extends AbstractEskalonUIScreen {
 			sequence2.addAction(Actions.delay(0.35F));
 			sequence2.addAction(Actions.run(
 					() -> screenManager.pushScreen(nextScreen, transition)));
-
-			// FIXME: shortly before switching the screen, the UI is flickering
 
 			stageToFadeOut.addAction(Actions.parallel(
 					Actions.fadeOut(0.45F, Interpolation.pow2In), sequence2));

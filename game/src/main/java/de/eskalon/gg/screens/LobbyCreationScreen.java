@@ -46,7 +46,7 @@ public class LobbyCreationScreen extends AbstractEskalonUIScreen {
 	private @Inject ISoundManager soundManager;
 	private @Inject Skin skin;
 
-	@Asset("ui/backgrounds/server_browser_screen.jpg")
+	@Asset("ui/backgrounds/main_menu_screen.png")
 	private @Inject Texture backgroundTexture;
 	@Asset(value = "data/misc/player_presets.json", params = "array_list_player_stub")
 	private @Inject JSON playerStubsJson;
@@ -59,7 +59,6 @@ public class LobbyCreationScreen extends AbstractEskalonUIScreen {
 		super.show();
 
 		setImage(backgroundTexture);
-		setMode(ImageScreenMode.CENTERED_ORIGINAL_SIZE);
 
 		BackInputProcessor backInput = new BackInputProcessor() {
 			@Override

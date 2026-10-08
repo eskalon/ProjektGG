@@ -62,7 +62,7 @@ public class LobbyScreen extends AbstractEskalonUIScreen {
 	private @Inject ISoundManager soundManager;
 	private @Inject EventBus eventBus;
 
-	@Asset("ui/backgrounds/lobby_screen.jpg")
+	@Asset("ui/backgrounds/lobby_screen.png")
 	private @Inject Texture backgroundTexture;
 
 	private final int maxPlayerCount = 7;

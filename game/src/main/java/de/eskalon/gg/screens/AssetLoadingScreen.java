@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.I18NBundle;
@@ -52,7 +51,7 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 	private Viewport viewport;
 
 	// Assets of the loading screen itself
-	private static final String BACKGROUND_PATH = "ui/backgrounds/loading_screen.jpg";
+	private static final String BACKGROUND_PATH = "ui/backgrounds/loading_screen.png";
 	static final String TITLE_PATH = "ui/title.png";
 	private static final String BAR_TOP_PATH = "ui/loading_bar_top.png";
 	private static final String BAR_BOTTOM_PATH = "ui/loading_bar_bottom.png";
@@ -98,8 +97,6 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 
 	@Override
 	protected void loadOwnAssets() {
-		// Don't use injection for the screen's own assets, because they have to
-		// be loaded first
 		assetManager.load(BACKGROUND_PATH, Texture.class);
 		assetManager.load(TITLE_PATH, Texture.class);
 		assetManager.load(BAR_TOP_PATH, Texture.class);
@@ -191,7 +188,7 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 
 		// Change screen
 		screenManager.pushScreen(MainMenuScreen.class,
-				"longBlendingTransition");
+				"veryLongBlendingTransition");
 	}
 
 	@Override
@@ -205,9 +202,10 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 				Gdx.graphics.getHeight());
 
 		spriteBatch.draw(titleTexture,
-				(Gdx.graphics.getWidth() / 2) - (titleTexture.getWidth() / 2)
-						- 18,
-				187, titleTexture.getWidth(), titleTexture.getHeight());
+				(Gdx.graphics.getWidth() / 2)
+						- (titleTexture.getWidth() * 0.8f / 2) - 18,
+				50, titleTexture.getWidth() * 0.8f,
+				titleTexture.getHeight() * 0.8f);
 
 		// Tmp vars
 		float imageWidth = topBarTexture.getWidth();
@@ -216,10 +214,10 @@ public class AssetLoadingScreen extends AbstractAssetLoadingScreen {
 		// The actual drawing
 		spriteBatch.draw(bottomBarTexture,
 				(Gdx.graphics.getWidth() / 2) - (imageWidth / 2),
-				(Gdx.graphics.getHeight() / 4) - imageHeight / 2 + 95);
+				(Gdx.graphics.getHeight() / 4) - imageHeight / 2 - 65);
 		spriteBatch.draw(topBarTexture,
 				(Gdx.graphics.getWidth() / 2) - (imageWidth / 2),
-				(Gdx.graphics.getHeight() / 4) - imageHeight / 2 + 95, 0, 0,
+				(Gdx.graphics.getHeight() / 4) - imageHeight / 2 - 65, 0, 0,
 				Math.round(imageWidth * progress), (int) imageHeight);
 
 		spriteBatch.end();

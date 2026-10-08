@@ -33,7 +33,7 @@ public class RoundEndScreen extends AbstractGameScreen {
 	private @Inject Skin skin;
 	private @Inject ISoundManager soundManager;
 
-	@Asset("ui/backgrounds/round_end_screen.jpg")
+	@Asset("ui/backgrounds/round_end_screen.png")
 	private @Inject Texture backgroundTexture;
 	@Asset("audio/page_flip.mp3")
 	private @Inject Sound flipSound;

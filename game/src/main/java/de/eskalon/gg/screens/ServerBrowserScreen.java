@@ -47,7 +47,7 @@ public class ServerBrowserScreen extends AbstractEskalonUIScreen {
 	private @Inject Skin skin;
 	private @Inject ProjektGGApplicationContext appContext;
 
-	@Asset("ui/backgrounds/server_browser_screen.jpg")
+	@Asset("ui/backgrounds/main_menu_screen.png")
 	private @Inject Texture backgroundTexture;
 
 	private ICallback connectionCallback;
@@ -68,7 +68,6 @@ public class ServerBrowserScreen extends AbstractEskalonUIScreen {
 		super.show();
 
 		setImage(backgroundTexture);
-		setMode(ImageScreenMode.CENTERED_ORIGINAL_SIZE);
 
 		BackInputProcessor backInput = new BackInputProcessor() {
 			@Override

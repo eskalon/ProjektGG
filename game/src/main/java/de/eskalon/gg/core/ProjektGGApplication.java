@@ -126,13 +126,17 @@ public class ProjektGGApplication extends AbstractEskalonApplication {
 		appContext.getTransitions().put("shortBlendingTransition",
 				shortBlendingTransition);
 		BlendingTransition blendingTransition = new BlendingTransition(batch,
-				0.39F, Interpolation.sine);
+				0.43F, Interpolation.sine);
 		appContext.getTransitions().put("blendingTransition",
 				blendingTransition);
 		BlendingTransition longBlendingTransition = new BlendingTransition(
-				batch, 0.51F, Interpolation.pow2In);
+				batch, 0.75F, Interpolation.pow2In);
 		appContext.getTransitions().put("longBlendingTransition",
 				longBlendingTransition);
+		BlendingTransition veryLongBlendingTransition = new BlendingTransition(
+				batch, 1.05F, Interpolation.pow2In);
+		appContext.getTransitions().put("veryLongBlendingTransition",
+				veryLongBlendingTransition);
 
 		// Register basic game stuff
 		injector.bindToConstructor(GameClient.class);
