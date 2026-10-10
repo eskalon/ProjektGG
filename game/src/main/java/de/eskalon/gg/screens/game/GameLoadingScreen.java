@@ -41,7 +41,7 @@ public class GameLoadingScreen extends AbstractEskalonUIScreen {
 	private @Inject EskalonScreenManager screenManager;
 	private @Inject ProjektGGApplicationContext appContext;
 
-	@Asset("ui/backgrounds/game_loading_screen.jpg")
+	@Asset("ui/backgrounds/game_loading_screen.png")
 	private @Inject Texture backgroundTexture;
 	@Asset("ui/loading_bar_top.png")
 	private @Inject Texture topBarTexture;

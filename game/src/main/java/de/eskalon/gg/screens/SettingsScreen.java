@@ -41,7 +41,7 @@ public class SettingsScreen extends AbstractEskalonUIScreen {
 	private @Inject EskalonSettings settings;
 	private @Inject ISoundManager soundManager;
 
-	@Asset("ui/backgrounds/settings_screen.jpg")
+	@Asset("ui/backgrounds/settings_screen.png")
 	private @Inject Texture backgroundImage1;
 	@Asset("ui/backgrounds/main_menu_screen.png")
 	private @Inject Texture backgroundImage2;

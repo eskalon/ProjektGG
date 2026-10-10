@@ -46,12 +46,6 @@ Thanks to Everyone That Created the Following Assets!
   Path: ui/skin/skin.png\
   Based on the works of: [Lamoon](https://opengameart.org/content/rpg-gui-construction-kit-v10)\
   License: [CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/legalcode)
-
-- **The background images altar, town**\
-  Path: ui/backgrounds/\
-  Based on public domain works:
-  - [Altar frontal from La Seu d'Urgell or of the Apostles](https://commons.wikimedia.org/wiki/File:Altar_frontal_from_La_Seu_d%27Urgell_or_of_the_Apostles_-_Google_Art_Project.jpg)
-  - [Nuremberga](https://commons.wikimedia.org/wiki/File:Nuremberg_chronicles_-_Nuremberga.png)
   
 ### Audio
 - **Clock Tick**\
